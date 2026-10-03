@@ -1,0 +1,51 @@
+/*
+ * Fixed, component-scoped design tokens for the booking flow — deliberately
+ * independent of the tenant-configurable --color-* variables that
+ * buildCssVariables() (tokens/index.ts) injects at the app layout level.
+ * Two of this component's three mount targets (chat widget, LINE LIFF
+ * webview) may never have that tenant scope in context, and the spec's
+ * colors are tenant-*independent* by design — the booking flow must look
+ * identical everywhere it's mounted. Every booking/ui component reads
+ * var(--booking-*), never var(--color-*).
+ */
+.booking-flow {
+  --booking-accent: #1b3a5c;
+  --booking-bg: #fbfaf7;
+  --booking-border: #e3e0d7;
+  --booking-text: #24303d;
+  --booking-text-muted: #5b6b7a;
+
+  --booking-selected-bg: #1b3a5c;
+  --booking-selected-border: #14293f;
+  --booking-selected-text: #ffffff;
+
+  /* Availability tiers — paired with a symbol (◎/○/△/×/−) everywhere they
+     appear, never color alone. */
+  --booking-tier-plenty: #2f7d52;
+  --booking-tier-available: #3b6ea5;
+  --booking-tier-few: #b7791f;
+  --booking-tier-full: #b3261e;
+  --booking-tier-closed: #9ca3af;
+
+  --booking-error: #b3261e;
+  --booking-success: #2f7d52;
+
+  --booking-transition-duration: 175ms;
+  --booking-transition-easing: ease-out;
+
+  background-color: var(--booking-bg);
+  color: var(--booking-text);
+}
+
+/*
+ * 1.75 line-height for Japanese body text. Deliberately keyed off a
+ * data-locale attribute (set from BookingFlow's locale prop), NOT the CSS
+ * :lang() pseudo-class — this app's root layout hardcodes
+ * <html lang={siteConfig.locales.default}> regardless of the active
+ * request locale, so :lang(ja) would match even on /en pages. !important is
+ * needed because Tailwind's text-size utilities (text-sm, text-lg, etc.)
+ * each carry their own paired line-height at equal selector specificity.
+ */
+.booking-flow[data-locale='ja'] :where(p, span, dt, dd, li, label, h1, h2, h3, button) {
+  line-height: 1.75 !important;
+}

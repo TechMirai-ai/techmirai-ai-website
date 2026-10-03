@@ -1,0 +1,207 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "about": "会社概要",
+    "services": "サービス",
+    "jobs": "求人情報",
+    "news": "ニュース",
+    "team": "チーム",
+    "events": "イベント",
+    "seminars": "セミナー",
+    "gallery": "ギャラリー",
+    "downloads": "資料ダウンロード",
+    "contact": "お問い合わせ",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "cookie": "クッキーポリシー"
+  },
+  "common": {
+    "readMore": "続きを読む",
+    "viewAll": "すべて見る",
+    "backTo": "{label}に戻る",
+    "loading": "読み込み中…",
+    "notFound": "ページが見つかりません",
+    "error": "エラーが発生しました"
+  },
+  "form": {
+    "name": "お名前",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "message": "メッセージ",
+    "subject": "件名",
+    "submit": "送信する",
+    "submitting": "送信中…",
+    "success": "メッセージを受け付けました。近日中にご連絡いたします。",
+    "error": "送信に失敗しました。再度お試しください。",
+    "required": "必須項目です",
+    "invalidEmail": "正しいメールアドレスを入力してください",
+    "resume": "履歴書・職務経歴書",
+    "coverLetter": "志望動機書",
+    "apply": "応募する",
+    "turnstileError": "確認を完了してください。"
+  },
+  "errors": {
+    "404": "ページが見つかりません",
+    "500": "サーバーエラーが発生しました",
+    "generic": "問題が発生しました"
+  },
+  "blocks": {
+    "hero": {
+      "scrollDown": "スクロールダウン"
+    },
+    "stats": {
+      "sectionLabel": "実績"
+    },
+    "faq": {
+      "expand": "開く",
+      "collapse": "閉じる"
+    },
+    "gallery": {
+      "openLightbox": "画像を開く",
+      "closeLightbox": "閉じる",
+      "previous": "前の画像",
+      "next": "次の画像"
+    },
+    "contactForm": {
+      "contactHeading": "お問い合わせ",
+      "jobApplyHeading": "この求人に応募する"
+    },
+    "booking": {
+      "visitType": {
+        "title": "今回は初診ですか?",
+        "first": "初診",
+        "returning": "再診",
+        "firstVisitUnavailable": "現在、初診で予約できる診療はありません。お手数ですが、お電話にてお問い合わせください。"
+      },
+      "service": {
+        "title": "診療内容を選択",
+        "durationMinutes": "{minutes}分",
+        "priceLabel": "¥{price}",
+        "noPrice": "料金はお問い合わせください",
+        "loading": "読み込み中…"
+      },
+      "calendar": {
+        "title": "日時を選択",
+        "prevWeek": "前の週",
+        "nextWeek": "次の週",
+        "loading": "空き状況を読み込み中…",
+        "selectedSlotLabel": "{date} {time}、{symbolLabel}",
+        "legend": {
+          "plenty": "空きあり",
+          "available": "予約可能",
+          "few": "残りわずか",
+          "full": "満員",
+          "closed": "対応不可"
+        }
+      },
+      "contact": {
+        "title": "ご連絡先",
+        "familyName": "姓",
+        "givenName": "名",
+        "familyNameKana": "セイ",
+        "givenNameKana": "メイ",
+        "phone": "電話番号",
+        "email": "メールアドレス",
+        "emailOptionalHint": "任意 — 予約確認のみに使用します。",
+        "continue": "次へ"
+      },
+      "confirmation": {
+        "title": "予約内容の確認",
+        "visitTypeLabel": "受診区分",
+        "serviceLabel": "診療内容",
+        "dateTimeLabel": "日時",
+        "nameLabel": "お名前",
+        "phoneLabel": "電話番号",
+        "emailLabel": "メールアドレス",
+        "editLink": "別の日時を選ぶ",
+        "submit": "予約を確定する",
+        "submitting": "予約中…"
+      },
+      "success": {
+        "title": "予約が確定しました",
+        "clinicNameLabel": "診察券",
+        "confirmationCodeLabel": "予約番号",
+        "dateTimeLabel": "予約日時",
+        "screenshotHint": "この画面を保存またはスクリーンショットし、当日ご来院の際にご提示ください。"
+      },
+      "errors": {
+        "slotFull": "その時間は他の方が予約したため、満員になりました。別の時間をお選びください。",
+        "slotClosed": "その時間は現在ご利用いただけません。別の時間をお選びください。",
+        "rateLimited": "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
+        "invalidInput": "入力内容を保存できませんでした。内容をご確認のうえ、もう一度お試しください。",
+        "phoneAlreadyRegistered": "この電話番号はすでに登録されています。内容をご確認いただくか、心当たりがない場合はクリニックまでお問い合わせください。",
+        "generic": "エラーが発生しました。もう一度お試しください。"
+      },
+      "progress": {
+        "stepLabel": "ステップ {n}/{total}"
+      },
+      "nav": {
+        "back": "戻る"
+      }
+    }
+  },
+  "system": {
+    "invalidChoice": "表示されている選択肢からお選びください。",
+    "invalid": {
+      "required": "こちらの項目は必須です。",
+      "email": "正しいメールアドレスを入力してください。",
+      "phone": "正しい電話番号を入力してください。"
+    }
+  },
+  "reception": {
+    "greeting": "こんにちは。ご来院ありがとうございます。本日はどのようなご用件でしょうか?",
+    "menu": {
+      "prompt": "下記からお選びください。",
+      "book": "予約したい",
+      "faq": "質問がある",
+      "manage": "予約の変更・キャンセル"
+    },
+    "booking": {
+      "intro": "こちらからご予約を承ります。"
+    },
+    "manage": {
+      "intro": "ご予約の変更・キャンセルはこちらのページから行っていただけます。",
+      "cta": "予約の変更・キャンセルへ進む"
+    },
+    "faq": {
+      "menu": {
+        "prompt": "どのようなことについて知りたいですか?"
+      },
+      "ask": {
+        "prompt": "ご質問を入力してください。お答えできる範囲でご案内します。"
+      },
+      "ai": {
+        "answer": "申し訳ございません。ただいま自動でのご案内ができませんでした。お手数ですが、お電話にてお問い合わせください：{phone}",
+        "offTopic": "申し訳ございません。当院のご利用に関するご質問のみお答えしております。その他のご相談はお電話にて承ります：{phone}"
+      },
+      "opt": {
+        "hours": "営業時間",
+        "access": "アクセス",
+        "parking": "駐車場",
+        "prices": "料金",
+        "bring": "持ち物",
+        "firstVisit": "初診の流れ",
+        "ask": "質問を入力する",
+        "staff": "LINEでスタッフに相談する",
+        "other": "症状・施術についてのご質問",
+        "back": "メニューに戻る"
+      },
+      "staff": {
+        "intro": "下のボタンからLINEでスタッフに直接メッセージを送れます。",
+        "cta": "LINEでチャットを開く"
+      },
+      "notFound": "現在準備中です。お電話にてお問い合わせください：{phone}"
+    },
+    "refusal": {
+      "text": "体の症状や必要な施術については、担当の施術者に直接ご確認ください。お電話でもお問い合わせいただけます：{phone}"
+    }
+  },
+  "a11y": {
+    "skipToContent": "メインコンテンツへスキップ",
+    "openMenu": "ナビゲーションメニューを開く",
+    "closeMenu": "ナビゲーションメニューを閉じる",
+    "darkMode": "ダークモード切替",
+    "languageSelector": "言語を選択",
+    "externalLink": "新しいタブで開きます"
+  }
+}

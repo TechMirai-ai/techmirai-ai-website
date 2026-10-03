@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+@source "../../**/*.{ts,tsx,js,jsx}";
+@source "../../../../apps/**/src/**/*.{ts,tsx,js,jsx}";
+
+/* ─── Brand token definitions (single source of truth, not overridden at runtime) ─── */
+:root {
+  --color-brand-primary:        #047857;
+  --color-brand-primary-dark:   #0D5E49;
+  --color-brand-primary-light:  #E1F5EE;
+  --color-brand-dark:           #04342C;
+  --color-brand-accent:         #1D9E75;
+  --color-brand-accent-hover:   #198663;
+  --color-bg-primary:           #FFFFFF;
+  --color-bg-secondary:         #F7FAF9;
+  --color-bg-tertiary:          #E1F5EE;
+  --color-text-primary:         #04342C;
+  --color-text-secondary:       #4B6B63;
+  --color-text-muted:           #4B6B63;
+  --color-text-on-dark:         #FFFFFF;
+  --color-text-on-accent:       #FFFFFF;
+  --color-border-default:       #E2E8E7;
+  --color-border-strong:        #C0C5C4;
+}
+
+@theme {
+  /* ─── Brand tokens (generate Tailwind utilities: bg-brand-primary, text-brand-accent, etc.) ─── */
+  --color-brand-primary:        #047857;
+  --color-brand-primary-dark:   #0D5E49;
+  --color-brand-primary-light:  #E1F5EE;
+  --color-brand-dark:           #04342C;
+  --color-brand-accent:         #1D9E75;
+  --color-brand-accent-hover:   #198663;
+  --color-bg-primary:           #FFFFFF;
+  --color-bg-secondary:         #F7FAF9;
+  --color-bg-tertiary:          #E1F5EE;
+  --color-text-primary:         #04342C;
+  --color-text-secondary:       #4B6B63;
+  --color-text-muted:           #4B6B63;
+  --color-text-on-dark:         #FFFFFF;
+  --color-text-on-accent:       #FFFFFF;
+  --color-border-default:       #E2E8E7;
+  --color-border-strong:        #C0C5C4;
+
+  /* ─── Semantic brand colors (concrete defaults; overridden at runtime via wrapperStyle) ─── */
+  --color-primary: #047857;
+  --color-secondary: #0F6E56;
+  --color-accent: #1D9E75;
+  --color-background: #F7FAF9;
+  --color-surface: #FFFFFF;
+  --color-text: #04342C;
+  --color-muted: #4B6B63;
+  --color-error: #DC2626;
+  --color-success: #12823B;
+  --color-warning: #A35905;
+
+  /* ─── Neutral palette (slate) ─── */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* ─── Typography — font families (concrete fallbacks; overridden per-locale at runtime) ─── */
+  /* Latin/numerals resolve to Inter; Japanese glyphs fall through to Noto Sans JP.
+     Deliberate ordering — do not split into separate per-language stacks. */
+  --font-sans: Inter, "Noto Sans JP", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+  --font-serif: "Noto Serif JP", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+
+  /* ─── Type scale (caption 14px minimum — audience skews older, never smaller) ─── */
+  --text-xs: 0.875rem;   /* 14px caption */
+  --text-sm: 0.9375rem;  /* 15px small */
+  --text-base: 1.0625rem; /* 17px body */
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;    /* 24px section title (low end) */
+  --text-3xl: 1.875rem;  /* 30px section title (high end) */
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;      /* 48px hero */
+  --text-6xl: 3.5rem;    /* 56px hero (high end) */
+
+  /* ─── Spacing ─── */
+  --spacing-0: 0px;
+  --spacing-0\.5: 0.125rem;
+  --spacing-1: 0.25rem;
+  --spacing-1\.5: 0.375rem;
+  --spacing-2: 0.5rem;
+  --spacing-2\.5: 0.625rem;
+  --spacing-3: 0.75rem;
+  --spacing-3\.5: 0.875rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-7: 1.75rem;
+  --spacing-8: 2rem;
+  --spacing-9: 2.25rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-14: 3.5rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-28: 7rem;
+  --spacing-32: 8rem;
+  --spacing-36: 9rem;
+  --spacing-40: 10rem;
+  --spacing-44: 11rem;
+  --spacing-48: 12rem;
+  --spacing-56: 14rem;
+  --spacing-64: 16rem;
+  --spacing-72: 18rem;
+  --spacing-80: 20rem;
+  --spacing-96: 24rem;
+
+  /* ─── Border radii — small/medium/large per design system; full reserved for status pills ─── */
+  --radius-none: 0px;
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.625rem;  /* 10px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;  /* pill — status tags only */
+
+  /* ─── Shadows — reserved for genuinely elevated elements (sticky header, dropdown,
+     modal, card-on-hover); hairline borders are the primary surface separator ─── */
+  --shadow-sm: 0 1px 2px rgba(24, 40, 52, 0.06);
+  --shadow-md: 0 4px 16px rgba(24, 40, 52, 0.08);
+  --shadow-lg: 0 12px 32px rgba(24, 40, 52, 0.10);
+
+  /* ─── Breakpoints ─── */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Defensive: no component should be able to cause page-level horizontal
+       scroll (e.g. position:sticky inside a local overflow-x-auto table can
+       leak overflow to the document in some browsers). Local scroll
+       containers like the hours-location table keep working — this only
+       clips at the document boundary. */
+    overflow-x: hidden;
+  }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Heading scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    margin-top: 0;
+    margin-bottom: 0.75em;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.33rem; }
+  h5 { font-size: 1.2rem; }
+  h6 { font-size: 1.125rem; }
+
+  /* Japanese: proportional-width kana kerning, 0.02em body letter-spacing.
+     Never drop below font-weight 400 on Japanese text elsewhere in the app —
+     light weights make kanji illegible. Not enforced here via a blanket rule
+     since it would override the h1-h6 font-weight:700 above (higher specificity
+     than the element selector). */
+  :lang(ja) {
+    font-feature-settings: "palt";
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+
+  /* Bengali: slightly more generous vertical rhythm */
+  :lang(bn) {
+    line-height: 1.75;
+  }
+
+  /* Highly-visible focus ring using brand primary */
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Remove outline for mouse users; keep for keyboard/AT users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Logo-cloud continuous scroll — pure CSS for performance */
+  @keyframes logoScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .logo-track {
+    display: flex;
+    width: max-content;
+    animation: logoScroll 30s linear infinite;
+  }
+
+  .logo-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Affiliates marquee — reuses same keyframe, speed set via inline style */
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: logoScroll var(--marquee-duration, 40s) linear infinite;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+  .logo-track,
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+}

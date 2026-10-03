@@ -1,0 +1,44 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "DATABASE_URI",
+        "PAYLOAD_SECRET",
+        "CLOUDFLARE_R2_BUCKET",
+        "CLOUDFLARE_R2_ACCESS_KEY_ID",
+        "CLOUDFLARE_R2_SECRET_ACCESS_KEY",
+        "CLOUDFLARE_R2_ENDPOINT",
+        "RESEND_API_KEY",
+        "FROM_EMAIL",
+        "CONTACT_NOTIFICATION_EMAIL",
+        "BOOKING_TOKEN_SECRET",
+        "CRON_SECRET",
+        "LINE_CHANNEL_SECRET",
+        "LINE_CHANNEL_ACCESS_TOKEN",
+        "LINE_LOGIN_CHANNEL_ID",
+        "LINE_LOGIN_CHANNEL_SECRET",
+        "TURNSTILE_SECRET_KEY",
+        "AI_AGENT_BASE_URL",
+        "AI_AGENT_API_KEY",
+        "AI_CORPUS_SECRET",
+        "GROQ_API_KEY",
+        "GROQ_MODEL",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  }
+}

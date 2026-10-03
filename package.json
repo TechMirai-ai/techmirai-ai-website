@@ -1,0 +1,23 @@
+{
+  "name": "clinic-demo-standalone",
+  "private": true,
+  "packageManager": "pnpm@11.1.3",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck",
+    "lint": "turbo lint",
+    "seed": "pnpm --filter clinic-demo seed",
+    "seed:demo": "pnpm --filter clinic-demo seed:demo"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "turbo": "^2.9.14",
+    "typescript": "^6.0.3"
+  }
+  
+}

@@ -1,0 +1,207 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "jobs": "Jobs",
+    "news": "News",
+    "team": "Team",
+    "events": "Events",
+    "seminars": "Seminars",
+    "gallery": "Gallery",
+    "downloads": "Downloads",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "cookie": "Cookie Policy"
+  },
+  "common": {
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "backTo": "Back to {label}",
+    "loading": "Loading…",
+    "notFound": "Page not found",
+    "error": "An error occurred"
+  },
+  "form": {
+    "name": "Full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "message": "Message",
+    "subject": "Subject",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "success": "Your message has been sent. We will get back to you soon.",
+    "error": "Something went wrong. Please try again.",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "resume": "Resume / CV",
+    "coverLetter": "Cover letter",
+    "apply": "Apply now",
+    "turnstileError": "Please complete the verification."
+  },
+  "errors": {
+    "404": "Page not found",
+    "500": "Internal server error",
+    "generic": "Something went wrong"
+  },
+  "blocks": {
+    "hero": {
+      "scrollDown": "Scroll down"
+    },
+    "stats": {
+      "sectionLabel": "By the numbers"
+    },
+    "faq": {
+      "expand": "Expand",
+      "collapse": "Collapse"
+    },
+    "gallery": {
+      "openLightbox": "Open image",
+      "closeLightbox": "Close",
+      "previous": "Previous image",
+      "next": "Next image"
+    },
+    "contactForm": {
+      "contactHeading": "Get in touch",
+      "jobApplyHeading": "Apply for this position"
+    },
+    "booking": {
+      "visitType": {
+        "title": "Is this your first visit?",
+        "first": "First visit (初診)",
+        "returning": "Returning patient (再診)",
+        "firstVisitUnavailable": "No services are currently available for first-time visitors. Please call the clinic directly."
+      },
+      "service": {
+        "title": "Choose a service",
+        "durationMinutes": "{minutes} min",
+        "priceLabel": "¥{price}",
+        "noPrice": "Price on request",
+        "loading": "Loading services…"
+      },
+      "calendar": {
+        "title": "Choose a date and time",
+        "prevWeek": "Previous week",
+        "nextWeek": "Next week",
+        "loading": "Loading availability…",
+        "selectedSlotLabel": "{date} {time}, {symbolLabel}",
+        "legend": {
+          "plenty": "Plenty available",
+          "available": "Available",
+          "few": "Few remaining",
+          "full": "Full",
+          "closed": "Not offered"
+        }
+      },
+      "contact": {
+        "title": "Your details",
+        "familyName": "Family name",
+        "givenName": "Given name",
+        "familyNameKana": "Family name (kana)",
+        "givenNameKana": "Given name (kana)",
+        "phone": "Phone number",
+        "email": "Email address",
+        "emailOptionalHint": "Optional — we'll only use this to send a confirmation.",
+        "continue": "Continue"
+      },
+      "confirmation": {
+        "title": "Confirm your appointment",
+        "visitTypeLabel": "Visit type",
+        "serviceLabel": "Service",
+        "dateTimeLabel": "Date & time",
+        "nameLabel": "Name",
+        "phoneLabel": "Phone",
+        "emailLabel": "Email",
+        "editLink": "Choose a different time",
+        "submit": "Confirm booking",
+        "submitting": "Confirming…"
+      },
+      "success": {
+        "title": "Booking confirmed",
+        "clinicNameLabel": "Patient Card",
+        "confirmationCodeLabel": "Confirmation code",
+        "dateTimeLabel": "Appointment",
+        "screenshotHint": "Please save or screenshot this card and bring it to your appointment."
+      },
+      "errors": {
+        "slotFull": "That time was just booked by someone else. Please choose another time.",
+        "slotClosed": "That time is no longer available. Please choose another time.",
+        "rateLimited": "Too many requests. Please wait a moment and try again.",
+        "invalidInput": "Some information could not be saved. Please check your details and try again.",
+        "phoneAlreadyRegistered": "This phone number is already registered. Please check your details, or contact the clinic if you believe this is a mistake.",
+        "generic": "Something went wrong. Please try again."
+      },
+      "progress": {
+        "stepLabel": "Step {n} of {total}"
+      },
+      "nav": {
+        "back": "Back"
+      }
+    }
+  },
+  "system": {
+    "invalidChoice": "Please choose one of the options shown.",
+    "invalid": {
+      "required": "This field is required.",
+      "email": "Please enter a valid email address.",
+      "phone": "Please enter a valid phone number."
+    }
+  },
+  "reception": {
+    "greeting": "Hello! Thanks for visiting. How can we help you today?",
+    "menu": {
+      "prompt": "Please choose an option below.",
+      "book": "Book an appointment",
+      "faq": "Ask a question",
+      "manage": "Change or cancel a booking"
+    },
+    "booking": {
+      "intro": "Let's get your appointment booked."
+    },
+    "manage": {
+      "intro": "You can change or cancel your appointment on this page.",
+      "cta": "Go to manage my booking"
+    },
+    "faq": {
+      "menu": {
+        "prompt": "What would you like to know?"
+      },
+      "ask": {
+        "prompt": "Type your question and we'll try to answer it."
+      },
+      "ai": {
+        "answer": "Sorry — we couldn't answer that automatically just now. Please call us and we'll be glad to help: {phone}",
+        "offTopic": "Sorry — we can only help with questions about the clinic and visiting us. For anything else, please call: {phone}"
+      },
+      "opt": {
+        "hours": "Business hours",
+        "access": "Access / directions",
+        "parking": "Parking",
+        "prices": "Prices",
+        "bring": "What to bring",
+        "firstVisit": "What to expect at your first visit",
+        "ask": "Type your own question",
+        "staff": "Talk to our staff on LINE",
+        "other": "Questions about symptoms or treatment",
+        "back": "Back to menu"
+      },
+      "staff": {
+        "intro": "Tap below to message our staff directly on LINE.",
+        "cta": "Open LINE chat"
+      },
+      "notFound": "This answer isn't ready yet — please call us: {phone}"
+    },
+    "refusal": {
+      "text": "For questions about your symptoms or what treatment you need, please ask the practitioner directly. You can also call: {phone}"
+    }
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "darkMode": "Toggle dark mode",
+    "languageSelector": "Select language",
+    "externalLink": "Opens in a new tab"
+  }
+}

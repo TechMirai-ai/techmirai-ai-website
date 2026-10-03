@@ -1,0 +1,66 @@
+{
+  "name": "@techmirai/cms-core",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "description": "Shared Payload CMS + Next.js template core for this app and future client deployments",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "exports": {
+    "./schema": "./src/schema/site-config.ts",
+    "./blocks": "./src/blocks/index.ts",
+    "./i18n": "./src/i18n/routing-factory.ts",
+    "./payload/config-factory": "./src/payload/config-factory.ts",
+    "./booking": "./src/booking/index.ts",
+    "./notifications": "./src/notifications/index.ts",
+    "./line": "./src/line/index.ts",
+    "./booking/api": "./src/booking/api/index.ts",
+    "./booking/client": "./src/booking/api/client.ts",
+    "./booking/ui": "./src/booking/ui/index.ts",
+    "./booking/ui/styles": "./src/booking/ui/tokens.css",
+    "./reception": "./src/verticals/clinic/reception/index.ts",
+    "./reception/ai": "./src/verticals/clinic/reception/ai/index.ts",
+    "./reception/ui": "./src/verticals/clinic/reception/ui/index.ts",
+    "./tokens": "./src/tokens/index.ts",
+    "./seed": "./src/seed/utils.ts",
+    "./styles": "./src/styles/globals.css",
+    "./components/ui": "./src/components/ui/index.ts",
+    "./lib/motion": "./src/lib/motion.ts",
+    "./components/LanguageSwitcher": "./src/components/LanguageSwitcher.tsx",
+    "./payload/lib/richtext-to-text": "./src/payload/lib/richtext-to-text.ts",
+    "./payload/admin/BeforeDashboard": "./src/payload/admin/BeforeDashboard.tsx"
+  },
+  "peerDependencies": {
+    "@payloadcms/db-postgres": "^3.84.1",
+    "@payloadcms/richtext-lexical": "^3.84.1",
+    "framer-motion": "^11.0.0",
+    "next": "^15.3.9",
+    "next-intl": "^3.26.5",
+    "payload": "^3.84.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "jsdom": "^25.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@techmirai/reception-engine": "workspace:*",
+    "fuse.js": "^7.1.0",
+    "lucide-react": "^1.16.0",
+    "resend": "^6.18.1"
+  }
+}

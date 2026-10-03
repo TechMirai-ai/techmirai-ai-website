@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@site/*": [
+        "./*"
+      ],
+      "@techmirai/cms-core/schema": [
+        "../../packages/cms-core/src/schema/site-config.ts"
+      ],
+      "@techmirai/cms-core/blocks": [
+        "../../packages/cms-core/src/blocks/index.ts"
+      ],
+      "@techmirai/cms-core/i18n": [
+        "../../packages/cms-core/src/i18n/routing-factory.ts"
+      ],
+      "@techmirai/cms-core/payload/config-factory": [
+        "../../packages/cms-core/src/payload/config-factory.ts"
+      ],
+      "@techmirai/cms-core/tokens": [
+        "../../packages/cms-core/src/tokens/index.ts"
+      ],
+      "@techmirai/cms-core/seed": [
+        "../../packages/cms-core/src/seed/utils.ts"
+      ],
+      "@techmirai/cms-core/styles": [
+        "../../packages/cms-core/src/styles/globals.css"
+      ],
+      "@techmirai/cms-core/components/ui": [
+        "../../packages/cms-core/src/components/ui/index.ts"
+      ],
+      "@techmirai/cms-core/lib/motion": [
+        "../../packages/cms-core/src/lib/motion.ts"
+      ],
+      "@techmirai/cms-core/components/LanguageSwitcher": [
+        "../../packages/cms-core/src/components/LanguageSwitcher.tsx"
+      ],
+      "@payload-config": [
+        "./payload.config.ts"
+      ]
+    },
+    "allowJs": true,
+    "incremental": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "*.ts",
+    "*.tsx",
+    "next.config.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
+}

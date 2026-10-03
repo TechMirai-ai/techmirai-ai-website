@@ -1,0 +1,270 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "aboutLinks": {
+      "about": "About",
+      "ceoMessage": "Message From The CEO",
+      "overview": "Organization Overview",
+      "business": "Business Contents",
+      "gallery": "Gallery",
+      "history": "History"
+    },
+    "services": "Services",
+    "jobs": "Jobs",
+    "seminars": "Seminars",
+    "team": "Team",
+    "news": "News",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "common": {
+    "readMore": "Read more",
+    "learnMore": "Learn more",
+    "applyNow": "Apply now",
+    "contactUs": "Contact us",
+    "viewAll": "View all",
+    "backTo": "Back to {section}",
+    "loading": "Loading...",
+    "callNow": "Call now",
+    "bookNow": "Book now"
+  },
+  "form": {
+    "name": "Full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "message": "Message",
+    "subject": "Subject",
+    "submit": "Send message",
+    "submitting": "Sending...",
+    "success": "Your message has been sent.",
+    "error": "Something went wrong. Please try again."
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Something went wrong",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "blocks": {
+    "faq": "Frequently asked questions",
+    "contactForm": "Get in touch",
+    "teamGrid": "Our team",
+    "eventList": "Upcoming events",
+    "gallery": "Gallery",
+    "logoCloud": "Partners & Certifications",
+    "ctaBanner": "Get in touch",
+    "booking": {
+      "visitType": {
+        "title": "Is this your first visit?",
+        "first": "First visit (初診)",
+        "returning": "Returning patient (再診)",
+        "firstVisitUnavailable": "No services are currently available for first-time visitors. Please call the clinic directly."
+      },
+      "service": {
+        "title": "Choose a service",
+        "durationMinutes": "{minutes} min",
+        "priceLabel": "¥{price}",
+        "noPrice": "Price on request",
+        "loading": "Loading services…"
+      },
+      "calendar": {
+        "title": "Choose a date and time",
+        "prevWeek": "Previous week",
+        "nextWeek": "Next week",
+        "loading": "Loading availability…",
+        "selectedSlotLabel": "{date} {time}, {symbolLabel}",
+        "legend": {
+          "plenty": "Plenty available",
+          "available": "Available",
+          "few": "Few remaining",
+          "full": "Full",
+          "closed": "Not offered"
+        }
+      },
+      "contact": {
+        "title": "Your details",
+        "familyName": "Family name",
+        "givenName": "Given name",
+        "familyNameKana": "Family name (kana)",
+        "givenNameKana": "Given name (kana)",
+        "phone": "Phone number",
+        "email": "Email address",
+        "emailOptionalHint": "Optional — we'll only use this to send a confirmation.",
+        "continue": "Continue"
+      },
+      "confirmation": {
+        "title": "Confirm your appointment",
+        "visitTypeLabel": "Visit type",
+        "serviceLabel": "Service",
+        "dateTimeLabel": "Date & time",
+        "nameLabel": "Name",
+        "phoneLabel": "Phone",
+        "emailLabel": "Email",
+        "editLink": "Choose a different time",
+        "submit": "Confirm booking",
+        "submitting": "Confirming…"
+      },
+      "success": {
+        "title": "Booking confirmed",
+        "clinicNameLabel": "Patient Card",
+        "confirmationCodeLabel": "Confirmation code",
+        "dateTimeLabel": "Appointment",
+        "screenshotHint": "Please save or screenshot this card and bring it to your appointment.",
+        "manageLinkLabel": "Manage or cancel your appointment"
+      },
+      "errors": {
+        "slotFull": "That time was just booked by someone else. Please choose another time.",
+        "slotClosed": "That time is no longer available. Please choose another time.",
+        "rateLimited": "Too many requests. Please wait a moment and try again.",
+        "invalidInput": "Some information could not be saved. Please check your details and try again.",
+        "phoneAlreadyRegistered": "This phone number is already registered. Please check your details, or contact the clinic if you believe this is a mistake.",
+        "cutoffPassed": "This appointment is too close to its scheduled time to be changed online. Please call the clinic.",
+        "generic": "Something went wrong. Please try again."
+      },
+      "progress": {
+        "stepLabel": "Step {n} of {total}"
+      },
+      "nav": {
+        "back": "Back"
+      },
+      "manage": {
+        "loading": "Loading your appointment…",
+        "notFound": "We couldn't find that appointment. The link may have expired.",
+        "cancelButton": "Cancel appointment",
+        "rescheduleButton": "Reschedule",
+        "cancelledMessage": "Your appointment has been cancelled.",
+        "pastCutoffMessage": "This appointment is too close to its scheduled time to change online. Please call us at {phone}.",
+        "reschedule": {
+          "title": "Choose a new time",
+          "confirm": "Confirm new time",
+          "success": "Your appointment has been rescheduled.",
+          "successPartial": "Your new appointment is confirmed, but we couldn't automatically cancel your previous one. Please contact the clinic to confirm it's cancelled."
+        }
+      },
+      "linePicker": {
+        "prompt": "Which appointment would you like to manage?"
+      }
+    }
+  },
+  "blog": {
+    "title": "Blog & Insights",
+    "backTo": "Back to Blog",
+    "readMore": "Read Article",
+    "by": "By",
+    "category": "Category",
+    "allCategories": "All",
+    "ctaHeading": "Stay informed on Japan's employment landscape",
+    "ctaButton": "Talk to Our Experts"
+  },
+  "caseStudies": {
+    "title": "Case Studies",
+    "backTo": "Back to Case Studies",
+    "challenge": "Challenge",
+    "solution": "Solution",
+    "outcome": "Outcome",
+    "results": "Results at a Glance",
+    "ctaHeading": "Ready to see results like these?",
+    "ctaButton": "Talk to Our Team",
+    "viewStudy": "View Case Study",
+    "industry": "Industry"
+  },
+  "services": {
+    "backToServices": "Back to Services",
+    "viewDetails": "View Details",
+    "ctaHeading": "Unsure which service fits you?",
+    "ctaButton": "Talk to Us"
+  },
+  "company": {
+    "title": "Company Profile",
+    "backTo": "Back",
+    "foundedLabel": "Founded",
+    "capitalLabel": "Capital",
+    "employeesLabel": "Employees",
+    "hqLabel": "Headquarters",
+    "missionLabel": "Our Mission",
+    "visionLabel": "Our Vision",
+    "historyLabel": "Our History",
+    "leadershipLabel": "Leadership",
+    "ctaHeading": "Ready to work with us?",
+    "ctaButton": "Get in Touch"
+  },
+  "seminars": {
+    "title": "Seminars & Webinars",
+    "backTo": "Back to Seminars",
+    "upcomingTab": "Upcoming",
+    "pastTab": "Past",
+    "viewDetails": "View Details",
+    "registerNow": "Register Now",
+    "speaker": "Speaker",
+    "online": "Online",
+    "ctaHeading": "Want to be notified about upcoming seminars?",
+    "ctaButton": "Contact Us",
+    "registrationOpen": "Registration Open",
+    "registrationClosed": "Registration Closed",
+    "fullBooked": "Fully Booked",
+    "cancelled": "Cancelled"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "backTo": "Back",
+    "general": "General",
+    "ctaHeading": "Still have questions? We're here to help.",
+    "ctaButton": "Contact Us"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "formHeading": "Send a Message",
+    "officeHeading": "Office Information",
+    "inquiryGeneral": "General Enquiry",
+    "inquiryVisa": "Visa & Immigration",
+    "inquiryRecruitment": "Recruitment & Hiring",
+    "inquiryOther": "Other",
+    "company": "Company (optional)",
+    "inquiryType": "Enquiry Type",
+    "ctaHeading": "Looking for answers before reaching out?",
+    "ctaButton": "View FAQ"
+  },
+  "recruit": {
+    "title": "Careers",
+    "backTo": "Back to Careers",
+    "applyNow": "Apply Now",
+    "allDepartments": "All Departments",
+    "requirements": "Requirements",
+    "benefits": "Benefits",
+    "closing": "Closing",
+    "noOpenings": "No open positions at the moment. Check back soon.",
+    "ctaHeading": "Don't see the right role? We'd love to hear from you.",
+    "ctaButton": "Contact Us"
+  },
+  "hero": {
+    "scrollDown": "Scroll down",
+    "scroll": "Scroll"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mobileNavigation": "Mobile navigation",
+    "externalLink": "Opens in new tab",
+    "required": "Required"
+  },
+  "liffBooking": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again, or open this link in the LINE app.",
+    "confirmTitle": "Continue as {name}?",
+    "confirmHint": "We found your details from a previous booking.",
+    "confirmYes": "Yes, continue",
+    "confirmNo": "No, this isn't me"
+  },
+  "liffManage": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again, or open this link in the LINE app.",
+    "notLinked": "We couldn't find a booking linked to your LINE account. Please book your first appointment, or call us at {phone}.",
+    "noBookings": "You have no upcoming appointments to manage."
+  },
+  "liffTopBar": {
+    "languageLabel": "Language"
+  }
+}

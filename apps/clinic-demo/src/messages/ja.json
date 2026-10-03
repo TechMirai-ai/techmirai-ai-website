@@ -1,0 +1,270 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "about": "会社概要",
+    "aboutLinks": {
+      "about": "会社情報",
+      "ceoMessage": "代表メッセージ",
+      "overview": "組織概要",
+      "business": "事業内容",
+      "gallery": "ギャラリー",
+      "history": "沿革"
+    },
+    "services": "サービス",
+    "jobs": "求人",
+    "seminars": "セミナー",
+    "team": "チーム",
+    "news": "ニュース",
+    "contact": "お問い合わせ",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  },
+  "common": {
+    "readMore": "続きを読む",
+    "learnMore": "詳しく見る",
+    "applyNow": "今すぐ応募",
+    "contactUs": "お問い合わせ",
+    "viewAll": "すべて見る",
+    "backTo": "{section}に戻る",
+    "loading": "読み込み中...",
+    "callNow": "電話をかける",
+    "bookNow": "予約する"
+  },
+  "form": {
+    "name": "氏名",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "message": "メッセージ",
+    "subject": "件名",
+    "submit": "送信する",
+    "submitting": "送信中...",
+    "success": "メッセージが送信されました。",
+    "error": "エラーが発生しました。もう一度お試しください。"
+  },
+  "errors": {
+    "notFound": "ページが見つかりません",
+    "serverError": "エラーが発生しました",
+    "required": "必須項目です",
+    "invalidEmail": "有効なメールアドレスを入力してください"
+  },
+  "blocks": {
+    "faq": "よくある質問",
+    "contactForm": "お問い合わせ",
+    "teamGrid": "チーム紹介",
+    "eventList": "イベント一覧",
+    "gallery": "ギャラリー",
+    "logoCloud": "パートナー・認定機関",
+    "ctaBanner": "お問い合わせ",
+    "booking": {
+      "visitType": {
+        "title": "今回は初診ですか?",
+        "first": "初診",
+        "returning": "再診",
+        "firstVisitUnavailable": "現在、初診で予約できる診療はありません。お手数ですが、お電話にてお問い合わせください。"
+      },
+      "service": {
+        "title": "診療内容を選択",
+        "durationMinutes": "{minutes}分",
+        "priceLabel": "¥{price}",
+        "noPrice": "料金はお問い合わせください",
+        "loading": "読み込み中…"
+      },
+      "calendar": {
+        "title": "日時を選択",
+        "prevWeek": "前の週",
+        "nextWeek": "次の週",
+        "loading": "空き状況を読み込み中…",
+        "selectedSlotLabel": "{date} {time}、{symbolLabel}",
+        "legend": {
+          "plenty": "空きあり",
+          "available": "予約可能",
+          "few": "残りわずか",
+          "full": "満員",
+          "closed": "対応不可"
+        }
+      },
+      "contact": {
+        "title": "ご連絡先",
+        "familyName": "姓",
+        "givenName": "名",
+        "familyNameKana": "セイ",
+        "givenNameKana": "メイ",
+        "phone": "電話番号",
+        "email": "メールアドレス",
+        "emailOptionalHint": "任意 — 予約確認のみに使用します。",
+        "continue": "次へ"
+      },
+      "confirmation": {
+        "title": "予約内容の確認",
+        "visitTypeLabel": "受診区分",
+        "serviceLabel": "診療内容",
+        "dateTimeLabel": "日時",
+        "nameLabel": "お名前",
+        "phoneLabel": "電話番号",
+        "emailLabel": "メールアドレス",
+        "editLink": "別の日時を選ぶ",
+        "submit": "予約を確定する",
+        "submitting": "予約中…"
+      },
+      "success": {
+        "title": "予約が確定しました",
+        "clinicNameLabel": "診察券",
+        "confirmationCodeLabel": "予約番号",
+        "dateTimeLabel": "予約日時",
+        "screenshotHint": "この画面を保存またはスクリーンショットし、当日ご来院の際にご提示ください。",
+        "manageLinkLabel": "予約の変更・キャンセルはこちら"
+      },
+      "errors": {
+        "slotFull": "その時間は他の方が予約したため、満員になりました。別の時間をお選びください。",
+        "slotClosed": "その時間は現在ご利用いただけません。別の時間をお選びください。",
+        "rateLimited": "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
+        "invalidInput": "入力内容を保存できませんでした。内容をご確認のうえ、もう一度お試しください。",
+        "phoneAlreadyRegistered": "この電話番号はすでに登録されています。内容をご確認いただくか、心当たりがない場合はクリニックまでお問い合わせください。",
+        "cutoffPassed": "ご予約日時が近いため、オンラインでの変更はできません。お電話にてお問い合わせください。",
+        "generic": "エラーが発生しました。もう一度お試しください。"
+      },
+      "progress": {
+        "stepLabel": "ステップ {n}/{total}"
+      },
+      "nav": {
+        "back": "戻る"
+      },
+      "manage": {
+        "loading": "予約情報を読み込んでいます…",
+        "notFound": "該当する予約が見つかりませんでした。リンクの有効期限が切れている可能性があります。",
+        "cancelButton": "予約をキャンセル",
+        "rescheduleButton": "日時を変更",
+        "cancelledMessage": "ご予約をキャンセルしました。",
+        "pastCutoffMessage": "ご予約日時が近いため、オンラインでの変更はできません。{phone} までお電話ください。",
+        "reschedule": {
+          "title": "新しい日時を選択",
+          "confirm": "この日時に変更する",
+          "success": "ご予約の日時を変更しました。",
+          "successPartial": "新しいご予約は確定しましたが、以前のご予約を自動的にキャンセルできませんでした。以前のご予約のキャンセルについては、クリニックまでお問い合わせください。"
+        }
+      },
+      "linePicker": {
+        "prompt": "どちらのご予約を変更しますか？"
+      }
+    }
+  },
+  "blog": {
+    "title": "ブログ・インサイト",
+    "backTo": "ブログ一覧に戻る",
+    "readMore": "記事を読む",
+    "by": "著者",
+    "category": "カテゴリー",
+    "allCategories": "すべて",
+    "ctaHeading": "日本の雇用動向を把握しましょう",
+    "ctaButton": "専門家に相談する"
+  },
+  "caseStudies": {
+    "title": "導入事例",
+    "backTo": "導入事例一覧に戻る",
+    "challenge": "課題",
+    "solution": "解決策",
+    "outcome": "成果",
+    "results": "実績サマリー",
+    "ctaHeading": "このような成果を実現しませんか？",
+    "ctaButton": "チームに相談する",
+    "viewStudy": "事例を見る",
+    "industry": "業種"
+  },
+  "services": {
+    "backToServices": "サービス一覧に戻る",
+    "viewDetails": "詳しく見る",
+    "ctaHeading": "どのサービスが合っているか迷っていますか？",
+    "ctaButton": "相談する"
+  },
+  "company": {
+    "title": "会社概要",
+    "backTo": "戻る",
+    "foundedLabel": "設立",
+    "capitalLabel": "資本金",
+    "employeesLabel": "従業員数",
+    "hqLabel": "本社",
+    "missionLabel": "ミッション",
+    "visionLabel": "ビジョン",
+    "historyLabel": "沿革",
+    "leadershipLabel": "経営陣",
+    "ctaHeading": "私たちと一緒に始めませんか？",
+    "ctaButton": "お問い合わせ"
+  },
+  "seminars": {
+    "title": "セミナー・ウェビナー",
+    "backTo": "セミナー一覧に戻る",
+    "upcomingTab": "今後の予定",
+    "pastTab": "過去",
+    "viewDetails": "詳細を見る",
+    "registerNow": "今すぐ登録",
+    "speaker": "講師",
+    "online": "オンライン",
+    "ctaHeading": "今後のセミナー情報をお届けしますか？",
+    "ctaButton": "お問い合わせ",
+    "registrationOpen": "受付中",
+    "registrationClosed": "受付終了",
+    "fullBooked": "満席",
+    "cancelled": "中止"
+  },
+  "faq": {
+    "title": "よくある質問",
+    "backTo": "戻る",
+    "general": "一般",
+    "ctaHeading": "まだご質問がありますか？お気軽にご相談ください。",
+    "ctaButton": "お問い合わせ"
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "formHeading": "メッセージを送る",
+    "officeHeading": "会社情報",
+    "inquiryGeneral": "一般的なお問い合わせ",
+    "inquiryVisa": "ビザ・在留資格",
+    "inquiryRecruitment": "採用・人材紹介",
+    "inquiryOther": "その他",
+    "company": "会社名（任意）",
+    "inquiryType": "お問い合わせ種別",
+    "ctaHeading": "お問い合わせ前によくある質問をご覧ください。",
+    "ctaButton": "よくある質問を見る"
+  },
+  "recruit": {
+    "title": "採用情報",
+    "backTo": "採用情報に戻る",
+    "applyNow": "今すぐ応募",
+    "allDepartments": "すべての部署",
+    "requirements": "応募要件",
+    "benefits": "待遇・福利厚生",
+    "closing": "締切",
+    "noOpenings": "現在募集中のポジションはありません。またご確認ください。",
+    "ctaHeading": "ご希望のポジションが見当たりませんか？ぜひご連絡ください。",
+    "ctaButton": "お問い合わせ"
+  },
+  "hero": {
+    "scrollDown": "下へスクロール",
+    "scroll": "スクロール"
+  },
+  "a11y": {
+    "skipToContent": "コンテンツへスキップ",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "mobileNavigation": "モバイルナビゲーション",
+    "externalLink": "新しいタブで開く",
+    "required": "必須"
+  },
+  "liffBooking": {
+    "loading": "読み込み中…",
+    "error": "エラーが発生しました。もう一度お試しいただくか、LINEアプリでこのリンクを開いてください。",
+    "confirmTitle": "{name}様として予約しますか？",
+    "confirmHint": "前回のご予約情報が見つかりました。",
+    "confirmYes": "はい、続ける",
+    "confirmNo": "いいえ、別の人です"
+  },
+  "liffManage": {
+    "loading": "読み込み中…",
+    "error": "エラーが発生しました。もう一度お試しいただくか、LINEアプリでこのリンクを開いてください。",
+    "notLinked": "LINEアカウントに紐づくご予約が見つかりませんでした。まずはご予約いただくか、{phone} までお電話ください。",
+    "noBookings": "現在、変更可能なご予約はありません。"
+  },
+  "liffTopBar": {
+    "languageLabel": "言語"
+  }
+}

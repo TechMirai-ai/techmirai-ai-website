@@ -1,0 +1,116 @@
+import type { ReactNode } from 'react'
+
+import { HeroBlock } from './hero/component'
+import { adaptHeroBlock } from './hero/adapter'
+import { StatsBlock } from './stats/component'
+import { adaptStatsBlock } from './stats/adapter'
+import { ServicesGridBlock } from './services-grid/component'
+import { adaptServicesGridBlock } from './services-grid/adapter'
+import { BentoGridBlock } from './bento-grid/component'
+import { adaptBentoGridBlock } from './bento-grid/adapter'
+import { CaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/component'
+import { adaptCaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/adapter'
+import { LogoCloudBlock } from './logo-cloud/component'
+import { adaptLogoCloudBlock } from './logo-cloud/adapter'
+import { CTABannerBlock } from './cta-banner/component'
+import { adaptCTABannerBlock } from './cta-banner/adapter'
+import { RichTextBlock } from './rich-text/component'
+import { adaptRichTextBlock } from './rich-text/adapter'
+import { FAQBlock } from './faq/component'
+import { adaptFAQBlock } from './faq/adapter'
+import { ContactFormBlock } from './contact-form/component'
+import { adaptContactFormBlock } from './contact-form/adapter'
+import { TeamGridBlock } from './team-grid/component'
+import { adaptTeamGridBlock } from './team-grid/adapter'
+import { EventListBlock } from './event-list/component'
+import { adaptEventListBlock } from './event-list/adapter'
+import { GalleryBlock } from './gallery/component'
+import { adaptGalleryBlock } from './gallery/adapter'
+import { HoursLocationBlock } from './hours-location/component'
+import { adaptHoursLocationBlock } from './hours-location/adapter'
+import { CaseStudiesGridBlock } from '../verticals/recruitment/blocks/case-studies-grid/component'
+import { adaptCaseStudiesGridBlock } from '../verticals/recruitment/blocks/case-studies-grid/adapter'
+import { CompanyProfileBlock } from './company-profile/component'
+import { adaptCompanyProfileBlock } from './company-profile/adapter'
+import { ComplianceGridBlock } from '../verticals/recruitment/blocks/compliance-grid/component'
+import { adaptComplianceGridBlock } from '../verticals/recruitment/blocks/compliance-grid/adapter'
+import { DownloadsGridBlock } from './downloads-grid/component'
+import { adaptDownloadsGridBlock } from './downloads-grid/adapter'
+import { BlogTeaserBlock } from './blog-teaser/component'
+import { adaptBlogTeaserBlock } from './blog-teaser/adapter'
+import { NewsListBlock } from './news-list/component'
+import { adaptNewsListBlock } from './news-list/adapter'
+import { PageHeroBlock } from './page-hero/component'
+import { adaptPageHeroBlock } from './page-hero/adapter'
+import { ImageTextSplitBlock } from './image-text-split/component'
+import { adaptImageTextSplitBlock } from './image-text-split/adapter'
+import { StatsBarBlock } from './stats-bar/component'
+import { adaptStatsBarBlock } from './stats-bar/adapter'
+import { CEOMessageBlock } from './ceo-message/component'
+import { adaptCEOMessageBlock } from './ceo-message/adapter'
+import { AffiliatesBlock } from './affiliates/component'
+import { adaptAffiliatesBlock } from './affiliates/adapter'
+import { BusinessLineListBlock } from '../verticals/recruitment/blocks/business-line-list/component'
+import { adaptBusinessLineListBlock } from '../verticals/recruitment/blocks/business-line-list/adapter'
+import { GalleryGridBlock } from './gallery-grid/component'
+import { adaptGalleryGridBlock } from './gallery-grid/adapter'
+import { GalleryAlbumsBlock } from './gallery-grid/GalleryAlbumsBlock'
+import { HistoryBlock } from './history/component'
+import { adaptHistoryBlock } from './history/adapter'
+import { PlacementStatisticsBlock } from '../verticals/recruitment/blocks/placement-statistics/component'
+import { adaptPlacementStatisticsBlock } from '../verticals/recruitment/blocks/placement-statistics/adapter'
+import { ContactInfoCardBlock } from './contact-info-card/component'
+import { adaptContactInfoCardBlock } from './contact-info-card/adapter'
+import { MissionStatementBlock } from './mission-statement/component'
+import { adaptMissionStatementBlock } from './mission-statement/adapter'
+import { DoctorGridBlock } from '../verticals/clinic/blocks/doctor-grid/component'
+import { adaptDoctorGridBlock } from '../verticals/clinic/blocks/doctor-grid/adapter'
+import { DepartmentListBlock } from '../verticals/clinic/blocks/department-list/component'
+import { adaptDepartmentListBlock } from '../verticals/clinic/blocks/department-list/adapter'
+import { TreatmentListBlock } from '../verticals/clinic/blocks/treatment-list/component'
+import { adaptTreatmentListBlock } from '../verticals/clinic/blocks/treatment-list/adapter'
+import { BookingCtaBlock } from './booking-cta/component'
+import { adaptBookingCtaBlock } from './booking-cta/adapter'
+
+export type BlockRenderer = (raw: unknown) => ReactNode
+
+export const blockRegistry: Record<string, BlockRenderer> = {
+  'hero':                (raw) => <HeroBlock               {...adaptHeroBlock(raw)} />,
+  'stats':               (raw) => <StatsBlock              {...adaptStatsBlock(raw)} />,
+  'services-grid':       (raw) => <ServicesGridBlock       {...adaptServicesGridBlock(raw)} />,
+  'bento-grid':          (raw) => <BentoGridBlock          {...adaptBentoGridBlock(raw)} />,
+  'case-study-carousel': (raw) => <CaseStudyCarouselBlock  {...adaptCaseStudyCarouselBlock(raw)} />,
+  'logo-cloud':          (raw) => <LogoCloudBlock          {...adaptLogoCloudBlock(raw)} />,
+  'cta-banner':          (raw) => <CTABannerBlock          {...adaptCTABannerBlock(raw)} />,
+  'rich-text':           (raw) => <RichTextBlock           {...adaptRichTextBlock(raw)} />,
+  'faq':                 (raw) => <FAQBlock                {...adaptFAQBlock(raw)} />,
+  'contact-form':        (raw) => <ContactFormBlock        {...adaptContactFormBlock(raw)} />,
+  'team-grid':           (raw) => <TeamGridBlock           {...adaptTeamGridBlock(raw)} />,
+  'event-list':          (raw) => <EventListBlock          {...adaptEventListBlock(raw)} />,
+  'gallery':             (raw) => <GalleryBlock            {...adaptGalleryBlock(raw)} />,
+  'hours-location':      (raw) => <HoursLocationBlock      {...adaptHoursLocationBlock(raw)} />,
+  'case-studies-grid':   (raw) => <CaseStudiesGridBlock    {...adaptCaseStudiesGridBlock(raw)} />,
+  'company-profile':     (raw) => <CompanyProfileBlock     {...adaptCompanyProfileBlock(raw)} />,
+  'compliance-grid':     (raw) => <ComplianceGridBlock     {...adaptComplianceGridBlock(raw)} />,
+  'downloads-grid':      (raw) => <DownloadsGridBlock      {...adaptDownloadsGridBlock(raw)} />,
+  'blog-teaser':         (raw) => <BlogTeaserBlock         {...adaptBlogTeaserBlock(raw)} />,
+  'news-list':           (raw) => <NewsListBlock             {...adaptNewsListBlock(raw)} />,
+  'page-hero':               (raw) => <PageHeroBlock               {...adaptPageHeroBlock(raw)} />,
+  'image-text-split':        (raw) => <ImageTextSplitBlock         {...adaptImageTextSplitBlock(raw)} />,
+  'stats-bar':               (raw) => <StatsBarBlock               {...adaptStatsBarBlock(raw)} />,
+  'ceo-message':             (raw) => <CEOMessageBlock             {...adaptCEOMessageBlock(raw)} />,
+  'affiliates':              (raw) => <AffiliatesBlock             {...adaptAffiliatesBlock(raw)} />,
+  'business-line-list':      (raw) => <BusinessLineListBlock       {...adaptBusinessLineListBlock(raw)} />,
+  'history':                 (raw) => <HistoryBlock                {...adaptHistoryBlock(raw)} />,
+  'placement-statistics':    (raw) => <PlacementStatisticsBlock    {...adaptPlacementStatisticsBlock(raw)} />,
+  'contact-info-card':       (raw) => <ContactInfoCardBlock        {...adaptContactInfoCardBlock(raw)} />,
+  'mission-statement':       (raw) => <MissionStatementBlock       {...adaptMissionStatementBlock(raw)} />,
+
+/* 🛠️ RESTORED TO CLEAN PASSTHROUGH */
+  'gallery-grid': (raw) => <GalleryGridBlock {...adaptGalleryGridBlock(raw)} />,
+
+  'doctor-grid':       (raw) => <DoctorGridBlock       {...adaptDoctorGridBlock(raw)} />,
+  'department-list':   (raw) => <DepartmentListBlock   {...adaptDepartmentListBlock(raw)} />,
+  'treatment-list':    (raw) => <TreatmentListBlock    {...adaptTreatmentListBlock(raw)} />,
+  'booking-cta':       (raw) => <BookingCtaBlock       {...adaptBookingCtaBlock(raw)} />,
+}
