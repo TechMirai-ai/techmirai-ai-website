@@ -29,7 +29,7 @@ const db =
           connectionTimeoutMillis: 45000,
           ssl: uri.includes('rlwy.net') ? { rejectUnauthorized: false } : true,
         },
-         push: false,
+         push: true,
         // Booking module indexes + constraints that field config can't express.
         // Runs on production init so the DB-level safety net actually deploys.
         //

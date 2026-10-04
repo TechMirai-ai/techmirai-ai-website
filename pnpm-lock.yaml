@@ -29,6 +29,9 @@ importers:
       '@line/liff':
         specifier: ^2.30.0
         version: 2.30.0
+      '@next/env':
+        specifier: 15.5.19
+        version: 15.5.19
       '@payloadcms/db-postgres':
         specifier: ^3.84.1
         version: 3.85.0(@libsql/client@0.14.0)(@upstash/redis@1.38.0)(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))
@@ -1805,6 +1808,7 @@ packages:
 
   '@line/liff@2.30.0':
     resolution: {integrity: sha512-vxC6x7bRaM8E0fU3erdATbxsT/v066kJ9ck466aWYyQlkAw43oni6jUI+lToJgBrw9iQw8sVtou+MiRdqNiRiA==}
+    deprecated: This version has been deprecated because an issue with potential security implications was identified. Update to LIFF v2.31.1 immediately. See https://developers.line.biz/en/docs/liff/release-notes/#liff-v2-31-1
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}

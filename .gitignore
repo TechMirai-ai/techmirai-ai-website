@@ -47,6 +47,7 @@ temp/
 # and pnpm seed:demo's generated placeholder images. Never durable across
 # most hosts' deploys (see docs/DEPLOY-NEW-CLIENT.md) and shouldn't be
 # committed — R2 is the real storage backend once configured.
+apps/*/public/media/
 
 # playwright MCP tool artifacts
 .playwright-mcp/

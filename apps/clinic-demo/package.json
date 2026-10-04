@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@line/liff": "^2.30.0",
+    "@next/env": "15.5.19",
     "@payloadcms/db-postgres": "^3.84.1",
     "@payloadcms/db-sqlite": "3.84.1",
     "@payloadcms/email-resend": "^3.84.1",
