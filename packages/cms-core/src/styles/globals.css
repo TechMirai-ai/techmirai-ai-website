@@ -190,13 +190,8 @@
      than the element selector). */
   :lang(ja) {
     font-feature-settings: "palt";
-    line-height: 1.6;
+    line-height: 1.8;
     letter-spacing: 0.02em;
-  }
-
-  /* Bengali: slightly more generous vertical rhythm */
-  :lang(bn) {
-    line-height: 1.75;
   }
 
   /* Highly-visible focus ring using brand primary */

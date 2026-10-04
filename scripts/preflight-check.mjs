@@ -12,7 +12,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { extname, join, relative } from 'node:path'
 
 const repoRoot = process.cwd()
-const SITE_CONFIG_PATH = 'apps/clinic-demo/site.config.ts'
+const SITE_CONFIG_PATH = 'apps/techmirai-web/site.config.ts'
 
 const SCAN_ROOTS = ['apps', 'packages']
 const SCAN_EXTENSIONS = new Set(['.ts', '.tsx'])
@@ -113,7 +113,7 @@ function main() {
   // the app actually reads is documented here at all — a var referenced in
   // code but missing from .env.example is a silent onboarding trap for the
   // next client.
-  const ENV_EXAMPLE_PATH = 'apps/clinic-demo/.env.example'
+  const ENV_EXAMPLE_PATH = 'apps/techmirai-web/.env.example'
   const REQUIRED_ENV_VARS_DOCUMENTED = [
     // LINE Messaging API webhook (STEP 2 Part 1) — src/app/api/line/webhook/route.ts
     'LINE_CHANNEL_SECRET',

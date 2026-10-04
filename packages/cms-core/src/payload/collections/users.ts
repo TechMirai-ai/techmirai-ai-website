@@ -24,8 +24,8 @@ export const UsersCollection: CollectionConfig = {
       defaultValue: 'editor',
       required: true,
       options: [
-        { label: { en: 'Admin', ja: '管理者', bn: 'অ্যাডমিন' }, value: 'admin' },
-        { label: { en: 'Editor', ja: '編集者', bn: 'সম্পাদক' }, value: 'editor' },
+        { label: { en: 'Admin', ja: '管理者' }, value: 'admin' },
+        { label: { en: 'Editor', ja: '編集者' }, value: 'editor' },
       ],
       admin: {
         position: 'sidebar',

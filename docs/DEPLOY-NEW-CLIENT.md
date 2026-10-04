@@ -33,13 +33,13 @@ node scripts/create-client-app.mjs ../my-new-client
 cd ../my-new-client
 git init
 git add -A
-git commit -m "Initial scaffold from clinic-demo template"
+git commit -m "Initial scaffold from techmirai-ai-website template"
 ```
 
 `create-client-app.mjs` copies every git-tracked file (via `git archive`, so
 no `node_modules`/`.next`/`.env.local` come along) into the target directory,
 and replaces every client-identity value in
-`apps/clinic-demo/site.config.ts` with a `__FILL_ME__` sentinel. It does
+`apps/techmirai-web/site.config.ts` with a `__FILL_ME__` sentinel. It does
 **not** run `git init` or install anything — that's on you, so nothing
 happens to your shell's working directory or git state without you asking.
 
@@ -48,18 +48,20 @@ This produces a genuinely separate repository: its own git history, no
 remote (a new GitHub repo, not a fork) is what makes it independently
 deployable.
 
-**Why the app folder is still `apps/clinic-demo`:** every client repo keeps
-the same internal engineering layout (`apps/clinic-demo/`,
-`packages/cms-core/`) regardless of the client's actual name. The client's
-identity lives entirely in `site.config.ts` and the new repo's own name —
-not in internal folder paths. This keeps scaffolding simple and keeps
-future engine fixes easy to compare/port across client repos.
+**Why the app folder normally keeps its name:** every client repo scaffolded this way keeps
+the same internal engineering layout (`apps/<app-name>/`, `packages/cms-core/`) regardless of
+the client's actual brand — the client's identity lives entirely in `site.config.ts` and the
+new repo's own name, not in internal folder paths. This keeps scaffolding simple and keeps
+future engine fixes easy to compare/port across client repos. (`techmirai-ai-website` is the
+one known exception: it was hand-cloned per `docs/WORK-ORDER.md`, not scaffolded via this
+script, and its app folder was renamed from `apps/clinic-demo` to `apps/techmirai-web` in
+Pack-2/D1.)
 
 ---
 
 ## 2. Configure `site.config.ts`
 
-Open `apps/clinic-demo/site.config.ts` and fill in every `__FILL_ME__`
+Open `apps/techmirai-web/site.config.ts` and fill in every `__FILL_ME__`
 sentinel. Each one says what it needs and gives an example:
 
 ```ts
@@ -117,7 +119,7 @@ folders to avoid unnecessary dev-server reloads.
 
 **Production: use Postgres, not SQLite.** The in-house booking engine
 needs real transactions, which SQLite disables for this app (see
-`apps/clinic-demo/src/seed/booking.ts`'s doc comment) — a real client
+`apps/techmirai-web/src/seed/booking.ts`'s doc comment) — a real client
 launch with the booking widget enabled requires Postgres regardless of
 scale.
 
@@ -135,7 +137,7 @@ Until that's fixed, provision a fresh Postgres database like this:
 
 1. Create the database and get its connection string.
 2. Temporarily set `push: true` on the `postgresAdapter(...)` call in
-   `apps/clinic-demo/payload.config.ts`.
+   `apps/techmirai-web/payload.config.ts`.
 3. Boot the app once against that `DATABASE_URI` (`pnpm dev` or `pnpm build
    && pnpm start` with the Postgres URI set) — this creates the base
    schema (all of Payload's own collection/global tables).
@@ -186,7 +188,7 @@ must pass before anything is touched:
 **Real client content:** structure the client's content into JSON matching
 the collection shapes in
 `packages/cms-core/src/verticals/clinic/collections/`, then write real
-seeding logic in `apps/clinic-demo/src/seed/index.ts` (currently a stub
+seeding logic in `apps/techmirai-web/src/seed/index.ts` (currently a stub
 that tells you this — see the file itself), following the pattern in
 `src/seed/demo/index.ts`. Run it with:
 
@@ -211,11 +213,11 @@ Seeds bookable services/resources/slots. Refuses to run against SQLite
 
 ## 6. Set environment variables
 
-Copy `apps/clinic-demo/.env.example` to `.env.local` for local dev, and set
+Copy `apps/techmirai-web/.env.example` to `.env.local` for local dev, and set
 the same variables on your host for production:
 
 ```bash
-cp apps/clinic-demo/.env.example apps/clinic-demo/.env.local
+cp apps/techmirai-web/.env.example apps/techmirai-web/.env.local
 ```
 
 Every variable the app actually reads is documented in that file, grouped
@@ -272,7 +274,7 @@ the widget is disabled for this client.
    CORS/CSRF allow-listing (`payload.config.ts`) as well as absolute links.
 3. Set `site.config.ts`'s `site.domain` to match (no protocol).
 4. **If the daily appointment-reminder cron matters for this client:**
-   `apps/clinic-demo/vercel.json` declares a Vercel Cron
+   `apps/techmirai-web/vercel.json` declares a Vercel Cron
    (`/api/cron/notifications`, daily). This only fires if you're deployed
    on Vercel. On any other host, you need an equivalent scheduled caller
    (e.g. a hosted cron service hitting that endpoint with `CRON_SECRET`).

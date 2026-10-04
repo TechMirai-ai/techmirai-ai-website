@@ -50,7 +50,7 @@ export function MissionStatementBlock({
   missionBody,
   photos,
 }: MissionStatementBlockProps) {
-  // 2. Access the current locale ('ja', 'en', 'bn', etc.)
+  // 2. Access the current locale ('ja', 'en', etc.)
   const locale = useLocale()
 
   // Fewer + bigger flowers, slow fall

@@ -129,7 +129,7 @@ export const reserveRequestSchema = z.object({
    * be verified server-side against LINE's own endpoint
    * (verifyLineIdToken, packages/cms-core/src/line/id-token.ts) before its
    * `sub` claim is used as a real lineUserId anywhere. See
-   * apps/clinic-demo's reserve route, which does that verification before
+   * apps/techmirai-web's reserve route, which does that verification before
    * calling handleReserve — this field only carries the token over the
    * wire, it is not itself a trusted identity.
    */

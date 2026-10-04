@@ -17,11 +17,6 @@ const labels: Record<string, { motto: string; mottoBreak: string; title: string 
     mottoBreak: '共に学び、<br />人生を楽しみ、<br />成功を目指す。',
     title: '代表メッセージ' 
   },
-  bn: { 
-    motto: 'একসাথে শিখুন, জীবন উপভোগ করুন এবং সাফল্যের জন্য চেষ্টা করুন।', 
-    mottoBreak: 'একসাথে শিখুন,<br />জীবন উপভোগ করুন এবং<br />সাফল্যের জন্য চেষ্টা করুন।',
-    title: 'প্রতিনিধির বার্তা' 
-  },
 }
 
 const bgMap: Record<string, string> = {

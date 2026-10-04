@@ -66,7 +66,7 @@ guards, in order:
    `GITHUB_ACTIONS`, or `NETLIFY` is set. This script must never fire as
    a side effect of a deploy or CI run.
 3. **Dev-database declaration** — requires `DATABASE_ENV=development` set
-   in `apps/clinic-demo/.env.local`. This is a persistent, once-set flag
+   in `apps/techmirai-web/.env.local`. This is a persistent, once-set flag
    distinct from `DATABASE_URI` — it exists specifically so a real
    production connection string (which would never carry this flag) can
    never be seeded into by accident.
@@ -93,7 +93,7 @@ SEED_DEMO_CONFIRM_CLEAR=yes pnpm seed:demo
 ```
 
 Run either from the repo root — the root `seed:demo` script forwards
-into `apps/clinic-demo`.
+into `apps/techmirai-web`.
 
 ---
 
@@ -103,10 +103,10 @@ From a clean checkout:
 
 ```bash
 pnpm install
-cp apps/clinic-demo/.env.example apps/clinic-demo/.env.local
+cp apps/techmirai-web/.env.example apps/techmirai-web/.env.local
 ```
 
-Edit `apps/clinic-demo/.env.local` and set, at minimum:
+Edit `apps/techmirai-web/.env.local` and set, at minimum:
 
 - `DATABASE_URI` — `file:../../.data/local.db` works out of the box for
   local dev (SQLite). No setup needed.
@@ -170,7 +170,7 @@ lose.
 
 ```bash
 # 1. Confirm you're pointed at the right database
-echo $DATABASE_URI   # or check apps/clinic-demo/.env.local directly
+echo $DATABASE_URI   # or check apps/techmirai-web/.env.local directly
 
 # 2. If on Neon: open the dashboard and confirm a recent restore
 #    point exists, in case you need to roll back
@@ -195,7 +195,7 @@ change.
 
 Homepage, services, team, doctors, news, blog, testimonials, downloads,
 and the `faqs` **collection** (which backs the public `/faq` page) are
-all written by `apps/clinic-demo/src/seed/demo/*.ts`, orchestrated by
+all written by `apps/techmirai-web/src/seed/demo/*.ts`, orchestrated by
 `demo/index.ts`. This is what `pnpm seed:demo --confirm` populates and
 clears.
 
@@ -251,13 +251,13 @@ precise about which one applies:
 
 - **Iterating on this template's own demo/placeholder clinic** (e.g.
   improving what a sales demo shows): edit the relevant files under
-  `apps/clinic-demo/src/seed/demo/`, then run `pnpm seed:demo --confirm`
+  `apps/techmirai-web/src/seed/demo/`, then run `pnpm seed:demo --confirm`
   and verify per section 4/5 above.
 - **Onboarding an actual new client:** `pnpm seed:demo` is specifically
   the demo/placeholder pathway (fictional clinic content, `demo-`
   prefixed slugs) — reusing it for a real client would seed placeholder
   content, not the client's real content. The documented path for real
-  content is `apps/clinic-demo/src/seed/index.ts` (`pnpm seed`), which
+  content is `apps/techmirai-web/src/seed/index.ts` (`pnpm seed`), which
   currently ships as a stub meant to be filled in following the pattern
   in `demo/index.ts`, or entering content directly via `/admin`.
 

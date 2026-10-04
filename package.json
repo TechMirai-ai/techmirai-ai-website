@@ -1,5 +1,5 @@
 {
-  "name": "clinic-demo-standalone",
+  "name": "techmirai-ai-website",
   "private": true,
   "packageManager": "pnpm@11.1.3",
   "workspaces": [
@@ -11,8 +11,8 @@
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
-    "seed": "pnpm --filter clinic-demo seed",
-    "seed:demo": "pnpm --filter clinic-demo seed:demo"
+    "seed": "pnpm --filter techmirai-web seed",
+    "seed:demo": "pnpm --filter techmirai-web seed:demo"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",

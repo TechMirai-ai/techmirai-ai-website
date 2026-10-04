@@ -30,16 +30,6 @@ const labels: Record<string, Record<string, string>> = {
     headcount: '従業員数',
     businessDescription: '事業内容',
   },
-  bn: {
-    companyName: 'কোম্পানির নাম',
-    founded: 'প্রতিষ্ঠিত',
-    ceo: 'সিইও',
-    address: 'ঠিকানা',
-    capital: 'মূলধন',
-    licenseNumber: 'লাইসেন্স',
-    headcount: 'জনবল',
-    businessDescription: 'ব্যবসা',
-  },
 }
 
 export function CompanyProfileBlock({

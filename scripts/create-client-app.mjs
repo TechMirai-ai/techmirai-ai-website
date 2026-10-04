@@ -6,7 +6,7 @@
 //      target directory — no node_modules, .next, .turbo, .data, or
 //      .env.local, since none of those are tracked.
 //   2. Replaces every client-identity value in the copy's
-//      apps/clinic-demo/site.config.ts with a __FILL_ME__ sentinel, so
+//      apps/techmirai-web/site.config.ts with a __FILL_ME__ sentinel, so
 //      the new repo can never accidentally ship this template's demo
 //      content (see docs/DEPLOY-NEW-CLIENT.md for the fill-in checklist).
 //
@@ -22,7 +22,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const SITE_CONFIG_RELATIVE_PATH = 'apps/clinic-demo/site.config.ts'
+const SITE_CONFIG_RELATIVE_PATH = 'apps/techmirai-web/site.config.ts'
 
 function fail(message) {
   console.error(`\nERROR: ${message}\n`)
@@ -268,8 +268,8 @@ function main() {
       ``,
       `Next steps (see docs/DEPLOY-NEW-CLIENT.md):`,
       `  1. cd ${targetPath} && git init`,
-      `  2. Fill in every __FILL_ME__ in apps/clinic-demo/site.config.ts`,
-      `  3. cp apps/clinic-demo/.env.example apps/clinic-demo/.env.local and fill in real values`,
+      `  2. Fill in every __FILL_ME__ in apps/techmirai-web/site.config.ts`,
+      `  3. cp apps/techmirai-web/.env.example apps/techmirai-web/.env.local and fill in real values`,
       `  4. pnpm install`,
       `  5. node scripts/preflight-check.mjs`,
       ``,

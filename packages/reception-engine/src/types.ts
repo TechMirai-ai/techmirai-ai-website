@@ -15,7 +15,7 @@
 // triage, ai-fallback.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type Locale = 'en' | 'ja' | 'bn'
+export type Locale = 'en' | 'ja'
 
 export type NodeId = string
 

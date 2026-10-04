@@ -31,7 +31,7 @@ it's the *same* booking engine (`packages/cms-core/src/booking/`, see
 [online-reservation.md](online-reservation.md)) reached through three new
 surfaces:
 
-1. A **webhook** (`apps/clinic-demo/src/app/api/line/webhook/route.ts`) that
+1. A **webhook** (`apps/techmirai-web/src/app/api/line/webhook/route.ts`) that
    currently handles exactly two LINE event types: `follow` (greet) and
    `unfollow` (mark the linked customer's LINE channel dead).
 2. Two **LIFF** (LINE Front-end Framework) pages — LINE's mechanism for
@@ -73,7 +73,7 @@ each with its own LIFF ID (`NEXT_PUBLIC_LIFF_ID` and
 app's Endpoint URL is fixed per app registration, and appending a subpath
 to a LIFF URL does not change which endpoint actually loads — verified
 against LINE's own documentation before this was built (see the doc
-comment in `apps/clinic-demo/src/app/(liff)/[locale]/line/manage/page.tsx`).
+comment in `apps/techmirai-web/src/app/(liff)/[locale]/line/manage/page.tsx`).
 Any second, genuinely distinct LIFF-hosted flow needs its own LIFF app —
 this is a LINE platform constraint, not a choice made here.
 
@@ -176,7 +176,7 @@ the **only** signal used: it flips the matched customer's
 
 1. The rich-menu booking button (once a rich menu exists — see §5) opens
    `https://<domain>/<locale>/line/booking`, a thin server page
-   (`apps/clinic-demo/src/app/(liff)/[locale]/line/booking/page.tsx`) that
+   (`apps/techmirai-web/src/app/(liff)/[locale]/line/booking/page.tsx`) that
    just validates the locale/feature flag and renders `LiffBookingClient`.
 2. `LiffBookingClient` (`'use client'`) calls `liff.init()`, then
    `liff.login()` if not already logged in (a no-op inside LINE's in-app
@@ -296,7 +296,7 @@ Before handing a LINE-enabled client off as ready:
 | Want to change... | Edit |
 |---|---|
 | The `follow`-event greeting text | `site.config.ts` → `reception.greeting` (shared with the web reception widget — see [ai-receptionist.md](ai-receptionist.md)) |
-| Booking/manage LIFF page copy (loading/error/confirm-shortcut text) | `apps/clinic-demo/src/messages/{en,ja}.json` under the `liffBooking`/`liffManage` namespaces |
+| Booking/manage LIFF page copy (loading/error/confirm-shortcut text) | `apps/techmirai-web/src/messages/{en,ja}.json` under the `liffBooking`/`liffManage` namespaces |
 | Which webhook events are handled | `packages/cms-core/src/line/webhook-service.ts` — currently only `follow`/`unfollow` are dispatched; `message`/`postback`/rich-menu-tap events are explicitly out of scope today (stated directly in that file's own comment) |
 | How a notification picks LINE vs. email | `resolveNotificationChannel` (notifications module) — the one shared seam; do not add a second, ad hoc `if (customer.lineUserId)` check anywhere else |
 | The cancellation cutoff window shown in the LIFF manage page | `site.config.ts` → `booking.cancellationCutoffHours` (shared with the web manage page) |

@@ -7,7 +7,7 @@ export interface RateLimitResult {
  * Backend-agnostic rate limiter contract. checkReserveRateLimit() below is
  * wired to the in-memory implementation by default; swapping in a
  * shared-store implementation (e.g. an Upstash-backed limiter, matching
- * apps/clinic-demo/src/lib/rate-limit.ts's approach for contact forms) is a
+ * apps/techmirai-web/src/lib/rate-limit.ts's approach for contact forms) is a
  * change to that one wiring point, not to any call site.
  */
 export interface RateLimiter {

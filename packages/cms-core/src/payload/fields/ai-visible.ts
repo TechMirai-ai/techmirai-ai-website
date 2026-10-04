@@ -6,7 +6,6 @@ export const aiVisibleField: Field = {
   label: {
     en: 'Include in AI corpus',
     ja: 'AIコーパスに含める',
-    bn: 'AI কর্পাসে অন্তর্ভুক্ত করুন',
   },
   defaultValue: true,
   admin: {

@@ -24,7 +24,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  apps/clinic-demo:
+  apps/techmirai-web:
     dependencies:
       '@line/liff':
         specifier: ^2.30.0
@@ -2682,9 +2682,6 @@ packages:
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
 
-  clinic-demo@file:apps/clinic-demo:
-    resolution: {directory: apps/clinic-demo, type: directory}
-
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -4381,6 +4378,9 @@ packages:
   tapable@2.3.3:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
+
+  techmirai-web@file:apps/techmirai-web:
+    resolution: {directory: apps/techmirai-web, type: directory}
 
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
@@ -7710,84 +7710,6 @@ snapshots:
 
   client-only@0.0.1: {}
 
-  clinic-demo@file:apps/clinic-demo(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31):
-    dependencies:
-      '@line/liff': 2.30.0
-      '@payloadcms/db-postgres': 3.85.0(@libsql/client@0.14.0)(@upstash/redis@1.38.0)(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))
-      '@payloadcms/db-sqlite': 3.84.1(@types/pg@8.20.0)(@upstash/redis@1.38.0)(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(pg@8.20.0)
-      '@payloadcms/email-resend': 3.85.0(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))
-      '@payloadcms/next': 3.85.0(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-      '@payloadcms/richtext-lexical': 3.85.0(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@payloadcms/next@3.85.0(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/react@19.2.16)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(yjs@13.6.31)
-      '@payloadcms/storage-s3': 3.85.0(@types/react@19.2.16)(monaco-editor@0.55.1)(next@15.5.19(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-      '@techmirai/cms-core': link:packages/cms-core
-      '@upstash/ratelimit': 2.0.8(@upstash/redis@1.38.0)
-      '@upstash/redis': 1.38.0
-      '@vercel/functions': 3.7.7(@aws-sdk/credential-provider-web-identity@3.972.48)(ws@8.21.0)
-      framer-motion: 11.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      fuse.js: 7.5.0
-      lucide-react: 1.17.0(react@19.2.7)
-      next: 15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4)
-      next-intl: 3.26.5(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(react@19.2.7)
-      payload: 3.85.0(graphql@16.14.1)(typescript@6.0.3)
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-flag-icons: 1.0.6(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31)
-      resend: 6.18.1
-      tailwindcss: 4.3.0
-      zod: 4.4.3
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@aws-sdk/credential-provider-web-identity'
-      - '@babel/core'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@emotion/is-prop-valid'
-      - '@faceless-ui/modal'
-      - '@faceless-ui/scroll-info'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@playwright/test'
-      - '@prisma/client'
-      - '@react-email/render'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/react'
-      - '@types/sql.js'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - babel-plugin-macros
-      - babel-plugin-react-compiler
-      - better-sqlite3
-      - bufferutil
-      - bun-types
-      - debug
-      - expo-sqlite
-      - gel
-      - graphql
-      - knex
-      - kysely
-      - monaco-editor
-      - mysql2
-      - pg
-      - pg-native
-      - postgres
-      - prisma
-      - rollup
-      - sass
-      - sql.js
-      - sqlite3
-      - supports-color
-      - tslib
-      - typescript
-      - utf-8-validate
-      - ws
-      - yjs
-
   clsx@2.1.1: {}
 
   colorette@2.0.20: {}
@@ -9297,7 +9219,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      react-flag-icons: clinic-demo@file:apps/clinic-demo(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31)
+      react-flag-icons: techmirai-web@file:apps/techmirai-web(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@aws-sdk/credential-provider-web-identity'
@@ -9657,6 +9579,85 @@ snapshots:
   tailwindcss@4.3.0: {}
 
   tapable@2.3.3: {}
+
+  techmirai-web@file:apps/techmirai-web(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31):
+    dependencies:
+      '@line/liff': 2.30.0
+      '@next/env': 15.5.19
+      '@payloadcms/db-postgres': 3.85.0(@libsql/client@0.14.0)(@upstash/redis@1.38.0)(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))
+      '@payloadcms/db-sqlite': 3.84.1(@types/pg@8.20.0)(@upstash/redis@1.38.0)(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(pg@8.20.0)
+      '@payloadcms/email-resend': 3.85.0(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))
+      '@payloadcms/next': 3.85.0(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@payloadcms/richtext-lexical': 3.85.0(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@payloadcms/next@3.85.0(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/react@19.2.16)(monaco-editor@0.55.1)(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(yjs@13.6.31)
+      '@payloadcms/storage-s3': 3.85.0(@types/react@19.2.16)(monaco-editor@0.55.1)(next@15.5.19(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(payload@3.85.0(graphql@16.14.1)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@techmirai/cms-core': link:packages/cms-core
+      '@upstash/ratelimit': 2.0.8(@upstash/redis@1.38.0)
+      '@upstash/redis': 1.38.0
+      '@vercel/functions': 3.7.7(@aws-sdk/credential-provider-web-identity@3.972.48)(ws@8.21.0)
+      framer-motion: 11.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      fuse.js: 7.5.0
+      lucide-react: 1.17.0(react@19.2.7)
+      next: 15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4)
+      next-intl: 3.26.5(next@15.5.19(@babel/core@7.29.7)(@playwright/test@1.62.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.77.4))(react@19.2.7)
+      payload: 3.85.0(graphql@16.14.1)(typescript@6.0.3)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      react-flag-icons: 1.0.6(@aws-sdk/credential-provider-web-identity@3.972.48)(@faceless-ui/modal@3.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@libsql/client@0.14.0)(@playwright/test@1.62.1)(@types/pg@8.20.0)(@types/react@19.2.16)(graphql@16.14.1)(monaco-editor@0.55.1)(pg@8.20.0)(rollup@4.61.1)(sass@1.77.4)(tslib@2.8.1)(typescript@6.0.3)(ws@8.21.0)(yjs@13.6.31)
+      resend: 6.18.1
+      tailwindcss: 4.3.0
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - '@aws-sdk/client-rds-data'
+      - '@aws-sdk/credential-provider-web-identity'
+      - '@babel/core'
+      - '@cloudflare/workers-types'
+      - '@electric-sql/pglite'
+      - '@emotion/is-prop-valid'
+      - '@faceless-ui/modal'
+      - '@faceless-ui/scroll-info'
+      - '@libsql/client'
+      - '@libsql/client-wasm'
+      - '@neondatabase/serverless'
+      - '@op-engineering/op-sqlite'
+      - '@opentelemetry/api'
+      - '@planetscale/database'
+      - '@playwright/test'
+      - '@prisma/client'
+      - '@react-email/render'
+      - '@tidbcloud/serverless'
+      - '@types/better-sqlite3'
+      - '@types/pg'
+      - '@types/react'
+      - '@types/sql.js'
+      - '@vercel/postgres'
+      - '@xata.io/client'
+      - babel-plugin-macros
+      - babel-plugin-react-compiler
+      - better-sqlite3
+      - bufferutil
+      - bun-types
+      - debug
+      - expo-sqlite
+      - gel
+      - graphql
+      - knex
+      - kysely
+      - monaco-editor
+      - mysql2
+      - pg
+      - pg-native
+      - postgres
+      - prisma
+      - rollup
+      - sass
+      - sql.js
+      - sqlite3
+      - supports-color
+      - tslib
+      - typescript
+      - utf-8-validate
+      - ws
+      - yjs
 
   term-size@2.2.1: {}
 

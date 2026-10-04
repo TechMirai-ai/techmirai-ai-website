@@ -1,7 +1,10 @@
 # Architecture
 
-This document describes `clinic-demo-standalone` as it actually exists in this
-repository. It was written by reading the source directly (package manifests,
+This document describes the shared engine as it existed in `clinic-demo-standalone`, the
+template this repository (`techmirai-ai-website`) was cloned from in Pack-1. A few specifics
+below (the app folder's name, the clinic vertical being switched on) have since changed in this
+repo during Pack-2 — noted inline where it matters. It was written by reading the source
+directly (package manifests,
 `site.config.ts`, `payload.config.ts`, the Payload collection/block/global
 definitions, and the seed scripts) rather than from prior documentation.
 Anything the author could not verify by reading the code is flagged explicitly
@@ -35,7 +38,7 @@ manifests — read directly, not assumed.
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Framework | **Next.js 15** (`^15.3.9`) | App Router, under `apps/clinic-demo/src/app` |
+| Framework | **Next.js 15** (`^15.3.9`) | App Router, under `apps/techmirai-web/src/app` |
 | CMS | **Payload CMS 3** (`^3.84.1`) | Headless, mounted inside the Next app via `@payloadcms/next` |
 | UI runtime | **React 19.2.0** | |
 | Database (local dev) | **SQLite** via `@payloadcms/db-sqlite` | File at `.data/local.db` (repo root), selected automatically — see below |
@@ -52,36 +55,37 @@ manifests — read directly, not assumed.
 
 ### Locales actually configured
 
-Confirmed in `apps/clinic-demo/site.config.ts`:
+Confirmed in `apps/techmirai-web/site.config.ts` (as of Pack-2/D1 — this subsection originally
+described the inherited `clinic-demo-standalone` template, which had a third, Bengali locale;
+D1 removed Bengali completely, so this now reflects the current, corrected state):
 
 ```ts
-locales: { enabled: ['en', 'ja', 'bn'], default: 'ja', direction: { en: 'ltr', ja: 'ltr', bn: 'ltr' } }
+locales: { enabled: ['ja', 'en'], default: 'ja', direction: { en: 'ltr', ja: 'ltr' } }
 ```
 
-Japanese (default), English, and Bengali — all left-to-right. Message
-catalogs exist at both `apps/clinic-demo/src/messages/{en,ja,bn}.json` and
-`packages/cms-core/src/i18n/messages/{en,ja,bn}.json` and are fully translated
-(no missing or English-fallback keys in the `ja` catalogs, verified by diffing
-against `en`). Locale routing uses `localePrefix: 'as-needed'` and
-`localeDetection: false` (`src/i18n/routing.ts`), so the default locale
-(`ja`) is served unprefixed at `/`, `/en` and `/bn` are prefixed, and the
-browser's `Accept-Language` header is ignored.
+Japanese (default) and English — both left-to-right. Message catalogs exist at both
+`apps/techmirai-web/src/messages/{en,ja}.json` and
+`packages/cms-core/src/i18n/messages/{en,ja}.json` and are fully translated (no missing or
+English-fallback keys in the `ja` catalogs, verified by diffing against `en`). Locale routing
+uses `localePrefix: 'as-needed'` and `localeDetection: false` (`src/i18n/routing.ts`), so the
+default locale (`ja`) is served unprefixed at `/`, `/en` is prefixed, and the browser's
+`Accept-Language` header is ignored.
 
 **Seeded CMS content is still English-only.** The message catalogs above are
 fully translated, but `src/seed/demo/*` (the placeholder-content seed run via
 `pnpm seed:demo`) writes English "sample"/placeholder text as the `ja`-locale
-value for every collection and page it seeds (pages, services, doctors,
-treatments, team, news, blog, FAQs, testimonials, downloads, footer, etc.).
-It writes to `locale: 'ja'` specifically so Payload's locale fallback
-(`fallback: true`, `defaultLocale: 'ja'`) still resolves `en`/`bn` requests to
-real data instead of blank fields — but the underlying text itself has not
-been translated. A real Japanese content pass is required before this seed
-data represents anything beyond a structural placeholder.
+value for every collection and page it seeds (pages, services, team, news, blog, FAQs,
+testimonials, downloads, footer, etc. — no longer doctors/treatments, which D1 removed along
+with the clinic vertical). It writes to `locale: 'ja'` specifically so Payload's locale
+fallback (`fallback: true`, `defaultLocale: 'ja'`) still resolves `en` requests to real data
+instead of blank fields — but the underlying text itself has not been translated. A real
+Japanese content pass is required before this seed data represents anything beyond a
+structural placeholder.
 
 ## 3. Project Structure
 
 ```
-apps/clinic-demo/            # the deployable Next.js application (the "vertical instance")
+apps/techmirai-web/            # the deployable Next.js application (the "vertical instance")
   src/app/
     (frontend)/[locale]/...  # public site routes (locale-prefixed via next-intl)
     (payload)/admin/...      # Payload's built-in admin UI, mounted inside the Next app
@@ -124,10 +128,11 @@ model for the remaining ~10%:
   gated in exactly two places: `config-factory.ts` (collections/globals) and
   `blocks/registry.tsx` + `payload/collections/pages.ts` (`buildAvailableBlocks`,
   for page-builder blocks).
-- This app (`clinic-demo`) only turns on `verticals.clinic`. The
-  `verticals.recruitment` code exists in the package and typechecks, but its
-  collections, globals, and blocks are never registered in this app's Payload
-  config, and its seed data is never created.
+- This app (`techmirai-web`) originally only turned on `verticals.clinic` (inherited from the
+  `clinic-demo-standalone` template). As of Pack-2/D1, both `verticals.clinic` and
+  `verticals.recruitment` are off. Both verticals' code still exists in the package and
+  typechecks either way — neither's collections, globals, or blocks are registered in this
+  app's Payload config, and neither's seed data is created.
 
 ## 4. Data Model
 
@@ -259,7 +264,7 @@ registered for this app since `verticals.recruitment` is off):
 
 ## 6. Configuration
 
-`apps/clinic-demo/site.config.ts` is the **single source of truth** for this
+`apps/techmirai-web/site.config.ts` is the **single source of truth** for this
 app instance: branding (name, tagline, domain, colors, typography), enabled
 locales, feature flags, vertical flags, nav/social links, contact details,
 form routing, legal page slugs, SEO defaults, and third-party integration
@@ -333,7 +338,7 @@ a real business decision, respectively.
 
 ### Booking provider URL (real provider required)
 
-- **Location:** `apps/clinic-demo/site.config.ts`,
+- **Location:** `apps/techmirai-web/site.config.ts`,
   `integrations.bookingProviderUrl`, currently `'https://example.com/book-placeholder'`.
 - A `// TODO` comment directly above it in `site.config.ts` says: "replace
   with real booking provider before real client launch."
@@ -344,7 +349,7 @@ a real business decision, respectively.
 ### Other placeholders noticed while reading (not part of the two above, flagged for completeness)
 
 - `site.config.ts` → `nav.socialLinks` all point at
-  `*-clinic-demo-placeholder` handles on facebook/instagram/youtube/linkedin.
+  `*-sakura-sekkotsu-placeholder` handles on facebook/instagram/youtube/linkedin.
 - `site.config.ts` → `contact.mapEmbedUrl` is a generic "Tokyo Station"
   Google Maps embed, not a real clinic address.
 
@@ -352,16 +357,16 @@ a real business decision, respectively.
 
 ```bash
 pnpm install                 # installs the whole workspace (apps/* + packages/*)
-# set up apps/clinic-demo/.env.local (gitignored — no committed .env.example exists in this repo)
-pnpm dev                     # turbo dev → runs `next dev` for apps/clinic-demo
+# set up apps/techmirai-web/.env.local (gitignored — no committed .env.example exists in this repo)
+pnpm dev                     # turbo dev → runs `next dev` for apps/techmirai-web
 pnpm seed:demo               # populates every base collection with generic placeholder content
 ```
 
 `.env.local` (as currently configured for this checkout) points
 `DATABASE_URI` at `file:../../.data/local.db` — i.e. a SQLite file that lives
-at the **monorepo root**, not inside `apps/clinic-demo/`.
+at the **monorepo root**, not inside `apps/techmirai-web/`.
 
-**Why `.data/local.db` lives outside `apps/clinic-demo/` — do not move it back.**
+**Why `.data/local.db` lives outside `apps/techmirai-web/` — do not move it back.**
 Next's dev server file watcher watches the app's project directory (and, by
 extension, anything `next.config.ts`'s `transpilePackages` pulls in) for
 source changes and triggers a recompile/reload on any change it detects.
@@ -371,10 +376,10 @@ reads — looks like a filesystem change. If the `.db` file sits inside the
 watched app directory, the dev server treats every database write as a
 source-code change and enters a recompile/reload loop, in the worst case
 making the app effectively unusable in dev. Putting the database file at the
-repo root under `.data/`, entirely outside `apps/clinic-demo/`, removes it
+repo root under `.data/`, entirely outside `apps/techmirai-web/`, removes it
 from the watched tree and stops this loop. `local.db` and `.data` are both
 listed in the root `.gitignore`. If a future contributor "cleans this up" by
-moving `local.db` back under `apps/clinic-demo/`, the reload loop will return.
+moving `local.db` back under `apps/techmirai-web/`, the reload loop will return.
 
 `payload.config.ts` picks the database adapter automatically based on the
 shape of `DATABASE_URI` — any value starting with `file:` or ending in `.db`
@@ -408,7 +413,7 @@ state machine instead of a component:
   and the React UI (`ui/`). Exposed to the app via three subpath exports on
   `@techmirai/cms-core` (see its `package.json` `exports` map): `./reception`,
   `./reception/ai`, `./reception/ui`.
-- **`apps/clinic-demo/src/app/api/reception/ai/route.ts`** is the only
+- **`apps/techmirai-web/src/app/api/reception/ai/route.ts`** is the only
   server route. The FSM itself runs client-side (`ui/useReceptionEngine.ts`
   drives `packages/reception-engine`'s `advance()` in the browser); only the
   Groq call needs a server round-trip, to keep `GROQ_API_KEY` off the
@@ -491,7 +496,7 @@ allowlist (not a per-record opt-in flag), trimmed to a 2600-token budget in
 priority order `faq > service > page > team > company` — FAQ content is
 never trimmed before other sources.
 
-`apps/clinic-demo/src/lib/rate-limit.ts` provides a shared sliding-window
+`apps/techmirai-web/src/lib/rate-limit.ts` provides a shared sliding-window
 limiter (5 requests / 60s / IP), Upstash Redis-backed when
 `UPSTASH_REDIS_REST_URL`/`_TOKEN` are set, else an in-memory `Map` (single
 process only — does not coordinate across serverless instances). The
@@ -541,7 +546,7 @@ FAQ resolution path for the reception widget (`CLINIC_FAQ_SLUGS`,
 `resolveClinicFaqAnswers`, a live `faqs` Payload query at request time) "has
 been retired," while noting the `faqs` Payload collection itself, and the
 site's separate public `/faq` page built on it, were deliberately kept.
-Confirmed independently in `apps/clinic-demo/src/seed/demo/index.ts`:
+Confirmed independently in `apps/techmirai-web/src/seed/demo/index.ts`:
 `seedDemoFAQs` (writes to the `faqs` collection) and `seedDemoFAQPage` are
 still both called. **Net effect:** the `faqs` collection (§4's data model)
 and the public `/faq` page are unaffected, still CMS-backed, and edited
@@ -560,8 +565,8 @@ without checking first.
 ## 11. Seed Safety Mechanism
 
 `pnpm seed:demo` is destructive — it clears existing demo-tagged content
-before reseeding — so `apps/clinic-demo/src/seed/demo/index.ts` (the
-orchestrator) and `apps/clinic-demo/src/seed/demo/lib/clear.ts` (the confirm
+before reseeding — so `apps/techmirai-web/src/seed/demo/index.ts` (the
+orchestrator) and `apps/techmirai-web/src/seed/demo/lib/clear.ts` (the confirm
 gate) enforce four independent guards, checked in this order, before Payload
 is even initialized:
 
@@ -590,7 +595,7 @@ is even initialized:
    downloads/team; plus demo testimonials/gallery/events/media) and exits
    without touching the database.
 
-`pnpm seed` (real-content seeding, `apps/clinic-demo/src/seed/index.ts`) is
+`pnpm seed` (real-content seeding, `apps/techmirai-web/src/seed/index.ts`) is
 currently a stub and is not gated by this mechanism (there's nothing
 destructive in it yet). `pnpm seed:booking` is a separate script gated only
 by refusing to run against SQLite (see §8's Postgres-vs-SQLite note) — it is
@@ -600,7 +605,7 @@ and safe to re-run.
 ## 12. Deployment
 
 Based on what production wiring exists in the code (env vars discovered by
-grepping `process.env` usage across `apps/clinic-demo` and `packages/cms-core`):
+grepping `process.env` usage across `apps/techmirai-web` and `packages/cms-core`):
 
 - **Database:** Postgres, via `@payloadcms/db-postgres`, selected automatically
   once `DATABASE_URI` is a real Postgres connection string. `payload.config.ts`
@@ -614,7 +619,7 @@ grepping `process.env` usage across `apps/clinic-demo` and `packages/cms-core`):
   (`public/media`), which is **not** durable across most hosting platforms'
   deploys — flagged as something to confirm is genuinely acceptable for
   whatever production target is chosen, or R2 must be configured.
-- **Environment variables:** `apps/clinic-demo/.env.example` is now
+- **Environment variables:** `apps/techmirai-web/.env.example` is now
   committed and documents every variable the app reads, grouped by purpose
   with required-vs-optional called out inline — cross-check against that
   file directly rather than this list. Notably, beyond the database/storage/

@@ -79,7 +79,7 @@ describe('handleReceptionAiRequest — input validation', () => {
     ['a null body (unparseable request)', null],
     ['a missing question', { locale: 'ja' }],
     ['an empty question', { question: '   ', locale: 'ja' }],
-    ['an unsupported locale', { question: 'hello', locale: 'bn' }],
+    ['an unsupported locale', { question: 'hello', locale: 'fr' }],
     ['a non-string question', { question: 42, locale: 'en' }],
     ['an over-long question', { question: 'あ'.repeat(501), locale: 'ja' }],
   ])('rejects %s with 400 and no spend', async (_label, body) => {

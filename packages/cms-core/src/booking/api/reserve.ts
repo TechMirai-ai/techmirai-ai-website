@@ -80,7 +80,7 @@ interface ExistingCustomerDoc {
  * could hit the identical phone collision before this with zero guard).
  *
  * `verifiedLineUserId` MUST already be verified server-side (see
- * apps/clinic-demo's reserve route, which calls
+ * apps/techmirai-web's reserve route, which calls
  * @techmirai/cms-core/line's verifyLineIdToken before this) — this
  * function trusts it completely, never re-derives or re-checks it.
  *

@@ -59,7 +59,7 @@ describe('buildStaticFaqAnswers', () => {
   })
 
   it('falls back to English for a non-ja locale', () => {
-    const answers = buildStaticFaqAnswers('bn')
+    const answers = buildStaticFaqAnswers('fr')
     expect(answers['faq.clinic-parking']).toBe(buildStaticFaqAnswers('en')['faq.clinic-parking'])
   })
 })

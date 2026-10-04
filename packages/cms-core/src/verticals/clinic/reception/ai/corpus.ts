@@ -2,7 +2,7 @@
 // The grounding corpus.
 //
 // This is the compilation logic that used to live inside
-// apps/clinic-demo/src/app/api/ai/corpus/route.ts — a GET route built for an
+// apps/techmirai-web/src/app/api/ai/corpus/route.ts — a GET route built for an
 // external consumer to pull over HTTP with a bearer token. Grounding an
 // in-process answer through that route would mean the app calling itself over
 // the network and holding a secret to read its own database, so the logic is

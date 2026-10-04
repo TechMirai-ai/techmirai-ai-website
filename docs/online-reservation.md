@@ -72,7 +72,7 @@ If this updates zero rows, the slot was already full (or closed) and the
 transaction rolls back with a `SlotUnavailableError` — no appointment row is
 ever created for a slot that wasn't actually available. This is why booking
 **requires Postgres, not SQLite**, even in local dev — SQLite doesn't give
-this system real transactions (see `apps/clinic-demo/src/seed/booking.ts`'s
+this system real transactions (see `apps/techmirai-web/src/seed/booking.ts`'s
 own doc comment, and `docs/DEPLOY-NEW-CLIENT.md` §4).
 
 **Idempotency** is enforced the same way, not with an in-memory check: a
@@ -126,8 +126,8 @@ could offer.
 
 ### Entry points
 
-- **Direct:** `/[locale]/booking` (`apps/clinic-demo/src/app/(frontend)/[locale]/booking/page.tsx`) mounts `BookingFlow` with no `initialVisitType`/`initialCustomer` — the full 6-step flow.
-- **From LINE:** `apps/clinic-demo/src/app/(liff)/[locale]/line/booking/` mounts the same `BookingFlow`, sometimes pre-seeded with an identity-verified customer (see the companion doc).
+- **Direct:** `/[locale]/booking` (`apps/techmirai-web/src/app/(frontend)/[locale]/booking/page.tsx`) mounts `BookingFlow` with no `initialVisitType`/`initialCustomer` — the full 6-step flow.
+- **From LINE:** `apps/techmirai-web/src/app/(liff)/[locale]/line/booking/` mounts the same `BookingFlow`, sometimes pre-seeded with an identity-verified customer (see the companion doc).
 - **The homepage CTA is currently broken — see §5.** There is no working "book now" link from the homepage as of this writing.
 
 ### The 6 steps (`packages/cms-core/src/booking/ui/`)
@@ -148,7 +148,7 @@ whole flow.
 ### What happens on submit
 
 `ConfirmationStep`'s confirm action calls `POST /api/v1/booking/reserve`
-(`apps/clinic-demo/src/app/api/v1/booking/reserve/route.ts` →
+(`apps/techmirai-web/src/app/api/v1/booking/reserve/route.ts` →
 `packages/cms-core/src/booking/api/reserve.ts`):
 
 1. **Validate** the request against `schemas.ts`'s Zod schema.
@@ -164,7 +164,7 @@ whole flow.
 6. **Dispatch notifications** — `packages/cms-core/src/notifications/` queues
    a confirmation email via the `EmailResendChannel`; a reminder is sent
    later by a scheduled batch job
-   (`apps/clinic-demo/src/app/api/cron/notifications/route.ts`), not at
+   (`apps/techmirai-web/src/app/api/cron/notifications/route.ts`), not at
    booking time.
 7. Returns a `confirmationCode` to the client, which the UI shows on
    `SuccessStep`.
@@ -228,7 +228,7 @@ guarantees around it.
 
 ```bash
 pnpm e2e:install   # once, installs the Playwright browser
-pnpm e2e           # apps/clinic-demo/e2e/booking-journey.spec.ts + manage-appointment.spec.ts
+pnpm e2e           # apps/techmirai-web/e2e/booking-journey.spec.ts + manage-appointment.spec.ts
 ```
 
 The booking engine also has extensive integration tests under
@@ -252,7 +252,7 @@ truth, shared by both client-side (pre-submit) and server-side
   reservation button (`hero/component.tsx`) falls back to a hardcoded
   default of `{ label: 'Online Reservation', href: '#' }` whenever the
   seeded content doesn't supply a `reservationButton` — and the current
-  homepage seed (`apps/clinic-demo/src/seed/demo/pages/home.ts`) doesn't
+  homepage seed (`apps/techmirai-web/src/seed/demo/pages/home.ts`) doesn't
   set one. Separately, the `booking-cta` block (which *does* correctly wire
   itself to `siteConfig.integrations.bookingProviderUrl` — still a
   placeholder value, `https://example.com/book-placeholder`) isn't seeded

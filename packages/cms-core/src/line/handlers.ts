@@ -5,7 +5,7 @@ import type { LineFollowEvent, LineTextMessage, LineUnfollowEvent } from './type
 
 export interface FollowHandlerDeps {
   sendReply: (replyToken: string, messages: LineTextMessage[]) => Promise<void>
-  /** Pre-rendered bilingual (ja/en) greeting text — see apps/clinic-demo's
+  /** Pre-rendered bilingual (ja/en) greeting text — see apps/techmirai-web's
    * lib/line.ts, which sources this from site.config.ts's existing
    * reception.greeting copy. */
   greetingText: string

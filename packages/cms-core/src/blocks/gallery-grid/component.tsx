@@ -13,7 +13,6 @@ import { GalleryAlbumsBlock } from './GalleryAlbumsBlock'
 const labels: Record<string, string> = {
   en: 'Our Journey',
   ja: '私たちの歩み',
-  bn: 'আমাদের পথচলা',
 }
 
 // Cinematic slow pan and zoom fade transition configuration

@@ -98,7 +98,7 @@ comment:
 > which proxies to an external agent service that does not exist for this
 > deployment."
 
-and the same sentence, near-verbatim, in `apps/clinic-demo/src/app/api/
+and the same sentence, near-verbatim, in `apps/techmirai-web/src/app/api/
 reception/ai/route.ts`'s own header comment. Instead, `ai/groq.ts` makes a
 direct `fetch` POST to Groq's own OpenAI-compatible endpoint — no SDK, no
 intermediate service, no dependency on infrastructure that was never stood
@@ -180,7 +180,7 @@ narrative version):
    - No confident match → the resolver returns `{ kind: 'ai' }`, and the
      graph routes to `faq.ai`.
 5. **The AI-fallback node triggers a real request** to
-   `apps/clinic-demo/src/app/api/reception/ai/route.ts` — the only server
+   `apps/techmirai-web/src/app/api/reception/ai/route.ts` — the only server
    route in this whole system, because it's the only step needing the Groq
    API key kept off the client. `ai/handler.ts` runs, in order: feature
    gate → rate limit (5 req/60s/IP, its own bucket, separate from the
@@ -389,7 +389,7 @@ plan against what actually shipped:
    AI-route test, one Playwright E2E happy path. All of this exists today
    (`faq-matcher.test.ts`, `triage.test.ts`, `screening.test.ts`,
    `handler.test.ts`, `groq.test.ts`, `prompt.test.ts`, `corpus.test.ts`,
-   `answer.test.ts`, plus `apps/clinic-demo/e2e/reception-journey.spec.ts`).
+   `answer.test.ts`, plus `apps/techmirai-web/e2e/reception-journey.spec.ts`).
 
 ### What the commit history actually shows
 

@@ -1,4 +1,4 @@
-# Clinic Demo — Project Overview
+# TechMirai AI Website — Project Overview
 
 This is the starting point for anyone new to this project. It's a map, not
 a manual — a few minutes of reading to understand the whole project's
@@ -17,7 +17,7 @@ split into two layers:
   that provides generic CMS building blocks (pages, blog, news, team, FAQs,
   contact forms), driven by a config object. It has no built-in idea of
   what a "clinic" is.
-- **`apps/clinic-demo`** — one concrete website built on that engine, with
+- **`apps/techmirai-web`** — one concrete website built on that engine, with
   clinic-specific functionality (doctors, treatments, departments, an
   in-house booking system, a LINE integration, and an AI-assisted
   reception widget) layered on top.
@@ -25,7 +25,7 @@ split into two layers:
 If you're deploying this for a **real client**, you scaffold a new repo
 from this one and configure it for that client — see
 [docs/DEPLOY-NEW-CLIENT.md](docs/DEPLOY-NEW-CLIENT.md). The internal folder
-names (`apps/clinic-demo`, `packages/cms-core`) stay the same across every
+names (`apps/techmirai-web`, `packages/cms-core`) stay the same across every
 client repo; only config and content change.
 
 ---
@@ -70,12 +70,12 @@ how to develop it.
 ## 4. Monorepo structure
 
 ```
-apps/clinic-demo/           # the deployable Next.js app — routes, config, seed scripts
+apps/techmirai-web/           # the deployable Next.js app — routes, config, seed scripts
 packages/cms-core/          # the shared engine — Payload config, blocks, collections
 packages/reception-engine/  # generic, framework-agnostic state-machine engine
 ```
 
-Inside `apps/clinic-demo`, `site.config.ts` is the single source of truth
+Inside `apps/techmirai-web`, `site.config.ts` is the single source of truth
 for this instance's branding and feature flags. Inside `packages/cms-core`,
 generic engine code lives directly under `src/`, and clinic-specific code
 lives under `src/verticals/clinic/`. Beyond that, prefer the feature docs
@@ -88,12 +88,12 @@ to the right file faster than guessing from folder names.
 
 ```bash
 pnpm install
-cp apps/clinic-demo/.env.example apps/clinic-demo/.env.local
+cp apps/techmirai-web/.env.example apps/techmirai-web/.env.local
 pnpm dev
 ```
 
 Visit `http://localhost:3000` for the site, `http://localhost:3000/admin`
-for the CMS. `apps/clinic-demo/.env.example` documents every environment
+for the CMS. `apps/techmirai-web/.env.example` documents every environment
 variable the app reads; at minimum you'll want `DATABASE_URI` and
 `PAYLOAD_SECRET` set to see the site running.
 

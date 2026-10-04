@@ -30,7 +30,7 @@ read (C1 item 1).
 
 ## 3. Route map
 
-Current routes under `apps/clinic-demo/src/app/(frontend)/[locale]/`:
+Current routes under `apps/techmirai-web/src/app/(frontend)/[locale]/`:
 `/`, `/[slug]`, `/about/[slug]`, `/blog`, `/blog/[slug]`, `/booking`, `/booking/manage`,
 `/company`, `/contact`, `/gallery`, `/jobs`, `/jobs/[slug]`, `/news`, `/news/[slug]`,
 `/services`, `/services/[slug]`, `/team`, `/team/[slug]`.
@@ -48,13 +48,16 @@ at F2 planning time, not here.
 
 ## 5. Leftover inventory (quick grep counts, apps/ + packages/, excluding node_modules)
 
-- "sakura" (case-insensitive): 22 file hits
-- "sadiatec" (case-insensitive): 4 file hits
-- "clinic-demo" (code references, not the folder path itself): 24 file hits
-- `'bn'` (Bengali locale key): 4 file hits
-
-`[INCOMPLETE]` — exact file-by-file list and disposition (delete vs. rename vs. intentional)
-belongs to D1 (rename/locale cleanup), which will grep these again and resolve each hit.
+- "sakura" (case-insensitive): 22 file hits — `[INCOMPLETE]`, not yet resolved; belongs to a
+  later content pack, not D1.
+- "sadiatec" (case-insensitive): 4 file hits — `[INCOMPLETE]`, not yet resolved.
+- "clinic-demo": resolved by D1 — the app folder was renamed to `apps/techmirai-web` and every
+  path/comment reference updated; the handful of remaining hits (in `docs/WORK-ORDER.md`,
+  `docs/packs/PACK-1-CLONE.md`, `CLAUDE.md`, and some `*.example` test-fixture domains) are
+  intentionally out of scope — see D1's own report for the full justification.
+- `'bn'` (Bengali locale key): corrected count was 16 files (this note's original "4 file
+  hits" was an undercount from a quick grep, not the real scope) — all resolved by D1; Bengali
+  is now removed everywhere as a locale.
 
 ## 6. Placeholder register skeleton
 

@@ -63,7 +63,7 @@ const siteConfig = {
     services: true,
     team: true,
     company: true,
-    // Both TRUE, exactly as in apps/clinic-demo/site.config.ts — the point of
+    // Both TRUE, exactly as in apps/techmirai-web/site.config.ts — the point of
     // the exclusion is that it does not follow these flags.
     blog: true,
     news: true,

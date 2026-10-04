@@ -11,7 +11,7 @@ import type { LineCustomerLookupResponse } from './schemas'
  * customer by lineUserId".
  *
  * `verifiedLineUserId` MUST already be verified server-side (see
- * apps/clinic-demo's line-lookup route, which calls
+ * apps/techmirai-web's line-lookup route, which calls
  * @techmirai/cms-core/line's verifyLineIdToken before this).
  *
  * Returns the full registered record, including phone — the LIFF page
