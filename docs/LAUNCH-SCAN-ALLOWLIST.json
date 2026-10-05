@@ -1,0 +1,12 @@
+[
+  {
+    "_comment": "Template entry, NOT an active suppression: the case-study page this applies to does not exist in the repo yet (Pack-3). Kept here as a worked example of the allow-list's shape, per docs/WORK-ORDER.md Appendix B's own preamble example. Remove this _comment field and the 'NOT YET APPLICABLE' note once a real case-study page exists and this entry is actually load-bearing.",
+    "rule": "B4_WORDS_TO_AVOID",
+    "scope": "case-studies",
+    "locale": "ja",
+    "match": "完全",
+    "reason": "NOT YET APPLICABLE (case-study page not built yet). Appendix B's own worked example: the case study's Japanese for 'fully custom-coded' contains 完全 (perfect, complete), which is on the avoid list in other uses.",
+    "addedBy": "Jamal",
+    "date": "2026-10-05"
+  }
+]

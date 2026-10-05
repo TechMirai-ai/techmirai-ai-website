@@ -12,6 +12,7 @@
     "seed:booking": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/booking.ts",
     "db:apply-indexes": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-db-indexes.ts",
     "a11y": "tsx scripts/a11y-check.ts",
+    "launch-scan:pages": "tsx scripts/launch-scan-pages.ts",
     "e2e": "playwright test",
     "e2e:install": "playwright install chromium"
   },

@@ -1,5 +1,45 @@
 # Findings
 
+## 2026-10-05 — F1: normal preflight was already FAILING before F1, not just launch mode
+
+F1's own "Done when" line expects *"normal preflight passes"* (as the baseline, with only the
+new `--launch` mode expected to fail). Verified otherwise: running the unmodified, currently
+committed `scripts/preflight-check.mjs` (confirmed byte-identical output against the version
+before F1's `--launch` dispatch was added) already fails with 33 pre-existing issues — leftover
+`Sakura Osteopathic Clinic`/`さくら接骨院`/`sakura-sekkotsu`/`+81-3-5432-1188` strings scattered
+across `site.config.ts`, several `[locale]` pages, `src/seed/**`, and three `packages/cms-core`
+shared components (`hero/component.tsx`, `services-grid/component.tsx`,
+`payload/globals/header.ts`, `verticals/clinic/reception/faq-content.ts`). This is unrelated to
+F1's own changes (F1 only added the `--launch` code path; `runNormalChecks()` is byte-for-byte
+the old `main()`) and is consistent with Pack-3/4 not having run yet — the site still has
+extensive clinic seed content. No code change made — flagging only, per standing rule 13; F1's
+own scope is building the gate, not fixing what it (or the pre-existing normal check) finds.
+
+## 2026-10-05 — F1: `contact.address` wording doesn't match the Spec's literal bracket text
+
+`site.config.ts`'s `contact.address` reads `[Address you may publish]` (en) / `[掲載可能な住所]`
+(ja), set in Pack-2/D2. The Content Spec's literal wording (p.2-6, item 6) is `[one address you
+are allowed to publish]`. `docs/WORK-ORDER.md` Appendix A paraphrases it the same way the code
+does (`[address you may publish]`), which is likely where D2 got the wording from — but per
+CLAUDE.md rule 5 the Spec's own bracket text is the source of truth, not Appendix A's summary.
+Registered as `F1-06` in `docs/PLACEHOLDER-REGISTER.md` with this mismatch noted. No code
+change made — flagging only, per standing rule 13; it's already-committed D2 content, not F1's
+to rewrite unilaterally.
+
+## 2026-10-05 — F1: Appendix A's "found in later sections" items deliberately not registered yet
+
+`docs/WORK-ORDER.md` Appendix A lists 21 numbered items (Spec §1, pp.2-6) plus a "found in
+later sections" bullet list (timelines, integrations detail, pricing detail, security, founder
+message, team bios, company profile detail, technology table, booking, case-study detail, FAQ
+items F19/F20/F24/F25, blog bylines, chat answer C09). F1 registered all 21 numbered items
+(`F1-01`..`F1-21`) but deliberately did not add rows for the later-sections bullets: none of
+that content exists in the repo yet (Pack-3/4 haven't built those pages), F1's own Read list
+names only Spec p.2-6/p.11-14, and Appendix A itself frames that bullet list as "not
+exhaustive; Step C1 builds the full list." Each Pack-3/4 step that builds a page should add its
+own register row(s) when it creates the field — see the note left directly in
+`docs/PLACEHOLDER-REGISTER.md` above the F1 rows. No code change made — flagging only, per
+standing rule 13.
+
 ## 2026-10-04 — D1: `create-client-app.mjs` / `preflight-check.mjs` assume this repo is still the generic template
 
 `scripts/create-client-app.mjs` scaffolds a brand-new client repo from this one (via `git
