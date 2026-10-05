@@ -72,6 +72,105 @@ the ~25 shared UI primitives for WCAG correctness against the new accent is a la
 system task than "a handful of files," per `docs/WORK-ORDER.md` §1.4. Flagging for a future
 accessibility pass.
 
+## 2026-10-05 — E2: reception chat widget always greets in Japanese, ignores page locale (found during Checkpoint 4 prep)
+
+Verified in-browser on `/en`: the chat widget's teaser/greeting bubble shows the Japanese
+greeting (`こんにちは。TechMiraiのAI受付...`), not the English one defined in
+`site.config.ts`'s `reception.greeting.en`. Root cause in
+`packages/cms-core/src/verticals/clinic/reception/ui/ReceptionWidget.tsx:41`:
+```
+const initialLocale = locales[0] ?? 'ja'
+```
+`locales` here is the static `reception.locales` array from `site.config.ts` (`['ja', 'en']`,
+line ~197) — not the current route's locale. So `initialLocale` is always `'ja'`, regardless of
+whether the page is `/ja` or `/en`; `greeting[initialLocale]` (line 75) and the
+`ReceptionPanel`'s `initialLocale` prop (line 92) inherit the same wrong value. This is the
+exact failure mode `docs/packs/PACK-2-FOUNDATION.md`'s E2 step warned about by name: "Render it
+inside the locale provider so anything it mounts... has translation context. The clinic
+template once failed here." It has recurred — the widget is mounted without being passed (or
+without using) the actual page locale from the locale provider/route params.
+No code change made — flagging only, per standing rule 13; this is a generic engine bug in
+`packages/cms-core` (shared by all verticals, not TechMirai-specific content), so per CLAUDE.md
+rule 11 a fix belongs in `docs/ENGINE-FIXES.md` as its own small, separate change, not folded
+into this finding.
+
+## 2026-10-05 — D2/E1: leftover Sakura-clinic SEO title/description in `site.config.ts` (found during Checkpoint 4 prep)
+
+While capturing Checkpoint 4 screenshots, the browser tab title on `/` (ja) still read
+"さくら整骨院..." (old clinic name). Traced to `site.config.ts`:
+- `seo.titleTemplate` (line 154): `'%s | さくら接骨院 Sakura Osteopathic Clinic'` — appears in
+  every page's `<title>` tag via the template.
+- `seo.defaultDescription.en`/`.ja` (lines 156-157): full old-clinic marketing copy
+  ("Sakura Osteopathic Clinic is a neighborhood clinic in Setagaya, Tokyo...") used as the
+  default meta description site-wide.
+- Also noticed, lower severity: `forms.contactRecipient`/`forms.appointmentRecipient` (lines
+  143, 145) are `reception@sakura-sekkotsu.example` — already marked `// TODO: replace with the
+  client's real inbox before real client launch`, so this one is a known placeholder, not a
+  missed rename.
+
+Not caught by D1's "clinic-demo" string grep (different string: "さくら接骨院"/"Sakura
+Osteopathic Clinic", not "clinic-demo") or by D2's identity-constants work, since `seo.*` isn't
+one of the fields D2's plan named. No code change made — flagging only, per standing rule 13;
+needs a decision on what TechMirai's actual SEO title/description copy should be (Spec doesn't
+appear to give one directly), likely a `[TBD]`/placeholder-register entry rather than invented
+copy, per CLAUDE.md rule 5.
+
+## 2026-10-05 — E1: "AI受付" nav label identical in both locales — likely intentional, but inconsistent with the glossary (found during Checkpoint 4 prep)
+
+Verified by loading `/en` in a browser while gathering Checkpoint 4 screenshots: the first
+desktop nav item reads "AI受付" on both the Japanese and English header. Traced to
+`apps/techmirai-web/src/seed/demo/globals-header.ts:35`:
+```
+{ label: { en: 'AI受付', ja: 'AI受付' }, href: '/ai-reception' },
+```
+Initially looked like a missed translation (every other `navItems` entry has a distinct
+`en`/`ja` pair, e.g. `'Solutions'`/`'業種別'`), but `apps/techmirai-web/src/lib/glossary.ts:10`
+shows this is TechMirai's actual bilingual product name: `productFamily: { en: 'AI受付 (AI
+Reception)', ja: 'AI受付' }` — confirmed again by the chat-widget greeting
+(`site.config.ts` `reception.greeting.en`), which is Spec-quoted verbatim (Pack-2/E2, Content
+Spec §16.1) and also keeps "AI受付" untranslated inside the English sentence. So "AI受付" as a
+bare term in English is Spec-sanctioned branding, not leakage — but the nav label doesn't
+include the glossary's own `(AI Reception)` qualifier the way `productFamily` does, so the nav
+and the glossary disagree on the term's exact EN rendering. Flagging the inconsistency for a
+decision (should the EN nav show "AI受付" alone, or "AI受付 (AI Reception)" per the glossary?)
+rather than guessing — per CLAUDE.md rule 5/6 this repo doesn't invent or correct Spec copy
+unilaterally. No code change made — flagging only, per standing rule 13.
+
+**2026-10-05 update — Jamal's decision**: use "AI受付" alone for the EN navigation label,
+matching the actual Spec wording. Do not add "(AI Reception)" unless a later approved content
+decision explicitly requires it. No code change needed — the current `globals-header.ts:35`
+value (`en: 'AI受付'`) already matches this decision as-is.
+
+## 2026-10-05 — Checkpoint 4: header-behaviour decision signed off by Jamal
+
+Per `docs/packs/PACK-2-FOUNDATION.md` E1 ("Put this in the plan as a decision for Jamal and the
+Director, and wait for the answer") and the Checkpoint 4 requirement ("the header-behaviour
+decision"), Jamal has signed off the following as the approved Option A behavior for Pack-2:
+
+- The header remains visible/sticky/always available while scrolling (not "hidden until
+  scroll") — matching what `HeaderClient.tsx` (~line 169) already implements (`fixed`,
+  `translate-y-0 opacity-100`, no scroll listener).
+- Desktop navigation and the Solutions dropdown remain accessible at all times.
+- Mobile uses the sticky bottom action bar (`MobileMenu.tsx`), as already implemented.
+
+No code change required — the implementation already matched this decision; this entry is the
+recorded sign-off that `docs/packs/PACK-2-FOUNDATION.md`'s E1 "Done when" and Checkpoint 4
+both required. The dead `scrolled` prop in `MobileMenu.tsx` (declared, never used) remains a
+minor cleanup item, not addressed here since it isn't a correctness issue.
+
+**Other Checkpoint 4 open items — Jamal's decision**: the chat-widget locale bug (greeting
+always in Japanese, see the "E2: reception chat widget always greets in Japanese" entry below)
+and the leftover Sakura-clinic SEO title/description (see the "D2/E1: leftover Sakura-clinic
+SEO title/description" entry below) are **not** Pack-2 blockers. Both stay documented here and
+carry forward to the future step where they're in scope (the chat-widget bug to a
+`docs/ENGINE-FIXES.md` fix per CLAUDE.md rule 11; the SEO copy to Pack-3 content work). No
+unrelated fixes were made to close Pack-2.
+
+**Checkpoint 4 is signed off as of 2026-10-05.** Pack 2 is finished per
+`docs/packs/PACK-2-FOUNDATION.md`'s own closing line ("Pack 2 is finished when Checkpoint 4
+(after E2) is signed off and F3 is committed") once F3 is also committed — F1-F3 remain to be
+planned and executed.
+
 ## 2026-10-04 — D1: small pre-existing doc inaccuracy fixed in passing
 
 While re-running the "clinic-demo" grep sweep required by D1, found `ARCHITECTURE.md` claiming

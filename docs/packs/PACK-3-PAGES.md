@@ -4,7 +4,7 @@ Steps **G1 to G4, H1 to H3, I1 to I4**. The rulebook is `docs/WORK-ORDER.md`; do
 
 ## Before starting (Jamal)
 
-- [ ] Pack 2 is finished. Jamal has signed off Checkpoint 4 and has answered the header behaviour question.
+- [x] Pack 2 is finished. Jamal has signed off Checkpoint 4 and has answered the header behaviour question. (Signed off 2026-10-05 — see `docs/FINDINGS.md` "Checkpoint 4: header-behaviour decision signed off by Jamal". Note: F1-F3 still need to be planned/executed before Pack 2 is fully closed per `docs/packs/PACK-2-FOUNDATION.md`'s own closing line.)
 - [ ] Jamal knows that copy written from the Spec is a first load only. Haruka's Japanese review and the Director's sign-off on homepage, positioning and pricing happen before launch, not in these steps.
 
 **How to run a pack (every step, every time)**
