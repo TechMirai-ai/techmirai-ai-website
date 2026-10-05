@@ -181,6 +181,7 @@ const integrationsSchema = z.object({
   turnstileSiteKey: z.string().optional(),
   resendFromEmail: z.string().email(),
   bookingProviderUrl: z.string().optional(),
+  demoUrl: z.string().optional(),
   mapsApiKey: z.string().optional(),
   chatWidget: chatWidgetSchema.optional(),
 })

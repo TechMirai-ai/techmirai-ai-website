@@ -1,56 +1,90 @@
 import type { Payload } from 'payload'
+import siteConfig from '../../../site.config'
 
 /**
- * Seeds the Header global's phone button.
+ * Seeds the Header global's nav items, CTA button, and phone/LINE buttons.
  *
- * The Hero block config has no phone field of its own — the phone shown in the
- * hero (and in the mobile menu) is injected at render time from this global by
- * `resolveHeaderData()`. So this is where the doc's Hero-block phone number
- * belongs. Per Jamal's decision the Tokyo/Setagaya number is used everywhere,
- * NOT the Gifu number the doc's Hero section literally shows.
+ * Pack-2/E1: navItems/ctaButton now carry the real TechMirai navigation
+ * (Content Spec §4), written with `locale: 'all'` and `{en, ja}` label
+ * objects — the same localized-array-field pattern `seedDemoFooter` uses —
+ * since `navItems.label`/`children.label`/`ctaButton.label` are all
+ * `localized: true` in the schema. This replaces the clinic-era nav content
+ * that was previously hand-authored in the Payload admin UI and only existed
+ * in the dev DB (not reproducible from any file in this repo before this).
  *
- * Written against the `en` locale specifically. `phoneDisplay`/`phoneHref` are
- * NOT localized, so a single write updates them for every locale — but a
- * global update revalidates the whole document, and the `navItems` already in
- * this global carry labels only in `en` (they were authored before
- * `navItems.label` became `localized: true`). Writing against `ja` therefore
- * fails validation on those required, empty ja labels. Rather than invent
- * Japanese navigation labels the content doc says nothing about, this writes
- * the locale that validates and leaves the nav gap alone — it is called out in
- * the handover notes instead.
+ * The Hero block has no phone/nav field of its own — those are injected at
+ * render time from this global by `resolveHeaderData()` (see `page.tsx`'s
+ * hero block-data injection).
+ *
+ * Pack-2/D2: phoneDisplay/phoneHref and the LINE button's href read from
+ * site.config.ts (the single identity-constant source).
  */
-const CLINIC_PHONE_DISPLAY = '+81-3-5432-1188'
-const CLINIC_PHONE_HREF = 'tel:+81354321188'
-
-/**
- * The header global's `lineButton.href` was previously left at an unrelated
- * placeholder handle (@470vmlzv) — a second, inconsistent fake LINE URL
- * living alongside the one already established for this demo project (see
- * site.config.ts's reception.staffLineUrl and its "swap before launch"
- * comment). This reuses that same placeholder value so the whole project
- * points at one fake handle instead of two, without coupling the two
- * settings at runtime — the header's LINE button stays its own
- * independently CMS-configurable field, separate from reception's
- * site.config value.
- */
-const LINE_URL = 'https://line.me/R/ti/p/~nahidarahamanrupta'
-
 export async function seedDemoHeader(payload: Payload): Promise<void> {
-  await payload.updateGlobal({
+  const phone = siteConfig.contact.phone ?? ''
+
+  // locale:'all' is a Payload runtime feature not reflected in its TypeScript overloads
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const current = await (payload as any).findGlobal({ slug: 'header', locale: 'all', depth: 0 })
+
+  await (payload as any).updateGlobal({
     slug: 'header',
-    locale: 'en',
+    locale: 'all',
     data: {
+      ...current,
+      navItems: [
+        { label: { en: 'AI受付', ja: 'AI受付' }, href: '/ai-reception' },
+        {
+          label: { en: 'Solutions', ja: '業種別' },
+          href: '/solutions',
+          children: [
+            { label: { en: 'Clinics & treatment rooms', ja: 'クリニック・治療院' }, href: '/solutions/clinic' },
+            { label: { en: 'Beauty salons', ja: '美容サロン' }, href: '/solutions/beauty' },
+            { label: { en: 'Auto service & dealers', ja: '自動車整備・販売' }, href: '/solutions/automobile' },
+            { label: { en: 'Hotels & guesthouses', ja: 'ホテル・宿泊施設' }, href: '/solutions/hotel' },
+          ],
+        },
+        { label: { en: 'How It Works', ja: '仕組み' }, href: '/how-it-works' },
+        { label: { en: 'Integrations', ja: '連携' }, href: '/integrations' },
+        { label: { en: 'Pricing', ja: '料金' }, href: '/pricing' },
+        { label: { en: 'About', ja: '会社紹介' }, href: '/about' },
+        { label: { en: 'Technology', ja: 'AI開発' }, href: '/technology' },
+      ],
+      ctaButton: {
+        // label is written separately below — see the comment there.
+        href: '/assessment',
+      },
       phoneButton: {
-        phoneDisplay: CLINIC_PHONE_DISPLAY,
-        phoneHref: CLINIC_PHONE_HREF,
+        phoneDisplay: phone,
+        phoneHref: `tel:${phone}`,
         // The doc says nothing about these two localized labels, so they carry
         // the values the schema itself defaults them to rather than new copy.
         badgeLabel: 'Call Now',
         subLabel: 'Click to call us',
       },
       lineButton: {
-        href: LINE_URL,
+        href: siteConfig.reception.staffLineUrl ?? '',
       },
     },
   })
+
+  // ctaButton.label is a GROUP field's localized sub-field — unlike navItems'
+  // (an ARRAY field's localized sub-field, which the locale:'all' write above
+  // persists correctly), a locale:'all' write silently drops group-field
+  // localized values (confirmed by direct DB read: navItems[].label came
+  // back as {en,ja} correctly, ctaButton.label came back as {en: null}, no
+  // ja key at all). Logged in docs/ENGINE-FIXES.md. Workaround: write each
+  // locale's label separately, after navItems already has both locales
+  // filled so these single-locale updates don't fail the "empty required
+  // label" global validation that affected navItems historically.
+  await (payload as any).updateGlobal({
+    slug: 'header',
+    locale: 'en',
+    data: { ctaButton: { label: 'Free AI Website Assessment', href: '/assessment' } },
+  })
+  await (payload as any).updateGlobal({
+    slug: 'header',
+    locale: 'ja',
+    data: { ctaButton: { label: '無料AIホームページ診断', href: '/assessment' } },
+  })
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 }

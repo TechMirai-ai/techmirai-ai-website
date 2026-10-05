@@ -76,7 +76,9 @@ export function ReceptionWidget({
 
   return (
     <div
-      className="fixed bottom-5 right-5 z-[9999] flex flex-col items-end gap-3"
+      // Pack-2/E2: shifted up at phone width so it doesn't sit on top of
+      // the mobile sticky bottom bar HeaderClient.tsx added in E1.
+      className="fixed bottom-[72px] right-5 z-[9999] flex flex-col items-end gap-3 lg:bottom-5"
       style={{ ['--reception-accent' as string]: accentColor } as CSSProperties}
     >
       {render && (

@@ -89,3 +89,45 @@ into). Logged here as a known quirk: if a future vertical-flag flip crashes the 
 `pnpm dev` restart is the fix, not a rollback. Related to the already-logged "migration CLI
 broken" gap above — another data point that `push: true` is a dev-only stopgap, not production-
 grade schema management.
+
+## 2026-10-05 — D2: stale duplicate LINE-URL fallbacks in shared engine components (fix)
+
+**Symptom:** found while re-running D2's own grep-cleanliness check across the whole repo (not
+just `apps/techmirai-web`). Two shared `packages/cms-core` components each carry their own
+hardcoded "fallback only" LINE URL, explicitly commented as meant to mirror
+`site.config.ts`'s `reception.staffLineUrl` — but each had drifted to a different stale value:
+`blocks/hero/component.tsx`'s `resolvedLine` fallback still had the handle from before D2
+(`~nahidarahamanrupta`), and `components/ui/FloatingCTAs.tsx`'s `DEFAULT_LINE_URL` still had an
+even older one (`@470vmlzv`, the same stray value D2 already removed from
+`apps/techmirai-web`'s `Footer.tsx`). Both are genuinely fallback-only (the real value flows in
+as a prop from `resolveHeaderData` once that fallback was fixed in D2), so neither was visibly
+broken for techmirai-web today — but a future app on this engine, or a prop regression, would
+silently serve one of these three different fake handles instead of the one true convention.
+
+**Fix:** updated both literals to the same placeholder (`~techmirai-placeholder`) D2 set in
+`site.config.ts`, matching each file's own documented intent to track that one value. Purely a
+value correction — no behavior/API change.
+
+**Status:** done, keep as-is.
+
+## 2026-10-05 — E1: `locale: 'all'` updateGlobal drops a GROUP field's localized sub-field (fix)
+
+**Symptom:** found while seeding the Header global's new `ctaButton` for Pack-2/E1. A single
+`payload.updateGlobal({ locale: 'all', data: {...} })` call correctly persisted `navItems[].label`
+(an ARRAY field's localized sub-field — confirmed by reading it back as `{en: "AI受付", ja:
+"AI受付"}`), but the same call's `ctaButton.label` (a GROUP field's localized sub-field, same
+`localized: true` schema flag) came back as `{en: null}` with no `ja` key at all — silently
+dropped, no error thrown.
+
+**Fix:** in `apps/techmirai-web/src/seed/demo/globals-header.ts`, `ctaButton.label` is now
+written via two separate single-locale `updateGlobal` calls (`locale: 'en'`, then `locale:
+'ja'`) after the main `locale: 'all'` write, instead of inside it. This works because by that
+point `navItems` already has both locales' required labels filled, so the single-locale updates
+don't hit the "empty required label fails global validation" issue that `navItems` itself ran
+into historically (see the file's own doc comments).
+
+**Status:** done for this one field. Open question: is this specific to GROUP vs ARRAY field
+types under `locale:'all'`, or something about this field's position/depth in the document? Not
+investigated further — the workaround is cheap and the bug is narrow (only matters for
+group-type localized fields seeded via `locale:'all'`). Worth retesting if Payload/the Postgres
+adapter is upgraded.

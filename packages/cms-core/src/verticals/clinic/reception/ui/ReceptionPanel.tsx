@@ -105,7 +105,7 @@ export function ReceptionPanel({
         <button
           type="button"
           onClick={restart}
-          aria-label="Restart"
+          aria-label={locale === 'ja' ? 'やり直す' : 'Restart'}
           className="rounded-full p-1.5 text-white/70 transition hover:bg-white/20 hover:text-white"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -117,7 +117,7 @@ export function ReceptionPanel({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={locale === 'ja' ? '閉じる' : 'Close'}
           className="rounded-full p-1.5 text-white/70 transition hover:bg-white/20 hover:text-white"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
@@ -125,6 +125,12 @@ export function ReceptionPanel({
           </svg>
         </button>
       </header>
+
+      {/* Pack-2/E2: AI disclosure tag, required on every page (Content Spec
+          §16.1, mandated site-wide by §18 item 8) — "Automated assistant"/自動応答. */}
+      <p className="bg-zinc-100 px-4 py-1.5 text-center text-[11px] font-medium tracking-wide text-zinc-500">
+        {locale === 'ja' ? '自動応答' : 'Automated assistant'}
+      </p>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-zinc-50 px-4 py-4">
         {messages.map((m) => (

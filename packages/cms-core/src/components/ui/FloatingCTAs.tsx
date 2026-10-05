@@ -9,7 +9,7 @@ interface FloatingCTAsProps {
 
 // Fallback only — real value should come from the Header global's
 // lineButton.href, same source Hero and the mobile drawer already use.
-const DEFAULT_LINE_URL = 'https://line.me/R/ti/p/@470vmlzv'
+const DEFAULT_LINE_URL = 'https://line.me/R/ti/p/~techmirai-placeholder'
 
 export function FloatingCTAs({ lineUrl }: FloatingCTAsProps) {
   const [visible, setVisible] = useState(false)
@@ -25,7 +25,9 @@ export function FloatingCTAs({ lineUrl }: FloatingCTAsProps) {
   return (
     <div
       className={[
-        'md:hidden fixed bottom-4 left-4 z-40 transition-transform duration-300',
+        // Pack-2/E2: shifted up so it doesn't sit on top of the mobile
+        // sticky bottom bar HeaderClient.tsx added in E1.
+        'md:hidden fixed bottom-[72px] left-4 z-40 transition-transform duration-300',
         visible ? 'translate-y-0' : 'translate-y-24',
       ].join(' ')}
     >

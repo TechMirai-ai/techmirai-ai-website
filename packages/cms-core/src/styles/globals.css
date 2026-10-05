@@ -4,13 +4,17 @@
 @source "../../../../apps/**/src/**/*.{ts,tsx,js,jsx}";
 
 /* ─── Brand token definitions (single source of truth, not overridden at runtime) ─── */
+/* Pack-2/D2: realigned to match site.config.ts's brand.colors (was drifted —
+   #047857 here vs. #0F6E56 there). --color-brand-dark/--color-brand-accent*
+   repurposed to the Spec's navy/orange accents; TEMPORARY exact hex values,
+   see docs/PLACEHOLDER-REGISTER.md. */
 :root {
-  --color-brand-primary:        #047857;
+  --color-brand-primary:        #0F6E56;
   --color-brand-primary-dark:   #0D5E49;
   --color-brand-primary-light:  #E1F5EE;
-  --color-brand-dark:           #04342C;
-  --color-brand-accent:         #1D9E75;
-  --color-brand-accent-hover:   #198663;
+  --color-brand-dark:           #1B2A45;
+  --color-brand-accent:         #D97706;
+  --color-brand-accent-hover:   #B45309;
   --color-bg-primary:           #FFFFFF;
   --color-bg-secondary:         #F7FAF9;
   --color-bg-tertiary:          #E1F5EE;
@@ -25,12 +29,12 @@
 
 @theme {
   /* ─── Brand tokens (generate Tailwind utilities: bg-brand-primary, text-brand-accent, etc.) ─── */
-  --color-brand-primary:        #047857;
+  --color-brand-primary:        #0F6E56;
   --color-brand-primary-dark:   #0D5E49;
   --color-brand-primary-light:  #E1F5EE;
-  --color-brand-dark:           #04342C;
-  --color-brand-accent:         #1D9E75;
-  --color-brand-accent-hover:   #198663;
+  --color-brand-dark:           #1B2A45;
+  --color-brand-accent:         #D97706;
+  --color-brand-accent-hover:   #B45309;
   --color-bg-primary:           #FFFFFF;
   --color-bg-secondary:         #F7FAF9;
   --color-bg-tertiary:          #E1F5EE;
@@ -43,9 +47,9 @@
   --color-border-strong:        #C0C5C4;
 
   /* ─── Semantic brand colors (concrete defaults; overridden at runtime via wrapperStyle) ─── */
-  --color-primary: #047857;
-  --color-secondary: #0F6E56;
-  --color-accent: #1D9E75;
+  --color-primary: #0F6E56;
+  --color-secondary: #1B2A45;
+  --color-accent: #D97706;
   --color-background: #F7FAF9;
   --color-surface: #FFFFFF;
   --color-text: #04342C;

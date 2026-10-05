@@ -32,22 +32,18 @@ function MegaMenuPanel({ item }: { item: ResolvedNavItem }) {
         transition-all duration-200 origin-top pointer-events-none group-hover/item:pointer-events-auto"
     >
       <div className="bg-white rounded-2xl shadow-2xl border border-neutral-100 p-12 grid grid-cols-12 gap-12 text-left">
-        <div className="col-span-3 relative rounded-2xl overflow-hidden min-h-[450px] bg-neutral-50">
-          {item.featuredImageUrl ? (
+        {item.featuredImageUrl && (
+          <div className="col-span-3 relative rounded-2xl overflow-hidden min-h-[450px] bg-neutral-50">
             <img
               src={item.featuredImageUrl}
               alt={item.featuredImageAlt || 'Featured Service'}
               className="object-cover w-full h-full absolute inset-0"
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs text-neutral-400 italic bg-neutral-50/50">
-              No Image Selected
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         <div
-          className="col-span-9 gap-12 text-left"
+          className={item.featuredImageUrl ? 'col-span-9 gap-12 text-left' : 'col-span-12 gap-12 text-left'}
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${columns.length}, 1fr)`
@@ -131,28 +127,16 @@ export function HeaderClient({
   phoneButton,
   lineButton,
 }: HeaderClientProps) {
-  const [scrolled, setScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
   const prioritizedLocales = ['ja', ...locales.filter((l) => l !== 'ja')]
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 650)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  useEffect(() => {
     setIsMobileMenuOpen(false)
   }, [pathname])
 
   const strippedPath = pathname.replace(/^\/(en|ja)(?=\/|$)/, '') || '/'
-  const isHomepage = strippedPath === '/'
-  const headerScrolled = isHomepage ? scrolled : true
 
   function isActive(item: ResolvedNavItem): boolean {
     const hasChildren = (item.children?.length ?? 0) > 0 || (item.megaMenu && (item.megaColumns?.length ?? 0) > 0)
@@ -160,7 +144,7 @@ export function HeaderClient({
   }
 
   function Logo({ dark, imageUrl }: { dark: boolean; imageUrl?: string | null | undefined }) {
-    const logoSrc = imageUrl || '/brand/Sakura-clinic-logo.png'
+    const logoSrc = imageUrl || `/${siteConfig.brand.logoFile}`
 
     return (
       <div className="relative flex items-center h-16 w-40 sm:h-20 sm:w-44 lg:h-20 lg:w-44 xl:h-20 xl:w-52 2xl:h-25 2xl:w-70 shrink-0 transition-all duration-300">
@@ -176,14 +160,14 @@ export function HeaderClient({
     )
   }
 
+  const mobileBarLabels = locale === 'ja'
+    ? { assessment: '無料診断', line: 'LINE', call: '電話' }
+    : { assessment: 'Free assessment', line: 'LINE', call: 'Call' }
+
   return (
+    <>
     <header
-      className={[
-        'fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ease-out',
-        headerScrolled
-          ? 'translate-y-0 opacity-100 border-b border-border-default shadow-sm'
-          : 'translate-y-0 opacity-100 lg:-translate-y-full lg:opacity-0 lg:pointer-events-none',
-      ].join(' ')}
+      className="fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ease-out translate-y-0 opacity-100 border-b border-border-default shadow-sm"
     >
       <div className="relative flex items-center justify-between w-full px-2 sm:px-4 lg:px-3 xl:px-6 2xl:px-10 h-18 md:h-20 lg:h-22 gap-1.5 xl:gap-3 2xl:gap-6">
         <Link href="/" className="shrink-0">
@@ -296,10 +280,7 @@ export function HeaderClient({
 
           {ctaLabel && (
             <Link href={ctaHref}>
-              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#06C755] px-3 xl:px-4 2xl:px-5 py-2 text-xs xl:text-sm font-semibold tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-[#05b34c] hover:shadow-md whitespace-nowrap">
-                <svg className="w-4 h-4 xl:w-5 xl:h-5 fill-current shrink-0" viewBox="0 0 24 24">
-                  <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63h-1.625v1.25h1.625c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.256c-.348 0-.63-.285-.63-.629V8.108c0-.345.282-.63.63-.63h2.256c.349 0 .63.285.63.63 0 .349-.281.63-.63.63h-1.625v1.125h1.625zm-3.896 3.14c0 .248-.146.467-.37.561-.089.038-.184.057-.278.057-.152 0-.301-.052-.422-.152l-2.732-3.414v2.888c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.247.146-.467.37-.561.225-.094.484-.04.65.129l2.731 3.414V8.108c0-.345.282-.63.63-.63.349 0 .63.285.63.63v4.895zm-6.173 0c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.895zm-2.487 0c0 .344-.282.629-.63.629H3.923c-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.266h1.89c.348 0 .63.283.63.629zM24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314z" />
-                </svg>
+              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3 xl:px-4 2xl:px-5 py-2 text-xs xl:text-sm font-semibold tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md whitespace-nowrap">
                 <span>{ctaLabel}</span>
               </button>
             </Link>
@@ -315,7 +296,7 @@ export function HeaderClient({
             localeLabels={localeLabels}
             locale={locale}
             strippedPath={strippedPath}
-            scrolled={headerScrolled}
+            scrolled={true}
             onOpenChange={setIsMobileMenuOpen}
             phoneButton={phoneButton}
             lineButton={lineButton}
@@ -323,5 +304,30 @@ export function HeaderClient({
         </div>
       </div>
     </header>
+
+    {/* Mobile sticky bottom bar (Pack-2/E1): Free assessment / LINE / Call, phone width only */}
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 grid grid-cols-3 border-t border-border-default bg-white shadow-sm">
+      <Link
+        href="/assessment"
+        className="flex items-center justify-center h-14 text-xs font-semibold text-white bg-brand-primary"
+      >
+        {mobileBarLabels.assessment}
+      </Link>
+      <a
+        href={lineButton?.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center h-14 text-xs font-semibold text-white bg-[#06C755]"
+      >
+        {mobileBarLabels.line}
+      </a>
+      <a
+        href={phoneButton?.phoneHref}
+        className="flex items-center justify-center h-14 text-xs font-semibold text-text-primary bg-[var(--color-surface-alt)] border-l border-border-default"
+      >
+        {mobileBarLabels.call}
+      </a>
+    </div>
+    </>
   )
 }

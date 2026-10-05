@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 import siteConfig from '../../site.config'
 
+// Pack-2/D2 indexing guard: SITE_ENV must be exactly "production" to serve a
+// crawlable robots.txt. Unset or any other value fails safe to "Disallow: /"
+// so a staging/demo deploy is never accidentally indexed.
 export default function robots(): MetadataRoute.Robots {
-  const serverUrl = process.env['NEXT_PUBLIC_SERVER_URL'] ?? ''
-  const isProduction =
-    process.env['NODE_ENV'] === 'production' && serverUrl.includes(siteConfig.site.domain)
+  const isProduction = process.env['SITE_ENV'] === 'production'
 
   if (!isProduction) {
     return {
@@ -17,7 +18,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin', '/api/'],
+        disallow: ['/admin', '/api/', '/thanks'],
       },
     ],
     sitemap: `https://${siteConfig.site.domain}/sitemap.xml`,

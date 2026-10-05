@@ -137,10 +137,16 @@ blocks = await Promise.all(
     }
     if (block.blockType === 'hero') {
   const { navItems, cmsLogoUrl, phoneButton, lineButton } = await resolveHeaderData(locale)
+  // Spec §5.1: the hero's 2x2 nav cards show exactly these 4 items, not every
+  // top-level header link — curated here so growing the header's nav list
+  // doesn't silently inflate the hero.
+  const heroCardHrefs = ['/ai-reception', '/solutions', '/how-it-works', '/pricing']
   return {
     ...block,
-    navItems: navItems.map((item) => ({ label: item.label, href: item.href })),
-    logoUrl: cmsLogoUrl ?? undefined,
+    navItems: navItems
+      .filter((item) => heroCardHrefs.includes(item.href))
+      .map((item) => ({ label: item.label, href: item.href })),
+    logoUrl: cmsLogoUrl ?? `/${siteConfig.brand.logoFile}`,
     phoneButton,
     lineButton,
   } as RawBlock

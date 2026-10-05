@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Home, Stethoscope, Activity, ClipboardList, Wallet, MapPin, Phone, Calendar, Circle } from 'lucide-react'
+import { Bot, Puzzle, ClipboardList, Wallet, Phone, Calendar, Circle, MapPin } from 'lucide-react'
 import type {
   HeroBlockProps, NavItem, HoursRow, ReservationButton,
   PhoneButton, LineButton, NoteItem, AddressInfo, FirstVisitCard,
@@ -18,34 +18,16 @@ function withLocale(locale: string, href: string): string {
   return path.startsWith(`/${locale}/`) || path === `/${locale}` ? path : `/${locale}${path}`
 }
 
-// href is the icon lookup key: unlike `label`, it isn't `localized: true` in the
-// Header global schema, so it's the one field guaranteed identical across
-// locales — a label-keyed map breaks the moment the page renders in Japanese.
+// Pack-2/E1: TechMirai's 4 hero nav cards (AI受付, Solutions, How It Works,
+// Pricing — Spec §5.1). href is the icon lookup key: unlike `label`, it isn't
+// `localized: true` in the Header global schema, so it's the one field
+// guaranteed identical across locales — a label-keyed map breaks the moment
+// the page renders in Japanese.
 const navIconMapByHref: Record<string, LucideIcon> = {
-  '/introduction': Home,
-  '/philosophy': Stethoscope,
-  '/treatment-details': Activity,
-  '/flow': ClipboardList,
-  '/fee': Wallet,
-  '/access': MapPin,
-  // Other known routes, kept for nav items that may point at them.
-  '/company': Home,
-  '/services': Activity,
-  '/contact': MapPin,
-}
-
-// Legacy secondary lookup for any nav item whose href isn't in the map above
-// yet; only ever matches in English since labels are localized.
-const navIconMapByLabel: Record<string, LucideIcon> = {
-  'Clinic Introduction': Home,
-  'Philosophy & Approach': Stethoscope,
-  'Treatment Philosophy & Approach': Stethoscope,
-  'Available Treatments': Activity,
-  'Treatment Flow': ClipboardList,
-  'Fees & Insurance': Wallet,
-  'Treatment Fees & Insurance': Wallet,
-  'Access': MapPin,
-  'Location & Transportation': MapPin,
+  '/ai-reception': Bot,
+  '/solutions': Puzzle,
+  '/how-it-works': ClipboardList,
+  '/pricing': Wallet,
 }
 
 export function HeroBlock({
@@ -81,7 +63,7 @@ export function HeroBlock({
 
   const total = slides.length
 
-  const resolvedLogoUrl = logoUrl || '/brand/Sakura-clinic-logo.png'
+  const resolvedLogoUrl = logoUrl || '/brand/logo.svg'
 
   useEffect(() => {
     if (total <= 1) return
@@ -109,18 +91,14 @@ export function HeroBlock({
     },
   }
 
-  const defaultNavItems: NavItem[] = [
-    { label: 'Clinic Introduction', href: '/company', icon: Home },
-    { label: 'Philosophy & Approach', href: '/company', icon: Stethoscope },
-    { label: 'Available Treatments', href: '/services', icon: Activity },
-    { label: 'Treatment Flow', href: '/services', icon: ClipboardList },
-    { label: 'Access', href: '/contact', icon: MapPin },
-  ]
+  // No app-specific defaults here — a shared engine component with no
+  // navItems prop renders no cards rather than leaking another app's pages.
+  const defaultNavItems: NavItem[] = []
 
   const resolvedNavItems: NavItem[] = navItems?.length
     ? navItems.map((item) => ({
       ...item,
-      icon: item.icon ?? navIconMapByHref[item.href] ?? navIconMapByLabel[item.label] ?? Circle,
+      icon: item.icon ?? navIconMapByHref[item.href] ?? Circle,
     }))
     : defaultNavItems
 
@@ -131,7 +109,7 @@ export function HeroBlock({
   // Fallback only fires if the header global's lineButton is genuinely unset.
   // URL matches the project's one established LINE placeholder convention
   // (see site.config.ts reception.staffLineUrl) rather than a second, unrelated fake handle.
-  const resolvedLine: LineButton = lineButton ?? { label: 'LINE Booking', href: 'https://line.me/R/ti/p/~nahidarahamanrupta', subLabel: 'Easy booking & chat' }
+  const resolvedLine: LineButton = lineButton ?? { label: 'LINE Booking', href: 'https://line.me/R/ti/p/~techmirai-placeholder', subLabel: 'Easy booking & chat' }
   const resolvedHoursRows: HoursRow[] = hoursTable?.rows?.length
     ? hoursTable.rows
     : [
@@ -165,7 +143,7 @@ export function HeroBlock({
       <div className="lg:col-start-1 lg:row-start-1 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 pb-0">
         <Image
           src={resolvedLogoUrl}
-          alt="Sakura Osteopathic Clinic"
+          alt="Logo"
           width={350}
           height={100}
           priority

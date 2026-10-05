@@ -10,16 +10,18 @@ const recruitmentVertical = false
 const clinicVertical = false
 
 // Shared by contact.phone and reception.clinicPhone so the two never drift.
-const clinicPhone = '+81-3-5432-1188'
+// Pack-2/D2: Spec gives this only as a bracketed CONFIRM item — stored
+// literally bracketed per CLAUDE.md rule 5, see docs/PLACEHOLDER-REGISTER.md.
+const clinicPhone = '[080-7701-3004]'
 
 const siteConfig: SiteConfig = {
   site: {
-    name: 'Sakura Osteopathic Clinic',
+    name: 'TechMirai',
     tagline: {
       en: 'Gentle, community-rooted care for every body',
       ja: '地域に根ざした、やさしい施術を',
     },
-    domain: 'sakura-sekkotsu.example',
+    domain: 'techmirai-ai.com',
   },
 
   brand: {
@@ -27,15 +29,18 @@ const siteConfig: SiteConfig = {
     faviconFile: 'favicon.ico',
     ogImageFile: 'brand/logo.svg',
     colors: {
-      // Calm-teal palette. primary (#0F6E56, 6.2:1 on white) is the ONLY color
-      // permitted behind white text at normal size — accent (#1D9E75, 3.4:1 on
-      // white) fails WCAG AA for body-size text and is restricted to hover
-      // states, icon fills, borders, and text 24px+. See globals.css for the
-      // mirrored legacy --color-brand-*/--color-bg-*/--color-text-*/--color-border-*
-      // block, a second statically-compiled copy of this same palette.
+      // TechMirai palette (Pack-2/D2): green primary kept from the original
+      // logo per the Spec ("keep the current logo and green"); navy/orange
+      // introduced as the brochure's accent colors. TEMPORARY exact hex
+      // values — the brochure (TECHMIRAI_BROCHURE.html) is not yet supplied,
+      // see docs/PLACEHOLDER-REGISTER.md. primary (#0F6E56, 6.2:1 on white)
+      // is the ONLY color permitted behind white text at normal size. See
+      // globals.css for the mirrored legacy --color-brand-*/--color-bg-*/
+      // --color-text-*/--color-border-* block, a second statically-compiled
+      // copy of this same palette — keep both in sync.
       primary: '#0F6E56',
-      secondary: '#0F6E56',
-      accent: '#1D9E75',
+      secondary: '#1B2A45',
+      accent: '#D97706',
       background: '#F7FAF9',
       surface: '#FFFFFF',
       text: '#04342C',
@@ -48,11 +53,11 @@ const siteConfig: SiteConfig = {
       surfaceFaint: '#F0F8F5',
       textSecondary: '#4B6B63',
       headingDark: '#04342C',
-      deepAccent: '#0F6E56',
-      iconAccent: '#1D9E75',
-      buttonAccent: '#0F6E56',
-      buttonAccentHover: '#0D5E49',
-      priceHighlight: '#1D9E75',
+      deepAccent: '#1B2A45',
+      iconAccent: '#1B2A45',
+      buttonAccent: '#D97706',
+      buttonAccentHover: '#B45309',
+      priceHighlight: '#D97706',
     },
     typography: {
       fontSans: 'Inter',
@@ -113,24 +118,23 @@ const siteConfig: SiteConfig = {
   },
 
   contact: {
-    email: 'info@sakura-sekkotsu.example',
+    // Pack-2/D2: TechMirai's own identity constants (Content Spec Section
+    // 10.6). email/domain are given plainly by the Spec; phone/address/hours
+    // are given only as bracketed CONFIRM items — stored literally bracketed
+    // per CLAUDE.md rule 5, not invented. See docs/PLACEHOLDER-REGISTER.md.
+    email: 'info@techmirai-ai.com',
     phone: clinicPhone,
     address: {
-      en: 'Sakura Building 1F, 2-14-8 Umegaoka, Setagaya-ku, Tokyo 154-0022',
-      ja: '〒154-0022 東京都世田谷区梅丘2-14-8 さくらビル1F',
+      en: '[Address you may publish]',
+      ja: '[掲載可能な住所]',
     },
     mapEmbedUrl: 'https://www.google.com/maps?q=Umegaoka+Station+Tokyo&output=embed',
-    // Each value is "morning / afternoon", a "△"-prefixed segment for limited/
-    // by-appointment hours, or a bare "休診" for a fully closed day — parsed by
-    // the hours-location block into a real table with ●/▲/休 symbols.
+    // Spec gives hours as one bracketed phrase, not a per-weekday schedule —
+    // the hours-location block (packages/cms-core/src/blocks/hours-location)
+    // expects monday..sunday keys and has no live instance on any page yet;
+    // this single-key shape is a Pack-3 concern once that block is placed.
     businessHours: {
-      monday: '09:00–12:00 / 15:00–19:30',
-      tuesday: '09:00–12:00 / 15:00–19:30',
-      wednesday: '09:00–12:00 / 休',
-      thursday: '09:00–12:00 / 15:00–19:30',
-      friday: '09:00–12:00 / 15:00–19:30',
-      saturday: '09:00–12:00 / △13:00–16:00',
-      sunday: '休診',
+      weekdays: '[Weekdays 9:00–18:00]',
     },
   },
 
@@ -159,6 +163,9 @@ const siteConfig: SiteConfig = {
     resendFromEmail: 'onboarding@resend.dev',
     // TODO: replace with real booking provider before real client launch
     bookingProviderUrl: 'https://example.com/book-placeholder',
+    // Pack-2/D2: Spec gives this only as a bracketed CONFIRM item — stored
+    // literally bracketed per CLAUDE.md rule 5, see docs/PLACEHOLDER-REGISTER.md.
+    demoUrl: '[demo.techmirai-ai.com]',
   },
 
   notifications: {
@@ -180,17 +187,21 @@ const siteConfig: SiteConfig = {
 
   reception: {
     enabled: true,
+    // Pack-2/E2: Content Spec §16.1 exact greeting text (includes the
+    // required "automated assistant" self-disclosure).
     greeting: {
-      en: "Hello! Thanks for visiting Sakura Osteopathic Clinic. How can we help you today?",
-      ja: 'こんにちは。さくら接骨院にご来院いただきありがとうございます。本日はどのようなご用件でしょうか?',
+      en: "Hello! I'm TechMirai's AI受付, an automated assistant. I can answer questions about our service, show you the demo, or book a free consultation. What would you like to do?",
+      ja: 'こんにちは。TechMiraiのAI受付（自動応答）です。サービスについてのご質問、デモのご案内、無料相談のご予約を承ります。ご用件をお選びください。',
     },
     openDelayMs: 8000,
     locales: ['ja', 'en'],
     clinicPhone,
     // Placeholder — same convention as the socialLinks placeholders above.
-    // Swap for the real clinic's LINE add-friend URL before launch; until
-    // then this demo shows the "Talk to staff" option using this link.
-    staffLineUrl: 'https://line.me/R/ti/p/~nahidarahamanrupta',
+    // Spec gives only a bracket token ("[LINE Official Account URL]"), no
+    // literal URL — this fake-but-valid placeholder keeps the widget
+    // functional; swap for the real LINE add-friend URL before launch. See
+    // docs/PLACEHOLDER-REGISTER.md.
+    staffLineUrl: 'https://line.me/R/ti/p/~techmirai-placeholder',
   },
 }
 

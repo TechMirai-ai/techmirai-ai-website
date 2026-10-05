@@ -1,5 +1,6 @@
 export { Alert } from './Alert'
 export { Badge } from './Badge'
+export { StatusBadge } from './StatusBadge'
 export { Button } from './Button'
 export { Card } from './Card'
 export { Container } from './Container'

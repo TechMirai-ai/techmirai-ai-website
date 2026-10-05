@@ -113,6 +113,8 @@ export const resolveHeaderData = cache(async (locale: string) => {
     return resolved
   })
 
+  const fallbackPhone = siteConfig.contact.phone ?? ''
+
   const phoneButton = headerData.phoneButton
   ? {
       phoneDisplay: headerData.phoneButton.phoneDisplay,
@@ -120,7 +122,12 @@ export const resolveHeaderData = cache(async (locale: string) => {
       badgeLabel: resolve(headerData.phoneButton.badgeLabel),
       subLabel: resolve(headerData.phoneButton.subLabel),
     }
-  : undefined
+  : {
+      phoneDisplay: fallbackPhone,
+      phoneHref: `tel:${fallbackPhone}`,
+      badgeLabel: '',
+      subLabel: '',
+    }
 
 const lineButton = headerData.lineButton
   ? {
@@ -128,7 +135,7 @@ const lineButton = headerData.lineButton
       label: resolve(headerData.lineButton.label),
       subLabel: resolve(headerData.lineButton.subLabel),
     }
-  : undefined
+  : { href: siteConfig.reception.staffLineUrl ?? '', label: '', subLabel: '' }
 
   return {
   navItems: resolvedNavItems,
