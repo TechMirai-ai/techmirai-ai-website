@@ -10,6 +10,7 @@ import { PagesCollection, buildAvailableBlocks } from './collections/pages'
 import { MediaCollection } from './collections/media'
 import { ServicesCollection } from './collections/services'
 import { FAQsCollection } from './collections/faqs'
+import { ChatAnswersCollection } from './collections/chat-answers'
 import { NewsCollection } from './collections/news'
 import { UsersCollection } from './collections/users'
 import { TestimonialsCollection } from './collections/testimonials'
@@ -70,6 +71,7 @@ export function buildCmsConfig(
     MediaCollection,
     ServicesCollection(siteConfig),
     FAQsCollection,
+    ChatAnswersCollection,
     NewsCollection,
     UsersCollection,
     FormSubmissionsCollection({
@@ -90,8 +92,12 @@ export function buildCmsConfig(
     ...(siteConfig.features.gallery ? [GalleryCollection] : []),
     ...(siteConfig.features.downloads ? [DownloadsCollection] : []),
     ...(siteConfig.features.team ? [TeamCollection] : []),
-    // Recruitment vertical: jobs, seminars, case-studies move together as one unit.
-    ...(siteConfig.verticals.recruitment ? [JobsCollection, SeminarsCollection, CaseStudiesCollection] : []),
+    // Recruitment vertical: jobs and seminars move together as one unit.
+    ...(siteConfig.verticals.recruitment ? [JobsCollection, SeminarsCollection] : []),
+    // Case studies (e.g. Sadiatec) are not recruitment-specific — Pack-2/F2 decoupled this from
+    // the recruitment vertical flag (docs/ENGINE-FIXES.md) so a case-study page can exist with
+    // recruitment off.
+    ...(siteConfig.features.caseStudies ? [CaseStudiesCollection] : []),
     // Clinic vertical: doctors, treatments move together as one unit.
     ...(siteConfig.verticals.clinic ? [DoctorsCollection, TreatmentsCollection] : []),
   ]

@@ -218,3 +218,33 @@ While re-running the "clinic-demo" grep sweep required by D1, found `ARCHITECTUR
 code uses `*-sakura-sekkotsu-placeholder` (confirmed by reading `site.config.ts` directly).
 Pre-existing inaccuracy, unrelated to the rename; corrected the string since it was a one-line
 fix encountered directly in the course of D1's own required grep check.
+
+## 2026-10-05 — F2: `company/page.tsx` already expects global fields that have never existed in the schema
+
+Found while planning Pack-2/F2's `company-info` global additions.
+`apps/techmirai-web/src/app/(frontend)/[locale]/company/page.tsx` casts the `company-info`
+global to a local `CompanyInfoDoc` type that expects `mission`, `vision`, `executives`, and
+`timeline` fields — none of which have ever existed in `globals/company-info.ts`'s field config,
+in this repo or evidently in whatever it was ported from. None of these four names appear
+anywhere in the Content Spec's §10.6 (Company profile) either, so F2 did not add them: building
+schema for fields the Spec never asked for would be guessing, not implementing. F2 added the
+fields Spec §10.6 and §2.3 actually call for (`founder`, `businessForm`, `address`,
+`businessHours`, `mainClient` — see `docs/CLONE-PLAN.md` §4). This page is rebuilt from the Spec
+in Pack-3/I2 (About), so whoever plans I2 should either drop the `mission`/`vision`/`executives`/
+`timeline` reads or decide they're genuinely needed and add them additively then — not carried
+forward as an assumption.
+
+## 2026-10-05 — F2: `test:integration` cannot run on this developer machine (environment gap, not an F2 regression)
+
+While verifying F2's Gate 2 ("existing booking tests still pass"), `pnpm --filter @techmirai/cms-core test`
+(the unit suite, 51 files / 594 tests, including every customers/booking-touching file) passed
+cleanly with no changes needed. `pnpm --filter @techmirai/cms-core test:integration` failed before
+running a single test: `src/booking/test/global-setup.ts` shells out to a `psql` binary to create
+a throwaway test database, and `psql` is not installed/on `PATH` on this Windows machine (`which
+psql` / `command -v psql` both return nothing). This is a pre-existing environment gap — it would
+fail identically on `main` before any F2 change, since it's a missing local tool, not a code path
+F2 touched. Flagging per standing rule 12: F2's booking-schema changes (`customers.company`, the
+conditional kana `validate`) are verified correct by typecheck + the full unit suite + a `pnpm dev`
+admin-UI check, but the specific `*.integration.test.ts` files this plan named could not actually
+be executed and re-confirmed green in this environment. Installing a local PostgreSQL client (or
+running these in CI/WSL where `psql` exists) would close this gap.

@@ -6,9 +6,10 @@ import { authenticated } from '../../access'
  * A booking customer. Names are NOT localized — they are per-record data, not
  * translatable content.
  *
- * Kana readings (familyNameKana / givenNameKana) are MANDATORY: Japanese
- * businesses sort and call customers by their kana reading, so these must
- * always be present.
+ * Kana readings (familyNameKana / givenNameKana) are required for Japanese-locale
+ * customers: Japanese businesses sort and call customers by their kana reading.
+ * Optional when locale is 'en' (Spec 12.4 engineering note) — see each field's
+ * `validate` function rather than a static `required: true`.
  *
  * `createdAt`/`updatedAt` are provided by Payload's default timestamps.
  */
@@ -26,10 +27,29 @@ export const CustomersCollection: CollectionConfig = {
   fields: [
     { name: 'familyName', type: 'text', required: true },
     { name: 'givenName', type: 'text', required: true },
-    { name: 'familyNameKana', type: 'text', required: true },
-    { name: 'givenNameKana', type: 'text', required: true },
+    {
+      name: 'familyNameKana',
+      type: 'text',
+      validate: (value: unknown, { siblingData }: { siblingData: { locale?: string } }) => {
+        if (siblingData.locale === 'en') return true
+        return typeof value === 'string' && value.length > 0 ? true : 'Kana reading is required'
+      },
+    },
+    {
+      name: 'givenNameKana',
+      type: 'text',
+      validate: (value: unknown, { siblingData }: { siblingData: { locale?: string } }) => {
+        if (siblingData.locale === 'en') return true
+        return typeof value === 'string' && value.length > 0 ? true : 'Kana reading is required'
+      },
+    },
     { name: 'phone', type: 'text', index: true },
     { name: 'email', type: 'email' },
+    {
+      name: 'company',
+      type: 'text',
+      admin: { description: 'Company or shop name (Spec 12.4 "Company field"). Optional.' },
+    },
     { name: 'memberNumber', type: 'text', admin: { position: 'sidebar' } },
     { name: 'locale', type: 'text', admin: { position: 'sidebar' } },
     {

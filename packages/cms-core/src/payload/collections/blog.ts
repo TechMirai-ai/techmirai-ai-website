@@ -32,8 +32,25 @@ export const BlogCollection: CollectionConfig = {
         { name: 'jobTitle', type: 'text', localized: true },
       ],
     },
+    {
+      name: 'reviewer',
+      type: 'group',
+      admin: { description: 'Not every post has a named reviewer yet (Haruka\'s Japanese-copy review).' },
+      fields: [
+        { name: 'name', type: 'text' },
+        { name: 'jobTitle', type: 'text', localized: true },
+      ],
+    },
     { name: 'readTime', type: 'number', admin: { description: 'Estimated read time in minutes', position: 'sidebar' } },
     { name: 'publishedAt', type: 'date', required: true, admin: { position: 'sidebar' } },
+    {
+      name: 'contentUpdatedAt',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+        description: 'Editorial "content reviewed/updated" date (distinct from Payload\'s own updatedAt edit timestamp).',
+      },
+    },
     slugField,
     { name: 'active', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
     aiVisibleField,

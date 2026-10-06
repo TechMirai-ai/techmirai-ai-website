@@ -32,6 +32,7 @@
     "./lib/motion": "./src/lib/motion.ts",
     "./components/LanguageSwitcher": "./src/components/LanguageSwitcher.tsx",
     "./payload/lib/richtext-to-text": "./src/payload/lib/richtext-to-text.ts",
+    "./payload/collections/migrations/faq-keywords-category": "./src/payload/collections/migrations/faq-keywords-category.ts",
     "./payload/admin/BeforeDashboard": "./src/payload/admin/BeforeDashboard.tsx"
   },
   "peerDependencies": {

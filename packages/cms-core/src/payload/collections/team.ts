@@ -23,6 +23,16 @@ export const TeamCollection: CollectionConfig = {
         description: 'Show when TeamGrid has no explicit member list',
       },
     },
+    {
+      name: 'visible',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Public visibility — uncheck until this person has given written consent to publish their name and photo (Spec §1 item 15). Distinct from "Include in AI corpus" below.',
+      },
+    },
     { name: 'sortOrder', type: 'number', admin: { position: 'sidebar' } },
     aiVisibleField,
   ],

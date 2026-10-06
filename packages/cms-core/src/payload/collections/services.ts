@@ -2,6 +2,7 @@ import { safeRevalidateTag as revalidateTag } from '../lib/revalidate'
 import type { CollectionConfig } from 'payload'
 import type { SiteConfig } from '../../schema/site-config'
 import { aiVisibleField } from '../fields/ai-visible'
+import { statusBadgeField } from '../fields/status-badge'
 import { slugField } from '../fields/slug'
 import { buildAvailableBlocks } from './pages'
 
@@ -25,6 +26,7 @@ export function ServicesCollection(siteConfig: SiteConfig): CollectionConfig {
       slugField,
       { name: 'sort', type: 'number', admin: { position: 'sidebar' } },
       { name: 'active', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
+      statusBadgeField,
       { name: 'body', type: 'richText', localized: true },
       {
         name: 'stats',

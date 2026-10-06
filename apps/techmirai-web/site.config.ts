@@ -2,12 +2,19 @@ import type { SiteConfig } from '@techmirai/cms-core/schema'
 
 // Originally cloned from clinic-demo-standalone, which proved the ENGINE/vertical
 // separation by standing up a clinic-vertical app. As of Pack-2/D1, both verticals are
-// off for this TechMirai site — neither doctors/treatments (clinic) nor jobs/seminars/
-// case-studies (recruitment) apply here. features.jobListings/seminars/recruit/
-// caseStudies mirror recruitmentVertical below rather than being toggled independently,
-// matching the convention used by other apps built on this shared engine.
+// off for this TechMirai site — neither doctors/treatments (clinic) nor jobs/seminars
+// (recruitment) apply here. features.jobListings/seminars/recruit mirror
+// recruitmentVertical below rather than being toggled independently, matching the
+// convention used by other apps built on this shared engine.
 const recruitmentVertical = false
 const clinicVertical = false
+
+// Pack-2/F2: case studies (Sadiatec) are not a recruitment feature — they're used on
+// the homepage, About and a dedicated case-study page regardless of the recruitment
+// vertical. Decoupled from recruitmentVertical (see docs/ENGINE-FIXES.md) so the
+// Sadiatec case-study collection/page exist even with recruitment off. The page itself
+// still sits behind its own `visible` switch pending Sadiatec's written permission.
+const caseStudiesEnabled = true
 
 // Shared by contact.phone and reception.clinicPhone so the two never drift.
 // Pack-2/D2: Spec gives this only as a bracketed CONFIRM item — stored
@@ -93,7 +100,7 @@ const siteConfig: SiteConfig = {
     team: true,
     locations: true,
     services: true,
-    caseStudies: recruitmentVertical,
+    caseStudies: caseStudiesEnabled,
     blog: true,
     company: true,
     recruit: recruitmentVertical,

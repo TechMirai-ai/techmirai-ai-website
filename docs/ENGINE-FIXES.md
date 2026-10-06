@@ -131,3 +131,114 @@ types under `locale:'all'`, or something about this field's position/depth in th
 investigated further — the workaround is cheap and the bug is narrow (only matters for
 group-type localized fields seeded via `locale:'all'`). Worth retesting if Payload/the Postgres
 adapter is upgraded.
+
+## 2026-10-05 — F2: case-studies collection was wired to the recruitment vertical flag, not its own feature flag (fix)
+
+**Symptom:** found while planning Pack-2/F2's Sadiatec case-study visibility switch.
+`config-factory.ts` registered `CaseStudiesCollection` only when `siteConfig.verticals.recruitment`
+was true, and `site.config.ts`'s `features.caseStudies` was itself just `= recruitmentVertical`.
+Pack-2/D1 deliberately set `recruitmentVertical = false` for this site, so the case-studies
+collection was never registered at all — silently breaking Pack-3's planned Sadiatec case-study
+page (G3/I3) regardless of any visibility field F2 added, since case studies aren't a recruitment
+feature (jobs/seminars are; the Sadiatec case study is used on the homepage, About and its own
+page).
+
+**Fix:** `site.config.ts` now computes `features.caseStudies` from its own independent
+`caseStudiesEnabled = true`, not from `recruitmentVertical`. `config-factory.ts` gates
+`CaseStudiesCollection` on `siteConfig.features.caseStudies` instead of
+`siteConfig.verticals.recruitment`; `JobsCollection`/`SeminarsCollection` stay gated on the
+recruitment vertical, since those two genuinely are recruitment-only.
+
+**Status:** done. Confirmed with Jamal before fixing (F2 plan review) rather than assumed.
+
+## 2026-10-06 — F2: `push: true` asks a one-time interactive question the first time it boots after this change (expected, not fixed)
+
+**Symptom:** found while verifying F2's Gate 3 (`pnpm dev` boots, no console errors).
+`faqs.ts`'s `category` field changed from a localized `text` (stored in `faqs_locales`) to a
+plain `select` (stored in the base `faqs` table), landing in the same push as the new `keywords`
+field being *added* to `faqs_locales`. Drizzle's schema-diffing sees one text-ish column dropped
+from `faqs_locales` and one added, and can't tell on its own whether that's "add `keywords`" or
+"rename `category` to `keywords`" — so the first `pnpm dev` boot after this change prints:
+
+```
+Is keywords column in faqs_locales table created or renamed from another column?
+❯ + keywords            create column
+  ~ category › keywords rename column
+```
+
+and waits on stdin for someone to confirm. This is an interactive terminal prompt — it can only be
+answered by a human sitting at `pnpm dev`'s own terminal (confirmed: piping input via `yes ""` and
+via `winpty` from a separate, non-attached automation session both failed to reach it; the
+dev-server process hung on `/admin` past 90s either way, though some non-DB-dependent routes like
+plain `/en` still returned 200 while it was waiting).
+
+**What to do:** the correct answer is already the highlighted default — **just press Enter** (or
+explicitly pick "+ keywords create column"). This is the right choice: it's a genuinely new
+column, not a rename; nothing is actually being renamed. Never pick "rename" here.
+
+**Checked against the actual data, not assumed:** a read-only query against the dev database
+(2026-10-06) found that `faqs`/`faqs_locales` are **not** empty — they hold 9 existing documents
+(18 `faqs_locales` rows) with real `category` values (`Insurance & Payment`/`保険・お支払い`,
+`Treatment`/`施術について`, etc.). Traced to `apps/techmirai-web/src/seed/demo/faqs.ts` — these are
+leftover **clinic-demo** FAQ rows from an earlier `pnpm seed:demo` run, already flagged for removal
+in Pack-3/F3 (see the F1 "normal preflight was already FAILING" entry above), not TechMirai
+content. If "rename" were picked instead of "create column," every one of those 18 rows' old
+category label would be copied verbatim into the new `keywords` field (nonsense content for a
+keywords column), while the new base-table `category` enum column would come back `NULL` for all
+9 docs, since nothing actually migrates old values into it. "Create column" avoids both: existing
+rows simply get `keywords = NULL` and a fresh `category = NULL` on the base table, which is
+harmless *specifically because* this data is disposable demo content already scheduled for
+deletion, not because the table happens to be empty — it isn't.
+
+**General lesson, not just this field:** this prompt appears because `category` moved out of
+`faqs_locales` (de-localized into the base `faqs` table) in the same push that added a new
+localized `keywords` column into `faqs_locales` — a table losing one column and gaining another
+in one diff reads as a possible rename to Drizzle, regardless of whether the two fields are
+actually related. The same shape of change (a field crossing from the localized table to the base
+table, or vice versa, combined with a sibling field being added to the table it's leaving) will
+trigger the same ambiguous prompt again in future steps — and once real TechMirai content has been
+seeded into whatever table is involved, picking the wrong option would silently corrupt live data
+the way described above, not just stale demo rows. Worth the extra beat of double-checking what's
+actually in the affected table before answering, rather than assuming it's empty.
+
+**Why this isn't "fixed":** it's an inherent characteristic of `push: true` schema-diffing
+whenever a push both drops and adds a plausibly-related column in the same table in one shot —
+not a bug introduced by F2, and not fixable without either avoiding that shape of change (not
+worth contorting the schema for) or restoring a working `payload migrate` (the pre-launch item
+already tracked above). Logged here per the same pattern as the other `push: true` quirks already
+in this file (the FK-constraint-drop hiccup, D1).
+
+**Status:** open, informational. Confirmed by code-level trace (drizzle-kit's bundled
+`columnsResolver`/ambiguous-rename path in `pushSchema`) and by a direct read-only query of the
+dev database (not just observed terminal behavior). One-time for this specific column pair;
+answer "+ create column" the one time it appears.
+
+## 2026-10-06 — F2: the interactive push hung even after picking the correct answer; replaced with an explicit migration script
+
+**Symptom:** the prompt above reappeared on a later `pnpm dev` boot and hung on `/admin` even
+after selecting "+ keywords create column." Automation cannot answer this prompt (see the entry
+above); it turned out a human at an attached terminal couldn't reliably get past it either in this
+case. The `turbo dev` / `next dev` / `next` server processes were stopped and not retried.
+
+**What was done instead:** added `packages/cms-core/src/payload/collections/migrations/faq-keywords-category.ts`,
+a hand-written idempotent DDL module mirroring `booking-indexes.ts`/`customer-line-fields.ts`
+(`CREATE TYPE enum_faqs_category`, `ALTER TABLE faqs ADD COLUMN category`, `ALTER TABLE
+faqs_locales ADD COLUMN keywords`, `ALTER TABLE faqs_locales DROP COLUMN category`), plus a
+one-off runner script `apps/techmirai-web/scripts/apply-faq-schema-migration.ts` (run via
+`pnpm --filter techmirai-web run db:migrate-faq-keywords-category`). The runner sets
+`PAYLOAD_MIGRATING=true` before calling `getPayload()`, which makes `@payloadcms/db-postgres`'s
+`connect()` skip `pushDevSchema` entirely (see its `connect.js`: `if (... && process.env
+.PAYLOAD_MIGRATING !== 'true' && this.push !== false) { await pushDevSchema(this) }`) — so booting
+Payload for this script never triggers the diff/prompt at all.
+
+**Why this is safe here, specifically:** the migration's `DROP COLUMN category` on `faqs_locales`
+is **not additive** — it discards existing row data. This is only safe because, as established in
+the schema-comparison diagnosis above, the only rows affected are the 9 leftover clinic-demo FAQ
+documents (18 `faqs_locales` rows) already slated for removal in Pack-3/F3, not TechMirai content.
+Do not reuse this script's drop step against a database that might hold real FAQ content without
+re-verifying row contents first.
+
+**Status:** resolved for this specific change via the explicit migration script. The underlying
+gap (no production-safe automated migration path; `push: true` can hang on ambiguous diffs even
+when answered correctly) remains open and tracked under the 2026-10-04 entry above, due before
+WO-8.

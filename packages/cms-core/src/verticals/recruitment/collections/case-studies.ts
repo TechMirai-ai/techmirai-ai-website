@@ -42,6 +42,16 @@ export const CaseStudiesCollection: CollectionConfig = {
     { name: 'publishedAt', type: 'date', required: true },
     slugField,
     { name: 'active', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
+    {
+      name: 'visible',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Sadiatec case-study visibility — requires Sadiatec\'s written permission (Spec §1 item 14) before enabling. Separate from "active", which is this collection\'s generic publish flag.',
+      },
+    },
     aiVisibleField,
   ],
 }

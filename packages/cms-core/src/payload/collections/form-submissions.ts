@@ -41,6 +41,7 @@ export function FormSubmissionsCollection(emailConfig: FormSubmissionsConfig): C
           { label: 'Job Application', value: 'job-apply' },
           { label: 'Seminar Registration', value: 'seminar' },
           { label: 'Download Gate', value: 'download' },
+          { label: 'Free AI Website Assessment', value: 'assessment' },
         ],
         admin: { position: 'sidebar' },
       },
