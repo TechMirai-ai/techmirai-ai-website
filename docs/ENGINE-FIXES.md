@@ -266,3 +266,29 @@ possible FK-ordering edge case in the delete path itself.
 **Status:** fixed. Verified by running `pnpm seed --confirm` twice in a row and confirming no
 `-1`/`-2`-suffixed duplicate filenames appear in the `media` collection or `public/media/` after
 the second run.
+
+## 2026-10-07 — Pack-3/G0: reception chat widget always greeted in Japanese, ignoring page locale (fix)
+
+**Symptom:** on `/en/...` pages, the reception widget's teaser bubble and panel both opened in
+Japanese instead of English. Found and flagged during Pack-2/E2 (see `docs/FINDINGS.md`'s
+2026-10-05 "reception chat widget always greets in Japanese" entry); logged there as owed its own
+`docs/ENGINE-FIXES.md` entry per CLAUDE.md rule 11, but never written until now.
+
+**Root cause:** `apps/techmirai-web/src/app/(frontend)/[locale]/layout.tsx` has the real route
+locale in scope (`const { locale } = await params`) but never passed it to `<ReceptionWidget>`.
+`ReceptionWidget` (`packages/cms-core/src/verticals/clinic/reception/ui/ReceptionWidget.tsx`) had
+no `locale` prop at all — it derived its own `initialLocale` from `locales[0]`, the first entry of
+the static `reception.locales` capability array (`['ja', 'en']` in `site.config.ts`), which always
+evaluates to `'ja'` regardless of the actual page. That wrong value fed both the teaser's greeting
+text and `ReceptionPanel`'s `initialLocale` prop, so the whole widget opened in Japanese by default
+everywhere, correcting only if the visitor manually tapped the in-panel EN toggle.
+
+**Fix:** added a `locale: string` field to `ReceptionWidgetProps`, passed from the layout
+(`locale={locale}`), and changed the derivation to `locales.includes(locale) ? locale :
+locales[0] ?? 'ja'` — preferring the real route locale, falling back to the static array only if
+the route locale somehow isn't one of the widget's supported locales. No changes were needed in
+`ReceptionPanel.tsx` or `useReceptionEngine.ts`: both already key correctly off their own `locale`
+state once it starts from the right value.
+
+**Status:** fixed. Verify by loading `/en/...` and `/ja/...` and confirming the teaser bubble and
+freshly-opened panel show the matching language on each, before touching the in-panel toggle.

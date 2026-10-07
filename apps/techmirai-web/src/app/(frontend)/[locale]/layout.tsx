@@ -112,6 +112,7 @@ export default async function LocaleLayout({
             greeting={siteConfig.reception.greeting}
             openDelayMs={siteConfig.reception.openDelayMs}
             locales={siteConfig.reception.locales}
+            locale={locale}
             clinicPhone={siteConfig.reception.clinicPhone}
             {...(siteConfig.reception.staffLineUrl !== undefined
               ? { staffLineUrl: siteConfig.reception.staffLineUrl }

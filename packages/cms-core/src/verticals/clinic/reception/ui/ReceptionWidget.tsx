@@ -8,6 +8,8 @@ export interface ReceptionWidgetProps {
   greeting: Record<string, string>
   openDelayMs: number
   locales: string[]
+  /** The current page's route locale — preferred over locales[0] when choosing the initial greeting. */
+  locale: string
   clinicPhone: string
   clinicName: string
   faqAnswers: Record<string, Record<string, string>>
@@ -26,6 +28,7 @@ export function ReceptionWidget({
   greeting,
   openDelayMs,
   locales,
+  locale,
   clinicPhone,
   clinicName,
   faqAnswers,
@@ -38,7 +41,7 @@ export function ReceptionWidget({
   const [teaser, setTeaser] = useState(false)
   const everOpened = useRef(false)
 
-  const initialLocale = locales[0] ?? 'ja'
+  const initialLocale = locales.includes(locale) ? locale : locales[0] ?? 'ja'
 
   useEffect(() => {
     if (open) {
