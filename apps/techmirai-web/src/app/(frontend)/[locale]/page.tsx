@@ -4,6 +4,7 @@ import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../site.config'
 import { resolveHeaderData } from './_components/resolveHeaderData'
+import { generateQrCodeDataUrl } from '@/lib/qr-code'
 export const revalidate = 3600
 
 const SUPPORTED_LOCALES = ['en', 'ja'] as const
@@ -123,6 +124,13 @@ blocks = await Promise.all(
         enabled: siteConfig.features.bookingWidget,
         bookingProviderUrl: siteConfig.integrations.bookingProviderUrl,
       } as RawBlock
+    }
+
+    if (block.blockType === 'live-demo' && siteConfig.integrations.demoUrl) {
+      // Generated fresh on each render from the config URL, not baked in
+      // at seed time — see the G2 plan's QR-code decision.
+      const qrCodeDataUrl = await generateQrCodeDataUrl(siteConfig.integrations.demoUrl)
+      return { ...block, qrCodeDataUrl } as RawBlock
     }
 
     if (block.blockType === 'hours-location') {

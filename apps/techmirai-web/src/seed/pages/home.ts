@@ -4,13 +4,15 @@ import siteConfig from '../../../site.config'
 import type { MediaIds } from '../media'
 
 /**
- * Pack-3/G1: Homepage Hero, Problem section, Before/After table (Spec
- * §5.1-5.3). Writes real `layout` content into the `home` pages-collection
- * doc that Pack-2/F3 seeded empty. Uses `updateLocalizedDoc` (not
- * `upsertBySlug`, which no-ops once the doc exists) — see the G1 plan's
- * "seed approach" decision. Every string below is copied verbatim from
+ * Pack-3/G1-G2: Homepage content (Spec §5.1-5.5) — Hero, Problem section,
+ * Before/After table (G1), capability cards + "AI does not replace staff"
+ * sub-block, and the live-demo + industry-tiles block (G2). Writes real
+ * `layout` content into the `home` pages-collection doc that Pack-2/F3
+ * seeded empty. Uses `updateLocalizedDoc` (not `upsertBySlug`, which
+ * no-ops once the doc exists) — see the G1 plan's "seed approach"
+ * decision. Every string below is copied verbatim from
  * `docs/_inputs/TechMirai Website — Full Content Spec (EN JA).md` lines
- * 243-304; brackets preserved exactly per CLAUDE.md rule 5.
+ * 243-358; brackets preserved exactly per CLAUDE.md rule 5.
  */
 export async function seedHomePage(payload: Payload, media: MediaIds): Promise<void> {
   const demoUrl = siteConfig.integrations.demoUrl
@@ -121,6 +123,133 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
         },
       ],
     },
+    {
+      blockType: 'capability-cards',
+      heading: 'One front desk, behind every channel.',
+      intro:
+        'Customers reach you through your website, chat, LINE, social media and, soon, the phone. AI受付 answers all of them from one set of information that you approve.',
+      cards: [
+        {
+          label: 'AI chat',
+          status: 'available',
+          description: 'Answers questions about your services, hours and access, using information you approved.',
+        },
+        {
+          label: 'AI agent',
+          status: 'available',
+          description:
+            'Guides customers step by step: helps them choose a service, checks availability and completes the booking.',
+        },
+        {
+          label: 'Online booking',
+          status: 'available',
+          description: 'Real-time availability from your schedule. Two customers can never take the same slot.',
+        },
+        {
+          label: 'LINE',
+          status: 'available',
+          description: 'Customers book, receive confirmations and reminders, and change or cancel — all inside LINE.',
+        },
+        {
+          label: 'Social media',
+          status: 'available',
+          description:
+            'Links from Instagram, Google Maps and your other profiles take customers straight to chat or booking.',
+        },
+        {
+          label: 'Voice',
+          status: 'in-development',
+          description:
+            'An AI phone receptionist that answers calls from the same approved information. Demo available.',
+        },
+        {
+          label: 'Human handoff',
+          status: 'available',
+          description: 'A visible way to reach your staff at every step. Staff take over the moment it matters.',
+        },
+      ],
+      badgeRow:
+        'Japanese and English · Admin panel your staff can update · Notifications to staff for every booking',
+      splitHeading: 'AI handles the repetitive work. Your staff handle what matters.',
+      splitLeftTitle: 'AI受付 handles',
+      splitLeftItems: [
+        { text: 'Frequently asked questions' },
+        { text: 'Business hours' },
+        { text: 'Service information' },
+        { text: 'Basic reservations' },
+        { text: 'Directions and access' },
+        { text: 'Routine inquiries' },
+        { text: 'Connecting customers with the right staff member' },
+      ],
+      splitRightTitle: 'Your staff handle',
+      splitRightItems: [
+        { text: 'Complex consultations' },
+        { text: 'Complaints' },
+        { text: 'Sensitive situations' },
+        { text: 'Special requests' },
+        { text: 'Important customer conversations' },
+      ],
+      splitClosingLine:
+        'Let AI handle repetitive reception work, so your staff can focus on customers and on work that needs a person.',
+    },
+    {
+      blockType: 'live-demo',
+      heading: 'Experience it yourself.',
+      body: 'Our demo is a working clinic website. Ask the reception chat a question, book a real appointment, receive the confirmation, then change or cancel it yourself — exactly as your customers would.',
+      checklistItems: [
+        { text: 'Browse in Japanese or English' },
+        { text: 'Ask the reception chat a question' },
+        { text: 'Book a real appointment' },
+        { text: 'Receive a confirmation' },
+        { text: 'Change or cancel it yourself' },
+      ],
+      buttonLabel: 'Open the live demo',
+      buttonHref: demoUrl,
+      qrCaption: 'Scan to try it on your phone, exactly as a customer would.',
+      smallPrint: '[Demo clinic name] is a fictional clinic created for this demo.',
+      // No JA given anywhere in the Spec for these three (brochure not in
+      // this repo) — [JA TODO], registered as G2-01.
+      threeStepStrip: [{ text: 'Choose a service' }, { text: 'pick a time' }, { text: 'confirmed' }],
+      tiles: [
+        {
+          label: 'Clinics & treatment rooms',
+          description:
+            'Bookings, first-visit questions and reminders. Fewer calls during treatment. Live demo available.',
+          href: '/solutions/clinic',
+          buttonLabel: 'See how it works for you.',
+        },
+        {
+          label: 'Beauty salons',
+          description: 'Menu questions, LINE booking and easy rebooking while your hands are busy.',
+          href: '/solutions/beauty',
+          buttonLabel: 'See how it works for you.',
+        },
+        {
+          label: 'Auto service & dealers',
+          description: 'Inspection and maintenance bookings, hours and estimate requests.',
+          href: '/solutions/automobile',
+          buttonLabel: 'See how it works for you.',
+        },
+        {
+          label: 'Hotels & guesthouses',
+          description: "Guests' questions answered in Japanese and English, at any hour.",
+          href: '/solutions/hotel',
+          buttonLabel: 'See how it works for you.',
+        },
+        {
+          label: 'Restaurants',
+          description: 'Hours, menu questions and table reservations.',
+          href: '/contact',
+          buttonLabel: 'Ask us.',
+        },
+        {
+          label: 'Real estate',
+          description: 'Property inquiries, viewing appointments and after-hours questions.',
+          href: '/contact',
+          buttonLabel: 'Ask us.',
+        },
+      ],
+    },
   ]
 
   const jaLayout = [
@@ -211,6 +340,128 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
         { area: 'スタッフの時間', before: '一日中、同じ質問に対応', after: '目の前のお客様に集中' },
       ],
     },
+    {
+      blockType: 'capability-cards',
+      heading: 'どの窓口から来ても、受付はひとつ。',
+      intro:
+        'お客様は、ホームページ、チャット、LINE、SNS、そして今後は電話からも訪れます。AI受付は、あなたが承認したひとつの情報をもとに、すべての窓口で同じように対応します。',
+      cards: [
+        {
+          label: 'AIチャット',
+          status: 'available',
+          description: 'サービス内容や営業時間、アクセスなどのご質問に、承認済みの情報をもとに回答します。',
+        },
+        {
+          label: 'AIエージェント',
+          status: 'available',
+          description: 'お客様を一歩ずつご案内。サービス選び、空き状況の確認、予約の完了までお手伝いします。',
+        },
+        {
+          label: 'オンライン予約',
+          status: 'available',
+          description: '空き状況はリアルタイムで反映。同じ枠に2件の予約が重なることはありません。',
+        },
+        {
+          label: 'LINE連携',
+          status: 'available',
+          description: '予約、確認通知、リマインド、変更・キャンセルまで、LINEの中で完結します。',
+        },
+        {
+          label: 'SNSからの導線',
+          status: 'available',
+          description: 'InstagramやGoogleマップなどのリンクから、チャットや予約へ直接ご案内します。',
+        },
+        {
+          label: 'AI電話受付',
+          status: 'in-development',
+          description: '承認済みの情報をもとに電話に応対する、AIの電話受付です。デモをご覧いただけます。',
+        },
+        {
+          label: 'スタッフへの引き継ぎ',
+          status: 'available',
+          description: 'どの段階でも、スタッフへの連絡手段を表示。必要なときは、すぐにスタッフが対応します。',
+        },
+      ],
+      badgeRow: '日本語・英語に対応・スタッフが更新できる管理画面・予約ごとにスタッフへ通知',
+      splitHeading: 'くり返しの対応はAIに。大切な対応は、スタッフに。',
+      splitLeftTitle: 'AI受付が対応すること',
+      splitLeftItems: [
+        { text: 'よくあるご質問' },
+        { text: '営業時間' },
+        { text: 'サービス内容のご案内' },
+        { text: '基本的なご予約' },
+        { text: 'アクセスのご案内' },
+        { text: '定型的なお問い合わせ' },
+        { text: 'お客様と担当スタッフの橋渡し' },
+      ],
+      splitRightTitle: 'スタッフが対応すること',
+      splitRightItems: [
+        { text: '込み入ったご相談' },
+        { text: 'ご意見やご不満への対応' },
+        { text: 'デリケートな内容' },
+        { text: '特別なご要望' },
+        { text: '大切なお客様とのやり取り' },
+      ],
+      splitClosingLine:
+        'くり返しの受付業務はAIに任せて、スタッフはお客様と、人にしかできない仕事に集中できます。',
+    },
+    {
+      blockType: 'live-demo',
+      heading: 'まずは、体験してみてください。',
+      body: 'デモは、実際に動くクリニックのホームページです。受付チャットに質問し、実際に予約して確認通知を受け取り、ご自身で変更・キャンセルまで。お客様と同じ流れを、そのまま体験いただけます。',
+      checklistItems: [
+        { text: '日本語・英語でサイトを見る' },
+        { text: '受付チャットに質問する' },
+        { text: '実際に予約する' },
+        { text: '確認通知を受け取る' },
+        { text: 'ご自身で変更・キャンセルする' },
+      ],
+      buttonLabel: 'デモを開く',
+      buttonHref: demoUrl,
+      qrCaption: 'スマートフォンで読み取って、お客様と同じように試せます。',
+      smallPrint: 'デモに登場する[医院名]は、デモ用の架空の医院です。',
+      // No JA given anywhere in the Spec for these three (brochure not in
+      // this repo) — registered as G2-01.
+      threeStepStrip: [{ text: '[JA TODO]' }, { text: '[JA TODO]' }, { text: '[JA TODO]' }],
+      tiles: [
+        {
+          label: 'クリニック・治療院',
+          description: '予約、初診の方からのご質問、リマインド。施術中の電話を減らします。デモあり。',
+          href: '/solutions/clinic',
+          buttonLabel: '活用例を見る',
+        },
+        {
+          label: '美容サロン',
+          description: 'メニューのご質問、LINE予約、次回のご予約も、施術中にしっかり受付。',
+          href: '/solutions/beauty',
+          buttonLabel: '活用例を見る',
+        },
+        {
+          label: '自動車整備・販売',
+          description: '車検・点検のご予約、営業時間のご案内、お見積りのご相談受付。',
+          href: '/solutions/automobile',
+          buttonLabel: '活用例を見る',
+        },
+        {
+          label: 'ホテル・宿泊施設',
+          description: '宿泊のお客様のご質問に、日本語・英語で24時間対応。',
+          href: '/solutions/hotel',
+          buttonLabel: '活用例を見る',
+        },
+        {
+          label: '飲食店',
+          description: '営業時間やメニューのご質問、お席のご予約。',
+          href: '/contact',
+          buttonLabel: '相談する',
+        },
+        {
+          label: '不動産',
+          description: '物件のお問い合わせ、内見のご予約、営業時間外のご質問。',
+          href: '/contact',
+          buttonLabel: '相談する',
+        },
+      ],
+    },
   ]
 
   await updateLocalizedDoc(payload, 'pages', 'home', {
@@ -218,5 +469,5 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
     ja: { layout: jaLayout },
   })
 
-  payload.logger.info('🏠 Homepage Hero/Problem/Before-After content seeded (Spec §5.1-5.3)')
+  payload.logger.info('🏠 Homepage content seeded (Spec §5.1-5.5)')
 }

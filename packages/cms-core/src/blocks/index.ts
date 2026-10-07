@@ -6,6 +6,8 @@ import { ServicesGridBlockConfig } from './services-grid/config'
 import { BentoGridBlockConfig } from './bento-grid/config'
 import { ProblemSectionBlockConfig } from './problem-section/config'
 import { BeforeAfterBlockConfig } from './before-after/config'
+import { CapabilityCardsBlockConfig } from './capability-cards/config'
+import { LiveDemoBlockConfig } from './live-demo/config'
 import { CaseStudyCarouselBlockConfig } from '../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from './logo-cloud/config'
 import { CTABannerBlockConfig } from './cta-banner/config'
@@ -45,6 +47,8 @@ export const allBlockConfigs: Block[] = [
   BentoGridBlockConfig,
   ProblemSectionBlockConfig,
   BeforeAfterBlockConfig,
+  CapabilityCardsBlockConfig,
+  LiveDemoBlockConfig,
   CaseStudyCarouselBlockConfig,
   LogoCloudBlockConfig,
   CTABannerBlockConfig,
@@ -84,6 +88,8 @@ export type { ServicesGridBlockProps, ServiceItem, ServiceCta, ServicesLayout } 
 export type { BentoGridBlockProps, BentoGridItem, BentoLayout } from './bento-grid/types'
 export type { ProblemSectionBlockProps, ProblemSectionJourneyStep, ProblemSectionCard } from './problem-section/types'
 export type { BeforeAfterBlockProps, BeforeAfterRow } from './before-after/types'
+export type { CapabilityCardsBlockProps, CapabilityCard, CapabilityStatus, CapabilitySplitItem } from './capability-cards/types'
+export type { LiveDemoBlockProps, LiveDemoChecklistItem, LiveDemoStep, LiveDemoTile } from './live-demo/types'
 export type { CaseStudyCarouselBlockProps } from '../verticals/recruitment/blocks/case-study-carousel/types'
 export type { LogoCloudBlockProps, LogoItem, ScrollSpeed } from './logo-cloud/types'
 export type { CTABannerBlockProps, CTABannerCta, CTABannerVariant, CTABannerBackgroundStyle, CTABannerButtonVariant, CTABannerLayout } from './cta-banner/types'
@@ -119,6 +125,8 @@ export type { BookingCtaBlockProps } from './booking-cta/types'
 export { HeroBlock } from './hero/component'
 export { ProblemSectionBlock } from './problem-section/component'
 export { BeforeAfterBlock } from './before-after/component'
+export { CapabilityCardsBlock } from './capability-cards/component'
+export { LiveDemoBlock } from './live-demo/component'
 export { RichTextBlock } from './rich-text/component'
 export { StatsBlock } from './stats/component'
 export { CTABannerBlock } from './cta-banner/component'

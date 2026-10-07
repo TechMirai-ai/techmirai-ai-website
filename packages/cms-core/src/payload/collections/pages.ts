@@ -9,6 +9,8 @@ import { ServicesGridBlockConfig } from '../../blocks/services-grid/config'
 import { BentoGridBlockConfig } from '../../blocks/bento-grid/config'
 import { ProblemSectionBlockConfig } from '../../blocks/problem-section/config'
 import { BeforeAfterBlockConfig } from '../../blocks/before-after/config'
+import { CapabilityCardsBlockConfig } from '../../blocks/capability-cards/config'
+import { LiveDemoBlockConfig } from '../../blocks/live-demo/config'
 import { CaseStudyCarouselBlockConfig } from '../../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from '../../blocks/logo-cloud/config'
 import { CTABannerBlockConfig } from '../../blocks/cta-banner/config'
@@ -49,6 +51,8 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     BentoGridBlockConfig,
     ProblemSectionBlockConfig,
     BeforeAfterBlockConfig,
+    CapabilityCardsBlockConfig,
+    LiveDemoBlockConfig,
     LogoCloudBlockConfig,
     CTABannerBlockConfig,
     RichTextBlockConfig,

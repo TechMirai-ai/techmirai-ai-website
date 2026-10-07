@@ -271,3 +271,16 @@ Spec content). No code change made for any of these — flagging only, per stand
    read clinic content** (`さくら接骨院`/`Sakura Osteopathic Clinic`) even with `verticals.clinic`
    off — unrelated to the seed folder F3 touched, but a real leftover a launch-scan (`docs/WORK-ORDER.md`
    rule B1) will catch before go-live.
+
+## 2026-10-07 — Pack-3/G2: QR-code generation already built, overlaps with Pack-4/N1's own scope
+
+While planning G2 (homepage live-demo block, Spec §5.5), `docs/packs/PACK-4-FORMS-CHAT-LAUNCH.md`'s
+N1 step ("Image slots, alt text, QR code") was found to also separately list "QR code" in its own
+scope ("The QR code is generated from the demo URL in config"). G2 already implements this in
+full: `apps/techmirai-web/src/lib/qr-code.ts`'s `generateQrCodeDataUrl()` (using the new `qrcode`
+npm dependency) generates the live-demo block's QR code at render time in
+`apps/techmirai-web/src/app/(frontend)/[locale]/page.tsx`, encoding
+`siteConfig.integrations.demoUrl` fresh on every render — satisfying N1's own "the QR code is
+generated from the config URL" wording, not just G2's. Flagging only, per standing rule 13:
+whoever plans Pack-4/N1 should confirm the QR-code item there is already done (reusing this same
+helper for any other page that needs it) rather than building a second QR-generation path.
