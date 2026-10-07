@@ -248,3 +248,26 @@ conditional kana `validate`) are verified correct by typecheck + the full unit s
 admin-UI check, but the specific `*.integration.test.ts` files this plan named could not actually
 be executed and re-confirmed green in this environment. Installing a local PostgreSQL client (or
 running these in CI/WSL where `psql` exists) would close this gap.
+
+## 2026-10-06 — F3: gaps deferred to Pack-3/Phase-G, flagged only
+
+While implementing Pack-2/F3's seed scaffolding, four pre-existing or newly-visible gaps were
+noticed but are explicitly out of F3's own scope (seed/data layer only, not frontend routing or
+Spec content). No code change made for any of these — flagging only, per standing rule 13:
+
+1. **`downloads` collection has no real use yet.** `features.downloads` is on and the collection
+   exists, but nothing in F3's 16 page-groups links to a downloadable asset, so it was left empty
+   after clinic-demo removal rather than seeding speculative placeholder PDFs nothing references.
+   Revisit once a real download (e.g. a brochure PDF) has an actual home on a page.
+2. **`privacy`/`terms`/`legal-notice` and `product`/`security` routes are not `pages`-collection-driven
+   yet.** F3 created the `pages` docs for all five slugs (seed/data layer), but
+   `apps/techmirai-web/src/app/(frontend)/[locale]/{privacy,terms,legal-notice}/page.tsx` still
+   render via the static `LegalPlaceholder` component, and `product`/`security` have no route file
+   at all. Wiring these routes to query `pages` is Pack-3/Phase-G frontend work.
+3. **Product-visual placeholders with no Spec size** (phone mockup, admin-panel screenshot,
+   layered-answers diagram, sample assessment report — Spec §19) were deliberately not generated;
+   see `docs/PLACEHOLDER-REGISTER.md`'s note after row F3-16.
+4. **`site.config.ts`'s `seo.titleTemplate`/`defaultDescription`/`sitemapIncludeCollections` still
+   read clinic content** (`さくら接骨院`/`Sakura Osteopathic Clinic`) even with `verticals.clinic`
+   off — unrelated to the seed folder F3 touched, but a real leftover a launch-scan (`docs/WORK-ORDER.md`
+   rule B1) will catch before go-live.

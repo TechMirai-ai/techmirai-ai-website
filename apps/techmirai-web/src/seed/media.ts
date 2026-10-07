@@ -1,0 +1,105 @@
+import type { Payload } from 'payload'
+import { createInitialsAvatarPng, createLabelledPlaceholderPng, paletteColor } from './lib/placeholder-image'
+
+export interface MediaIds {
+  ogImages: Record<string, number | string>
+  teamGroupPhoto: number | string
+  individualPortrait: number | string
+}
+
+/**
+ * Uploads a generated buffer as a `media` doc, reusing an existing doc with
+ * the same filename instead of creating a duplicate. This is the
+ * Pack-2/F3 fix for the "reseeding orphans media" risk flagged in
+ * docs/packs/PACK-2-FOUNDATION.md's F3 step: stable filenames mean a
+ * re-upload after a failed/partial clear would otherwise get silently
+ * suffixed (`-1.png`) by the storage adapter rather than reused — logged in
+ * docs/ENGINE-FIXES.md.
+ */
+async function upsertMedia(
+  payload: Payload,
+  filename: string,
+  buffer: Buffer,
+  alt: { en: string; ja: string },
+): Promise<number | string> {
+  const existing = await payload.find({
+    collection: 'media',
+    where: { filename: { equals: filename } },
+    limit: 1,
+    depth: 0,
+  })
+  if (existing.docs[0]) {
+    return existing.docs[0]['id'] as number | string
+  }
+
+  // locale:'all' is a Payload runtime feature not reflected in its TypeScript overloads
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doc = await (payload as any).create({
+    collection: 'media',
+    data: { alt },
+    file: { data: buffer, mimetype: 'image/png', name: filename, size: buffer.length },
+    locale: 'all',
+  })
+  return doc.id as number | string
+}
+
+const PAGE_LABELS: Record<string, { en: string; ja: string }> = {
+  home: { en: 'Home', ja: '[JA TODO]' },
+  product: { en: 'Product', ja: '[JA TODO]' },
+  solutions: { en: 'Solutions', ja: '業種別' },
+  'how-it-works': { en: 'How It Works', ja: '仕組み' },
+  integrations: { en: 'Integrations', ja: '連携' },
+  pricing: { en: 'Pricing', ja: '料金' },
+  security: { en: 'Security', ja: '[JA TODO]' },
+  about: { en: 'About', ja: '会社紹介' },
+  technology: { en: 'Technology', ja: 'AI開発' },
+  assessment: { en: 'Free AI Website Assessment', ja: '無料AIホームページ診断' },
+  faq: { en: 'FAQ', ja: 'よくあるご質問' },
+  privacy: { en: 'Privacy Policy', ja: '[JA TODO]' },
+  terms: { en: 'Terms of Use', ja: '[JA TODO]' },
+  'legal-notice': { en: 'Legal Notice', ja: '[JA TODO]' },
+}
+
+/**
+ * Generates every placeholder image this seed needs, at the sizes Content
+ * Spec §19 ("Photo and image brief") actually specifies — one 1200×630
+ * social-share image per page (Spec §19's "one per page" rule), plus one
+ * Spec-sized team-group (2400×1350) and individual-portrait (1200×1500)
+ * placeholder. Visuals with no explicit Spec size (phone mockup, admin
+ * screenshot, diagrams, sample report) are deliberately NOT generated here
+ * — inventing a confident-looking size for them would violate CLAUDE.md's
+ * "do not invent facts" rule; see docs/FINDINGS.md for that logged gap.
+ * Each file gets a docs/PLACEHOLDER-REGISTER.md row (F3-01 onward).
+ */
+export async function seedMedia(payload: Payload): Promise<MediaIds> {
+  payload.logger.info('🖼️  Generating placeholder images...')
+
+  const ogImages: Record<string, number | string> = {}
+  let colorIndex = 0
+  for (const [slug, label] of Object.entries(PAGE_LABELS)) {
+    const buffer = await createLabelledPlaceholderPng(1200, 630, `PLACEHOLDER: ${label.en} social share 1200×630`, {
+      background: paletteColor(colorIndex++),
+    })
+    ogImages[slug] = await upsertMedia(payload, `og-${slug}.png`, buffer, {
+      en: `Placeholder social-share image for the ${label.en} page`,
+      ja: '[JA TODO]',
+    })
+  }
+  payload.logger.info(`   ${Object.keys(ogImages).length} social-share images ready`)
+
+  const teamGroupBuffer = await createLabelledPlaceholderPng(2400, 1350, 'PLACEHOLDER: Team group photo 2400×1350')
+  const teamGroupPhoto = await upsertMedia(payload, 'placeholder-team-group.png', teamGroupBuffer, {
+    en: 'Placeholder team group photo — real photo pending (Spec §19)',
+    ja: '[JA TODO]',
+  })
+
+  const portraitBuffer = await createInitialsAvatarPng('?', 1200)
+  const individualPortrait = await upsertMedia(payload, 'placeholder-team-portrait.png', portraitBuffer, {
+    en: 'Placeholder individual portrait — real photo pending (Spec §19)',
+    ja: '[JA TODO]',
+  })
+
+  payload.logger.info('   Team group + individual portrait placeholders ready')
+
+  return { ogImages, teamGroupPhoto, individualPortrait }
+}

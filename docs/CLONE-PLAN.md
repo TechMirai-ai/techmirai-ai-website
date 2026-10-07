@@ -48,7 +48,7 @@ corrected below.
 every collection F2 touched. That's false for `faqs` specifically — a read-only query found 9
 existing FAQ documents (18 `faqs_locales` rows), leftover clinic-demo content from an earlier
 `pnpm seed:demo` run (`apps/techmirai-web/src/seed/demo/faqs.ts`), already flagged for removal in
-Pack-3/F3. See the corresponding `docs/ENGINE-FIXES.md` entry (2026-10-06, "`push: true` asks a
+Pack-2/F3. See the corresponding `docs/ENGINE-FIXES.md` entry (2026-10-06, "`push: true` asks a
 one-time interactive question...") for what this meant for the `category`/`keywords` push and why
 it was still safe to proceed. Every other collection/global F2 touched (`team`, `company-info`,
 `case-studies`, `customers`, `services`, `blog`, `form-submissions`, the new `chat-answers`) was
@@ -72,7 +72,8 @@ for why, and why its `DROP COLUMN category` step is safe only for this disposabl
   six-option `select` (Spec §14's six categories), added `keywords` (localized textarea). The
   `category` type change does touch existing rows — 9 leftover clinic-demo FAQ documents, not
   TechMirai content (see the correction note above and the `docs/ENGINE-FIXES.md` entry); safe
-  because that data is disposable and already scheduled for removal in Pack-3/F3.
+  because that data is disposable and already scheduled for removal in Pack-2/F3 (now done —
+  removed by `clearLegacyContent()` in `apps/techmirai-web/src/seed/lib/clear.ts`).
 - New collection `chat-answers.ts`: `answerId`, `topic`, `keywords`, `answer`, `nextButtons`,
   `sortOrder`, `active` — holds Spec §16.3's C01–C10 chat-only answers (F01–F26 reuse the FAQ
   fields above instead). Registered unconditionally in `config-factory.ts`.

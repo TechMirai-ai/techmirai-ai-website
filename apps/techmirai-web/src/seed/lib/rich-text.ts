@@ -1,5 +1,4 @@
-// Lexical richText stub — matches the shape used across the real seed files
-// (see blog.ts's richTextStub / about-section.seed.ts's richText helper).
+// Lexical richText stub — matches the shape used across the real seed files.
 
 export function richText(...paragraphs: string[]) {
   return {

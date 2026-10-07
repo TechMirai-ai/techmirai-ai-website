@@ -181,7 +181,7 @@ column, not a rename; nothing is actually being renamed. Never pick "rename" her
 (18 `faqs_locales` rows) with real `category` values (`Insurance & Payment`/`保険・お支払い`,
 `Treatment`/`施術について`, etc.). Traced to `apps/techmirai-web/src/seed/demo/faqs.ts` — these are
 leftover **clinic-demo** FAQ rows from an earlier `pnpm seed:demo` run, already flagged for removal
-in Pack-3/F3 (see the F1 "normal preflight was already FAILING" entry above), not TechMirai
+in Pack-2/F3 (see the F1 "normal preflight was already FAILING" entry above), not TechMirai
 content. If "rename" were picked instead of "create column," every one of those 18 rows' old
 category label would be copied verbatim into the new `keywords` field (nonsense content for a
 keywords column), while the new base-table `category` enum column would come back `NULL` for all
@@ -234,7 +234,8 @@ Payload for this script never triggers the diff/prompt at all.
 **Why this is safe here, specifically:** the migration's `DROP COLUMN category` on `faqs_locales`
 is **not additive** — it discards existing row data. This is only safe because, as established in
 the schema-comparison diagnosis above, the only rows affected are the 9 leftover clinic-demo FAQ
-documents (18 `faqs_locales` rows) already slated for removal in Pack-3/F3, not TechMirai content.
+documents (18 `faqs_locales` rows) already slated for removal in Pack-2/F3, not TechMirai content
+(now done — see the F3 entry below).
 Do not reuse this script's drop step against a database that might hold real FAQ content without
 re-verifying row contents first.
 
@@ -242,3 +243,26 @@ re-verifying row contents first.
 gap (no production-safe automated migration path; `push: true` can hang on ambiguous diffs even
 when answered correctly) remains open and tracked under the 2026-10-04 entry above, due before
 WO-8.
+
+## 2026-10-06 — F3: seed media re-upload could orphan files when a stale doc survives a failed delete (fix)
+
+**Symptom:** the retired clinic-demo seed (`apps/techmirai-web/src/seed/demo/lib/clear.ts`) used
+stable, deterministic media filenames (e.g. `demo-team-01.png`) but could leave a stale `media`
+doc in place when its delete failed (a required relationship elsewhere still pointed at it — see
+`deleteWhere()`'s catch-and-warn behavior). On the next reseed, re-uploading a file under that same
+filename hit Payload's storage adapter, which — finding a same-named file already on disk —
+silently suffixed a new filename (`-1.png`) rather than reusing the existing doc. Flagged by
+Pack-2/F3's own task text ("Project notes say reseeding used to orphan media. Check whether that
+is fixed; if not, fix it as an engine fix and log it.") — confirmed still open, not previously
+fixed.
+
+**Fix:** `apps/techmirai-web/src/seed/media.ts`'s `upsertMedia()` now checks for an existing
+`media` doc with the target filename (`payload.find({ collection: 'media', where: { filename: {
+equals: name } } })`) before calling `create()`, reusing its id if found. This makes the upload
+step idempotent regardless of whether a stale doc's delete ever succeeded — the actual guarantee
+needed ("no new orphan media" on a second `pnpm seed` run), and strictly safer than chasing every
+possible FK-ordering edge case in the delete path itself.
+
+**Status:** fixed. Verified by running `pnpm seed --confirm` twice in a row and confirming no
+`-1`/`-2`-suffixed duplicate filenames appear in the `media` collection or `public/media/` after
+the second run.

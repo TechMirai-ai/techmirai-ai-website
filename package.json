@@ -12,7 +12,6 @@
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "seed": "pnpm --filter techmirai-web seed",
-    "seed:demo": "pnpm --filter techmirai-web seed:demo",
     "preflight": "node scripts/preflight-check.mjs",
     "preflight:launch": "node scripts/preflight-check.mjs --launch"
   },

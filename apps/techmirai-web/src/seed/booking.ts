@@ -202,25 +202,27 @@ async function seedSlotsForResource(payload: Payload, resourceId: number | strin
   return count
 }
 
-async function seedBooking(): Promise<void> {
-  if (process.env['NODE_ENV'] === 'production' || process.env['NEXT_PHASE'] === 'phase-production-build') {
-    console.log('⏭️ Skipping booking seed in production build')
-    return
-  }
-
+/**
+ * Seeds bookable-services/resources/slots into an already-booted `payload`
+ * instance. Exported so apps/techmirai-web/src/seed/index.ts's unified
+ * `pnpm seed` orchestrator can call this directly (reusing its own
+ * already-initialized Payload instance) alongside the standalone
+ * `pnpm seed:booking` entrypoint below — Pack-2/F3 explicitly keeps this
+ * mechanism as-is, only changing its shape from a top-level script to a
+ * callable function.
+ */
+export async function seedBooking(payload: Payload): Promise<void> {
   const dbUri = process.env['DATABASE_URI'] ?? ''
   const isLocalSqlite = dbUri.startsWith('file:') || dbUri.endsWith('.db')
   if (isLocalSqlite) {
-    console.error(
-      '🛑 Refusing to run: DATABASE_URI is a local SQLite file, which disables real transactions. ' +
-        'The reservation engine cannot complete a booking against it. Point DATABASE_URI at a real ' +
-        'Postgres database (a dedicated dev database, never production) and re-run. Aborting.',
+    throw new Error(
+      'Refusing to seed booking data: DATABASE_URI is a local SQLite file, which disables real ' +
+        'transactions. The reservation engine cannot complete a booking against it. Point DATABASE_URI ' +
+        'at a real Postgres database (a dedicated dev database, never production) and re-run.',
     )
-    process.exit(1)
   }
 
-  const payload = await getPayload({ config })
-  payload.logger.info(`🌱 Seeding booking data (bookable-services/resources/slots) into ${dbUri}...\n`)
+  payload.logger.info('🌱 Seeding booking data (bookable-services/resources/slots)...\n')
 
   const serviceIds: (number | string)[] = []
   for (const seed of BOOKABLE_SERVICES) {
@@ -237,10 +239,23 @@ async function seedBooking(): Promise<void> {
   }
 
   payload.logger.info(`\n✅ Booking seed complete. ${PRACTITIONERS.length} resources, ${totalSlots} total open slots.`)
+}
+
+async function runStandalone(): Promise<void> {
+  if (process.env['NODE_ENV'] === 'production' || process.env['NEXT_PHASE'] === 'phase-production-build') {
+    console.log('⏭️ Skipping booking seed in production build')
+    return
+  }
+  const payload = await getPayload({ config })
+  await seedBooking(payload)
   process.exit(0)
 }
 
-seedBooking().catch((err: unknown) => {
-  console.error('Booking seed failed:', err)
-  process.exit(1)
-})
+// Only run the CLI wrapper when this file is executed directly (`pnpm
+// seed:booking`), not when `seedBooking` is imported by index.ts.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runStandalone().catch((err: unknown) => {
+    console.error('Booking seed failed:', err)
+    process.exit(1)
+  })
+}
