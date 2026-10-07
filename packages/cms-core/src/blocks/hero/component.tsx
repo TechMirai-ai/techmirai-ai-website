@@ -31,16 +31,22 @@ const navIconMapByHref: Record<string, LucideIcon> = {
 }
 
 export function HeroBlock({
+  eyebrow,
   headline,
   subheadline,
+  channelChips,
+  trustLine,
+  chatPointer,
   heroSlides,
   backgroundImageUrl,
   heroImageUrl,
   logoUrl,
   navItems,
   reservationButton,
+  secondaryButton,
   phoneButton,
   lineButton,
+  hoursCard,
   hoursTable,
   notes,
   address,
@@ -151,12 +157,22 @@ export function HeroBlock({
         />
         {/* Headline – allow wrapping, remove forced nowrap */}
         <div className="max-w-xl mt-15 sm:mt-12 lg:mt-6">
+          {eyebrow && (
+            <p className="mb-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-accent">
+              {eyebrow}
+            </p>
+          )}
           <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl font-extrabold leading-[1.15] tracking-tight text-brand-primary">
             {headline}
           </h1>
           {subheadline && (
             <p className="-mt-1 sm:-mt-1.5 text-xs sm:text-sm lg:text-base text-text-secondary font-medium">
               {subheadline}
+            </p>
+          )}
+          {channelChips && (
+            <p className="mt-2 text-[11px] sm:text-xs font-semibold tracking-wide text-brand-primary/80">
+              {channelChips}
             </p>
           )}
         </div>
@@ -245,97 +261,124 @@ export function HeroBlock({
           </AnimatePresence>
         </div>
 
-        {/* Clinic Hours Card */}
-        <div className="w-[98%] sm:w-[96%] max-w-5xl mx-auto -mt-10 sm:-mt-14 relative z-10 rounded-2xl bg-white shadow-xl p-2.5 sm:p-4 lg:p-5 border border-gray-100">
-          <p className="font-semibold text-sm sm:text-base mb-2 text-text-primary text-center sm:text-left">
-            {locale === 'ja' ? '診療時間' : 'Clinic Hours'}
-          </p>
+        {/* "Who answers, and when" card (Spec §5.1) when hoursCard is provided;
+            otherwise fall back to the original weekly hours table + map for
+            any caller still using the older hoursTable/address fields. */}
+        {hoursCard ? (
+          <div className="w-[98%] sm:w-[96%] max-w-5xl mx-auto -mt-10 sm:-mt-14 relative z-10 rounded-2xl bg-white shadow-xl p-4 sm:p-5 lg:p-6 border border-gray-100">
+            {hoursCard.title && (
+              <p className="font-semibold text-sm sm:text-base mb-2 text-text-primary text-center sm:text-left">
+                {hoursCard.title}
+              </p>
+            )}
+            <div className="flex flex-col gap-1.5">
+              {hoursCard.aiRow && (
+                <p className="text-[13px] sm:text-sm text-text-primary font-medium">{hoursCard.aiRow}</p>
+              )}
+              {hoursCard.staffLabel && hoursCard.staffHoursValue && (
+                <p className="text-[13px] sm:text-sm text-text-secondary">
+                  {hoursCard.staffLabel} {hoursCard.staffHoursValue}
+                </p>
+              )}
+            </div>
+            {hoursCard.note && (
+              <p className="mt-2 pt-2 border-t border-gray-100 text-[12px] sm:text-xs text-text-muted leading-relaxed">
+                {hoursCard.note}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="w-[98%] sm:w-[96%] max-w-5xl mx-auto -mt-10 sm:-mt-14 relative z-10 rounded-2xl bg-white shadow-xl p-2.5 sm:p-4 lg:p-5 border border-gray-100">
+            <p className="font-semibold text-sm sm:text-base mb-2 text-text-primary text-center sm:text-left">
+              {locale === 'ja' ? '診療時間' : 'Clinic Hours'}
+            </p>
 
-          <div className="flex flex-col 2xl:flex-row gap-3 2xl:gap-4 items-stretch">
-            {/* Table – forced to fit, no overflow */}
-            <div className="flex-1 min-w-0">
-              <table className="w-full text-left border-collapse table-fixed">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="py-1.5 pr-1 font-medium text-gray-500 text-[10px] sm:text-xs w-[20%]">
-                      {locale === 'ja' ? '曜日' : 'Day'}
-                    </th>
-                    {resolvedHoursRows.map((row) => (
-                      <th
-                        key={row.day}
-                        className="py-1.5 px-0.5 font-medium text-text-primary text-center text-[10px] sm:text-xs"
-                        title={row.day}
-                      >
-                        {row.day.slice(0, 3)}
+            <div className="flex flex-col 2xl:flex-row gap-3 2xl:gap-4 items-stretch">
+              {/* Table – forced to fit, no overflow */}
+              <div className="flex-1 min-w-0">
+                <table className="w-full text-left border-collapse table-fixed">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="py-1.5 pr-1 font-medium text-gray-500 text-[10px] sm:text-xs w-[20%]">
+                        {locale === 'ja' ? '曜日' : 'Day'}
                       </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Morning */}
-                  <tr className="border-b border-gray-100">
-                    <td className="py-1.5 pr-1">
-                      <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#FFF3C4] text-[#854D0E] font-bold text-[10px] sm:text-[12px] leading-tight">
-                        {resolvedMorningLabel}
-                      </span>
-                    </td>
-                    {resolvedHoursRows.map((row) => (
-                      <td key={row.day} className="py-1.5 px-0.5 text-center">
-                        {row.morning ? (
-                          <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
-                        ) : (
-                          <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
-                        )}
+                      {resolvedHoursRows.map((row) => (
+                        <th
+                          key={row.day}
+                          className="py-1.5 px-0.5 font-medium text-text-primary text-center text-[10px] sm:text-xs"
+                          title={row.day}
+                        >
+                          {row.day.slice(0, 3)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Morning */}
+                    <tr className="border-b border-gray-100">
+                      <td className="py-1.5 pr-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#FFF3C4] text-[#854D0E] font-bold text-[10px] sm:text-[12px] leading-tight">
+                          {resolvedMorningLabel}
+                        </span>
                       </td>
-                    ))}
-                  </tr>
+                      {resolvedHoursRows.map((row) => (
+                        <td key={row.day} className="py-1.5 px-0.5 text-center">
+                          {row.morning ? (
+                            <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
+                          ) : (
+                            <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
 
-                  {/* Afternoon */}
-                  <tr>
-                    <td className="py-1.5 pr-1">
-                      <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#EE7A93] text-white font-bold text-[10px] sm:text-[12px] leading-tight">
-                        {resolvedAfternoonLabel}
-                      </span>
-                    </td>
-                    {resolvedHoursRows.map((row) => (
-                      <td key={row.day} className="py-1.5 px-0.5 text-center">
-                        {row.afternoon ? (
-                          <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
-                        ) : (
-                          <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
-                        )}
+                    {/* Afternoon */}
+                    <tr>
+                      <td className="py-1.5 pr-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#EE7A93] text-white font-bold text-[10px] sm:text-[12px] leading-tight">
+                          {resolvedAfternoonLabel}
+                        </span>
                       </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
+                      {resolvedHoursRows.map((row) => (
+                        <td key={row.day} className="py-1.5 px-0.5 text-center">
+                          {row.afternoon ? (
+                            <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
+                          ) : (
+                            <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Notes */}
+              <div className="w-full 2xl:w-[260px] 2xl:shrink-0 bg-[#FAF0EE] rounded-xl p-3 border border-[#F5E1DD]">
+                <p className="font-semibold text-xs sm:text-sm mb-1 text-text-primary">{locale === 'ja' ? '備考：' : 'Notes:'}</p>
+                <ul className="text-[12px] sm:text-xs text-gray-600 space-y-1 list-disc list-inside">
+                  {resolvedNotes.map((note, i) => (
+                    <li key={i}>{note.text}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            {/* Notes */}
-            <div className="w-full 2xl:w-[260px] 2xl:shrink-0 bg-[#FAF0EE] rounded-xl p-3 border border-[#F5E1DD]">
-              <p className="font-semibold text-xs sm:text-sm mb-1 text-text-primary">{locale === 'ja' ? '備考：' : 'Notes:'}</p>
-              <ul className="text-[12px] sm:text-xs text-gray-600 space-y-1 list-disc list-inside">
-                {resolvedNotes.map((note, i) => (
-                  <li key={i}>{note.text}</li>
-                ))}
-              </ul>
+            {/* Address */}
+            <div className="mt-3 pt-3 sm:mt-4 sm:pt-4 border-t border-gray-100 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500">
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-brand-primary shrink-0" strokeWidth={2} />
+                <span className="tracking-wide text-[12px] sm:text-xs md:text-sm">{resolvedAddress.line}</span>
+              </div>
+              <a
+                href={resolvedAddress.mapHref}
+                className="px-3 py-0.5 text-xs font-medium border border-brand-primary text-brand-primary rounded-full hover:bg-text-secondary hover:text-white transition-colors whitespace-nowrap"
+              >
+                {locale === 'ja' ? '地図を見る' : 'view map'}
+              </a>
             </div>
           </div>
-
-          {/* Address */}
-          <div className="mt-3 pt-3 sm:mt-4 sm:pt-4 border-t border-gray-100 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500">
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-brand-primary shrink-0" strokeWidth={2} />
-              <span className="tracking-wide text-[12px] sm:text-xs md:text-sm">{resolvedAddress.line}</span>
-            </div>
-            <a
-              href={resolvedAddress.mapHref}
-              className="px-3 py-0.5 text-xs font-medium border border-brand-primary text-brand-primary rounded-full hover:bg-text-secondary hover:text-white transition-colors whitespace-nowrap"
-            >
-              {locale === 'ja' ? '地図を見る' : 'view map'}
-            </a>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Right Column / Mobile Action Flow */}
@@ -373,17 +416,19 @@ export function HeroBlock({
     <p className="text-[12px] sm:text-xs xl:text-sm text-gray-600 font-medium leading-relaxed max-w-xs">
       {resolvedFirstVisit.description}
     </p>
-    <Link
-      href={withLocale(locale, resolvedFirstVisit.linkHref)}
-      className="mt-1 inline-flex items-center gap-1 text-xs xl:text-sm font-extrabold text-[#EE7A93] hover:underline transition-all"
-    >
-      <span>{resolvedFirstVisit.linkLabel}</span>
-      <span className="text-base leading-none">→</span>
-    </Link>
+    {resolvedFirstVisit.linkLabel && (
+      <Link
+        href={withLocale(locale, resolvedFirstVisit.linkHref)}
+        className="mt-1 inline-flex items-center gap-1 text-xs xl:text-sm font-extrabold text-[#EE7A93] hover:underline transition-all"
+      >
+        <span>{resolvedFirstVisit.linkLabel}</span>
+        <span className="text-base leading-none">→</span>
+      </Link>
+    )}
   </div>
 
-  {/* 2. ONLINE RESERVATION BUTTON (Placed after First-Time Visitors card) */}
-  <div className="flex justify-center w-full mt-2">
+  {/* 2. PRIMARY + SECONDARY BUTTONS (Placed after First-Time Visitors card) */}
+  <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 w-full mt-2">
     <Link
       href={resolvedReservation.href}
       className="group bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 rounded-full shadow-md transition-all duration-200 h-12 xl:h-14 w-full sm:w-auto max-w-xs leading-tight"
@@ -391,7 +436,27 @@ export function HeroBlock({
       <Calendar className="w-4 h-4 sm:w-5 sm:h-5 xl:w-6 xl:h-6 shrink-0 text-white group-hover:text-brand-primary transition-colors" />
       <span>{resolvedReservation.label}</span>
     </Link>
+    {secondaryButton?.label && secondaryButton.href && (
+      // Plain <a>, not next/link: this points at an external demo
+      // environment (siteConfig.integrations.demoUrl), same as the
+      // Phone/LINE buttons above — and Next's <Link> rejects any href
+      // containing "[" / "]", which the current bracketed placeholder does.
+      <a
+        href={secondaryButton.href}
+        className="group bg-white hover:bg-brand-primary border border-brand-primary text-brand-primary hover:text-white active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 rounded-full shadow-sm transition-all duration-200 h-12 xl:h-14 w-full sm:w-auto max-w-xs leading-tight"
+      >
+        <span>{secondaryButton.label}</span>
+      </a>
+    )}
   </div>
+
+  {/* 3. TRUST LINE + CHAT POINTER */}
+  {(trustLine || chatPointer) && (
+    <div className="flex flex-col items-center gap-1 w-full mt-2 text-center">
+      {trustLine && <p className="text-[11px] sm:text-xs text-text-muted">{trustLine}</p>}
+      {chatPointer && <p className="text-[11px] sm:text-xs text-brand-primary/80 font-medium">{chatPointer}</p>}
+    </div>
+  )}
 
 </div>
     </div>

@@ -192,6 +192,70 @@ export async function createLocalizedDoc<TResult = AnyRec>(
   return (await (payload as any).create({ collection, data, locale: 'all' })) as TResult
 }
 
+/**
+ * Updates an EXISTING document with fully correct data in every provided
+ * locale, in a single write — the update-path counterpart to
+ * `createLocalizedDoc` above, for a doc that was already created (e.g. by
+ * `upsertBySlug`) and now needs its real localized `array`/`blocks` content
+ * filled in. Looks the doc up by `slug`, then issues one
+ * `payload.update({ id, data, locale: 'all' })` built the same
+ * locale-merged way `createLocalizedDoc` builds its `create()` payload, so
+ * it's subject to the exact same single-write guarantee (see the comment
+ * above `mergeLocales`). Throws if no doc with that slug exists — this is
+ * an update path, not an upsert.
+ */
+export async function updateLocalizedDoc<TResult = AnyRec>(
+  payload: Payload,
+  collection: string,
+  slug: string,
+  perLocaleData: Record<string, AnyRec>,
+): Promise<TResult> {
+  const existing = await payload.find({
+    collection,
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 0,
+  })
+  const doc = existing.docs[0]
+  if (!doc) {
+    throw new Error(`updateLocalizedDoc: no "${collection}" doc with slug "${slug}" exists to update`)
+  }
+
+  const locales = Object.keys(perLocaleData)
+  const firstLocale = locales[0]
+  if (firstLocale === undefined) {
+    throw new Error('updateLocalizedDoc: perLocaleData must have at least one locale')
+  }
+
+  // Single-locale case can't hit the shared-row-clobbering bug — see
+  // createLocalizedDoc's comment for why this path is safe to skip the merge.
+  const onlyLocaleData = perLocaleData[firstLocale]
+  if (locales.length === 1 && onlyLocaleData !== undefined) {
+    return (await payload.update({
+      collection,
+      id: doc['id'] as number | string,
+      data: onlyLocaleData,
+      locale: firstLocale,
+    })) as TResult
+  }
+
+  const collectionConfig = payload.collections[collection]?.config
+  if (!collectionConfig) {
+    throw new Error(`updateLocalizedDoc: unknown collection "${collection}"`)
+  }
+
+  const data = mergeLocales(collectionConfig.fields, perLocaleData, locales)
+
+  // locale:'all' is a Payload runtime feature not reflected in its TypeScript overloads
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (await (payload as any).update({
+    collection,
+    id: doc['id'] as number | string,
+    data,
+    locale: 'all',
+  })) as TResult
+}
+
 export async function upsertBySlug<T extends Record<string, unknown>>(
   payload: Payload,
   collection: string,

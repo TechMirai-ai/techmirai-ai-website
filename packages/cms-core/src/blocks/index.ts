@@ -4,6 +4,8 @@ import { HeroBlockConfig } from './hero/config'
 import { StatsBlockConfig } from './stats/config'
 import { ServicesGridBlockConfig } from './services-grid/config'
 import { BentoGridBlockConfig } from './bento-grid/config'
+import { ProblemSectionBlockConfig } from './problem-section/config'
+import { BeforeAfterBlockConfig } from './before-after/config'
 import { CaseStudyCarouselBlockConfig } from '../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from './logo-cloud/config'
 import { CTABannerBlockConfig } from './cta-banner/config'
@@ -41,6 +43,8 @@ export const allBlockConfigs: Block[] = [
   StatsBlockConfig,
   ServicesGridBlockConfig,
   BentoGridBlockConfig,
+  ProblemSectionBlockConfig,
+  BeforeAfterBlockConfig,
   CaseStudyCarouselBlockConfig,
   LogoCloudBlockConfig,
   CTABannerBlockConfig,
@@ -78,6 +82,8 @@ export type { HeroBlockProps } from './hero/types'
 export type { StatsBlockProps, StatItem } from './stats/types'
 export type { ServicesGridBlockProps, ServiceItem, ServiceCta, ServicesLayout } from './services-grid/types'
 export type { BentoGridBlockProps, BentoGridItem, BentoLayout } from './bento-grid/types'
+export type { ProblemSectionBlockProps, ProblemSectionJourneyStep, ProblemSectionCard } from './problem-section/types'
+export type { BeforeAfterBlockProps, BeforeAfterRow } from './before-after/types'
 export type { CaseStudyCarouselBlockProps } from '../verticals/recruitment/blocks/case-study-carousel/types'
 export type { LogoCloudBlockProps, LogoItem, ScrollSpeed } from './logo-cloud/types'
 export type { CTABannerBlockProps, CTABannerCta, CTABannerVariant, CTABannerBackgroundStyle, CTABannerButtonVariant, CTABannerLayout } from './cta-banner/types'
@@ -111,6 +117,8 @@ export type { TreatmentListBlockProps, TreatmentCardItem } from '../verticals/cl
 export type { BookingCtaBlockProps } from './booking-cta/types'
 
 export { HeroBlock } from './hero/component'
+export { ProblemSectionBlock } from './problem-section/component'
+export { BeforeAfterBlock } from './before-after/component'
 export { RichTextBlock } from './rich-text/component'
 export { StatsBlock } from './stats/component'
 export { CTABannerBlock } from './cta-banner/component'

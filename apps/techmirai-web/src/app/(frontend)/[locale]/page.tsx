@@ -141,6 +141,14 @@ blocks = await Promise.all(
   // top-level header link — curated here so growing the header's nav list
   // doesn't silently inflate the hero.
   const heroCardHrefs = ['/ai-reception', '/solutions', '/how-it-works', '/pricing']
+  // The "Our staff: [hours]" row is never seeded as CMS text — it's injected
+  // here from siteConfig.contact.businessHours (F1-21's single source of
+  // truth), same pattern as phoneButton/lineButton above, so the bracketed
+  // hours value is never duplicated into seed content.
+  const hoursCardRaw = block['hoursCard'] as Record<string, unknown> | undefined
+  const staffHoursValue = siteConfig.contact.businessHours?.['weekdays']
+  const hoursCard =
+    hoursCardRaw && staffHoursValue ? { ...hoursCardRaw, staffHoursValue } : hoursCardRaw
   return {
     ...block,
     navItems: navItems
@@ -149,6 +157,7 @@ blocks = await Promise.all(
     logoUrl: cmsLogoUrl ?? `/${siteConfig.brand.logoFile}`,
     phoneButton,
     lineButton,
+    ...(hoursCard ? { hoursCard } : {}),
   } as RawBlock
 }
 

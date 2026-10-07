@@ -1,6 +1,7 @@
 import type {
   HeroBlockProps, HeroSlide, NavItem, ReservationButton, PhoneButton,
   LineButton, HoursTable, HoursRow, NoteItem, AddressInfo, FirstVisitCard,
+  SecondaryButton, HoursCard,
 } from './types'
 
 export function adaptHeroBlock(raw: unknown): HeroBlockProps {
@@ -94,6 +95,33 @@ export function adaptHeroBlock(raw: unknown): HeroBlockProps {
         }
       : undefined
 
+  const secondaryRaw = data['secondaryButton'] as Record<string, unknown> | null | undefined
+  const secondaryButton: SecondaryButton | undefined =
+    secondaryRaw && typeof secondaryRaw['label'] === 'string' && typeof secondaryRaw['href'] === 'string'
+      ? { label: secondaryRaw['label'], href: secondaryRaw['href'] }
+      : undefined
+
+  // staffHoursValue is injected onto the raw block by the homepage route from
+  // siteConfig.contact.businessHours — not a Hero-block CMS field of its own.
+  const hoursCardRaw = data['hoursCard'] as Record<string, unknown> | null | undefined
+  const hoursCard: HoursCard | undefined =
+    hoursCardRaw && typeof hoursCardRaw['title'] === 'string'
+      ? {
+          title: hoursCardRaw['title'],
+          aiRow: typeof hoursCardRaw['aiRow'] === 'string' ? hoursCardRaw['aiRow'] : '',
+          staffLabel: typeof hoursCardRaw['staffLabel'] === 'string' ? hoursCardRaw['staffLabel'] : '',
+          ...(typeof hoursCardRaw['note'] === 'string' && hoursCardRaw['note'] ? { note: hoursCardRaw['note'] } : {}),
+          ...(typeof hoursCardRaw['staffHoursValue'] === 'string' && hoursCardRaw['staffHoursValue']
+            ? { staffHoursValue: hoursCardRaw['staffHoursValue'] }
+            : {}),
+        }
+      : undefined
+
+  const eyebrowStr = typeof data['eyebrow'] === 'string' && data['eyebrow'] ? data['eyebrow'] : ''
+  const channelChipsStr = typeof data['channelChips'] === 'string' && data['channelChips'] ? data['channelChips'] : ''
+  const trustLineStr = typeof data['trustLine'] === 'string' && data['trustLine'] ? data['trustLine'] : ''
+  const chatPointerStr = typeof data['chatPointer'] === 'string' && data['chatPointer'] ? data['chatPointer'] : ''
+
   const subheadlineStr = typeof data['subheadline'] === 'string' && data['subheadline'] ? data['subheadline'] : ''
   const bgImageUrl = bgImage && typeof bgImage['url'] === 'string' ? bgImage['url'] : ''
 
@@ -113,6 +141,12 @@ const logoUrlRaw = typeof data['logoUrl'] === 'string' ? data['logoUrl'] : ''
     showScrollIndicator:
       typeof data['showScrollIndicator'] === 'boolean' ? data['showScrollIndicator'] : true,
     ...(subheadlineStr ? { subheadline: subheadlineStr } : {}),
+    ...(eyebrowStr ? { eyebrow: eyebrowStr } : {}),
+    ...(channelChipsStr ? { channelChips: channelChipsStr } : {}),
+    ...(trustLineStr ? { trustLine: trustLineStr } : {}),
+    ...(chatPointerStr ? { chatPointer: chatPointerStr } : {}),
+    ...(secondaryButton ? { secondaryButton } : {}),
+    ...(hoursCard ? { hoursCard } : {}),
     ...(bgImageUrl ? { backgroundImageUrl: bgImageUrl } : {}),
     ...(heroSlides.length > 0 ? { heroSlides } : {}),
     ...(reservationButton ? { reservationButton } : {}),

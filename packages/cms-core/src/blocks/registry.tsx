@@ -8,6 +8,10 @@ import { ServicesGridBlock } from './services-grid/component'
 import { adaptServicesGridBlock } from './services-grid/adapter'
 import { BentoGridBlock } from './bento-grid/component'
 import { adaptBentoGridBlock } from './bento-grid/adapter'
+import { ProblemSectionBlock } from './problem-section/component'
+import { adaptProblemSectionBlock } from './problem-section/adapter'
+import { BeforeAfterBlock } from './before-after/component'
+import { adaptBeforeAfterBlock } from './before-after/adapter'
 import { CaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/component'
 import { adaptCaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/adapter'
 import { LogoCloudBlock } from './logo-cloud/component'
@@ -79,6 +83,8 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'stats':               (raw) => <StatsBlock              {...adaptStatsBlock(raw)} />,
   'services-grid':       (raw) => <ServicesGridBlock       {...adaptServicesGridBlock(raw)} />,
   'bento-grid':          (raw) => <BentoGridBlock          {...adaptBentoGridBlock(raw)} />,
+  'problem-section':     (raw) => <ProblemSectionBlock     {...adaptProblemSectionBlock(raw)} />,
+  'before-after':        (raw) => <BeforeAfterBlock        {...adaptBeforeAfterBlock(raw)} />,
   'case-study-carousel': (raw) => <CaseStudyCarouselBlock  {...adaptCaseStudyCarouselBlock(raw)} />,
   'logo-cloud':          (raw) => <LogoCloudBlock          {...adaptLogoCloudBlock(raw)} />,
   'cta-banner':          (raw) => <CTABannerBlock          {...adaptCTABannerBlock(raw)} />,

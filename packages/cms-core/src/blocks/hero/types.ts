@@ -57,12 +57,30 @@ export interface FirstVisitCard {
   linkHref: string
 }
 
+export interface SecondaryButton {
+  label: string
+  href: string
+}
+
+export interface HoursCard {
+  title: string
+  aiRow: string
+  staffLabel: string
+  note?: string
+  /** Injected by the homepage route from siteConfig.contact.businessHours — see page.tsx. */
+  staffHoursValue?: string
+}
 
 export interface HeroBlockProps {
   blockType?: 'hero'
   eyebrow?: string
   headline?: string
   subheadline?: string
+  channelChips?: string
+  trustLine?: string
+  chatPointer?: string
+  secondaryButton?: SecondaryButton
+  hoursCard?: HoursCard
   backgroundImageUrl?: string
   heroSlides?: HeroSlide[]
   showScrollIndicator?: boolean

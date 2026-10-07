@@ -5,8 +5,12 @@ export const HeroBlockConfig: Block = {
   interfaceName: 'HeroBlock',
   labels: { singular: 'Hero', plural: 'Heroes' },
   fields: [
+    { name: 'eyebrow', type: 'text', localized: true },
     { name: 'headline', type: 'text', localized: true, required: true },
     { name: 'subheadline', type: 'textarea', localized: true },
+    { name: 'channelChips', type: 'text', localized: true },
+    { name: 'trustLine', type: 'text', localized: true },
+    { name: 'chatPointer', type: 'text', localized: true },
     {
       name: 'backgroundImage',
       type: 'upload',
@@ -34,6 +38,25 @@ export const HeroBlockConfig: Block = {
       fields: [
         { name: 'label', type: 'text', localized: true, defaultValue: 'Online Reservation' },
         { name: 'href', type: 'text', required: true, defaultValue: '#' },
+      ],
+    },
+    {
+      name: 'secondaryButton',
+      type: 'group',
+      fields: [
+        { name: 'label', type: 'text', localized: true },
+        { name: 'href', type: 'text' },
+      ],
+    },
+    {
+      name: 'hoursCard',
+      type: 'group',
+      admin: { description: 'A simple "who answers, and when" card (two lines + a note), not the weekly hours table below.' },
+      fields: [
+        { name: 'title', type: 'text', localized: true },
+        { name: 'aiRow', type: 'text', localized: true },
+        { name: 'staffLabel', type: 'text', localized: true },
+        { name: 'note', type: 'textarea', localized: true },
       ],
     },
     {
@@ -66,7 +89,7 @@ export const HeroBlockConfig: Block = {
       name: 'address',
       type: 'group',
       fields: [
-        { name: 'line', type: 'text', localized: true, required: true },
+        { name: 'line', type: 'text', localized: true },
         { name: 'mapHref', type: 'text', defaultValue: '#map' },
       ],
     },

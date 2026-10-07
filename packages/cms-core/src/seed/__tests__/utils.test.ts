@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import type { Field, Payload } from 'payload'
-import { mergeLocales, createLocalizedDoc } from '../utils'
+import { mergeLocales, createLocalizedDoc, updateLocalizedDoc } from '../utils'
 
 describe('mergeLocales', () => {
   it('wraps a localized leaf field as { locale: value } and keeps a non-localized leaf shared', () => {
@@ -252,5 +252,67 @@ describe('createLocalizedDoc', () => {
     await expect(createLocalizedDoc(payload, 'missing-collection', { ja: {}, en: {} })).rejects.toThrow(
       /unknown collection/,
     )
+  })
+})
+
+describe('updateLocalizedDoc', () => {
+  it('throws when no doc with that slug exists', async () => {
+    // Arrange
+    const find = vi.fn().mockResolvedValue({ docs: [] })
+    const payload = { find } as unknown as Payload
+
+    // Act & Assert
+    await expect(updateLocalizedDoc(payload, 'pages', 'missing-slug', { ja: {} })).rejects.toThrow(
+      /no "pages" doc with slug "missing-slug" exists/,
+    )
+  })
+
+  it('takes the single-locale fast path and calls payload.update with a plain (unwrapped) locale write against the found doc id', async () => {
+    // Arrange
+    const find = vi.fn().mockResolvedValue({ docs: [{ id: 'abc123' }] })
+    const update = vi.fn().mockResolvedValue({ id: 'abc123' })
+    const payload = { find, update } as unknown as Payload
+    const data = { layout: [{ blockType: 'hero' }] }
+
+    // Act
+    await updateLocalizedDoc(payload, 'pages', 'home', { ja: data })
+
+    // Assert
+    expect(update).toHaveBeenCalledWith({ collection: 'pages', id: 'abc123', data, locale: 'ja' })
+  })
+
+  it('merges via the collection schema and writes once with locale: "all" against the found doc id for multiple locales', async () => {
+    // Arrange
+    const find = vi.fn().mockResolvedValue({ docs: [{ id: 'abc123' }] })
+    const update = vi.fn().mockResolvedValue({ id: 'abc123' })
+    const fields: Field[] = [{ name: 'title', type: 'text', localized: true }]
+    const payload = {
+      find,
+      update,
+      collections: { pages: { config: { fields } } },
+    } as unknown as Payload
+
+    // Act
+    await updateLocalizedDoc(payload, 'pages', 'home', { ja: { title: 'ホーム' }, en: { title: 'Home' } })
+
+    // Assert
+    expect(update).toHaveBeenCalledTimes(1)
+    expect(update).toHaveBeenCalledWith({
+      collection: 'pages',
+      id: 'abc123',
+      data: { title: { ja: 'ホーム', en: 'Home' } },
+      locale: 'all',
+    })
+  })
+
+  it('throws when the target collection is not registered on the payload instance', async () => {
+    // Arrange
+    const find = vi.fn().mockResolvedValue({ docs: [{ id: 'abc123' }] })
+    const payload = { find, update: vi.fn(), collections: {} } as unknown as Payload
+
+    // Act & Assert
+    await expect(
+      updateLocalizedDoc(payload, 'missing-collection', 'home', { ja: {}, en: {} }),
+    ).rejects.toThrow(/unknown collection/)
   })
 })

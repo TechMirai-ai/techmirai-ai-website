@@ -5,6 +5,7 @@ export interface MediaIds {
   ogImages: Record<string, number | string>
   teamGroupPhoto: number | string
   individualPortrait: number | string
+  heroPhoneMockup: number | string
 }
 
 /**
@@ -101,5 +102,17 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
 
   payload.logger.info('   Team group + individual portrait placeholders ready')
 
-  return { ogImages, teamGroupPhoto, individualPortrait }
+  // Pack-3/G1: the homepage hero's phone-mockup image (Spec §5.1/§19) was
+  // deliberately left unsized by F3 pending "Phase G knowing actual on-page
+  // usage" (docs/PLACEHOLDER-REGISTER.md note after F3-16) — G1 is that
+  // moment. 750×1334 is a standard phone-screenshot aspect ratio; the real
+  // chat/booking/LINE screenshots this stands in for don't exist yet.
+  const heroPhoneMockupBuffer = await createLabelledPlaceholderPng(750, 1334, 'PLACEHOLDER: Hero phone mockup 750×1334')
+  const heroPhoneMockup = await upsertMedia(payload, 'placeholder-hero-phone-mockup.png', heroPhoneMockupBuffer, {
+    en: 'AI受付 answering a question and confirming a booking on a smartphone',
+    ja: 'スマートフォンでAI受付が質問に答え、予約を確定している画面',
+  })
+  payload.logger.info('   Hero phone-mockup placeholder ready')
+
+  return { ogImages, teamGroupPhoto, individualPortrait, heroPhoneMockup }
 }

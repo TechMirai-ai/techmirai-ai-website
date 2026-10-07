@@ -47,11 +47,13 @@ Columns: ID | page and field | locale | placeholder text | Spec section | owner 
 | F3-15 | Team group photo (not yet placed on a page) | n/a | `PLACEHOLDER: Team group photo 2400×1350` | Spec §19 ("Team group photo... landscape 2400×1350 px") | Developer → each person (consent, F1-15) | OPEN — generated, unassigned; Phase G decides placement once real photo/consent exists |
 | F3-16 | Individual portrait placeholder (not yet placed on a page) | n/a | neutral initials avatar, 1200×1500 | Spec §19 ("Individual portraits... 1200×1500 px") | Developer → each person (consent, F1-15) | OPEN — generated, unassigned; never a generated face per CLAUDE.md |
 
-**Note on the phone mockup, admin-panel screenshot, layered-answers diagram, and sample
-assessment report visuals (Spec §19):** Pack-2/F3 deliberately did NOT generate placeholders for
-these — the Spec gives no explicit pixel size for any of them, and inventing a confident-looking
-default size would violate CLAUDE.md's "do not invent facts" rule. Logged as a gap in
-`docs/FINDINGS.md` for Phase G to size and register once each visual's actual on-page usage is
-known.
+| G1-01 | `pages` (`home`) Hero `heroSlides[0].image` | en/ja | `PLACEHOLDER: Hero phone mockup 750×1334` (image); alt text copied exactly from Spec §5.1/§19 ("AI受付 answering a question and confirming a booking on a smartphone" / "スマートフォンでAI受付が質問に答え、予約を確定している画面") | Spec §5.1 (Hero), §19 ("Photo and image brief") | Developer | OPEN — Spec gives no explicit pixel size; 750×1334 (phone-screenshot aspect ratio) chosen now that Pack-3/G1 established actual on-page usage, per the note below. Real image needs the chat-answer → booking → LINE-confirmation screenshots Spec §19 calls for, which don't exist yet. |
+
+**Note on the admin-panel screenshot, layered-answers diagram, and sample assessment report
+visuals (Spec §19):** still not generated — the Spec gives no explicit pixel size for any of
+these, and inventing a confident-looking default size would violate CLAUDE.md's "do not invent
+facts" rule. The homepage hero's phone mockup (the fourth visual in this originally-grouped note)
+is now sized and registered as G1-01 above, since Pack-3/G1 established its actual on-page usage.
+Logged as a gap in `docs/FINDINGS.md` for whichever later step places the remaining three.
 
 **Note on Appendix A's "found in later sections" items** (timelines, integrations detail, pricing detail, security, founder message, team bios beyond #15/#16, company profile detail, technology table, booking, case-study detail beyond #14, FAQ items F19/F20/F24/F25, blog bylines, chat answer C09): these are explicitly out of F1's scope — F1's own Read list names only Spec p.2-6 and p.11-14 (Appendix A's 21 numbered items), and `docs/WORK-ORDER.md` Appendix A itself frames the later-sections bullets as "not exhaustive; Step C1 builds the full list." None of that content exists in the repo yet. Each Pack-3/4 step that builds a page is responsible for adding its own register row(s) when it creates the field, the same way F1-02/05/11/12/13/16/17/20 above are already pre-registered against steps that haven't run yet.

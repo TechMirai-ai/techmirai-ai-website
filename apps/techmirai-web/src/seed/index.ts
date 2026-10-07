@@ -14,6 +14,7 @@ import { assertSeedConfirmed, clearLegacyContent } from './lib/clear'
 import { seedMedia } from './media'
 import { seedHeader, seedFooter } from './globals'
 import { seedPlainPages } from './pages/plain-pages'
+import { seedHomePage } from './pages/home'
 import { seedCaseStudies } from './case-studies'
 import { seedChat } from './chat'
 import { seedBlog } from './blog'
@@ -71,6 +72,7 @@ async function run(): Promise<void> {
   const media = await seedMedia(payload)
 
   await seedPlainPages(payload, media)
+  await seedHomePage(payload, media)
   await seedCaseStudies(payload)
   await seedChat(payload)
   await seedBlog(payload)
