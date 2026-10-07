@@ -16,6 +16,16 @@ const clinicVertical = false
 // still sits behind its own `visible` switch pending Sadiatec's written permission.
 const caseStudiesEnabled = true
 
+// Pack-3/G3: the homepage's Spec §5.8 case-study teaser card has its own
+// visibility switch, separate from caseStudiesEnabled above (which only
+// gates the generic collection/feature). Default false — Sadiatec's written
+// permission is still pending (docs/PLACEHOLDER-REGISTER.md F1-14). Injected
+// into the 'case-study-teaser' block at render time in page.tsx, same
+// pattern as features.bookingWidget → booking-cta's `enabled` prop — so the
+// card and its button either both exist or neither does, on both locales at
+// once, with no stored boolean to drift between them.
+const sadiatecCaseStudyTeaserVisible = false
+
 // Shared by contact.phone and reception.clinicPhone so the two never drift.
 // Pack-2/D2: Spec gives this only as a bracketed CONFIRM item — stored
 // literally bracketed per CLAUDE.md rule 5, see docs/PLACEHOLDER-REGISTER.md.
@@ -101,6 +111,7 @@ const siteConfig: SiteConfig = {
     locations: true,
     services: true,
     caseStudies: caseStudiesEnabled,
+    caseStudyTeaser: sadiatecCaseStudyTeaserVisible,
     blog: true,
     company: true,
     recruit: recruitmentVertical,

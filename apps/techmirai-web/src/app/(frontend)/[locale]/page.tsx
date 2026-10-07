@@ -126,6 +126,13 @@ blocks = await Promise.all(
       } as RawBlock
     }
 
+    if (block.blockType === 'case-study-teaser') {
+      // Spec §5.8 — see the G3 plan's "visibility switch" decision: a single
+      // site-config flag (not a stored per-locale field) so the card and its
+      // button either both exist or neither does, on both locales at once.
+      return { ...block, visible: siteConfig.features.caseStudyTeaser } as RawBlock
+    }
+
     if (block.blockType === 'live-demo' && siteConfig.integrations.demoUrl) {
       // Generated fresh on each render from the config URL, not baked in
       // at seed time — see the G2 plan's QR-code decision.

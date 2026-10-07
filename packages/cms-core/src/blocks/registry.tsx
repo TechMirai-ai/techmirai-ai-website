@@ -16,6 +16,16 @@ import { CapabilityCardsBlock } from './capability-cards/component'
 import { adaptCapabilityCardsBlock } from './capability-cards/adapter'
 import { LiveDemoBlock } from './live-demo/component'
 import { adaptLiveDemoBlock } from './live-demo/adapter'
+import { ToolsCompatibilityBlock } from './tools-compatibility/component'
+import { adaptToolsCompatibilityBlock } from './tools-compatibility/adapter'
+import { ProcessStepsBlock } from './process-steps/component'
+import { adaptProcessStepsBlock } from './process-steps/adapter'
+import { CaseStudyTeaserBlock } from './case-study-teaser/component'
+import { adaptCaseStudyTeaserBlock } from './case-study-teaser/adapter'
+import { PricingTeaserBlock } from './pricing-teaser/component'
+import { adaptPricingTeaserBlock } from './pricing-teaser/adapter'
+import { SecurityPointsBlock } from './security-points/component'
+import { adaptSecurityPointsBlock } from './security-points/adapter'
 import { CaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/component'
 import { adaptCaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/adapter'
 import { LogoCloudBlock } from './logo-cloud/component'
@@ -91,6 +101,11 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'before-after':        (raw) => <BeforeAfterBlock        {...adaptBeforeAfterBlock(raw)} />,
   'capability-cards':    (raw) => <CapabilityCardsBlock    {...adaptCapabilityCardsBlock(raw)} />,
   'live-demo':           (raw) => <LiveDemoBlock           {...adaptLiveDemoBlock(raw)} />,
+  'tools-compatibility': (raw) => <ToolsCompatibilityBlock {...adaptToolsCompatibilityBlock(raw)} />,
+  'process-steps':       (raw) => <ProcessStepsBlock       {...adaptProcessStepsBlock(raw)} />,
+  'case-study-teaser':   (raw) => <CaseStudyTeaserBlock    {...adaptCaseStudyTeaserBlock(raw)} />,
+  'pricing-teaser':      (raw) => <PricingTeaserBlock      {...adaptPricingTeaserBlock(raw)} />,
+  'security-points':     (raw) => <SecurityPointsBlock     {...adaptSecurityPointsBlock(raw)} />,
   'case-study-carousel': (raw) => <CaseStudyCarouselBlock  {...adaptCaseStudyCarouselBlock(raw)} />,
   'logo-cloud':          (raw) => <LogoCloudBlock          {...adaptLogoCloudBlock(raw)} />,
   'cta-banner':          (raw) => <CTABannerBlock          {...adaptCTABannerBlock(raw)} />,

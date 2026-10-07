@@ -4,15 +4,18 @@ import siteConfig from '../../../site.config'
 import type { MediaIds } from '../media'
 
 /**
- * Pack-3/G1-G2: Homepage content (Spec §5.1-5.5) — Hero, Problem section,
+ * Pack-3/G1-G3: Homepage content (Spec §5.1-5.10) — Hero, Problem section,
  * Before/After table (G1), capability cards + "AI does not replace staff"
- * sub-block, and the live-demo + industry-tiles block (G2). Writes real
- * `layout` content into the `home` pages-collection doc that Pack-2/F3
- * seeded empty. Uses `updateLocalizedDoc` (not `upsertBySlug`, which
- * no-ops once the doc exists) — see the G1 plan's "seed approach"
- * decision. Every string below is copied verbatim from
+ * sub-block, and the live-demo + industry-tiles block (G2), tools
+ * compatibility, implementation process, case-study teaser, pricing teaser
+ * and security points (G3). Writes real `layout` content into the `home`
+ * pages-collection doc that Pack-2/F3 seeded empty. Uses `updateLocalizedDoc`
+ * (not `upsertBySlug`, which no-ops once the doc exists) — see the G1 plan's
+ * "seed approach" decision. Every string below is copied verbatim from
  * `docs/_inputs/TechMirai Website — Full Content Spec (EN JA).md` lines
- * 243-358; brackets preserved exactly per CLAUDE.md rule 5.
+ * 243-433; brackets preserved exactly per CLAUDE.md rule 5. The
+ * case-study-teaser block's `visible` flag is deliberately not seeded here —
+ * it's injected at render from `siteConfig.features.caseStudyTeaser`.
  */
 export async function seedHomePage(payload: Payload, media: MediaIds): Promise<void> {
   const demoUrl = siteConfig.integrations.demoUrl
@@ -250,6 +253,77 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
         },
       ],
     },
+    {
+      blockType: 'tools-compatibility',
+      heading: 'Keep the tools you already use.',
+      body: "Most businesses already have a phone number, a LINE account, social media and sometimes a booking system. We build around them instead of making you start over. In the free assessment we tell you exactly what connects and what doesn't.",
+      col1Title: 'Works out of the box',
+      col1List: 'LINE Official Account · Your own domain · Email notifications · Links from Google Maps and Instagram',
+      col2Title: 'Case by case',
+      col2List: 'Your current booking system, if it offers a connection (API) or data export · External calendars',
+      col3Title: "If it can't connect",
+      col3Body:
+        "AI受付's booking can take over, or your staff receive an instant notification for every booking, so nothing is missed.",
+      linkLabel: 'See all integrations',
+      linkHref: '/integrations',
+    },
+    {
+      blockType: 'process-steps',
+      heading: 'From first conversation to launch, we do the work.',
+      sub: 'No AI expertise required. Typical timeline: [X weeks] after we receive your content.',
+      steps: [
+        { title: 'Assessment', line: 'We review your website and how inquiries reach you today.' },
+        {
+          title: 'Design',
+          line: 'We agree what AI受付 answers, what staff handle, and how booking works.',
+        },
+        { title: 'Build', line: 'We build or upgrade your website and load your approved answers.' },
+        {
+          title: 'Integration',
+          line: 'We connect LINE, notifications and the tools agreed in design.',
+        },
+        { title: 'Test', line: 'You and your staff try every flow before customers do.' },
+        { title: 'Launch', line: 'We go live and stay with you through monthly support.' },
+      ],
+    },
+    {
+      blockType: 'case-study-teaser',
+      heading: 'Case study: Sadiatec Co., Ltd.',
+      body: 'A Japan–Bangladesh HR and recruitment company established in 2005. We replaced their WordPress site with a custom-built website in three languages, an admin panel their staff update themselves, an on-site chatbot that hands conversations to staff on WhatsApp, and search across every page.',
+      statsStrip: 'About 20 pages · 3 languages · 11 content types · 7 integrations',
+      note: 'The same engine now powers AI受付 and our clinic demo.',
+      buttonLabel: 'Read the case study',
+      buttonHref: '/case-studies/sadiatec',
+    },
+    {
+      blockType: 'pricing-teaser',
+      heading: 'Simple, transparent pricing.',
+      packageName: 'AI受付 Starter Package',
+      priceLine1: 'Initial setup from [¥300,000]',
+      priceLine2: 'Monthly from [¥30,000]',
+      includesList:
+        'Website with AI受付 built in · Reception chat with your approved answers · Online booking · LINE booking and reminders · Japanese and English · Admin panel · Monthly support',
+      note: 'Your exact quote comes after the free assessment. [Tax wording]',
+      buttonLabel: 'See pricing details',
+      buttonHref: '/pricing',
+    },
+    {
+      blockType: 'security-points',
+      heading: 'Safe to rely on, every day.',
+      points: [
+        { text: 'Answers come from information you approved.' },
+        {
+          text: 'Availability, prices and appointment times always come from your real booking data — never from AI.',
+        },
+        { text: 'A person is always one tap away.' },
+        {
+          text: "Personal information handled under our privacy policy and Japan's Act on the Protection of Personal Information.",
+        },
+        { text: 'Japanese-language support by email, phone and LINE, [weekdays 9:00–18:00].' },
+      ],
+      buttonLabel: 'Security and support details',
+      buttonHref: '/security',
+    },
   ]
 
   const jaLayout = [
@@ -462,6 +536,66 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
         },
       ],
     },
+    {
+      blockType: 'tools-compatibility',
+      heading: '今お使いの仕組みは、できるだけそのままに。',
+      body: '多くのお店には、すでに電話番号やLINE公式アカウント、SNS、場合によっては予約システムがあります。私たちは、ゼロからやり直すのではなく、それらを活かす形で導入します。何が連携でき、何ができないかは、無料診断で具体的にお伝えします。',
+      col1Title: '標準で対応',
+      col1List: 'LINE公式アカウント・独自ドメイン・メール通知・GoogleマップやInstagramからのリンク',
+      col2Title: '個別にご相談',
+      col2List: '現在の予約システム（API連携やデータ出力に対応している場合）・外部カレンダー',
+      col3Title: '連携できない場合',
+      col3Body: 'AI受付の予約機能に切り替えるか、予約のたびにスタッフへすぐ通知が届くため、見落としがありません。',
+      linkLabel: '連携の一覧を見る',
+      linkHref: '/integrations',
+    },
+    {
+      blockType: 'process-steps',
+      heading: 'はじめてのご相談から公開まで、私たちが進めます。',
+      sub: 'AIの知識は必要ありません。目安の期間：資料をお預かりしてから[X週間]。',
+      steps: [
+        { title: '無料診断', line: '現在のホームページと、お問い合わせの流れを確認します。' },
+        { title: '設計', line: 'AI受付が答えること、スタッフが対応すること、予約の流れを一緒に決めます。' },
+        { title: '構築', line: 'ホームページを構築・改修し、承認いただいた回答を登録します。' },
+        { title: '連携', line: 'LINE、通知、設計で決めたツールとつなぎます。' },
+        { title: 'テスト', line: '公開前に、すべての流れをお客様の立場で一緒に確認します。' },
+        { title: '公開', line: '公開後も、月額サポートで運用をお手伝いします。' },
+      ],
+    },
+    {
+      blockType: 'case-study-teaser',
+      heading: '導入事例：Sadiatec Co., Ltd. 様',
+      body: '2005年設立、日本とバングラデシュをつなぐ人材・採用支援の会社です。WordPressのサイトを、3言語対応の独自開発サイトに刷新しました。スタッフが自分で更新できる管理画面、WhatsAppでスタッフに引き継げるチャットボット、全ページを横断する検索機能を備えています。',
+      statsStrip: '約20ページ・3言語・管理項目11種類・外部連携7件',
+      note: 'この事例で開発したサイト基盤が、AI受付とクリニックのデモにも使われています。',
+      buttonLabel: '事例を詳しく見る',
+      buttonHref: '/case-studies/sadiatec',
+    },
+    {
+      blockType: 'pricing-teaser',
+      heading: 'わかりやすく、明朗な料金。',
+      packageName: 'AI受付 スタートパッケージ',
+      priceLine1: '初期費用 [30万円]〜',
+      priceLine2: '月額 [3万円]〜',
+      includesList:
+        'AI受付を組み込んだホームページ・承認済みの回答による受付チャット・オンライン予約・LINE予約とリマインド・日本語と英語・管理画面・月額サポート',
+      note: '正式なお見積りは、無料診断のあとにご提示します。[税の表記]',
+      buttonLabel: '料金の詳細を見る',
+      buttonHref: '/pricing',
+    },
+    {
+      blockType: 'security-points',
+      heading: '毎日、安心してお使いいただくために。',
+      points: [
+        { text: '回答は、承認いただいた情報から。' },
+        { text: '空き状況・料金・予約時間は、必ず実際の予約データから表示します。AIが作ることはありません。' },
+        { text: 'いつでも、ワンタップでスタッフへ。' },
+        { text: '個人情報は、個人情報保護法とプライバシーポリシーに基づいて取り扱います。' },
+        { text: 'メール・電話・LINEで、日本語でサポートします（[平日 9:00〜18:00]）。' },
+      ],
+      buttonLabel: 'セキュリティとサポートの詳細',
+      buttonHref: '/security',
+    },
   ]
 
   await updateLocalizedDoc(payload, 'pages', 'home', {
@@ -469,5 +603,5 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
     ja: { layout: jaLayout },
   })
 
-  payload.logger.info('🏠 Homepage content seeded (Spec §5.1-5.5)')
+  payload.logger.info('🏠 Homepage content seeded (Spec §5.1-5.10)')
 }

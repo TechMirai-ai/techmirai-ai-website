@@ -85,6 +85,7 @@ const featuresSchema = z.object({
   locations: z.boolean(),
   services: z.boolean(),
   caseStudies: z.boolean(),
+  caseStudyTeaser: z.boolean(),
   blog: z.boolean(),
   company: z.boolean(),
   recruit: z.boolean(),

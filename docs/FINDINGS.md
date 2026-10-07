@@ -1,5 +1,43 @@
 # Findings
 
+## 2026-10-07 — Pack-3/G3: `pnpm seed` dropped its Postgres connection during booking-slot generation (unrelated to G3, not reproduced)
+
+While re-running `pnpm seed` to verify G3's homepage content, the run crashed
+with `Error: Connection terminated unexpectedly` (node-postgres) partway
+through `seedBooking`'s slot generation for the second staff member (after
+successfully seeding ~156 slots for the first). This happened well after the
+homepage seed step itself had already logged `🏠 Homepage content seeded
+(Spec §5.1-5.10)` successfully, so the home page's layout (including this
+step's 5 new blocks) was written before the crash — not caused by, or a
+blocker for, G3's own content. Looks like a transient Neon/network timeout
+under the sustained slot-generation loop, not a code regression; not
+reproduced on a second check since the homepage content was already
+confirmed present by then. Flagging only, per standing rule 13 — no code
+change made, and this is pre-existing `seedBooking` behavior, not G3's scope.
+
+## 2026-10-07 — Pack-3/G3: new blocks must be registered in a THIRD place, `pages.ts`'s `buildAvailableBlocks`, not just `blocks/index.ts`/`registry.tsx`
+
+While seeding G3's five new homepage blocks, `pnpm seed` failed with
+`mergeLocales: unknown blockType "tools-compatibility" at layout position 5`.
+Root cause: `packages/cms-core/src/payload/collections/pages.ts` has its own
+separate, hand-maintained `buildAvailableBlocks(siteConfig)` function with its
+own import list and block array — a near-duplicate of
+`packages/cms-core/src/blocks/index.ts`'s `allBlockConfigs`, not a consumer of
+it. `buildAvailableBlocks` is what actually becomes the live `pages`
+collection's `layout` field schema (`fields: [..., { name: 'layout', type:
+'blocks', blocks: buildAvailableBlocks(siteConfig) }, ...]`), so a block only
+registered in `blocks/index.ts`/`registry.tsx` renders fine once seeded, but
+can never BE seeded (`updateLocalizedDoc`'s `mergeLocales` looks up each
+block's field schema from the collection's actual config to decide how to
+merge locale data, and throws on a slug it can't find there).
+
+G3 added the five new blocks to `pages.ts`'s list too (import + array entry),
+matching this file's existing pattern — not refactoring the duplication away,
+since collapsing it into a single source of truth is a generic engine
+cleanup, not G3's own scope. Flagging per standing rule 13 so whoever adds the
+next new block type knows to update three places (`registry.tsx`, `index.ts`,
+`pages.ts`), not two.
+
 ## 2026-10-05 — F1: normal preflight was already FAILING before F1, not just launch mode
 
 F1's own "Done when" line expects *"normal preflight passes"* (as the baseline, with only the

@@ -11,6 +11,11 @@ import { ProblemSectionBlockConfig } from '../../blocks/problem-section/config'
 import { BeforeAfterBlockConfig } from '../../blocks/before-after/config'
 import { CapabilityCardsBlockConfig } from '../../blocks/capability-cards/config'
 import { LiveDemoBlockConfig } from '../../blocks/live-demo/config'
+import { ToolsCompatibilityBlockConfig } from '../../blocks/tools-compatibility/config'
+import { ProcessStepsBlockConfig } from '../../blocks/process-steps/config'
+import { CaseStudyTeaserBlockConfig } from '../../blocks/case-study-teaser/config'
+import { PricingTeaserBlockConfig } from '../../blocks/pricing-teaser/config'
+import { SecurityPointsBlockConfig } from '../../blocks/security-points/config'
 import { CaseStudyCarouselBlockConfig } from '../../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from '../../blocks/logo-cloud/config'
 import { CTABannerBlockConfig } from '../../blocks/cta-banner/config'
@@ -53,6 +58,11 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     BeforeAfterBlockConfig,
     CapabilityCardsBlockConfig,
     LiveDemoBlockConfig,
+    ToolsCompatibilityBlockConfig,
+    ProcessStepsBlockConfig,
+    CaseStudyTeaserBlockConfig,
+    PricingTeaserBlockConfig,
+    SecurityPointsBlockConfig,
     LogoCloudBlockConfig,
     CTABannerBlockConfig,
     RichTextBlockConfig,
