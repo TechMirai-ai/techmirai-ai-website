@@ -6,6 +6,7 @@ export interface MediaIds {
   teamGroupPhoto: number | string
   individualPortrait: number | string
   heroPhoneMockup: number | string
+  partnerPhoto: number | string
 }
 
 /**
@@ -17,11 +18,12 @@ export interface MediaIds {
  * suffixed (`-1.png`) by the storage adapter rather than reused — logged in
  * docs/ENGINE-FIXES.md.
  */
-async function upsertMedia(
+export async function upsertMedia(
   payload: Payload,
   filename: string,
   buffer: Buffer,
   alt: { en: string; ja: string },
+  mimetype = 'image/png',
 ): Promise<number | string> {
   const existing = await payload.find({
     collection: 'media',
@@ -38,7 +40,7 @@ async function upsertMedia(
   const doc = await (payload as any).create({
     collection: 'media',
     data: { alt },
-    file: { data: buffer, mimetype: 'image/png', name: filename, size: buffer.length },
+    file: { data: buffer, mimetype, name: filename, size: buffer.length },
     locale: 'all',
   })
   return doc.id as number | string
@@ -100,6 +102,16 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
     ja: '[JA TODO]',
   })
 
+  // Pack-3/G4: the homepage team-grid's Partner card (Spec §5.11, Sadiatec /
+  // Md. Sanaul Haque) gets its own named initials avatar, distinct from the
+  // generic unlabelled `?` individualPortrait, for visual consistency next
+  // to the 4 named team members' own avatars.
+  const partnerPhotoBuffer = await createInitialsAvatarPng('SH', 1200)
+  const partnerPhoto = await upsertMedia(payload, 'placeholder-partner-sanaul-haque.png', partnerPhotoBuffer, {
+    en: 'Placeholder portrait for Sadiatec Co., Ltd. partner (Md. Sanaul Haque) — real photo pending',
+    ja: '[JA TODO]',
+  })
+
   payload.logger.info('   Team group + individual portrait placeholders ready')
 
   // Pack-3/G1: the homepage hero's phone-mockup image (Spec §5.1/§19) was
@@ -114,5 +126,5 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
   })
   payload.logger.info('   Hero phone-mockup placeholder ready')
 
-  return { ogImages, teamGroupPhoto, individualPortrait, heroPhoneMockup }
+  return { ogImages, teamGroupPhoto, individualPortrait, heroPhoneMockup, partnerPhoto }
 }

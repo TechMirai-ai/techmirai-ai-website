@@ -18,6 +18,9 @@ export function CTABannerBlock({
   heading = 'inquiry',
   body,
   primaryButton,
+  secondaryButton,
+  textLink,
+  contactStrip,
 }: CTABannerBlockProps) {
   const locale = useLocale()
   return (
@@ -152,23 +155,55 @@ export function CTABannerBlock({
                 </p>
               )}
 
-              {/* CTA Button */}
-              {primaryButton?.label && (
-                <div className="mt-6">
+              {/* CTA Button(s) */}
+              {(primaryButton?.label || secondaryButton?.label) && (
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {primaryButton?.label && (
+                    <Link
+                      href={withLocale(locale, primaryButton.href)}
+                      className="inline-flex items-center gap-2 rounded-full bg-brand-primary
+                                px-6 py-2.5 text-sm font-semibold tracking-wider text-white shadow-sm
+                                transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md"
+                    >
+                      <span>{primaryButton.label}</span>
+                      <ArrowRight
+                        size={14}
+                        className="transition-transform duration-200
+                                   group-hover:translate-x-1"
+                      />
+                    </Link>
+                  )}
+                  {secondaryButton?.label && secondaryButton?.href && (
+                    <Link
+                      href={withLocale(locale, secondaryButton.href)}
+                      className="inline-flex items-center gap-2 rounded-full border border-brand-primary
+                                px-6 py-2.5 text-sm font-semibold tracking-wider text-brand-primary
+                                transition-all duration-200 hover:bg-brand-primary-light"
+                    >
+                      {secondaryButton.label}
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* Plain text link (e.g. "Download the brochure") */}
+              {textLink?.label && textLink?.href && (
+                <div className="mt-4">
                   <Link
-                    href={withLocale(locale, primaryButton.href)}
-                    className="inline-flex items-center gap-2 rounded-full bg-brand-primary
-                              px-6 py-2.5 text-sm font-semibold tracking-wider text-white shadow-sm
-                              transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md"
+                    href={withLocale(locale, textLink.href)}
+                    className="text-[13px] font-semibold text-brand-primary hover:underline underline-offset-2"
                   >
-                    <span>{primaryButton.label}</span>
-                    <ArrowRight 
-                      size={14} 
-                      className="transition-transform duration-200 
-                                 group-hover:translate-x-1" 
-                    />
+                    {textLink.label} →
                   </Link>
                 </div>
+              )}
+
+              {/* Contact strip (phone/email/hours) — injected from siteConfig at render */}
+              {contactStrip && (
+                <p className="mt-4 text-[12.5px] text-text-secondary">
+                  TEL {contactStrip.phone} · {contactStrip.email}
+                  {contactStrip.hours ? ` · ${contactStrip.hours}` : ''}
+                </p>
               )}
 
             </div>

@@ -133,6 +133,51 @@ blocks = await Promise.all(
       return { ...block, visible: siteConfig.features.caseStudyTeaser } as RawBlock
     }
 
+    if (block.blockType === 'team-grid') {
+      // Spec §5.11 — the one founder-visibility switch (company-info global,
+      // built Pack-2/F2) is consumed here for the first time: Jamal's card
+      // is filtered out by the adapter when founder.visible is false.
+      const companyInfo = await payload.findGlobal({ slug: 'company-info', depth: 0 }).catch(() => null)
+      const founder = (companyInfo as Record<string, unknown> | null)?.['founder'] as
+        | { visible?: boolean; person?: unknown }
+        | undefined
+      return {
+        ...block,
+        founderVisible: founder?.visible !== false,
+        founderPersonId: founder?.person,
+      } as RawBlock
+    }
+
+    if (block.blockType === 'faq') {
+      // Spec §5.13 — resolved dynamically from faqs.homepage===true, sorted
+      // by sortOrder, mirroring the news-list dynamic-resolution pattern
+      // above. No relationship is ever stored for this block instance.
+      const resolved = await payload.find({
+        collection: 'faqs',
+        where: { homepage: { equals: true }, active: { equals: true } },
+        sort: 'sortOrder',
+        depth: 0,
+        locale,
+        fallbackLocale: false,
+      })
+      return { ...block, items: resolved.docs } as RawBlock
+    }
+
+    if (block.blockType === 'cta-banner' && block['showContactStrip'] === true) {
+      // Spec §5.14's final-CTA instance only — the PoC instance (§5.12) has
+      // no showContactStrip flag, so it skips this branch.
+      const { lineButton } = await resolveHeaderData(locale)
+      return {
+        ...block,
+        secondaryButton: { ...(block['secondaryButton'] as Record<string, unknown>), href: lineButton.href },
+        contactStrip: {
+          phone: siteConfig.contact.phone,
+          email: siteConfig.contact.email,
+          hours: siteConfig.contact.businessHours?.['weekdays'] ?? '',
+        },
+      } as RawBlock
+    }
+
     if (block.blockType === 'live-demo' && siteConfig.integrations.demoUrl) {
       // Generated fresh on each render from the config URL, not baked in
       // at seed time — see the G2 plan's QR-code decision.

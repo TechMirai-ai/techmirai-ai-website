@@ -11,6 +11,12 @@ export interface CTABannerCta {
   href: string
 }
 
+export interface CTABannerContactStrip {
+  phone: string
+  email: string
+  hours: string
+}
+
 export interface CTABannerBlockProps {
   eyebrow?: string
   heading: string
@@ -23,4 +29,9 @@ export interface CTABannerBlockProps {
   backgroundStyle?: CTABannerBackgroundStyle
   backgroundImageUrl?: string
   layout?: CTABannerLayout
+  textLink?: CTABannerCta
+  showContactStrip?: boolean
+  // Injected by the consuming app's page renderer from SiteConfig.contact —
+  // see packages/cms-core/src/blocks/cta-banner/adapter.ts.
+  contactStrip?: CTABannerContactStrip
 }

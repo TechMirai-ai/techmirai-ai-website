@@ -21,5 +21,14 @@ export const FAQBlockConfig: Block = {
         { label: 'Grid', value: 'grid' },
       ],
     },
+    {
+      name: 'textLink',
+      type: 'group',
+      label: 'See-all-questions link',
+      fields: [
+        { name: 'label', type: 'text', localized: true },
+        { name: 'href', type: 'text' },
+      ],
+    },
   ],
 }

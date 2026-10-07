@@ -1,5 +1,45 @@
 # Findings
 
+## 2026-10-07 — Pack-3/G4: FAQ-doc ownership handoff to Pack-3/I4, and the Partner card's open visibility question
+
+G4 seeds 6 real `faqs` docs (faqId F01, F03, F07, F14, F17, F22; `homepage:
+true`; `sortOrder` 1-6 matching Spec §5.13's own display order) because the
+homepage's FAQ section needs real working content today, even though the
+full 26-question page (Pack-3/I4) hasn't been built yet. **Whoever plans I4
+must reuse these 6 docs by `faqId`** (upsert-by-faqId, not a fresh create)
+and add the remaining 20 — never duplicate or change F01/F03/F07/F14/F17/
+F22's `faqId` values (the future chatbot-matching layer, Pack-4/K1-K2, also
+keys off `faqId` being stable, per the field's own admin description in
+`packages/cms-core/src/payload/collections/faqs.ts`). The homepage's `faq`
+block resolves its 6 items dynamically at render time (`payload.find` where
+`homepage: true`, sorted by `sortOrder` — see `page.tsx`) rather than storing
+a relationship, so I4 changing these 6 docs' `category`/`sortOrder`/content
+later will not require any homepage reseed.
+
+Also flagging: the Partner card (Sadiatec Co., Ltd. / Md. Sanaul Haque) is a
+named individual whose katakana reading and photo consent is, by the same
+logic as register row F1-15, arguably required before publish — but Spec
+§5.11 lists this card unconditionally (no "behind a switch" wording, unlike
+§5.8's case study), and G4's own done-when criteria only test the founder
+switch. G4 ships it ungated (registered as G4-01). A later step should
+decide whether it needs its own visibility switch, the same shape as G3's
+`caseStudyTeaser`.
+
+No code change made beyond G4's own scope — flagging only, per standing
+rule 13.
+
+## 2026-10-07 — Pack-3/G4: pre-existing duplicate `FAQBlockProps`/`FAQItem` declarations
+
+While adding the `textLink` field to the `faq` block, found that
+`packages/cms-core/src/blocks/faq/component.tsx` declares its own local
+`FAQBlockProps`/`FAQItem` interfaces, duplicating (and, until this change,
+slightly diverging from) the ones already exported from
+`packages/cms-core/src/blocks/faq/types.ts` that `adapter.ts` and
+`blocks/index.ts` actually use. Not caused by G4 — pre-existing. G4 updated
+both declarations in parallel to add `textLink` consistently, rather than
+collapsing the duplication (a generic engine cleanup, out of this step's
+scope). Flagging per standing rule 13 for a future pass.
+
 ## 2026-10-07 — Pack-3/G3: `pnpm seed` dropped its Postgres connection during booking-slot generation (unrelated to G3, not reproduced)
 
 While re-running `pnpm seed` to verify G3's homepage content, the run crashed

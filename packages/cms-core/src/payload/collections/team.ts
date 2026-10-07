@@ -13,6 +13,15 @@ export const TeamCollection: CollectionConfig = {
     { name: 'title', type: 'text', localized: true, required: true },
     { name: 'photo', type: 'upload', relationTo: 'media' },
     { name: 'bio', type: 'richText', localized: true },
+    {
+      name: 'shortBio',
+      type: 'text',
+      localized: true,
+      admin: {
+        description:
+          'One-line card description for compact team-card UIs (homepage §5.11). Distinct from the full "bio" richText, which About (Pack-3/I2) uses.',
+      },
+    },
     slugField,
     {
       name: 'featured',

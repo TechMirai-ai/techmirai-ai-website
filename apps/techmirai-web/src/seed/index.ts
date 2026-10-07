@@ -13,6 +13,10 @@ import siteConfig from '../../site.config'
 import { assertSeedConfirmed, clearLegacyContent } from './lib/clear'
 import { seedMedia } from './media'
 import { seedHeader, seedFooter } from './globals'
+import { seedTeam } from './team'
+import { seedCompanyInfoFounder } from './company-info'
+import { seedFaqs } from './faqs'
+import { seedDownloads } from './downloads'
 import { seedPlainPages } from './pages/plain-pages'
 import { seedHomePage } from './pages/home'
 import { seedCaseStudies } from './case-studies'
@@ -70,9 +74,13 @@ async function run(): Promise<void> {
   await clearLegacyContent(payload, { hasEvents, hasGallery, hasClinic })
 
   const media = await seedMedia(payload)
+  const team = await seedTeam(payload)
+  await seedCompanyInfoFounder(payload, team)
+  await seedFaqs(payload)
+  const downloads = await seedDownloads(payload)
 
   await seedPlainPages(payload, media)
-  await seedHomePage(payload, media)
+  await seedHomePage(payload, media, team, downloads)
   await seedCaseStudies(payload)
   await seedChat(payload)
   await seedBlog(payload)

@@ -14,6 +14,7 @@ interface PayloadRawFAQBlock {
   sectionHeading?: string
   variant?: 'accordion' | 'grid'
   items?: (string | PayloadRawFAQDoc)[]
+  textLink?: { label?: string; href?: string }
 }
 
 /**
@@ -61,9 +62,15 @@ const formattedItems: FAQItem[] = (block.items || [])
   })
   .filter((item): item is FAQItem => item !== null)
   
+  const textLink =
+    block.textLink?.label && block.textLink?.href
+      ? { label: block.textLink.label, href: block.textLink.href }
+      : undefined
+
   return {
     sectionHeading: block.sectionHeading || '',
     variant: block.variant || 'accordion',
     items: formattedItems,
+    ...(textLink ? { textLink } : {}),
   }
 }

@@ -77,5 +77,20 @@ export const CTABannerBlockConfig: Block = {
       relationTo: 'media',
       admin: { description: 'Required when variant is "Background image"' },
     },
+    {
+      name: 'textLink',
+      type: 'group',
+      label: 'Plain text link (e.g. "Download the brochure")',
+      fields: [
+        { name: 'label', type: 'text', localized: true },
+        { name: 'href', type: 'text' },
+      ],
+    },
+    {
+      name: 'showContactStrip',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { description: 'Shows a phone/email/hours strip, injected at render from siteConfig.contact — see page.tsx.' },
+    },
   ],
 }

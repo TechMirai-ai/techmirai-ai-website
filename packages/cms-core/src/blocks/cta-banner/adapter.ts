@@ -4,6 +4,7 @@ import type {
   CTABannerBackgroundStyle,
   CTABannerButtonVariant,
   CTABannerLayout,
+  CTABannerContactStrip,
 } from './types'
 
 // Map legacy variant values written before the rename, in case old seeds exist
@@ -38,6 +39,21 @@ export function adaptCTABannerBlock(raw: unknown): CTABannerBlockProps {
     secondaryRaw['label'] &&
     typeof secondaryRaw['href'] === 'string' &&
     secondaryRaw['href']
+
+  const textLinkRaw = (data['textLink'] ?? {}) as Record<string, unknown>
+  const hasTextLink =
+    typeof textLinkRaw['label'] === 'string' &&
+    textLinkRaw['label'] &&
+    typeof textLinkRaw['href'] === 'string' &&
+    textLinkRaw['href']
+
+  const showContactStrip = data['showContactStrip'] === true
+  const contactStripRaw = data['contactStrip'] as CTABannerContactStrip | undefined
+  const hasContactStrip =
+    showContactStrip &&
+    contactStripRaw &&
+    typeof contactStripRaw.phone === 'string' &&
+    typeof contactStripRaw.email === 'string'
 
   const rawBgStyle = data['backgroundStyle']
   const backgroundStyle: CTABannerBackgroundStyle =
@@ -74,5 +90,7 @@ export function adaptCTABannerBlock(raw: unknown): CTABannerBlockProps {
         }
       : {}),
     ...(bgUrl ? { backgroundImageUrl: bgUrl } : {}),
+    ...(hasTextLink ? { textLink: { label: textLinkRaw['label'] as string, href: textLinkRaw['href'] as string } } : {}),
+    ...(hasContactStrip ? { contactStrip: contactStripRaw } : {}),
   }
 }

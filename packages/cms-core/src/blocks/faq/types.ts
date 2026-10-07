@@ -4,8 +4,14 @@ export interface FAQItem {
   answer: string
 }
 
+export interface FAQTextLink {
+  label: string
+  href: string
+}
+
 export interface FAQBlockProps {
   sectionHeading?: string
   items?: FAQItem[]
   variant?: 'accordion' | 'grid'
+  textLink?: FAQTextLink
 }

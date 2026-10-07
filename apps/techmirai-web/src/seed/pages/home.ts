@@ -2,22 +2,31 @@ import type { Payload } from 'payload'
 import { updateLocalizedDoc } from '@techmirai/cms-core/seed'
 import siteConfig from '../../../site.config'
 import type { MediaIds } from '../media'
+import type { TeamIds } from '../team'
+import type { DownloadIds } from '../downloads'
 
 /**
- * Pack-3/G1-G3: Homepage content (Spec §5.1-5.10) — Hero, Problem section,
+ * Pack-3/G1-G4: Homepage content (Spec §5.1-5.14) — Hero, Problem section,
  * Before/After table (G1), capability cards + "AI does not replace staff"
  * sub-block, and the live-demo + industry-tiles block (G2), tools
  * compatibility, implementation process, case-study teaser, pricing teaser
- * and security points (G3). Writes real `layout` content into the `home`
+ * and security points (G3), company/team, PoC callout, FAQ teaser and the
+ * final call to action (G4). Writes real `layout` content into the `home`
  * pages-collection doc that Pack-2/F3 seeded empty. Uses `updateLocalizedDoc`
  * (not `upsertBySlug`, which no-ops once the doc exists) — see the G1 plan's
  * "seed approach" decision. Every string below is copied verbatim from
  * `docs/_inputs/TechMirai Website — Full Content Spec (EN JA).md` lines
- * 243-433; brackets preserved exactly per CLAUDE.md rule 5. The
- * case-study-teaser block's `visible` flag is deliberately not seeded here —
- * it's injected at render from `siteConfig.features.caseStudyTeaser`.
+ * 243-467 (plus the FAQ Q&A at lines 1176-1217); brackets preserved exactly
+ * per CLAUDE.md rule 5. The case-study-teaser block's `visible` flag and the
+ * homepage `faq` block's `items` are deliberately not seeded here — both
+ * are injected/resolved at render time (see page.tsx).
  */
-export async function seedHomePage(payload: Payload, media: MediaIds): Promise<void> {
+export async function seedHomePage(
+  payload: Payload,
+  media: MediaIds,
+  team: TeamIds,
+  downloads: DownloadIds,
+): Promise<void> {
   const demoUrl = siteConfig.integrations.demoUrl
 
   const enLayout = [
@@ -324,6 +333,58 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
       buttonLabel: 'Security and support details',
       buttonHref: '/security',
     },
+    {
+      blockType: 'team-grid',
+      sectionHeading: 'Built by people who understand both sides.',
+      intro:
+        'We are a small team based in Japan. Several of us came to Japan from abroad, so we know what foreign customers need. We have also worked inside Japanese companies, so we know how Japanese businesses work.',
+      bullets: [
+        { text: 'One team from build to running — not a chain of vendors.' },
+        {
+          text: 'Built with the support of Sadiatec Co., Ltd., a Japan-based company established in 2005.',
+        },
+        { text: 'A working product you can try before you ever talk to us.' },
+      ],
+      members: [team.jamal, team.abdullah, team.haruka, team.nahida],
+      partner: {
+        photo: media.partnerPhoto,
+        // Spec's own table gives no separate EN "name" — the EN "role"
+        // column is this one combined descriptive line; JA splits name/role.
+        name: 'Sadiatec Co., Ltd. — Md. Sanaul Haque, President & CEO',
+        line: 'Our Japan-based partner since our first project. Chiyoda-ku, Tokyo. Established 2005.',
+      },
+      columns: '3',
+      showBio: false,
+      buttonLabel: 'Meet the team',
+      buttonHref: '/about',
+    },
+    {
+      blockType: 'cta-banner',
+      heading: 'Validate your AI idea before full investment.',
+      body: 'Beyond AI受付, we build small AI proofs of concept — camera inspection, voice and document AI — so you can test an idea on your own data before committing a full budget.',
+      primaryButton: { label: 'Talk to us about a PoC', href: '/contact' },
+    },
+    {
+      blockType: 'faq',
+      // Spec §5.13 itself gives no heading for this homepage teaser — reusing
+      // the FAQ page's own H1 (Spec §14) rather than inventing one.
+      sectionHeading: 'Frequently asked questions',
+      variant: 'accordion',
+      // items intentionally omitted — resolved dynamically in page.tsx by
+      // faqs.homepage === true, sorted by sortOrder (see G4 plan).
+      textLink: { label: 'See all questions', href: '/faq' },
+    },
+    {
+      blockType: 'cta-banner',
+      heading: 'Transform your website into an AI reception desk.',
+      body: 'Send us your website address. We will show you what AI受付 could handle for your business — and what your staff should keep. Free, in Japanese or English.',
+      primaryButton: { label: 'Get a free AI website assessment', href: '/assessment' },
+      // secondaryButton.href is injected at render from the header's resolved
+      // LINE URL (resolveHeaderData) — see page.tsx's cta-banner branch.
+      secondaryButton: { label: 'Ask us on LINE', href: '#', variant: 'outline' },
+      textLink: { label: 'Download the brochure (PDF)', href: downloads.brochureUrl },
+      showContactStrip: true,
+    },
   ]
 
   const jaLayout = [
@@ -596,6 +657,50 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
       buttonLabel: 'セキュリティとサポートの詳細',
       buttonHref: '/security',
     },
+    {
+      blockType: 'team-grid',
+      sectionHeading: 'お店の立場も、お客様の立場もわかるチームです。',
+      intro:
+        '私たちは、日本を拠点とする少人数のチームです。メンバーの何人かは海外から日本に来て暮らしてきたため、外国人のお客様が何に困り、何を知りたいのかがわかります。また、日本企業で働いてきた経験から、日本のお店や会社の仕事の進め方も理解しています。',
+      bullets: [
+        { text: '構築から運用まで、ひとつのチームで。いくつもの業者を経由しません。' },
+        { text: '2005年設立の日本企業、Sadiatec Co., Ltd.の協力のもとで運営しています。' },
+        { text: 'ご相談の前に、実際に動く製品をお試しいただけます。' },
+      ],
+      members: [team.jamal, team.abdullah, team.haruka, team.nahida],
+      partner: {
+        photo: media.partnerPhoto,
+        // Spec gives this literally bracketed — never machine-translate/edit.
+        name: '[katakana from Mr. Haque]',
+        role: 'パートナー企業 (partner company)',
+        line: '最初のプロジェクトから私たちを支える、日本のパートナー企業です。東京都千代田区、2005年設立。',
+      },
+      columns: '3',
+      showBio: false,
+      buttonLabel: 'チームを詳しく見る',
+      buttonHref: '/about',
+    },
+    {
+      blockType: 'cta-banner',
+      heading: '本格的な投資の前に、AIのアイデアを検証しませんか。',
+      body: 'AI受付のほかに、画像検査・音声・文書AIなどの小さなPoC（概念実証）も開発しています。本格的な予算をかける前に、御社のデータでアイデアを検証できます。',
+      primaryButton: { label: 'PoCについて相談する', href: '/contact' },
+    },
+    {
+      blockType: 'faq',
+      sectionHeading: 'よくあるご質問',
+      variant: 'accordion',
+      textLink: { label: 'すべての質問を見る', href: '/faq' },
+    },
+    {
+      blockType: 'cta-banner',
+      heading: 'あなたのホームページを、AI受付に。',
+      body: 'ホームページのURLをお送りください。AI受付で対応できること、そしてスタッフが担うべきことを、無料でお伝えします。日本語・英語どちらでもご相談いただけます。',
+      primaryButton: { label: '無料AIホームページ診断を申し込む', href: '/assessment' },
+      secondaryButton: { label: 'LINEで相談する', href: '#', variant: 'outline' },
+      textLink: { label: '資料をダウンロード（PDF）', href: downloads.brochureUrl },
+      showContactStrip: true,
+    },
   ]
 
   await updateLocalizedDoc(payload, 'pages', 'home', {
@@ -603,5 +708,5 @@ export async function seedHomePage(payload: Payload, media: MediaIds): Promise<v
     ja: { layout: jaLayout },
   })
 
-  payload.logger.info('🏠 Homepage content seeded (Spec §5.1-5.10)')
+  payload.logger.info('🏠 Homepage content seeded (Spec §5.1-5.14)')
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export interface FAQItem {
@@ -9,16 +10,23 @@ export interface FAQItem {
   answer: string
 }
 
+export interface FAQTextLink {
+  label: string
+  href: string
+}
+
 export interface FAQBlockProps {
   sectionHeading?: string
   items?: FAQItem[]
   variant?: 'accordion' | 'grid'
+  textLink?: FAQTextLink
 }
 
-export function FAQBlock({ 
-  sectionHeading, 
-  items = [], 
-  variant = 'accordion' 
+export function FAQBlock({
+  sectionHeading,
+  items = [],
+  variant = 'accordion',
+  textLink,
 }: FAQBlockProps) {
   // Track open state for individual accordions
   const [openId, setOpenId] = useState<string | number | null>(null)
@@ -113,6 +121,17 @@ export function FAQBlock({
                 </p>
               </div>
             ))}
+          </div>
+        )}
+
+        {textLink?.label && textLink?.href && (
+          <div className="mt-8 text-center">
+            <Link
+              href={textLink.href}
+              className="text-[13.5px] font-semibold text-[var(--color-primary)] hover:underline underline-offset-2"
+            >
+              {textLink.label} →
+            </Link>
           </div>
         )}
 
