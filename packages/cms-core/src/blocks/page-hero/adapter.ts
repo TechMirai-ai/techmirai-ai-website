@@ -108,6 +108,9 @@ export function adaptPageHeroBlock(raw: unknown): PageHeroBlockProps {
           ...(backgroundImageUrl ? { backgroundImageUrl } : {}),
           ...(primaryButton ? { primaryButton } : {}),
           ...(secondaryButton ? { secondaryButton } : {}),
+          ...(typeof data['smallPrint'] === 'string' && data['smallPrint']
+            ? { smallPrint: data['smallPrint'] }
+            : {}),
           ...(profileCard ? { profileCard } : {}),
         }
       : {

@@ -115,6 +115,15 @@ export const PageHeroBlockConfig: Block = {
       ],
     },
     {
+      name: 'smallPrint',
+      type: 'text',
+      localized: true,
+      admin: {
+        description: 'Small italic disclaimer line below the buttons (e.g. a fictional-demo notice). Pack-3/H2.',
+        condition: (data) => data['variant'] === 'hero' || !data['variant'],
+      },
+    },
+    {
       name: 'profileCard',
       type: 'group',
       admin: {

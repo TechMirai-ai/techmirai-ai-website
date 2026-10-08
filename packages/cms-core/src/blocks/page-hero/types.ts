@@ -28,6 +28,7 @@ export interface PageHeroBlockProps {
   overlayColor?: 'black' | 'brand' | 'none'
   primaryButton?: { label: string; href: string }
   secondaryButton?: { label?: string; href?: string }
+  smallPrint?: string
   profileCard?: PageHeroProfileCard
 
   // page-title variant fields

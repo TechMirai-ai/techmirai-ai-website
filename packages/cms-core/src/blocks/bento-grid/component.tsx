@@ -1,20 +1,29 @@
 'use client'
 
+import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { motion } from 'framer-motion'
 import { SectionEyebrow } from '../../components/ui'
 import { staggerContainer, fadeInUp } from '../../lib/motion'
 import type { BentoGridBlockProps, BentoGridItem, BentoLayout } from './types'
 
+function withLocale(locale: string, href: string): string {
+  if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('[')) return href
+  const path = href.startsWith('/') ? href : `/${href}`
+  return path.startsWith(`/${locale}/`) || path === `/${locale}` ? path : `/${locale}${path}`
+}
+
 interface BentoCardProps {
   item: BentoGridItem
   index: number
   layout: BentoLayout
+  locale: string
 }
 
-function BentoCard({ item, index, layout }: BentoCardProps) {
+function BentoCard({ item, index, layout, locale }: BentoCardProps) {
   const isFeatured = layout === 'asymmetric' && index === 0
 
-  return (
+  const card = (
     <motion.article
       variants={fadeInUp}
       className={[
@@ -47,6 +56,14 @@ function BentoCard({ item, index, layout }: BentoCardProps) {
       )}
     </motion.article>
   )
+
+  if (!item.href) return card
+
+  return (
+    <Link href={withLocale(locale, item.href)} className="block h-full">
+      {card}
+    </Link>
+  )
 }
 
 export function BentoGridBlock({
@@ -57,6 +74,8 @@ export function BentoGridBlock({
   layout = 'asymmetric',
   bgVariant = 'tertiary', 
 }: BentoGridBlockProps & { bgVariant?: 'primary' | 'secondary' | 'white' | 'tertiary' }) {
+  const locale = useLocale()
+
   if (!items || items.length === 0) return null
 
   const bgStyleMap = {
@@ -82,9 +101,11 @@ export function BentoGridBlock({
           {/* ── Centered Strategic Minimalist Header Section ── */}
           <div className="mx-auto mb-8 md:mb-10 max-w-3xl text-center">
              {eyebrow && <SectionEyebrow>{eyebrow}</SectionEyebrow>}
-            <h2 className="text-2xl md:text-[32px] font-bold tracking-tight text-text-primary leading-[1.2]">
-              {heading}
-            </h2>
+            {heading && (
+              <h2 className="text-2xl md:text-[32px] font-bold tracking-tight text-text-primary leading-[1.2]">
+                {heading}
+              </h2>
+            )}
             {intro && (
               <p className="mx-auto mt-2 max-w-2xl text-[13.5px] md:text-[15px] leading-relaxed text-text-muted font-normal">
                 {intro}
@@ -105,7 +126,7 @@ export function BentoGridBlock({
                 viewport={{ once: true, margin: '-100px' }}
                 className="lg:col-span-5 flex flex-col justify-center"
               >
-                <BentoCard item={featuredItem} index={0} layout={layout} />
+                <BentoCard item={featuredItem} index={0} layout={layout} locale={locale} />
               </motion.div>
 
               {/* Right Column: Remaining 4 Items in a matrix taking 7 out of 12 columns */}
@@ -124,6 +145,7 @@ export function BentoGridBlock({
                       item={item}
                       index={i + 1}
                       layout={layout}
+                      locale={locale}
                     />
                   ))}
                 </motion.div>
@@ -140,7 +162,7 @@ export function BentoGridBlock({
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 md:gap-y-8"
             >
               {items.map((item, i) => (
-                <BentoCard key={item.number || i} item={item} index={i} layout={layout} />
+                <BentoCard key={item.number || i} item={item} index={i} layout={layout} locale={locale} />
               ))}
             </motion.div>
           )}

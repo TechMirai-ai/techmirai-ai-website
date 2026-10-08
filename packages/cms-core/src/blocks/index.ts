@@ -14,6 +14,7 @@ import { CaseStudyTeaserBlockConfig } from './case-study-teaser/config'
 import { PricingTeaserBlockConfig } from './pricing-teaser/config'
 import { SecurityPointsBlockConfig } from './security-points/config'
 import { ProductEditionBlockConfig } from './product-edition/config'
+import { ExampleChatBlockConfig } from './example-chat/config'
 import { CaseStudyCarouselBlockConfig } from '../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from './logo-cloud/config'
 import { CTABannerBlockConfig } from './cta-banner/config'
@@ -61,6 +62,7 @@ export const allBlockConfigs: Block[] = [
   PricingTeaserBlockConfig,
   SecurityPointsBlockConfig,
   ProductEditionBlockConfig,
+  ExampleChatBlockConfig,
   CaseStudyCarouselBlockConfig,
   LogoCloudBlockConfig,
   CTABannerBlockConfig,
@@ -108,6 +110,7 @@ export type { CaseStudyTeaserBlockProps } from './case-study-teaser/types'
 export type { PricingTeaserBlockProps } from './pricing-teaser/types'
 export type { SecurityPointsBlockProps, SecurityPoint } from './security-points/types'
 export type { ProductEditionBlockProps, ProductEditionWayToStart } from './product-edition/types'
+export type { ExampleChatBlockProps, ExampleChatTurn } from './example-chat/types'
 export type { CaseStudyCarouselBlockProps } from '../verticals/recruitment/blocks/case-study-carousel/types'
 export type { LogoCloudBlockProps, LogoItem, ScrollSpeed } from './logo-cloud/types'
 export type { CTABannerBlockProps, CTABannerCta, CTABannerVariant, CTABannerBackgroundStyle, CTABannerButtonVariant, CTABannerLayout } from './cta-banner/types'
@@ -151,6 +154,7 @@ export { CaseStudyTeaserBlock } from './case-study-teaser/component'
 export { PricingTeaserBlock } from './pricing-teaser/component'
 export { SecurityPointsBlock } from './security-points/component'
 export { ProductEditionBlock } from './product-edition/component'
+export { ExampleChatBlock } from './example-chat/component'
 export { RichTextBlock } from './rich-text/component'
 export { StatsBlock } from './stats/component'
 export { CTABannerBlock } from './cta-banner/component'

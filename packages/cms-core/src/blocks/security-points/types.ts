@@ -3,7 +3,7 @@ export interface SecurityPoint {
 }
 
 export interface SecurityPointsBlockProps {
-  heading: string
+  heading?: string
   points: SecurityPoint[]
   buttonLabel?: string
   buttonHref?: string

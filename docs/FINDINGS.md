@@ -1,5 +1,67 @@
 # Findings
 
+## 2026-10-08 — Pack-3/H2: H1's note on `/solutions`/`/how-it-works`/`/pricing` sharing the static-stub problem needed a correction once `/solutions/[slug]` existed
+
+H1's own FINDINGS.md entry (below) assumed the fix for `/solutions` would be
+identical to `/ai-reception`'s: delete the static stub, let the sibling
+`[locale]/[slug]/page.tsx` catch-all take over. That assumption turned out
+to be wrong once H2 actually needed to serve the four nested industry
+pages too.
+
+Once `solutions/[slug]/page.tsx` exists as a sibling of `solutions/page.tsx`
+(needed for `/solutions/{clinic,beauty,automobile,hotel}` — no `[...slug]`
+catch-all exists anywhere in the app, and the one-level-deep
+`X/[slug]/page.tsx` pattern used by `about/[slug]`, `blog/[slug]`, etc. was
+the only existing precedent for this shape), Next's router always resolves
+the literal `solutions` segment locally. A `/solutions` request with no
+local `page.tsx` there would 404, not fall through to the one-level-up
+`[locale]/[slug]/page.tsx` catch-all the way `/ai-reception` did. So
+`solutions/page.tsx` could not simply be deleted — it was instead replaced
+with a real `pages`-collection fetch for slug `'solutions'` (same shape as
+the generic catch-all, fixed to one slug), while the four industry stub
+folders (`solutions/{clinic,beauty,automobile,hotel}/page.tsx`) were
+deleted outright, since `solutions/[slug]/page.tsx` now serves them.
+
+Re-verified after the fix: `/solutions`, `/en/solutions`,
+`/solutions/clinic`, `/en/solutions/clinic` (and the other 3 industries)
+all return 200.
+
+## 2026-10-08 — Pack-3/H2: the clinic page's fictional-demo bracket reuses a disclaimer that's been live, unregistered, on the homepage since G2-G3
+
+`[Demo clinic name]` / `[医院名]` (`"[Demo clinic name] is a fictional
+clinic created for this demo."` / `"デモに登場する[医院名]は、デモ用の架空の
+医院です。"`) has rendered on the homepage's `live-demo.smallPrint` since
+Pack-3/G2-G3 (`apps/techmirai-web/src/seed/pages/home.ts` lines 221, 557),
+but was never added to `docs/PLACEHOLDER-REGISTER.md` — not an H2 defect,
+but H2 is the first step to notice it, because H2 is the first to reuse
+the same bracket elsewhere (the clinic page's new `page-hero.smallPrint`
+field, added this step). Registered now as `H2-03`, which also retroactively
+covers the original homepage usage. `F1-19` (the related `demoUrl` bracket
+itself) was already registered; this is the separate "fictional clinic"
+disclaimer text, not the URL.
+
+## 2026-10-08 — Pack-3/H2: closing-CTA copy for Section 7 is an interpretation call, not an explicit Spec instruction
+
+Spec Section 6 explicitly says to end `/ai-reception` with "the final call
+to action block from 5.14" — H1 followed that instruction directly. Section
+7 gives no equivalent explicit instruction for either the hub or the four
+industry pages; the step text just says "call to action" as the last
+element of the shared template, with no copy of its own.
+
+Two different calls were made here, both logged for visibility rather than
+asserted as fact:
+- The **4 industry pages** reuse 5.14's CTA verbatim (same heading/body/
+  buttons as `/ai-reception`'s own closing CTA), matching H1's precedent
+  for "no page-specific copy given → reuse the shared one."
+- The **hub** instead uses its own Spec-given "Bottom line" sentence
+  ("Don't see your industry?...") as the closing `cta-banner`'s `heading`,
+  because the Spec actually gives the hub a dedicated one-sentence
+  invitation that reads as a closing CTA in its own right — reusing 5.14's
+  "Transform your website..." heading verbatim there as well would have
+  buried the Spec's own, more contextually relevant sentence. The
+  button/secondary-button/text-link/`showContactStrip` structure underneath
+  is still the same site-wide pattern every other closing CTA uses.
+
 ## 2026-10-08 — Pack-3/H1 verification: `/ai-reception`'s Gate 3 still 500s — the `withLocale()` bracket fix in ENGINE-FIXES.md did not actually resolve the crash
 
 While running H1's remaining verification gates, `/en/ai-reception` and the

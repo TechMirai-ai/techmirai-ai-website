@@ -15,11 +15,13 @@ export function adaptBentoGridBlock(raw: unknown): BentoGridBlockProps {
           ? i['number']
           : String(idx + 1).padStart(2, '0')
       const iconStr = typeof i['icon'] === 'string' && i['icon'] ? i['icon'] : ''
+      const hrefStr = typeof i['href'] === 'string' && i['href'] ? i['href'] : ''
       return {
         number: numberStr,
         title,
         description,
         ...(iconStr ? { icon: iconStr } : {}),
+        ...(hrefStr ? { href: hrefStr } : {}),
       }
     })
     .filter((i) => i.title)

@@ -103,6 +103,7 @@ function PlainTextHeroVariant({
   body,
   primaryButton,
   secondaryButton,
+  smallPrint,
   textAlignment,
 }: {
   eyebrow?: string | undefined
@@ -110,6 +111,7 @@ function PlainTextHeroVariant({
   body?: string | undefined
   primaryButton?: { label: string; href: string } | undefined
   secondaryButton?: { label?: string; href?: string } | undefined
+  smallPrint?: string | undefined
   textAlignment: 'left' | 'center'
 }) {
   const locale = useLocale()
@@ -127,6 +129,7 @@ function PlainTextHeroVariant({
         )}
         {body && <p className="mt-4 text-[14px] md:text-[15px] leading-relaxed text-text-muted">{body}</p>}
         <HeroButtons primaryButton={primaryButton} secondaryButton={secondaryButton} locale={locale} />
+        {smallPrint && <p className="mt-3 text-[11.5px] text-text-muted italic">{smallPrint}</p>}
       </div>
     </section>
   )
@@ -140,6 +143,7 @@ export function PageHeroBlock({
   body,
   primaryButton,
   secondaryButton,
+  smallPrint,
   pageTitle,
   showBreadcrumb = false,
   breadcrumbItems = [],
@@ -166,6 +170,7 @@ export function PageHeroBlock({
         body={body}
         primaryButton={primaryButton}
         secondaryButton={secondaryButton}
+        smallPrint={smallPrint}
         textAlignment={textAlignment}
       />
     )
@@ -225,6 +230,7 @@ export function PageHeroBlock({
 
             {body && <p className="mt-3 text-sm text-slate-700">{body}</p>}
             <HeroButtons primaryButton={primaryButton} secondaryButton={secondaryButton} locale={locale} />
+            {smallPrint && <p className="mt-3 text-[11.5px] text-slate-500 italic">{smallPrint}</p>}
           </div>
         </div>
 

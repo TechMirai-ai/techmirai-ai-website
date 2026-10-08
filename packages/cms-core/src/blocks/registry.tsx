@@ -28,6 +28,8 @@ import { SecurityPointsBlock } from './security-points/component'
 import { adaptSecurityPointsBlock } from './security-points/adapter'
 import { ProductEditionBlock } from './product-edition/component'
 import { adaptProductEditionBlock } from './product-edition/adapter'
+import { ExampleChatBlock } from './example-chat/component'
+import { adaptExampleChatBlock } from './example-chat/adapter'
 import { CaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/component'
 import { adaptCaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/adapter'
 import { LogoCloudBlock } from './logo-cloud/component'
@@ -109,6 +111,7 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'pricing-teaser':      (raw) => <PricingTeaserBlock      {...adaptPricingTeaserBlock(raw)} />,
   'security-points':     (raw) => <SecurityPointsBlock     {...adaptSecurityPointsBlock(raw)} />,
   'product-edition':     (raw) => <ProductEditionBlock     {...adaptProductEditionBlock(raw)} />,
+  'example-chat':        (raw) => <ExampleChatBlock        {...adaptExampleChatBlock(raw)} />,
   'case-study-carousel': (raw) => <CaseStudyCarouselBlock  {...adaptCaseStudyCarouselBlock(raw)} />,
   'logo-cloud':          (raw) => <LogoCloudBlock          {...adaptLogoCloudBlock(raw)} />,
   'cta-banner':          (raw) => <CTABannerBlock          {...adaptCTABannerBlock(raw)} />,

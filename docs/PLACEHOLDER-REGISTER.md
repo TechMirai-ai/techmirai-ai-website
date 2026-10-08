@@ -55,6 +55,18 @@ Columns: ID | page and field | locale | placeholder text | Spec section | owner 
 | G2-01 | `pages` (`home`) `live-demo` `threeStepStrip` (3 items) | en/ja | EN: "Choose a service" / "pick a time" / "confirmed" (Spec's own words, not polished labels); JA: `[JA TODO]` ×3 | Spec §5.5 (Live demo), §16 (visuals inventory — "Three-step strip... as in the brochure") | Jamal / Haruka | OPEN — the Spec gives this strip only as a parenthetical referencing `TECHMIRAI_BROCHURE.html`, which isn't in this repo (same gap as `D2-01`); exact EN wording needs brochure confirmation, JA needs translating from scratch once EN is confirmed |
 | G3-01 | `pages` (`home`) `process-steps` `sub` | en/ja | `[X weeks]` (en) / `[X週間]` (ja) | Spec §5.7 (Implementation process) | Jamal | OPEN — first appearance of this placeholder anywhere in the repo (Appendix A's "found in later sections" list named it but wasn't itself a register row); needs a real typical-timeline figure from Jamal |
 
+| F3-17 | `pages` (`clinic`) `meta.image` | n/a | `PLACEHOLDER: Clinics & treatment rooms social share 1200×630` | Spec §19 | Developer | OPEN — same as F3-01 |
+| F3-18 | `pages` (`beauty`) `meta.image` | n/a | `PLACEHOLDER: Beauty salons social share 1200×630` | Spec §19 | Developer | OPEN — same as F3-01 |
+| F3-19 | `pages` (`automobile`) `meta.image` | n/a | `PLACEHOLDER: Auto service & dealers social share 1200×630` | Spec §19 | Developer | OPEN — same as F3-01 |
+| F3-20 | `pages` (`hotel`) `meta.image` | n/a | `PLACEHOLDER: Hotels & guesthouses social share 1200×630` | Spec §19 | Developer | OPEN — same as F3-01 |
+| H2-01 | `/solutions/beauty` `security-points` ("what it does") point | en/ja | `[Choose a staff member — CONFIRM]` / `[スタッフ指名 — 確認中]` | Spec §7.2 | Jamal | OPEN — confirm whether staff-selection is an available booking feature |
+| H2-02 | `/solutions/hotel` `security-points` ("what it does") point | en/ja | `[meals, rentals]` / `[お食事、レンタル]` | Spec §7.4 | Jamal | OPEN — confirm the actual bookable on-site services |
+| H2-03 | `/solutions/clinic` `page-hero` `smallPrint` | en/ja | `[Demo clinic name]` / `[医院名]` | Spec §7.1 | Jamal | OPEN — same gap as F1-19 (demo clinic must be labelled fictional, one clinic name to be chosen); this is the bracket's first register row even though it's been live on the homepage's `live-demo.smallPrint` since G2-G3 — see docs/FINDINGS.md |
+| H2-04 | `/solutions/clinic` `example-chat` turn | en/ja | `[9:00–13:00]` / `[9:00〜13:00]` | Spec §7.1 | n/a | BY DESIGN — permanent illustrative placeholder inside an example conversation; the mandatory "Example conversation. Details are illustrative." label (hardcoded in `example-chat/component.tsx`) covers it; no owner action |
+| H2-05 | `/solutions/beauty` `example-chat` turn | en/ja | `[2 hours]` / `[約2時間]` | Spec §7.2 | n/a | BY DESIGN — same as H2-04 |
+| H2-06 | `/solutions/automobile` `example-chat` turn | en/ja | `[your vehicle inspection certificate, compulsory insurance certificate and …]` / `[車検証、自賠責保険証明書、…]` | Spec §7.3 | n/a | BY DESIGN — same as H2-04 |
+| H2-07 | `/solutions/hotel` `example-chat` turn | en/ja | `[time]` / `[時間]`, and `[15:00]` (both locales) | Spec §7.4 | n/a | BY DESIGN — same as H2-04 |
+
 **Note on the admin-panel screenshot, layered-answers diagram, and sample assessment report
 visuals (Spec §19):** still not generated — the Spec gives no explicit pixel size for any of
 these, and inventing a confident-looking default size would violate CLAUDE.md's "do not invent

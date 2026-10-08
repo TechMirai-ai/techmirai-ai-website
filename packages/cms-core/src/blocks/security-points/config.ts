@@ -6,7 +6,11 @@ export const SecurityPointsBlockConfig: Block = {
   interfaceName: 'SecurityPointsBlock',
   labels: { singular: 'Security Points', plural: 'Security Points' },
   fields: [
-    { name: 'heading', type: 'text', localized: true, required: true },
+    // Pack-3/H2: no longer required — reused twice per industry page
+    // ("what AI受付 does" / "what staff still handle") under the page's own
+    // H1, with no distinct heading of its own. Same fix as `process-steps`
+    // (H1) and `problem-section` (H2).
+    { name: 'heading', type: 'text', localized: true },
     {
       name: 'points',
       type: 'array',

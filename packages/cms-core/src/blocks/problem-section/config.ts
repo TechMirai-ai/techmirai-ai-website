@@ -5,7 +5,11 @@ export const ProblemSectionBlockConfig: Block = {
   interfaceName: 'ProblemSectionBlock',
   labels: { singular: 'Problem Section', plural: 'Problem Sections' },
   fields: [
-    { name: 'heading', type: 'text', localized: true, required: true },
+    // Pack-3/H2: no longer required — some pages (e.g. the Section-7
+    // industry-page template) reuse this block for a sub-list under the
+    // page's own H1, with no distinct heading of its own (same situation
+    // `process-steps` hit in H1; same fix).
+    { name: 'heading', type: 'text', localized: true },
     { name: 'intro', type: 'textarea', localized: true },
     {
       name: 'journeySteps',

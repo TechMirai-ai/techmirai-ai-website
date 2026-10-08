@@ -1,5 +1,54 @@
 # Engine fixes
 
+## 2026-10-08 — Pack-3/H2: three blocks had a required `heading` with no way to omit it when the Spec gives none (fix)
+
+**Symptom:** found while planning H2's industry-page template, which reuses
+`problem-section` ("four problems") and `security-points` (twice: "what AI
+受付 does" / "what staff still handle") under the page's own H1, with no
+distinct heading of its own for either sub-section — the identical
+situation `process-steps` already hit and was fixed for in H1. Both blocks
+had `heading` as `required: true` on the Payload field and rendered it
+unconditionally in `component.tsx`. The hub's `bento-grid` (4-card link
+section) has the same situation for both `eyebrow` and `heading`.
+
+**Fix:** removed `required: true` from `heading` in `problem-section` and
+`security-points` (`config.ts`/`types.ts` each), and from `eyebrow`/
+`heading` in `bento-grid`; each `component.tsx` now wraps its `<h2>` (and
+`bento-grid`'s `<SectionEyebrow>`, which was already conditional) in
+`{heading && (...)}`. Same fix shape as `process-steps`' H1 entry.
+
+**Status:** done.
+
+## 2026-10-08 — Pack-3/H2: `bento-grid` had no way to make a card a link (fix)
+
+**Symptom:** found while planning the Solutions hub's 4-card grid linking
+out to the industry pages. `bento-grid`'s `items[]` had no `href` field —
+every existing usage of this block is purely informational (e.g. "why
+choose us" reasons), never a navigation card.
+
+**Fix:** added an optional `href` field to `items[]`
+(`config.ts`/`types.ts`/`adapter.ts`), and `component.tsx`'s `BentoCard`
+now wraps itself in a locale-aware `<Link>` (same `withLocale()` helper
+pattern already duplicated in 10+ other block components) when an item's
+`href` is present, otherwise rendering exactly as before.
+
+**Status:** done.
+
+## 2026-10-08 — Pack-3/H2: `page-hero` had no field for a small disclaimer line (fix)
+
+**Symptom:** found while planning the clinic page's fictional-demo
+disclaimer (Spec §7.1's implicit need, reusing the same bracketed notice
+already live on the homepage's `live-demo.smallPrint` since G2-G3 — see
+docs/FINDINGS.md). `page-hero` had no equivalent field.
+
+**Fix:** added an optional, localized `smallPrint` field to the hero
+variant (`config.ts`/`types.ts`/`adapter.ts`), rendered directly under the
+hero buttons in both the plain-text and image-background layouts,
+styled identically to `live-demo`'s own `smallPrint` (`text-[11.5px]
+italic text-text-muted`/`text-slate-500`).
+
+**Status:** done.
+
 ## 2026-10-08 — Pack-3/H1 verification: `page-hero`'s `HeroButtons` still crashed on bracketed placeholder hrefs after the `withLocale()` fix below (fix)
 
 **Symptom:** found live while re-verifying H1's Gate 3 after the

@@ -5,8 +5,12 @@ export const BentoGridBlockConfig: Block = {
   interfaceName: 'BentoGridBlock',
   labels: { singular: 'Bento Grid', plural: 'Bento Grids' },
   fields: [
-    { name: 'eyebrow', type: 'text', localized: true, required: true },
-    { name: 'heading', type: 'text', localized: true, required: true },
+    // Pack-3/H2: eyebrow/heading no longer required — the Solutions hub's
+    // 4-card link grid has no distinct heading of its own in the Spec,
+    // sitting directly under the hub's H1/intro (same situation
+    // `process-steps`/`problem-section`/`security-points` already hit).
+    { name: 'eyebrow', type: 'text', localized: true },
+    { name: 'heading', type: 'text', localized: true },
     { name: 'intro', type: 'textarea', localized: true },
     {
       name: 'items',
@@ -23,6 +27,11 @@ export const BentoGridBlockConfig: Block = {
         { name: 'title', type: 'text', localized: true, required: true },
         { name: 'description', type: 'textarea', localized: true },
         { name: 'icon', type: 'text', admin: { description: 'Lucide icon name (optional)' } },
+        {
+          name: 'href',
+          type: 'text',
+          admin: { description: 'Optional — makes the whole card a link (Pack-3/H2, Solutions hub).' },
+        },
       ],
     },
     {

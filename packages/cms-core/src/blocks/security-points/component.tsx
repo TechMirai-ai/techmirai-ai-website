@@ -11,9 +11,11 @@ export function SecurityPointsBlock({ heading, points, buttonLabel, buttonHref }
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8 py-10 md:py-14 bg-white">
       <div className="mx-auto max-w-5xl text-center mb-8 md:mb-10">
-        <h2 className="text-2xl md:text-[32px] font-bold tracking-tight text-text-primary leading-[1.2]">
-          {heading}
-        </h2>
+        {heading && (
+          <h2 className="text-2xl md:text-[32px] font-bold tracking-tight text-text-primary leading-[1.2]">
+            {heading}
+          </h2>
+        )}
       </div>
 
       <motion.ul

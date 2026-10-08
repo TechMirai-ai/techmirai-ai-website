@@ -17,6 +17,7 @@ import { CaseStudyTeaserBlockConfig } from '../../blocks/case-study-teaser/confi
 import { PricingTeaserBlockConfig } from '../../blocks/pricing-teaser/config'
 import { SecurityPointsBlockConfig } from '../../blocks/security-points/config'
 import { ProductEditionBlockConfig } from '../../blocks/product-edition/config'
+import { ExampleChatBlockConfig } from '../../blocks/example-chat/config'
 import { CaseStudyCarouselBlockConfig } from '../../verticals/recruitment/blocks/case-study-carousel/config'
 import { LogoCloudBlockConfig } from '../../blocks/logo-cloud/config'
 import { CTABannerBlockConfig } from '../../blocks/cta-banner/config'
@@ -65,6 +66,7 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     PricingTeaserBlockConfig,
     SecurityPointsBlockConfig,
     ProductEditionBlockConfig,
+    ExampleChatBlockConfig,
     LogoCloudBlockConfig,
     CTABannerBlockConfig,
     RichTextBlockConfig,

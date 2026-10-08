@@ -7,7 +7,7 @@ export interface ProblemSectionCard {
 }
 
 export interface ProblemSectionBlockProps {
-  heading: string
+  heading?: string
   intro?: string
   journeySteps?: ProblemSectionJourneyStep[]
   journeyCaption?: string

@@ -5,11 +5,12 @@ export interface BentoGridItem {
   title: string
   description: string
   icon?: string
+  href?: string
 }
 
 export interface BentoGridBlockProps {
-  eyebrow: string
-  heading: string
+  eyebrow?: string
+  heading?: string
   intro?: string
   items: BentoGridItem[]
   layout?: BentoLayout
