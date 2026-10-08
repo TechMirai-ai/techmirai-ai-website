@@ -1,5 +1,105 @@
 # Engine fixes
 
+## 2026-10-08 — Pack-3/H1 verification: `page-hero`'s `HeroButtons` still crashed on bracketed placeholder hrefs after the `withLocale()` fix below (fix)
+
+**Symptom:** found live while re-verifying H1's Gate 3 after the
+`withLocale()` fix immediately below was marked done. `/en/ai-reception`
+and `/ai-reception` both 500'd with the same `Dynamic href
+\`[demo.techmirai-ai.com]\` found in <Link>` error. The `withLocale()` fix
+only stops the helper from *locale-prefixing* a bracketed value — it does
+nothing about the fact that Next.js's app-router `<Link>` rejects **any**
+href containing `[`/`]`, prefixed or not. `hero`/`live-demo` never hit this
+because those two blocks already render their `demoUrl`-fed button as a
+plain `<a>`, not `<Link>` — a fact the `withLocale()` fix entry itself
+noted ("a hand-avoided case, not a real fix") but didn't act on for the
+other blocks it flagged as at-risk, including `page-hero`.
+
+**Fix:** `packages/cms-core/src/blocks/page-hero/component.tsx`'s
+`HeroButtons` now renders `primaryButton`/`secondaryButton` as a plain
+`<a href={...}>` whenever that button's href starts with `[`, and as
+`<Link href={withLocale(...)}>` otherwise — matching the existing
+`hero`/`live-demo` pattern instead of relying on `withLocale()` alone.
+`cta-banner`/`team-grid`/`product-edition` (the other 3 blocks the
+`withLocale()` entry flagged as equally at risk) were not touched here —
+none of them currently have a seeded bracketed-placeholder href in any
+page, so there was nothing to reproduce or verify against; worth applying
+the same pattern proactively if one ever does.
+
+**Status:** done. Verified by loading `/en/ai-reception`, `/ai-reception`
+(default JA), and `/ja/ai-reception` after the change — all resolve
+correctly (200/200/307), not just by re-reading the diff.
+
+## 2026-10-08 — Pack-3/H1: `withLocale()` crashed on bracketed placeholder hrefs like `demoUrl` (fix)
+
+**Symptom:** found live while verifying H1's Gate 3. `/ai-reception` 500'd:
+`Error: Dynamic href \`/en/[demo.techmirai-ai.com]\` found in <Link> while
+using the \`/app\` router, this is not supported.` The page's hero
+secondary button links to `siteConfig.integrations.demoUrl`, whose current
+value is the literal bracketed placeholder `[demo.techmirai-ai.com]` (Spec
+gives no real URL yet — F1-19). `withLocale()` — a small helper duplicated
+verbatim across 10 block `component.tsx` files — treats any href not
+starting with `http`/`#` as a safe internal path and prefixes it with the
+locale, turning `[demo.techmirai-ai.com]` into `/en/[demo.techmirai-ai.com]`
+— which Next.js's `<Link>` then parses as an (invalid) dynamic route
+segment and throws. `hero`/`live-demo` (Pack-3/G1-G2) never hit this
+because their specific demoUrl-fed buttons happen to bypass `withLocale`
+entirely (`href={buttonHref}` raw) — a hand-avoided case, not a real fix,
+and every other block built since (`cta-banner`, `team-grid`,
+`product-edition`, `page-hero`) would crash the same way the moment any
+future step feeds them a bracketed placeholder href.
+
+**Fix:** added `|| href.startsWith('[')` to the early-return guard in all
+10 duplicated copies of `withLocale()` (`hero`, `live-demo`, `news-list`,
+`downloads-grid`, `image-text-split`, `blog-teaser`, `page-hero`,
+`cta-banner`, `team-grid`, `product-edition`), so a bracketed value is
+always passed through unchanged, matching the Spec's own convention that
+bracketed text is a literal placeholder, never a real route. The
+underlying duplication (one helper, copy-pasted 10 times) is left as-is —
+collapsing it into a shared import is a larger refactor than this fix
+needed, and is worth a future cleanup pass, not bundled in here.
+
+**Status:** done.
+
+## 2026-10-08 — Pack-3/H1: `page-hero`'s `body`/buttons were typed and parsed but never rendered; no-image case forced a "No image" placeholder box (fix)
+
+**Symptom:** found while planning H1's simple eyebrow+H1+body+2-button hero
+(Spec §6.1, no background photo). `packages/cms-core/src/blocks/page-hero`'s
+`hero` variant has had `body`/`primaryButton`/`secondaryButton` fields in
+`config.ts`/`types.ts` since the block was built, and `adapter.ts` already
+parsed all three correctly — but `component.tsx`'s `PageHeroBlock` never
+destructured or rendered any of them, so filling them in via the CMS
+produced no visible change. Separately, when `backgroundImage` is empty,
+the component rendered a literal gray "No image" placeholder box instead of
+a clean text-only hero — there was no code path for "this page genuinely
+has no photo."
+
+**Fix:** added an `eyebrow` field (text, localized — didn't exist at all).
+Wired `body`/`primaryButton`/`secondaryButton` into the existing
+image-background layout (rendered inside the same text-overlay area as
+`heading`/`coloredSubtitle`). Added a new `PlainTextHeroVariant` sub-
+component, used automatically whenever `backgroundImageUrl` is absent —
+a simple centered-or-left eyebrow/H1/body/buttons layout with no diagonal
+image cutout, replacing the forced gray box.
+
+**Status:** done. Benefits any future page using `page-hero` without a
+background image, not just `/ai-reception`.
+
+## 2026-10-08 — Pack-3/H1: `process-steps`'s `heading` was required, with no way to omit it when the Spec gives none (fix)
+
+**Symptom:** found while seeding H1's "seven things it does" section (Spec
+§6.2), which — unlike every other use of this block so far — has no H2 row
+in the Spec at all. `heading` was `required: true` on the Payload field and
+rendered unconditionally in `component.tsx`, so there was no way to
+represent "the Spec genuinely gives no heading here" without inventing one
+(CLAUDE.md rule 5) or leaving an empty `<h2></h2>` in the DOM.
+
+**Fix:** removed `required: true` from `heading` in `config.ts`/`types.ts`;
+`component.tsx` now wraps the `<h2>` in `{heading && (...)}`. No existing
+usage (Pack-3/G3's "Implementation process") is affected — it already
+supplies a heading.
+
+**Status:** done.
+
 ## 2026-10-04 — `@next/env` v15 / tsx interop on Windows (fix)
 
 **Symptom:** scripts that boot Payload directly via `tsx` (seed scripts, `db:apply-indexes`)

@@ -1,5 +1,78 @@
 # Findings
 
+## 2026-10-08 — Pack-3/H1 verification: `/ai-reception`'s Gate 3 still 500s — the `withLocale()` bracket fix in ENGINE-FIXES.md did not actually resolve the crash
+
+While running H1's remaining verification gates, `/en/ai-reception` and the
+default-locale `/ai-reception` both return **500**, not 200:
+
+```
+⨯ Error: Dynamic href `[demo.techmirai-ai.com]` found in <Link> while using
+the `/app` router, this is not supported.
+```
+
+`docs/ENGINE-FIXES.md`'s 2026-10-08 "Pack-3/H1: `withLocale()` crashed on
+bracketed placeholder hrefs" entry already describes this exact symptom and
+is marked **Status: done** — but the fix (adding
+`|| href.startsWith('[')` to all 10 duplicated `withLocale()` copies, so a
+bracketed value passes through unchanged instead of getting
+locale-prefixed) does not fix the actual crash. Next.js's app-router
+`<Link>` rejects **any** href containing square brackets outright, whether
+or not it carries a locale prefix — the bug was never the double-bracketing
+(`/en/[demo.techmirai-ai.com]`), it's that `<Link href="[...]">` is rejected
+unconditionally.
+
+Confirmed by reading the code: `hero/component.tsx` (line ~440) and
+`live-demo/component.tsx` (line ~53) already both render their
+`demoUrl`-fed button as a **plain `<a href={...}>`**, not `next/link`'s
+`<Link>`, with an explicit comment that `<Link>` rejects bracketed hrefs —
+this was the real, working fix, done for those two blocks back in
+Pack-3/G1-G2. The ENGINE-FIXES.md entry itself even says this plain-`<a>`
+pattern is "a hand-avoided case, not a real fix" and predicts "every other
+block built since (`cta-banner`, `team-grid`, `product-edition`,
+`page-hero`) would crash the same way" — which is exactly what happened:
+`page-hero`'s `HeroButtons` (`packages/cms-core/src/blocks/page-hero/component.tsx`,
+~line 73-79) renders `secondaryButton` through `<Link href={withLocale(...)}>`,
+and H1's own `ai-reception.ts` seed feeds that exact block
+`secondaryButton: { label: 'Try the live demo', href: demoUrl }` (and the JA
+equivalent), so the crash was predictable and should have been caught by
+actually loading the page after the "fix," not just by re-reading the diff.
+
+**Fixed during this verification pass, with explicit approval** (this
+verification plan was otherwise read-only; the user was asked and chose to
+have this specific fix applied rather than just reporting the gate
+failure): `page-hero`'s `HeroButtons` now renders `secondaryButton`/
+`primaryButton` as a plain `<a>` when the href is a bracketed placeholder,
+matching the pattern already proven in `hero`/`live-demo`, instead of
+relying on `withLocale()` alone. See `docs/ENGINE-FIXES.md`'s new entry for
+the actual diff. Re-verified: `/en/ai-reception` → 200,
+`/ai-reception` (default locale) → 200, `/ja/ai-reception` → 307 to
+`/ai-reception` as expected.
+
+**Still open**: the homepage's own `secondaryButton`/`buttonHref` uses of
+`demoUrl` (`apps/techmirai-web/src/seed/pages/home.ts` lines 49, 219, 407,
+555) were not re-checked against whichever block renders them — `home.ts`'s
+`buttonHref: demoUrl` instances feed `live-demo`, which already uses the
+`<a>` pattern, but this was not independently re-verified end-to-end here
+since it's outside H1's own page. Worth a quick check next time the
+homepage is touched.
+
+## 2026-10-08 — Pack-3/H1: `/ai-reception` was seeded under the wrong slug, and shadowed by a static stub anyway
+
+While planning H1, found two compounding gaps that would have made `/ai-reception` unreachable with real content even after writing it:
+
+1. `apps/techmirai-web/src/seed/pages/plain-pages.ts` seeded this page's shell with `slug: 'product'`, not `'ai-reception'` — despite every forward-link already written in Pack-3/G1-G4 (the homepage hero's nav cards, the footer's PRODUCT section) pointing at `/ai-reception`. `scripts/launch-scan-pages.ts`'s own route list already expected `'ai-reception'`, confirming this was the intended slug all along, not a judgment call.
+2. `apps/techmirai-web/src/app/(frontend)/[locale]/ai-reception/page.tsx` was a **static** Next.js route rendering a hardcoded `ComingSoonStub` (added in the `3002481 "E2 Complete."` commit). Static route segments always win over the sibling `[slug]/page.tsx` catch-all that queries the `pages` collection generically, so even fixing the slug alone would never have made `/ai-reception` show real content — the static file had to go too.
+
+H1 fixed both (renamed the seed slug, deleted the static stub, and added a one-time cleanup in `plain-pages.ts` to delete the now-orphaned pre-rename `'product'` doc from any database that already ran a seed before this fix, guarded on an empty `layout` so nothing a human built there is silently destroyed).
+
+**`/solutions`, `/how-it-works`, and `/pricing` have the identical shadowing static-stub pattern** (same E2 commit) and are NOT fixed here — out of H1's own scope (this step only touches `/ai-reception`). Flagging for whoever plans Pack-3/H2 (`/solutions`) and H3 (`/how-it-works`, `/integrations`) — each of those stubs will need the same delete-the-static-file treatment before real content can go live at those routes.
+
+No code change made beyond H1's own scope for the 3 other pages — flagging only, per standing rule 13.
+
+## 2026-10-08 — Pack-3/H1: the catch-all `[slug]/page.tsx` was missing the `cta-banner`/`showContactStrip` injection
+
+`apps/techmirai-web/src/app/(frontend)/[locale]/[slug]/page.tsx` already mirrors home's siteConfig-injection switch for `booking-cta`/`hours-location`/`news-list`, but Pack-3/G4's `cta-banner`→`showContactStrip` injection (LINE-URL + phone/email/hours strip) was only ever added to the home route (`[locale]/page.tsx`). Since the Spec's final call-to-action (§5.14) is explicitly meant to be reused verbatim on other pages ("End with the final call to action block from 5.14" — H1's own instruction for §6's closing CTA), any page reusing that block needs the same injection. H1 added the identical branch to the catch-all. Whoever plans a future page reusing `cta-banner` with `showContactStrip` should find it already works via the catch-all now — this isn't a per-page thing to re-add.
+
 ## 2026-10-07 — Pack-3/G4: FAQ-doc ownership handoff to Pack-3/I4, and the Partner card's open visibility question
 
 G4 seeds 6 real `faqs` docs (faqId F01, F03, F07, F14, F17, F22; `homepage:

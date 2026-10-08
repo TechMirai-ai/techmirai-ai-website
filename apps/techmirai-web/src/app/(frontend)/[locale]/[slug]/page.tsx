@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../../site.config'
+import { resolveHeaderData } from '../_components/resolveHeaderData'
 
 export const revalidate = 3600
 
@@ -139,6 +140,23 @@ export default async function DynamicPage({ params }: Props) {
           phone: siteConfig.contact.phone,
           mapEmbedUrl: siteConfig.contact.mapEmbedUrl,
           businessHours: siteConfig.contact.businessHours,
+        } as RawBlock
+      }
+
+      if (block.blockType === 'cta-banner' && block['showContactStrip'] === true) {
+        // Mirrors [locale]/page.tsx (home)'s identical branch — the final
+        // call-to-action from Spec §5.14 is reused verbatim on other pages
+        // (Pack-3/H1 and onward), so it needs the same LINE-URL/contact-strip
+        // injection here too.
+        const { lineButton } = await resolveHeaderData(locale)
+        return {
+          ...block,
+          secondaryButton: { ...(block['secondaryButton'] as Record<string, unknown>), href: lineButton.href },
+          contactStrip: {
+            phone: siteConfig.contact.phone,
+            email: siteConfig.contact.email,
+            hours: siteConfig.contact.businessHours?.['weekdays'] ?? '',
+          },
         } as RawBlock
       }
 

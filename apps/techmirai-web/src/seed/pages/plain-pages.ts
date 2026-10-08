@@ -27,7 +27,7 @@ interface PlainPageSeed {
 // translation.
 const PLAIN_PAGES: PlainPageSeed[] = [
   { slug: 'home', title: { en: 'Home', ja: '[JA TODO]' } },
-  { slug: 'product', title: { en: 'Product', ja: '[JA TODO]' } },
+  { slug: 'ai-reception', title: { en: 'AI Reception', ja: 'AI受付' } },
   { slug: 'solutions', title: { en: 'Solutions', ja: '業種別' } },
   { slug: 'how-it-works', title: { en: 'How It Works', ja: '仕組み' } },
   { slug: 'integrations', title: { en: 'Integrations', ja: '連携' } },
@@ -42,7 +42,33 @@ const PLAIN_PAGES: PlainPageSeed[] = [
   { slug: 'legal-notice', title: { en: 'Legal Notice', ja: '[JA TODO]' } },
 ]
 
+/**
+ * Pack-3/H1: this page shell was seeded as `slug: 'product'` before the
+ * Spec's actual route (`/ai-reception`) was reconciled — see the H1 plan's
+ * "slug/route mismatch" finding. `upsertBySlug` is create-only, so simply
+ * renaming the slug above leaves the old `product` doc orphaned in any
+ * database that already ran a seed before this fix. Delete it here, once,
+ * guarded on an empty `layout` so a human's in-progress work at /product
+ * (unlikely, but not impossible) is never silently destroyed.
+ */
+async function removeOrphanedProductShell(payload: Payload): Promise<void> {
+  const existing = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'product' } },
+    limit: 1,
+    depth: 0,
+  })
+  const doc = existing.docs[0]
+  if (!doc) return
+  const layout = doc['layout']
+  if (Array.isArray(layout) && layout.length === 0) {
+    await payload.delete({ collection: 'pages', id: doc['id'] as string | number })
+    payload.logger.info('🧹 Removed orphaned pre-rename "product" page shell (now ai-reception)')
+  }
+}
+
 export async function seedPlainPages(payload: Payload, media: MediaIds): Promise<void> {
+  await removeOrphanedProductShell(payload)
   for (const page of PLAIN_PAGES) {
     await upsertBySlug(payload, 'pages', page.slug, {
       title: page.title,

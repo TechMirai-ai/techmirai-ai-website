@@ -26,6 +26,8 @@ import { PricingTeaserBlock } from './pricing-teaser/component'
 import { adaptPricingTeaserBlock } from './pricing-teaser/adapter'
 import { SecurityPointsBlock } from './security-points/component'
 import { adaptSecurityPointsBlock } from './security-points/adapter'
+import { ProductEditionBlock } from './product-edition/component'
+import { adaptProductEditionBlock } from './product-edition/adapter'
 import { CaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/component'
 import { adaptCaseStudyCarouselBlock } from '../verticals/recruitment/blocks/case-study-carousel/adapter'
 import { LogoCloudBlock } from './logo-cloud/component'
@@ -106,6 +108,7 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'case-study-teaser':   (raw) => <CaseStudyTeaserBlock    {...adaptCaseStudyTeaserBlock(raw)} />,
   'pricing-teaser':      (raw) => <PricingTeaserBlock      {...adaptPricingTeaserBlock(raw)} />,
   'security-points':     (raw) => <SecurityPointsBlock     {...adaptSecurityPointsBlock(raw)} />,
+  'product-edition':     (raw) => <ProductEditionBlock     {...adaptProductEditionBlock(raw)} />,
   'case-study-carousel': (raw) => <CaseStudyCarouselBlock  {...adaptCaseStudyCarouselBlock(raw)} />,
   'logo-cloud':          (raw) => <LogoCloudBlock          {...adaptLogoCloudBlock(raw)} />,
   'cta-banner':          (raw) => <CTABannerBlock          {...adaptCTABannerBlock(raw)} />,

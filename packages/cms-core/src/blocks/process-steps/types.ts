@@ -4,7 +4,7 @@ export interface ProcessStep {
 }
 
 export interface ProcessStepsBlockProps {
-  heading: string
+  heading?: string
   sub?: string
   steps: ProcessStep[]
 }

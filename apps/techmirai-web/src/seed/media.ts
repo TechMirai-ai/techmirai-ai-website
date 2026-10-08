@@ -48,7 +48,7 @@ export async function upsertMedia(
 
 const PAGE_LABELS: Record<string, { en: string; ja: string }> = {
   home: { en: 'Home', ja: '[JA TODO]' },
-  product: { en: 'Product', ja: '[JA TODO]' },
+  'ai-reception': { en: 'AI Reception', ja: 'AI受付' },
   solutions: { en: 'Solutions', ja: '業種別' },
   'how-it-works': { en: 'How It Works', ja: '仕組み' },
   integrations: { en: 'Integrations', ja: '連携' },

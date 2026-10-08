@@ -8,7 +8,7 @@ export const ProcessStepsBlockConfig: Block = {
   interfaceName: 'ProcessStepsBlock',
   labels: { singular: 'Process Steps', plural: 'Process Steps' },
   fields: [
-    { name: 'heading', type: 'text', localized: true, required: true },
+    { name: 'heading', type: 'text', localized: true },
     { name: 'sub', type: 'textarea', localized: true },
     {
       name: 'steps',

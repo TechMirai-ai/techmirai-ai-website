@@ -19,6 +19,7 @@ export interface PageHeroBlockProps {
   variant?: 'hero' | 'page-title'
 
   // hero variant fields
+  eyebrow?: string
   heading?: string
   coloredSubtitle?: string
   body?: string

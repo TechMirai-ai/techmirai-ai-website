@@ -8,7 +8,7 @@ import { staggerContainer, fadeInUp } from '../../lib/motion'
 import type { TeamGridBlockProps, TeamGridCardMember } from './types'
 
 function withLocale(locale: string, href: string): string {
-  if (!href || href.startsWith('http') || href.startsWith('#')) return href
+  if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('[')) return href
   const path = href.startsWith('/') ? href : `/${href}`
   return path.startsWith(`/${locale}/`) || path === `/${locale}` ? path : `/${locale}${path}`
 }

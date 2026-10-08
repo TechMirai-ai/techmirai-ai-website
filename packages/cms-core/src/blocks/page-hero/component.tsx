@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl'
 import type { PageHeroBlockProps, PageHeroBreadcrumbItem } from './types'
 
 function withLocale(locale: string, href: string): string {
-  if (!href || href.startsWith('http') || href.startsWith('#')) return href
+  if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('[')) return href
   const path = href.startsWith('/') ? href : `/${href}`
   return path.startsWith(`/${locale}/`) || path === `/${locale}` ? path : `/${locale}${path}`
 }
@@ -50,14 +50,101 @@ function PageTitleVariant({
   )
 }
 
+function HeroButtons({
+  primaryButton,
+  secondaryButton,
+  locale,
+}: {
+  primaryButton?: { label: string; href: string } | undefined
+  secondaryButton?: { label?: string; href?: string } | undefined
+  locale: string
+}) {
+  if (!primaryButton?.label && !secondaryButton?.label) return null
+  const primaryClassName =
+    'inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md'
+  const secondaryClassName =
+    'inline-flex items-center justify-center rounded-full border border-brand-primary px-6 py-2.5 text-sm font-semibold text-brand-primary transition-all duration-200 hover:bg-brand-primary-light'
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-3">
+      {primaryButton?.label &&
+        (primaryButton.href.startsWith('[') ? (
+          // Plain <a>, not next/link: Next's <Link> rejects any href
+          // containing "[" / "]", which a bracketed CONFIRM placeholder does
+          // (same pattern already used by hero/live-demo for demoUrl).
+          <a href={primaryButton.href} className={primaryClassName}>
+            {primaryButton.label}
+          </a>
+        ) : (
+          <Link href={withLocale(locale, primaryButton.href)} className={primaryClassName}>
+            {primaryButton.label}
+          </Link>
+        ))}
+      {secondaryButton?.label &&
+        secondaryButton?.href &&
+        (secondaryButton.href.startsWith('[') ? (
+          <a href={secondaryButton.href} className={secondaryClassName}>
+            {secondaryButton.label}
+          </a>
+        ) : (
+          <Link href={withLocale(locale, secondaryButton.href)} className={secondaryClassName}>
+            {secondaryButton.label}
+          </Link>
+        ))}
+    </div>
+  )
+}
+
+// A plain, image-free hero — no diagonal cutout, since that layout assumes
+// an adjacent photo to cut around. Used whenever backgroundImageUrl is
+// absent (previously rendered a forced gray "No image" box instead).
+function PlainTextHeroVariant({
+  eyebrow,
+  heading,
+  body,
+  primaryButton,
+  secondaryButton,
+  textAlignment,
+}: {
+  eyebrow?: string | undefined
+  heading?: string | undefined
+  body?: string | undefined
+  primaryButton?: { label: string; href: string } | undefined
+  secondaryButton?: { label?: string; href?: string } | undefined
+  textAlignment: 'left' | 'center'
+}) {
+  const locale = useLocale()
+  const alignClass = textAlignment === 'center' ? 'text-center mx-auto' : 'text-left'
+  return (
+    <section className="w-full px-4 sm:px-6 lg:px-8 pt-20 md:pt-28 pb-10 md:pb-14 bg-brand-surface">
+      <div className={`mx-auto max-w-3xl ${alignClass}`}>
+        {eyebrow && (
+          <p className="text-[12.5px] font-semibold uppercase tracking-wider text-brand-primary mb-2">{eyebrow}</p>
+        )}
+        {heading && (
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-text-primary leading-tight">
+            {heading}
+          </h1>
+        )}
+        {body && <p className="mt-4 text-[14px] md:text-[15px] leading-relaxed text-text-muted">{body}</p>}
+        <HeroButtons primaryButton={primaryButton} secondaryButton={secondaryButton} locale={locale} />
+      </div>
+    </section>
+  )
+}
+
 export function PageHeroBlock({
   variant = 'hero',
+  eyebrow,
   heading,
   coloredSubtitle,
+  body,
+  primaryButton,
+  secondaryButton,
   pageTitle,
   showBreadcrumb = false,
   breadcrumbItems = [],
   backgroundImageUrl,
+  textAlignment = 'left',
 }: PageHeroBlockProps) {
   const locale = useLocale()
 
@@ -67,6 +154,19 @@ export function PageHeroBlock({
         pageTitle={pageTitle ?? ''}
         showBreadcrumb={showBreadcrumb}
         breadcrumbItems={breadcrumbItems}
+      />
+    )
+  }
+
+  if (!backgroundImageUrl) {
+    return (
+      <PlainTextHeroVariant
+        eyebrow={eyebrow}
+        heading={heading}
+        body={body}
+        primaryButton={primaryButton}
+        secondaryButton={secondaryButton}
+        textAlignment={textAlignment}
       />
     )
   }
@@ -108,6 +208,9 @@ export function PageHeroBlock({
 
           {/* Heading & Subtitle Placed Outside Image (Over Cutout Area) */}
           <div className="relative z-10 pl-4 sm:pl-8 max-w-lg">
+            {eyebrow && (
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-slate-500 mb-1">{eyebrow}</p>
+            )}
             {heading && (
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#2A9D8F] leading-tight">
                 {heading}
@@ -119,6 +222,9 @@ export function PageHeroBlock({
                 {coloredSubtitle}
               </p>
             )}
+
+            {body && <p className="mt-3 text-sm text-slate-700">{body}</p>}
+            <HeroButtons primaryButton={primaryButton} secondaryButton={secondaryButton} locale={locale} />
           </div>
         </div>
 

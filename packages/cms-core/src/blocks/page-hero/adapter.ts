@@ -99,6 +99,7 @@ export function adaptPageHeroBlock(raw: unknown): PageHeroBlockProps {
     ...(breadcrumbItems.length > 0 ? { breadcrumbItems } : {}),
     ...(variant === 'hero'
       ? {
+          ...(typeof data['eyebrow'] === 'string' && data['eyebrow'] ? { eyebrow: data['eyebrow'] } : {}),
           ...(typeof data['heading'] === 'string' && data['heading'] ? { heading: data['heading'] } : {}),
           ...(typeof data['coloredSubtitle'] === 'string' && data['coloredSubtitle']
             ? { coloredSubtitle: data['coloredSubtitle'] }

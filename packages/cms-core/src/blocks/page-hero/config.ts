@@ -21,6 +21,15 @@ export const PageHeroBlockConfig: Block = {
 
     // ── hero variant fields ───────────────────────────────────────────
     {
+      name: 'eyebrow',
+      type: 'text',
+      localized: true,
+      admin: {
+        description: 'Max 40 characters. Small label shown above the heading.',
+        condition: (data) => data['variant'] === 'hero' || !data['variant'],
+      },
+    },
+    {
       name: 'heading',
       type: 'text',
       localized: true,
