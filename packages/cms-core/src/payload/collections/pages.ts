@@ -49,6 +49,9 @@ import { DoctorGridBlockConfig } from '../../verticals/clinic/blocks/doctor-grid
 import { DepartmentListBlockConfig } from '../../verticals/clinic/blocks/department-list/config'
 import { TreatmentListBlockConfig } from '../../verticals/clinic/blocks/treatment-list/config'
 import { BookingCtaBlockConfig } from '../../blocks/booking-cta/config'
+import { SetupStepsBlockConfig } from '../../blocks/setup-steps/config'
+import { LayeredAnswersDiagramBlockConfig } from '../../blocks/layered-answers-diagram/config'
+import { IntegrationsStatusTableBlockConfig } from '../../blocks/integrations-status-table/config'
 
 export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
   return [
@@ -106,6 +109,9 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     // Booking CTA is a core feature, not clinic-specific — any vertical with
     // features.bookingWidget on can use it.
     ...(siteConfig.features.bookingWidget ? [BookingCtaBlockConfig] : []),
+    SetupStepsBlockConfig,
+    LayeredAnswersDiagramBlockConfig,
+    IntegrationsStatusTableBlockConfig,
   ]
 }
 

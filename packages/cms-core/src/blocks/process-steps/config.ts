@@ -16,7 +16,9 @@ export const ProcessStepsBlockConfig: Block = {
       required: true,
       minRows: 1,
       fields: [
-        { name: 'title', type: 'text', localized: true, required: true },
+        // Pack-3/H3: no longer required — the five-step customer journey
+        // (Spec §8.1) has one sentence per step with no per-step title.
+        { name: 'title', type: 'text', localized: true },
         { name: 'line', type: 'textarea', localized: true, required: true },
       ],
     },

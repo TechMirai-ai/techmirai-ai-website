@@ -93,6 +93,12 @@ import { TreatmentListBlock } from '../verticals/clinic/blocks/treatment-list/co
 import { adaptTreatmentListBlock } from '../verticals/clinic/blocks/treatment-list/adapter'
 import { BookingCtaBlock } from './booking-cta/component'
 import { adaptBookingCtaBlock } from './booking-cta/adapter'
+import { SetupStepsBlock } from './setup-steps/component'
+import { adaptSetupStepsBlock } from './setup-steps/adapter'
+import { LayeredAnswersDiagramBlock } from './layered-answers-diagram/component'
+import { adaptLayeredAnswersDiagramBlock } from './layered-answers-diagram/adapter'
+import { IntegrationsStatusTableBlock } from './integrations-status-table/component'
+import { adaptIntegrationsStatusTableBlock } from './integrations-status-table/adapter'
 
 export type BlockRenderer = (raw: unknown) => ReactNode
 
@@ -146,4 +152,8 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'department-list':   (raw) => <DepartmentListBlock   {...adaptDepartmentListBlock(raw)} />,
   'treatment-list':    (raw) => <TreatmentListBlock    {...adaptTreatmentListBlock(raw)} />,
   'booking-cta':       (raw) => <BookingCtaBlock       {...adaptBookingCtaBlock(raw)} />,
+
+  'setup-steps':               (raw) => <SetupStepsBlock               {...adaptSetupStepsBlock(raw)} />,
+  'layered-answers-diagram':    (raw) => <LayeredAnswersDiagramBlock    {...adaptLayeredAnswersDiagramBlock(raw)} />,
+  'integrations-status-table':  (raw) => <IntegrationsStatusTableBlock  {...adaptIntegrationsStatusTableBlock(raw)} />,
 }

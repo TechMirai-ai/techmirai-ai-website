@@ -1,5 +1,25 @@
 # Engine fixes
 
+## 2026-10-08 — Pack-3/H3: `process-steps`' `steps[].title` was required, with no way to omit it for a title-less list (fix)
+
+**Symptom:** found while planning H3's five-step customer journey (Spec
+§8.1), which has one sentence per step with no per-step title — unlike
+every existing use of `process-steps` (homepage, `/ai-reception`), which
+always populates `title`. The field was `required: true` on both the
+Payload config and the TS type, and `component.tsx` rendered `step.title`
+unconditionally.
+
+**Fix:** removed `required: true` from `steps[].title`
+(`config.ts`/`types.ts`), made it optional in `ProcessStep`, wrapped the
+`<h3>` render in `{step.title && (...)}` (`component.tsx`), and changed
+`adapter.ts`'s row filter from `.filter((s) => s.title)` to
+`.filter((s) => s.line)` so title-less rows are no longer dropped.
+Additive/non-breaking — existing usages already populate `title`, so
+nothing already seeded is affected. Same fix shape as `process-steps`'
+own H1 entry below (which did the equivalent loosening for `heading`).
+
+**Status:** done.
+
 ## 2026-10-08 — Pack-3/H2: three blocks had a required `heading` with no way to omit it when the Spec gives none (fix)
 
 **Symptom:** found while planning H2's industry-page template, which reuses

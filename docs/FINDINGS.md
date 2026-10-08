@@ -1,5 +1,57 @@
 # Findings
 
+## 2026-10-08 — Pack-3/H3: `/how-it-works`/`/integrations` confirmed as the `/ai-reception`-style static-stub case, not the `/solutions` case
+
+H1's finding (below) flagged that `/how-it-works` and `/integrations` share
+the same "static stub shadows the dynamic catch-all" defect H1 fixed for
+`/ai-reception`, and H2's finding (below) warned that the simple
+"just delete the stub" fix doesn't universally hold — it broke for
+`/solutions`, which needed a nested `[slug]` route for 4 industry pages.
+
+Confirmed before deleting anything: neither `/how-it-works` nor
+`/integrations` has any sub-route in the Spec (§8) — both are flat pages.
+So the `/ai-reception`-style fix applies directly here: both stub
+directories (`apps/techmirai-web/src/app/(frontend)/[locale]/how-it-works/`,
+`.../integrations/`) were deleted outright, with no replacement file
+needed, since the sibling `[locale]/[slug]/page.tsx` catch-all already
+handles both slugs once seeded (the `pages` collection already had shells
+for both slugs, from `plain-pages.ts`'s Pack-2/F3 scaffolding).
+
+Re-verified after the fix: `/how-it-works`, `/en/how-it-works`,
+`/ja/how-it-works`, `/integrations`, `/en/integrations`, `/ja/integrations`
+all return 200.
+
+## 2026-10-08 — Pack-3/H3: `F1-12`'s original step attribution was wrong, and undercounted the status table's statuses
+
+`docs/PLACEHOLDER-REGISTER.md` row `F1-12` said the Integrations page was
+"NOT YET BUILT — registered by the Pack-3/I1 step." I1 was never the step
+that builds `/integrations` — `docs/packs/PACK-3-PAGES.md` and
+`docs/WORK-ORDER.md` Appendix C both assign it to H3. The row also listed
+only 3 statuses ("works now / case by case / not offered"); the Spec's
+actual §8.2 table uses 4 ("Available / Case by case / In development /
+Not offered" — the 4th appears once, for "Phone line"). Corrected in place
+rather than leaving a second, duplicate row, since F1-12 was always meant
+to be this exact field.
+
+## 2026-10-08 — Pack-3/H3: two judgment calls made where the Spec gives no explicit instruction
+
+Logged for visibility rather than asserted as fact, per the same practice
+H2 used for its own closing-CTA judgment call (below):
+
+- **No closing CTA** on either `/how-it-works` or `/integrations`. Spec §6
+  explicitly ties `/ai-reception` to the 5.14 CTA block; Spec §8 gives no
+  equivalent instruction for either page here, and neither page's own
+  closing line ("the under-table line" / "the bottom line") reads as an
+  invitation to add a CTA banner underneath it. Confirmed with Jamal before
+  seeding — both pages end on their literal Spec text instead.
+- **The diagram's "talk to a person" route label** reuses the Spec's own
+  already-approved "Talk to a person" / "スタッフと話す" pair (used
+  elsewhere in the Spec for the same affordance — the always-visible header
+  link, Appendix-listed around line 1480, and chatbot button B6 around line
+  1498) rather than the 4th answer-layer's "A person"/"スタッフ", since the
+  Spec's own diagram brief (p.50-51) uses the phrase "Talk to a person" by
+  name for this exact dashed route, not "A person."
+
 ## 2026-10-08 — Pack-3/H2: H1's note on `/solutions`/`/how-it-works`/`/pricing` sharing the static-stub problem needed a correction once `/solutions/[slug]` existed
 
 H1's own FINDINGS.md entry (below) assumed the fix for `/solutions` would be

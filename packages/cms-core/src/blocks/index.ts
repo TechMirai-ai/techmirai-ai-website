@@ -46,6 +46,9 @@ import { DoctorGridBlockConfig } from '../verticals/clinic/blocks/doctor-grid/co
 import { DepartmentListBlockConfig } from '../verticals/clinic/blocks/department-list/config'
 import { TreatmentListBlockConfig } from '../verticals/clinic/blocks/treatment-list/config'
 import { BookingCtaBlockConfig } from './booking-cta/config'
+import { SetupStepsBlockConfig } from './setup-steps/config'
+import { LayeredAnswersDiagramBlockConfig } from './layered-answers-diagram/config'
+import { IntegrationsStatusTableBlockConfig } from './integrations-status-table/config'
 
 export const allBlockConfigs: Block[] = [
   HeroBlockConfig,
@@ -94,6 +97,9 @@ export const allBlockConfigs: Block[] = [
   DepartmentListBlockConfig,
   TreatmentListBlockConfig,
   BookingCtaBlockConfig,
+  SetupStepsBlockConfig,
+  LayeredAnswersDiagramBlockConfig,
+  IntegrationsStatusTableBlockConfig,
 ]
 
 export type { HeroBlockProps } from './hero/types'
@@ -142,6 +148,9 @@ export type { DoctorGridBlockProps, DoctorCardItem } from '../verticals/clinic/b
 export type { DepartmentListBlockProps, DepartmentCardItem } from '../verticals/clinic/blocks/department-list/types'
 export type { TreatmentListBlockProps, TreatmentCardItem } from '../verticals/clinic/blocks/treatment-list/types'
 export type { BookingCtaBlockProps } from './booking-cta/types'
+export type { SetupStepsBlockProps, SetupStep } from './setup-steps/types'
+export type { LayeredAnswersDiagramBlockProps, LayeredAnswersStep } from './layered-answers-diagram/types'
+export type { IntegrationsStatusTableBlockProps, IntegrationRow, IntegrationStatus } from './integrations-status-table/types'
 
 export { HeroBlock } from './hero/component'
 export { ProblemSectionBlock } from './problem-section/component'

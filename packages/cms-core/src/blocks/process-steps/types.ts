@@ -1,5 +1,5 @@
 export interface ProcessStep {
-  title: string
+  title?: string
   line: string
 }
 

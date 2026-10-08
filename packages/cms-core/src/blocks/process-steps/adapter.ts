@@ -6,11 +6,14 @@ export function adaptProcessStepsBlock(raw: unknown): ProcessStepsBlockProps {
   const rawSteps = Array.isArray(data['steps']) ? data['steps'] : []
   const steps: ProcessStep[] = rawSteps
     .filter((s): s is Record<string, unknown> => typeof s === 'object' && s !== null)
-    .map((s) => ({
-      title: typeof s['title'] === 'string' ? s['title'] : '',
-      line: typeof s['line'] === 'string' ? s['line'] : '',
-    }))
-    .filter((s) => s.title)
+    .map((s) => {
+      const title = typeof s['title'] === 'string' && s['title'] ? s['title'] : ''
+      return {
+        line: typeof s['line'] === 'string' ? s['line'] : '',
+        ...(title ? { title } : {}),
+      }
+    })
+    .filter((s) => s.line)
 
   const heading = typeof data['heading'] === 'string' ? data['heading'] : ''
   const sub = typeof data['sub'] === 'string' && data['sub'] ? data['sub'] : ''

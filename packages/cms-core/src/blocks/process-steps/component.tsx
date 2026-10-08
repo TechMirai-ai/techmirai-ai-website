@@ -38,7 +38,9 @@ export function ProcessStepsBlock({ heading, sub, steps }: ProcessStepsBlockProp
             <span className="block text-[32px] font-bold tracking-tight text-brand-primary/25 leading-none font-sans select-none">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <h3 className="text-[14.5px] font-bold text-text-primary leading-snug">{step.title}</h3>
+            {step.title && (
+              <h3 className="text-[14.5px] font-bold text-text-primary leading-snug">{step.title}</h3>
+            )}
             <p className="text-[13px] leading-relaxed text-text-muted">{step.line}</p>
           </motion.li>
         ))}
