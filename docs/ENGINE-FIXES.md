@@ -487,3 +487,87 @@ state once it starts from the right value.
 
 **Status:** fixed. Verify by loading `/en/...` and `/ja/...` and confirming the teaser bubble and
 freshly-opened panel show the matching language on each, before touching the in-panel toggle.
+
+## 2026-10-12 — Pack-3/I2: the founder-visibility switch did nothing on any page except the homepage (fix)
+
+**Symptom:** found while planning `/about`, whose own Done-when requires the founder switch
+(`company-info` global's `founder.visible`) to hide the founder message, bio, photo and
+company-profile row on that page. Checking how founder-hiding currently works
+(`apps/techmirai-web/src/app/(frontend)/[locale]/page.tsx`, the homepage's own bespoke route)
+showed the `founderVisible`/`founderPersonId` injection for `team-grid` blocks lived only there.
+The generic catch-all `apps/techmirai-web/src/app/(frontend)/[locale]/[slug]/page.tsx`, which
+renders every other page including `/about`, had no founder-awareness at all — the switch was a
+no-op anywhere except the homepage, even though Pack-3/G4 already seeded a `team-grid` on the
+homepage specifically to exercise it.
+
+**Fix:** `[locale]/[slug]/page.tsx` now fetches the `company-info` global's `founder` field once
+per page load (same `payload.findGlobal` call the homepage already makes) and, inside its
+existing per-block `Promise.all` transform, adds three branches: injects
+`founderVisible`/`founderPersonId` into `team-grid` blocks (verbatim copy of the homepage's
+branch); drops `ceo-message` blocks entirely when `founder.visible === false`; and strips any
+`label-value-list` row flagged `founderGated` under the same condition. Since the `ceo-message`
+branch can now return `null`, the resolved blocks array gets one added `.filter((b): b is
+RawBlock => b !== null)` pass before rendering.
+
+**Status:** fixed. Verify by toggling `company-info`'s `founder.visible` to `false` in `/admin`,
+reloading `/about`, and confirming the founder-message block, Jamal's team card and the
+company-profile "Representative" row all disappear — then set it back to `true`.
+
+## 2026-10-12 — Pack-3/I2: `team-grid`'s `showBio` field was wired but never rendered (fix)
+
+**Symptom:** `team-grid/config.ts` has had a `showBio` checkbox since it was first built ("Show
+full bio (recommended for team index page)"), and `adapter.ts` already returned
+`showBio: data['showBio'] === true` on every block. But `component.tsx`'s `TeamGridBlock` never
+destructured `showBio` from its props, and its `Card` sub-component only ever rendered a member's
+one-line `shortBio` (as `line`) — there was no code path anywhere that rendered a team member's
+full `bio` richText field, regardless of `showBio`. Found while building `/about`'s Team section
+(Spec §10.4, "full bios"), which depends on this actually working.
+
+**Fix:** `adapter.ts`'s `RawTeamDoc` gained `bio?: unknown`, extracted via the existing
+`extractRichText` helper into a new optional `fullBio` on each mapped `TeamGridCardMember`.
+`component.tsx` now destructures `showBio` and passes it plus `fullBio` into `Card`, which renders
+`fullBio` (split into paragraphs, same convention as `ceo-message`) instead of the one-line `line`
+when `showBio` is true and `fullBio` is present, falling back to `line` otherwise. Additive — no
+existing `team-grid` usage (the homepage's, with `showBio: false`) is affected.
+
+**Status:** fixed. Verify on `/about`: all 5 Team cards show full paragraph bios, not just the
+one-line description; the homepage's own `team-grid` (`showBio: false`) is unchanged.
+
+## 2026-10-12 — Pack-3/I2: `ceo-message` rendered an invented, un-cleaned motto on every instance (fix)
+
+**Symptom:** `ceo-message/component.tsx` hardcoded an EN/JA "motto" heading ("Learn together,
+enjoy life, and strive for success." / "共に学び、人生を楽しみ、成功を目指す。") rendered
+unconditionally above every message, regardless of CMS content. This text does not appear
+anywhere in the TechMirai Content Spec — it reads like an uncleaned leftover from a different
+template this block was ported from. Found while reviewing the block for reuse on `/about`'s
+founder-message section (Spec §10.2); confirmed via grep that `ceo-message` had never been seeded
+anywhere before this step, so nothing live was showing this text.
+
+**Fix:** removed the `motto`/`mottoBreak` dictionary entries and the `<h2>` that rendered them
+from `component.tsx`'s `labels` map and `textEl`; kept the accurate "代表メッセージ / Message from
+the Representative" sub-heading above the signature area, which does match the Spec's own section
+name (代表挨拶) and isn't invented.
+
+**Status:** fixed. Verify `/about`'s founder-message block shows no motto text above the message
+paragraphs.
+
+## 2026-10-12 — Pack-3/I2: required richText fields fail Payload's `locale:'all'` merge write (fix)
+
+**Symptom:** seeding `/about` failed with `ValidationError` on `ceo-message`'s `message` field and
+`rich-text`'s `content` field — both richText, both `required: true` — even though the content
+supplied was valid and non-empty. `packages/cms-core/src/seed/utils.ts`'s own `createLocalizedDoc`
+comment already documents the root cause: Payload's richText `required` validator inspects
+`value?.root?.children` directly, before the `locale:'all'` write-transform unwraps `{ [locale]:
+value }` — so a required richText field inside any multi-locale `createLocalizedDoc`/
+`updateLocalizedDoc` merge write fails validation regardless of content, a known Payload
+limitation the single-locale fast path already sidesteps but the 2+-locale path cannot. Every
+other richText field seeded so far (`team.bio`, `faqs.answer`) happened to not be `required: true`
+at the field level, so this is the first time a seed step's content tripped it.
+
+**Fix:** removed `required: true` from `ceo-message/config.ts`'s `message` field and
+`rich-text/config.ts`'s `content` field — the schema-level enforcement, not the underlying
+Payload merge bug. Safe because neither block had ever been seeded before this step (confirmed via
+grep), so no already-seeded content depends on the admin-UI "required" nag for either field.
+
+**Status:** fixed. Verify `pnpm seed --confirm` completes `/about`'s seed step without a
+`ValidationError`.

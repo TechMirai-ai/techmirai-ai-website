@@ -79,4 +79,46 @@ describe('adaptTeamGridBlock', () => {
     expect(result.members).toEqual([])
     expect(result.partner).toBeUndefined()
   })
+
+  it('extracts fullBio from a richText bio field (Pack-3/I2)', () => {
+    // Arrange
+    const memberWithBio = {
+      id: '4',
+      name: 'Someone',
+      title: 'Engineer',
+      visible: true,
+      bio: {
+        root: {
+          children: [
+            { children: [{ text: 'First paragraph.' }] },
+            { children: [{ text: 'Second paragraph.' }] },
+          ],
+        },
+      },
+    }
+    const raw = { members: [memberWithBio] }
+
+    // Act
+    const result = adaptTeamGridBlock(raw)
+
+    // Assert
+    expect(result.members[0]?.fullBio).toBe('First paragraph.\nSecond paragraph.')
+  })
+
+  it('passes through the partner clarityLine when present (Pack-3/I2)', () => {
+    // Arrange
+    const raw = {
+      members: [],
+      partner: {
+        name: 'Sadiatec Co., Ltd.',
+        clarityLine: 'TechMirai is an independent business.',
+      },
+    }
+
+    // Act
+    const result = adaptTeamGridBlock(raw)
+
+    // Assert
+    expect(result.partner?.clarityLine).toBe('TechMirai is an independent business.')
+  })
 })

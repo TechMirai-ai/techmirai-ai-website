@@ -6,17 +6,9 @@ import { motion } from 'framer-motion'
 import type { CEOMessageBlockProps } from './types'
 
 // 1. Define the dictionary for dynamic text
-const labels: Record<string, { motto: string; mottoBreak: string; title: string }> = {
-  en: { 
-    motto: 'Learn together, enjoy life, and strive for success.', 
-    mottoBreak: 'Learn together,<br />enjoy life, and<br />strive for success.',
-    title: 'Message from the Representative' 
-  },
-  ja: { 
-    motto: '共に学び、人生を楽しみ、成功を目指す。', 
-    mottoBreak: '共に学び、<br />人生を楽しみ、<br />成功を目指す。',
-    title: '代表メッセージ' 
-  },
+const labels: Record<string, { title: string }> = {
+  en: { title: 'Message from the Representative' },
+  ja: { title: '代表メッセージ' },
 }
 
 const bgMap: Record<string, string> = {
@@ -47,8 +39,8 @@ export function CEOMessageBlock({
   
  // 2. Setup localization with a type assertion to guarantee 't' is never undefined
 const locale = useLocale();
-const t = (labels[locale] || labels['en']) as { motto: string; mottoBreak: string; title: string };
-  
+const t = (labels[locale] || labels['en']) as { title: string };
+
   const bg = bgMap[backgroundStyle] ?? bgMap['white']
   const isDarkBg = backgroundStyle === 'black'
   
@@ -72,12 +64,6 @@ const t = (labels[locale] || labels['en']) as { motto: string; mottoBreak: strin
 
   const textEl = (
     <div className="flex flex-1 flex-col justify-start text-left pt-2">
-      {/* 3. Render Dynamic Motto */}
-      <h2 
-        className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-deep-accent)] leading-snug mb-5"
-        dangerouslySetInnerHTML={{ __html: t.mottoBreak }} 
-      />
-
       <div className="space-y-4">
         {message.split('\n').filter(Boolean).map((para, i) => (
           <p key={i} className={`text-sm sm:text-base leading-relaxed ${textColor}`}>

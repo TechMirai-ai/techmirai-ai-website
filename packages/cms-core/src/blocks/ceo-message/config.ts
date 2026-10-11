@@ -9,7 +9,9 @@ export const CEOMessageBlockConfig: Block = {
     { name: 'portraitAlt', type: 'text', required: true, localized: true, admin: { description: 'Max 150 characters' } },
     { name: 'name', type: 'text', required: true, localized: true, admin: { description: 'Max 100 characters' } },
     { name: 'title', type: 'text', required: true, localized: true, admin: { description: 'Max 100 characters' } },
-    { name: 'message', type: 'richText', required: true, localized: true },
+    // Not `required: true` — same Payload locale:'all'-merge-vs-required-
+    // richText limitation as rich-text/config.ts's `content` field.
+    { name: 'message', type: 'richText', localized: true },
     { name: 'signature', type: 'upload', relationTo: 'media' },
     {
       name: 'portraitPosition',

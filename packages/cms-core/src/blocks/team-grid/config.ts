@@ -34,6 +34,15 @@ export const TeamGridBlockConfig: Block = {
         { name: 'name', type: 'text', localized: true },
         { name: 'role', type: 'text', localized: true },
         { name: 'line', type: 'textarea', localized: true },
+        {
+          name: 'clarityLine',
+          type: 'textarea',
+          localized: true,
+          admin: {
+            description:
+              'Optional small disclaimer line below the main line, e.g. "TechMirai is an independent business; X is our partner, not our parent company." (Pack-3/I2, Spec §10.5).',
+          },
+        },
       ],
     },
     {

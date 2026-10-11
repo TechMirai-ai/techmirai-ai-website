@@ -22,6 +22,15 @@ export const LabelValueListBlockConfig: Block = {
       fields: [
         { name: 'label', type: 'text', localized: true, required: true },
         { name: 'detail', type: 'textarea', localized: true, required: true },
+        {
+          name: 'founderGated',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description:
+              'Hide this entire row when the founder switch (company-info global) is off — e.g. a company-profile "Representative" row (Pack-3/I2, Spec §2.3).',
+          },
+        },
       ],
     },
     {

@@ -84,8 +84,20 @@ export default async function DynamicPage({ params }: Props) {
 
   let blocks = (page.layout ?? []) as RawBlock[]
 
+  // Pack-3/I2: fetched once and reused by three branches below (team-grid
+  // injection, ceo-message removal, label-value-list row-gating) — the
+  // homepage's own page.tsx only ever needed this for team-grid, but this
+  // catch-all serves every other page, including /about which needs all
+  // three. See docs/ENGINE-FIXES.md's Pack-3/I2 entry.
+  const companyInfo = await payload.findGlobal({ slug: 'company-info', depth: 0 }).catch(() => null)
+  const founder = (companyInfo as Record<string, unknown> | null)?.['founder'] as
+    | { visible?: boolean; person?: unknown }
+    | undefined
+  const founderVisible = founder?.visible !== false
+  const founderPersonId = founder?.person
+
   // === RESOLVE NEWS LIST BLOCK FALLBACK (same as homepage) ===
-  blocks = await Promise.all(
+  const resolvedBlocks = await Promise.all(
     blocks.map(async (block) => {
       if (block.blockType === 'news-list') {
         const source = block.source as string | undefined
@@ -160,9 +172,40 @@ export default async function DynamicPage({ params }: Props) {
         } as RawBlock
       }
 
+      // === FOUNDER-VISIBILITY GATING (Pack-3/I2, Spec §2.3) ===
+      // Mirrors [locale]/page.tsx (home)'s team-grid branch, plus two new
+      // cases the homepage never needed: ceo-message (the whole block is
+      // the founder message) and label-value-list (a single row, e.g. the
+      // company-profile "Representative" row, can be founder-gated).
+      if (block.blockType === 'team-grid') {
+        return {
+          ...block,
+          founderVisible,
+          founderPersonId,
+        } as RawBlock
+      }
+
+      if (block.blockType === 'ceo-message') {
+        return founderVisible ? block : null
+      }
+
+      if (block.blockType === 'label-value-list' && !founderVisible) {
+        const rows = Array.isArray(block['rows']) ? (block['rows'] as Record<string, unknown>[]) : []
+        return {
+          ...block,
+          rows: rows.filter((row) => row['founderGated'] !== true),
+        } as RawBlock
+      }
+
+      if (block.blockType === 'rich-text' && block['founderGated'] === true && !founderVisible) {
+        return null
+      }
+
       return block
     })
   )
+
+  blocks = resolvedBlocks.filter((b): b is RawBlock => b !== null)
 
   return (
     <>

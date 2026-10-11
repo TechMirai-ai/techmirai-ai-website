@@ -17,13 +17,20 @@ function Card({
   name,
   title,
   line,
+  fullBio,
+  showBio,
+  note,
   photoUrl,
 }: {
   name: string
   title?: string | undefined
   line?: string | undefined
+  fullBio?: string | undefined
+  showBio?: boolean | undefined
+  note?: string | undefined
   photoUrl?: string | undefined
 }) {
+  const bioParagraphs = showBio && fullBio ? fullBio.split('\n').filter(Boolean) : null
   return (
     <div className="rounded-xl border border-border-default bg-white p-5 shadow-sm flex flex-col gap-3">
       <div className="h-20 w-20 rounded-full overflow-hidden bg-bg-tertiary shrink-0">
@@ -33,7 +40,14 @@ function Card({
         <h3 className="text-[14.5px] font-bold text-text-primary leading-snug">{name}</h3>
         {title && <p className="text-[12.5px] font-semibold text-brand-primary">{title}</p>}
       </div>
-      {line && <p className="text-[13px] leading-relaxed text-text-muted">{line}</p>}
+      {bioParagraphs
+        ? bioParagraphs.map((para, i) => (
+            <p key={i} className="text-[13px] leading-relaxed text-text-muted">
+              {para}
+            </p>
+          ))
+        : line && <p className="text-[13px] leading-relaxed text-text-muted">{line}</p>}
+      {note && <p className="text-[12px] italic leading-relaxed text-text-muted">{note}</p>}
     </div>
   )
 }
@@ -45,6 +59,7 @@ export function TeamGridBlock({
   members,
   partner,
   columns,
+  showBio,
   buttonLabel,
   buttonHref,
 }: TeamGridBlockProps) {
@@ -87,12 +102,12 @@ export function TeamGridBlock({
       >
         {members.map((m: TeamGridCardMember) => (
           <motion.div key={m.id} variants={fadeInUp}>
-            <Card name={m.name} title={m.title} line={m.line} photoUrl={m.photoUrl} />
+            <Card name={m.name} title={m.title} line={m.line} fullBio={m.fullBio} showBio={showBio} photoUrl={m.photoUrl} />
           </motion.div>
         ))}
         {partner && (
           <motion.div variants={fadeInUp}>
-            <Card name={partner.name} title={partner.role} line={partner.line} photoUrl={partner.photoUrl} />
+            <Card name={partner.name} title={partner.role} line={partner.line} note={partner.clarityLine} photoUrl={partner.photoUrl} />
           </motion.div>
         )}
       </motion.div>

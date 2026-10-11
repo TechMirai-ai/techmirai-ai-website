@@ -631,3 +631,76 @@ published content: `reception/ai/prompt.ts`'s system prompt plus
 mandated tag in `reception/ui/ReceptionPanel.tsx`). Only the request-limits
 bullet got a `[CONFIRM]` appended — see
 `docs/PLACEHOLDER-REGISTER.md` row I1-06.
+
+## 2026-10-12 — Pack-3/I2: `/about` had the same static-stub-shadows-the-catch-all defect (6th instance)
+
+`apps/techmirai-web/src/app/(frontend)/[locale]/about/page.tsx` was a
+static `ComingSoonStub` route that would have shadowed the dynamic
+`[locale]/[slug]/page.tsx` catch-all exactly like the `/ai-reception`,
+`/how-it-works`, `/integrations` and `/pricing` stubs before it — the 6th
+instance of this pattern counting I1's own note that it was already the
+4th. Deleted the stub file (confirmed clean/tracked via `git status`
+first, recoverable via `git checkout --`). Unlike the earlier four cases,
+only the `page.tsx` file was removed, not the whole `about/` directory —
+`about/[slug]/page.tsx` is a separate, legitimate dynamic route for
+`/about/*` sub-pages (driven by `apps/techmirai-web/src/lib/about-slugs.ts`'s
+`ABOUT_PAGE_SLUGS`) and stays untouched. Given how consistently this exact
+defect keeps recurring, it's probably worth a repo-wide one-time sweep for
+any other `(frontend)/[locale]/<slug>/page.tsx` stub still shadowing the
+catch-all, rather than continuing to discover them one Pack-3 step at a
+time — not something I expanded this step's scope to do myself.
+
+## 2026-10-12 — Pack-3/I2: chose `label-value-list` over the existing `company-profile` block for the Company profile table
+
+`packages/cms-core/src/blocks/company-profile` is wired into the block
+registry and `buildAvailableBlocks()` but has never actually been seeded
+anywhere in this repo (confirmed via grep). Its row labels are a hardcoded
+8-key EN/JA dictionary baked directly into `component.tsx` (companyName,
+founded, ceo, address, capital, licenseNumber, headcount,
+businessDescription), which doesn't match Spec §10.6's actual 10 rows
+(trade name, representative, business form, established, address,
+business, partner, main client, phone, email — Spec's own "Item (EN)" /
+"項目 (JA)" columns). Rather than rewrite that hardcoded dictionary to fit
+a different field set it was never designed for, `/about`'s Company
+profile table reuses the I1 `label-value-list` block instead, whose
+localized `label`+`detail` rows map onto Spec's own two columns directly.
+`company-profile` is left as-is and still unused — a decision for whoever
+eventually needs its photo/years-badge/CTA-button shape (which Spec §10.6
+doesn't call for) to pick it up or remove it.
+
+## 2026-10-12 — Pack-3/I2: pre-existing English glosses inside some `team` JA title fields (observation, not changed)
+
+While reusing the `team` collection's existing JA `title` fields for
+`/about`'s Team section, noticed several carry an English parenthetical
+baked into the JA string itself — e.g. `代表 (representative)`, `共同創業
+者 (co-founder)`, `営業・お客様窓口 (sales and client contact)` — whereas
+Spec §5.11/§10.4 gives plain JA-only terms with no English gloss, and
+Nahida's `エンジニア` has no gloss at all, making the pattern inconsistent
+even within the same collection. These were seeded in Pack-3/G4, before
+this step. Per CLAUDE.md rule 6 ("Japanese text is... never edited by the
+developer or by ECC"), not changed here — flagging for Haruka's review
+pass rather than fixing it myself.
+
+## 2026-10-12 — Pack-3/I2: launch-scan's `B1_ALLOWED_SADIATEC_LOCATIONS` is still the original empty stub, now flagging both `/` and `/about`
+
+Ran `launch-scan-pages.ts` against `/about` as due diligence (not itself one
+of I2's "six common gates" — Appendix B's launch scan is a separate,
+whole-project gate). `scripts/launch-scan-rules.mjs`'s own comment already
+documents this: `B1_ALLOWED_SADIATEC_LOCATIONS = []` is "a stub — see note
+above," left empty because "none of those pages exist in the repo yet,"
+with an explicit instruction to "refine with real route/file patterns once
+Pack-3/4 builds those pages." Both now exist — the homepage (Pack-3/G3-G4)
+and `/about` (Pack-3/I2) legitimately name "Sadiatec" exactly where
+`docs/WORK-ORDER.md` Appendix B1 says it's allowed — but the stub was never
+filled in, so the scan flags every single mention on both pages (confirmed
+via the raw JSON hit log: 1 hit on `/`, 2 on `/en`, 6 each on `/about` and
+`/en/about`). Not something this step introduced — the homepage hits prove
+it's been silently failing since G3/G4. Not fixed here: filling in the
+real allow-list needs care (the function is shared between the rendered
+pass, keyed on route paths like `/about`/`/en/about`, and the static
+source-file pass in `preflight-check.mjs`, keyed on file paths like
+`apps/techmirai-web/src/seed/pages/about.ts` — a correct fix likely needs
+different matching logic for each, and Appendix B1 also names the
+not-yet-built case-study/FAQ/chat-answer locations), and it isn't required
+by I2's own Done-when list. Logging for whoever closes out the launch gate
+before go-live (I3's case study and I4's FAQ will hit the same stub).

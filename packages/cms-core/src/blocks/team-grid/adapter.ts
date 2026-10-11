@@ -1,10 +1,12 @@
 import type { TeamGridBlockProps, TeamGridCardMember } from './types'
+import { extractRichText } from '../../lib/extract-rich-text'
 
 interface RawTeamDoc {
   id: string | number
   name?: string
   title?: string
   shortBio?: string
+  bio?: unknown
   visible?: boolean
   photo?: { url?: string } | string | null
 }
@@ -30,11 +32,13 @@ export function adaptTeamGridBlock(raw: unknown): TeamGridBlockProps {
     .filter((m) => founderVisible || String(m.id) !== founderPersonId)
     .map((m) => {
       const photoUrl = typeof m.photo === 'object' && m.photo !== null ? m.photo.url : undefined
+      const fullBio = extractRichText(m.bio)
       return {
         id: String(m.id),
         name: m.name ?? '',
         title: m.title ?? '',
         ...(m.shortBio ? { line: m.shortBio } : {}),
+        ...(fullBio ? { fullBio } : {}),
         ...(photoUrl ? { photoUrl } : {}),
       }
     })
@@ -61,6 +65,9 @@ export function adaptTeamGridBlock(raw: unknown): TeamGridBlockProps {
             name: partnerName,
             ...(typeof partnerRaw['role'] === 'string' && partnerRaw['role'] ? { role: partnerRaw['role'] as string } : {}),
             ...(typeof partnerRaw['line'] === 'string' && partnerRaw['line'] ? { line: partnerRaw['line'] as string } : {}),
+            ...(typeof partnerRaw['clarityLine'] === 'string' && partnerRaw['clarityLine']
+              ? { clarityLine: partnerRaw['clarityLine'] as string }
+              : {}),
             ...(partnerPhotoUrl ? { photoUrl: partnerPhotoUrl } : {}),
           },
         }

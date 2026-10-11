@@ -3,6 +3,7 @@ export interface TeamGridCardMember {
   name: string
   title: string
   line?: string
+  fullBio?: string
   photoUrl?: string
 }
 
@@ -10,6 +11,7 @@ export interface TeamGridPartnerCard {
   name: string
   role?: string
   line?: string
+  clarityLine?: string
   photoUrl?: string
 }
 
