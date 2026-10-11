@@ -52,6 +52,7 @@ import { BookingCtaBlockConfig } from '../../blocks/booking-cta/config'
 import { SetupStepsBlockConfig } from '../../blocks/setup-steps/config'
 import { LayeredAnswersDiagramBlockConfig } from '../../blocks/layered-answers-diagram/config'
 import { IntegrationsStatusTableBlockConfig } from '../../blocks/integrations-status-table/config'
+import { LabelValueListBlockConfig } from '../../blocks/label-value-list/config'
 
 export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
   return [
@@ -112,6 +113,7 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     SetupStepsBlockConfig,
     LayeredAnswersDiagramBlockConfig,
     IntegrationsStatusTableBlockConfig,
+    LabelValueListBlockConfig,
   ]
 }
 

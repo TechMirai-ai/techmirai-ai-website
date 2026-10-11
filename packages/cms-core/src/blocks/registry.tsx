@@ -99,6 +99,8 @@ import { LayeredAnswersDiagramBlock } from './layered-answers-diagram/component'
 import { adaptLayeredAnswersDiagramBlock } from './layered-answers-diagram/adapter'
 import { IntegrationsStatusTableBlock } from './integrations-status-table/component'
 import { adaptIntegrationsStatusTableBlock } from './integrations-status-table/adapter'
+import { LabelValueListBlock } from './label-value-list/component'
+import { adaptLabelValueListBlock } from './label-value-list/adapter'
 
 export type BlockRenderer = (raw: unknown) => ReactNode
 
@@ -156,4 +158,5 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'setup-steps':               (raw) => <SetupStepsBlock               {...adaptSetupStepsBlock(raw)} />,
   'layered-answers-diagram':    (raw) => <LayeredAnswersDiagramBlock    {...adaptLayeredAnswersDiagramBlock(raw)} />,
   'integrations-status-table':  (raw) => <IntegrationsStatusTableBlock  {...adaptIntegrationsStatusTableBlock(raw)} />,
+  'label-value-list':            (raw) => <LabelValueListBlock           {...adaptLabelValueListBlock(raw)} />,
 }

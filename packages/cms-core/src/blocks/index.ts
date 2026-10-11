@@ -49,6 +49,7 @@ import { BookingCtaBlockConfig } from './booking-cta/config'
 import { SetupStepsBlockConfig } from './setup-steps/config'
 import { LayeredAnswersDiagramBlockConfig } from './layered-answers-diagram/config'
 import { IntegrationsStatusTableBlockConfig } from './integrations-status-table/config'
+import { LabelValueListBlockConfig } from './label-value-list/config'
 
 export const allBlockConfigs: Block[] = [
   HeroBlockConfig,
@@ -100,6 +101,7 @@ export const allBlockConfigs: Block[] = [
   SetupStepsBlockConfig,
   LayeredAnswersDiagramBlockConfig,
   IntegrationsStatusTableBlockConfig,
+  LabelValueListBlockConfig,
 ]
 
 export type { HeroBlockProps } from './hero/types'
@@ -151,6 +153,7 @@ export type { BookingCtaBlockProps } from './booking-cta/types'
 export type { SetupStepsBlockProps, SetupStep } from './setup-steps/types'
 export type { LayeredAnswersDiagramBlockProps, LayeredAnswersStep } from './layered-answers-diagram/types'
 export type { IntegrationsStatusTableBlockProps, IntegrationRow, IntegrationStatus } from './integrations-status-table/types'
+export type { LabelValueListBlockProps, LabelValueRow } from './label-value-list/types'
 
 export { HeroBlock } from './hero/component'
 export { ProblemSectionBlock } from './problem-section/component'

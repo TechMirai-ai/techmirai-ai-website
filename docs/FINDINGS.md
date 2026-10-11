@@ -549,3 +549,85 @@ npm dependency) generates the live-demo block's QR code at render time in
 generated from the config URL" wording, not just G2's. Flagging only, per standing rule 13:
 whoever plans Pack-4/N1 should confirm the QR-code item there is already done (reusing this same
 helper for any other page that needs it) rather than building a second QR-generation path.
+
+## 2026-10-11 — Pack-3/I1: `/pricing` had the same static-stub-shadows-catch-all defect already fixed for `/how-it-works`/`/integrations`/`/ai-reception`
+
+While verifying Gate 3 (every page returns 200 with real content), `/pricing`
+returned 200 but rendered none of the seeded block content — only the
+site-wide header/footer. Direct DB inspection confirmed the `pages` doc's
+`layout` was correctly seeded (6 blocks, both locales). The actual cause:
+`apps/techmirai-web/src/app/(frontend)/[locale]/pricing/page.tsx` was a
+leftover static "Coming Soon" stub (`ComingSoonStub`) pre-dating I1, which
+Next.js's file-based routing matches before the sibling
+`[locale]/[slug]/page.tsx` catch-all ever runs — the exact defect shape
+already documented and fixed in the 2026-10-08 Pack-3/H3 entry above for
+`/how-it-works`/`/integrations`, and in H1's finding before that for
+`/ai-reception`. `/security` had no such stub and rendered correctly from
+the start.
+
+Fixed the same way as those precedents: deleted
+`apps/techmirai-web/src/app/(frontend)/[locale]/pricing/` outright, no
+replacement needed, since the catch-all already handles the `pricing` slug
+once seeded. Re-verified after the fix: `/pricing`, `/en/pricing` both
+return 200 with the seeded content actually present (confirmed via direct
+`fetch()`, not just status code).
+
+This is the fourth page-group to hit this exact pattern (`/ai-reception`,
+`/how-it-works`, `/integrations`, now `/pricing`) — worth a quick check of
+remaining not-yet-built page-groups' stub directories before their own
+content-seeding steps, rather than rediscovering this per page.
+
+## 2026-10-11 — Pack-3/I1: Spec §9.1's "Pricing FAQ" cross-reference to Section 14 (F17/F18/F19) is inaccurate
+
+Spec §9.1 labels its 3-row Pricing FAQ table "(also in Section 14: F17, F18,
+F19)". Checked against Section 14's actual F01-F26 list (lines 1207-1209 of
+`docs/_inputs/TechMirai Website — Full Content Spec (EN JA).md`): only F19's
+question ("Is there a minimum contract period?") matches. The other two
+rows directly under §9.1's heading — "How do I pay?" and "What if I stop
+the service?" — do not exist anywhere in the stable F01-F26 list, which
+§14's own intro says must stay fixed at 26 questions (reused by the
+homepage and chatbot). F17 ("How much does it cost?") and F18 ("Are there
+other costs?") are also not the same questions as §9.1's own payment/
+cancellation rows — they're already covered elsewhere on `/pricing` (the
+package card and the "Not included" table respectively).
+
+Resolved per a plan-review judgment call (confirmed with Jamal via
+AskUserQuestion before implementation): `/pricing`'s FAQ section renders
+§9.1's own 3-row table as plain page content via the new `label-value-list`
+block, not through the relationship-based `faq` block (which would have
+required inventing new F27/28 ids, breaking the "stays fixed at 26"
+constraint, or dropping two of the three rows). The cross-reference note
+itself is treated as a stale/incorrect artifact of the Spec's authoring,
+not corrected in the Spec file. See `docs/PLACEHOLDER-REGISTER.md` row I1-04.
+
+## 2026-10-11 — Pack-3/I1: homepage §5.9 and `/pricing` §9.1 give different bracket wording for the same tax-note fact
+
+Spec §5.9 (homepage `pricing-teaser`) gives the tax-note placeholder as
+`[Tax wording]`; Spec §9.1 (`/pricing`'s own package card) gives the same
+underlying fact as `[Wording from your accountant]`. Both are copied
+verbatim per CLAUDE.md rule 5 rather than reconciled, since neither page's
+instance is "wrong" — they're just two different bracket phrasings the
+Spec itself uses for the same not-yet-provided fact. Flagged in
+`docs/PLACEHOLDER-REGISTER.md` row F1-20 for whoever eventually fills in
+the real wording to update both.
+
+## 2026-10-11 — Pack-3/I1: `/security`'s "request limits" claim downgraded to `[CONFIRM]` after reading the booking API's rate limiter
+
+The I1 step prompt itself flagged this as likely, given "project notes"
+about an in-memory rate limiter — confirmed by reading the actual code
+rather than assuming. `packages/cms-core/src/booking/api/rate-limit.ts`'s
+own doc comment states its limiter is process-local only ("does not share
+counts across serverless instances or horizontally-scaled processes"),
+explicitly deferred to a future "WO-8 production hardening pass". The
+contact-form limiter (`apps/techmirai-web/src/lib/rate-limit.ts`) upgrades
+to an Upstash Redis-backed limiter when configured; the booking API's does
+not have an equivalent fallback. Every other "Accurate answers"/"Bookings"
+statement on `/security` was verified against real evidence and left as
+the Spec states it (no double bookings: atomic slot-capacity claim in
+`booking/api/reserve.ts`; private manage link: HMAC-derived, 30-day-TTL,
+timing-safe-verified token in `booking/api/tokens.ts`; AI only from
+published content: `reception/ai/prompt.ts`'s system prompt plus
+`corpus.ts`'s AI-visible filter; automated-assistant label: site-wide
+mandated tag in `reception/ui/ReceptionPanel.tsx`). Only the request-limits
+bullet got a `[CONFIRM]` appended — see
+`docs/PLACEHOLDER-REGISTER.md` row I1-06.

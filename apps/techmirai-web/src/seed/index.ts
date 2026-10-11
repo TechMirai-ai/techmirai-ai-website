@@ -25,6 +25,8 @@ import { seedSolutionsHub } from './pages/solutions'
 import { seedSolutionsIndustryPages } from './pages/solutions-industries'
 import { seedHowItWorksPage } from './pages/how-it-works'
 import { seedIntegrationsPage } from './pages/integrations'
+import { seedPricingPage } from './pages/pricing'
+import { seedSecurityPage } from './pages/security'
 import { seedCaseStudies } from './case-studies'
 import { seedChat } from './chat'
 import { seedBlog } from './blog'
@@ -93,6 +95,8 @@ async function run(): Promise<void> {
   await seedSolutionsIndustryPages(payload, downloads, industryFaqIds)
   await seedHowItWorksPage(payload)
   await seedIntegrationsPage(payload)
+  await seedPricingPage(payload)
+  await seedSecurityPage(payload)
   await seedCaseStudies(payload)
   await seedChat(payload)
   await seedBlog(payload)

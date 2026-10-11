@@ -39,6 +39,32 @@ section) has the same situation for both `eyebrow` and `heading`.
 
 **Status:** done.
 
+## 2026-10-11 — Pack-3/I1: `launch-scan-pages.ts`'s `ROUTES` list was missing `security` (fix)
+
+**Symptom:** found while running Gate 3's launch-scan check for I1's two
+new pages. `scripts/launch-scan-pages.ts`'s hardcoded `ROUTES` array
+already listed `'pricing'` but not `'security'` — so `/security` was
+silently never crawled by the scan at all (not a false pass; it was simply
+absent from the list), even though `/pricing` and `/security` were seeded
+as a pair in the same step.
+
+**Fix:** added `'security'` to `ROUTES`, alphabetically next to `'privacy'`/
+`'services'`. Additive/non-breaking — every other route is unaffected, and
+the scan's "unknown route" skip-if-non-200 behavior (its own comment, line
+~30) means adding a route that didn't exist yet would have been harmless
+even before this step seeded real content for it.
+
+**Status:** done — re-run confirms no old prices anywhere in the full scan
+output. `/security`/`/en/security` now report the expected `B6_BRACKET_
+PLACEHOLDERS` hits for every `[CONFIRM]`/bracketed item this step itself
+seeded (all already logged in `docs/PLACEHOLDER-REGISTER.md` rows I1-01
+through I1-06), plus the same site-wide, pre-existing hits every other page
+already shows (phone number, business hours, demo URL, missing canonical/
+hreflang, and the generic `meta.title`/`meta.description` "TBD... not yet
+seeded" gap, which is identical across every page built so far — home,
+ai-reception, how-it-works, integrations, solutions — since none of their
+seed files touch `meta`, only `layout`; out of scope for this step).
+
 ## 2026-10-08 — Pack-3/H2: `bento-grid` had no way to make a card a link (fix)
 
 **Symptom:** found while planning the Solutions hub's 4-card grid linking

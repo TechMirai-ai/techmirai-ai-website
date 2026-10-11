@@ -48,6 +48,7 @@ const ROUTES = [
   'news',
   'pricing',
   'privacy',
+  'security',
   'services',
   'solutions',
   'team',
