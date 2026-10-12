@@ -13,9 +13,10 @@ import config from '../../payload.config'
  * doc comment, and apps/techmirai-web/e2e/booking-journey.spec.ts, which
  * mocks the booking API for exactly this reason).
  *
- * Fictional identity matches WO-0's seed content exactly (see
- * seed/demo/{services,doctors}.ts): さくら接骨院 (Sakura Sekkotsuin), its 4
- * departments, and its 5 named practitioners — not generic placeholder data.
+ * Pack-4/J2 (Spec §12.4): the four consultation services below replace the
+ * clinic-demo services, and ONE demo resource carries the demo slots. The
+ * clinic-demo services/resources from earlier seeds are deactivated (never
+ * deleted) so a dev database that already has them stops offering them.
  *
  * Run via `pnpm seed:booking`. Safe to re-run: services/resources are
  * upserted by name (created once, left alone after), and only *future,
@@ -36,57 +37,70 @@ interface HourWindow {
   endMinute: number
 }
 
-// Mirrors site.config.ts's contact.businessHours exactly. Previously
-// missing Tuesday/Thursday/Saturday entirely, so no bookable slots ever
-// existed on three of the six days the site advertises as open — found
-// while fixing the same bug for a second client's booking.ts.
-const CONSULTATION_HOURS: Record<number, HourWindow[]> = {
-  1: [
-    { startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 },
-    { startHour: 15, startMinute: 0, endHour: 19, endMinute: 30 },
-  ], // Monday
-  2: [
-    { startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 },
-    { startHour: 15, startMinute: 0, endHour: 19, endMinute: 30 },
-  ], // Tuesday
-  3: [{ startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 }], // Wednesday
-  4: [
-    { startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 },
-    { startHour: 15, startMinute: 0, endHour: 19, endMinute: 30 },
-  ], // Thursday
-  5: [
-    { startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 },
-    { startHour: 15, startMinute: 0, endHour: 19, endMinute: 30 },
-  ], // Friday
-  6: [
-    { startHour: 9, startMinute: 0, endHour: 12, endMinute: 0 },
-    { startHour: 13, startMinute: 0, endHour: 16, endMinute: 0 },
-  ], // Saturday
-}
+/**
+ * The Spec gives the demo window only as the bracketed `[9:00-18:00]`
+ * (WORK-ORDER.md §219: "Dummy slots are fine ... Mark them as demo"), so it
+ * stays a single named constant — nothing here asserts it is confirmed.
+ * Which time zone these wall-clock hours are in is open decision D2; the
+ * generator below keeps the pre-existing JST conversion unchanged until then.
+ */
+const DEMO_WINDOW: HourWindow = { startHour: 9, startMinute: 0, endHour: 18, endMinute: 0 }
+const DEMO_WEEKDAYS: readonly number[] = [1, 2, 3, 4, 5] // Monday to Friday (getUTCDay())
 
 const APPOINTMENT_MINUTES = 30
 
-const PRACTITIONERS = ['田中 大輔', '佐藤 美咲', '山本 健太', '鈴木 愛', '小林 真一']
+/**
+ * Decision D4 (approved by Jamal): one shared calendar/resource named
+ * "TechMirai" — no person is named. The slots generated for it are DEMO
+ * availability and must be replaced with real availability before launch.
+ */
+const DEMO_RESOURCE_NAME = 'TechMirai'
+
+/** The resource name used by the first J2 seed run, retired when the shared "TechMirai" calendar replaced it. */
+const SUPERSEDED_PLACEHOLDER_RESOURCE_NAME = '[Demo resource — CONFIRM]'
 
 interface BookableServiceSeed {
   ja: string
   en: string
   durationMin: number
-  priceYen: number | null
-  firstVisitAllowed: boolean
+  active: boolean
   sortOrder: number
 }
 
-// Matches seed/demo/services.ts's 4 departments (整形外科的施術 / スポーツ障害・
-// リハビリ / 交通事故治療 / 産前産後骨盤矯正), split into a first/follow-up pair
-// for the largest department (mirroring the booking UI's visit-type step)
-// plus one bookable entry per remaining department.
+/**
+ * Spec §12.4 bookable services (EN / JA / length). `visit` keeps the Spec's
+ * bracketed names and `[60 min]` verbatim and is seeded INACTIVE: the engine
+ * reserves a single slot and ignores duration, so a 60-minute visit cannot be
+ * booked safely until open decision D3 is resolved.
+ */
 const BOOKABLE_SERVICES: BookableServiceSeed[] = [
-  { ja: '初診（整形外科的施術）', en: 'First Visit — Orthopedic Care', durationMin: 30, priceYen: null, firstVisitAllowed: true, sortOrder: 1 },
-  { ja: '再診（整形外科的施術）', en: 'Follow-up — Orthopedic Care', durationMin: 20, priceYen: null, firstVisitAllowed: false, sortOrder: 2 },
-  { ja: 'スポーツ障害・リハビリ', en: 'Sports Injury & Rehab', durationMin: 40, priceYen: null, firstVisitAllowed: true, sortOrder: 3 },
-  { ja: '交通事故治療', en: 'Traffic Accident Treatment', durationMin: 30, priceYen: null, firstVisitAllowed: true, sortOrder: 4 },
-  { ja: '産前産後骨盤矯正', en: 'Pre/Postnatal Pelvic Care', durationMin: 40, priceYen: 5000, firstVisitAllowed: true, sortOrder: 5 },
+  { ja: '無料オンライン相談', en: 'Free online consultation', durationMin: 30, active: true, sortOrder: 1 },
+  { ja: 'デモのご案内', en: 'Live demo walkthrough', durationMin: 30, active: true, sortOrder: 2 },
+  { ja: 'AI受付（電話）のデモ', en: 'AI受付 Voice demo', durationMin: 30, active: true, sortOrder: 3 },
+  {
+    ja: '[訪問でのご相談 — 対応エリアと担当を確認中]',
+    en: '[In-person consultation — CONFIRM area and who visits]',
+    durationMin: 60,
+    active: false,
+    sortOrder: 4,
+  },
+]
+
+// Clinic-demo leftovers from the original seed (deactivated, never deleted).
+const LEGACY_SERVICE_NAMES_JA = [
+  '初診（整形外科的施術）',
+  '再診（整形外科的施術）',
+  'スポーツ障害・リハビリ',
+  '交通事故治療',
+  '産前産後骨盤矯正',
+]
+const LEGACY_RESOURCE_NAMES = [
+  '田中 大輔',
+  '佐藤 美咲',
+  '山本 健太',
+  '鈴木 愛',
+  '小林 真一',
+  SUPERSEDED_PLACEHOLDER_RESOURCE_NAME,
 ]
 
 /** JST wall-clock time on a given UTC calendar date, expressed as UTC (JST = UTC+9, no DST). */
@@ -132,9 +146,9 @@ async function upsertBookableService(payload: Payload, seed: BookableServiceSeed
     data: {
       name: seed.ja,
       durationMin: seed.durationMin,
-      priceYen: seed.priceYen,
-      firstVisitAllowed: seed.firstVisitAllowed,
-      active: true,
+      priceYen: null,
+      firstVisitAllowed: true,
+      active: seed.active,
       sortOrder: seed.sortOrder,
     },
   })
@@ -162,6 +176,25 @@ async function clearFutureOpenSlots(payload: Payload, resourceId: number | strin
   }
 }
 
+/** Marks any pre-J2 clinic-demo service/resource inactive (and drops its future open slots). Returns how many rows changed. */
+async function deactivateLegacyClinicData(payload: Payload): Promise<number> {
+  let changed = 0
+  for (const name of LEGACY_SERVICE_NAMES_JA) {
+    const existing = await findOneByName(payload, 'bookable-services', name)
+    if (!existing) continue
+    await payload.update({ collection: 'bookable-services', id: existing.id, data: { active: false } })
+    changed++
+  }
+  for (const name of LEGACY_RESOURCE_NAMES) {
+    const existing = await findOneByName(payload, 'resources', name)
+    if (!existing) continue
+    await clearFutureOpenSlots(payload, existing.id)
+    await payload.update({ collection: 'resources', id: existing.id, data: { active: false } })
+    changed++
+  }
+  return changed
+}
+
 async function seedSlotsForResource(payload: Payload, resourceId: number | string): Promise<number> {
   await clearFutureOpenSlots(payload, resourceId)
 
@@ -170,33 +203,30 @@ async function seedSlotsForResource(payload: Payload, resourceId: number | strin
 
   for (let dayOffset = 1; dayOffset <= SLOT_HORIZON_DAYS; dayOffset++) {
     const date = new Date(todayUtcMidnight.getTime() + dayOffset * DAY_MS)
-    const windows = CONSULTATION_HOURS[date.getUTCDay()]
-    if (!windows) continue
+    if (!DEMO_WEEKDAYS.includes(date.getUTCDay())) continue
 
-    for (const window of windows) {
-      let cursorMinutes = window.startHour * 60 + window.startMinute
-      const endMinutes = window.endHour * 60 + window.endMinute
+    let cursorMinutes = DEMO_WINDOW.startHour * 60 + DEMO_WINDOW.startMinute
+    const endMinutes = DEMO_WINDOW.endHour * 60 + DEMO_WINDOW.endMinute
 
-      while (cursorMinutes + APPOINTMENT_MINUTES <= endMinutes) {
-        const startHour = Math.floor(cursorMinutes / 60)
-        const startMinute = cursorMinutes % 60
-        const endTotal = cursorMinutes + APPOINTMENT_MINUTES
-        const endHour = Math.floor(endTotal / 60)
-        const endMinute = endTotal % 60
+    while (cursorMinutes + APPOINTMENT_MINUTES <= endMinutes) {
+      const startHour = Math.floor(cursorMinutes / 60)
+      const startMinute = cursorMinutes % 60
+      const endTotal = cursorMinutes + APPOINTMENT_MINUTES
+      const endHour = Math.floor(endTotal / 60)
+      const endMinute = endTotal % 60
 
-        await payload.create({
-          collection: 'slots',
-          data: {
-            resource: resourceId,
-            startsAt: jstToUtcIso(date, startHour, startMinute),
-            endsAt: jstToUtcIso(date, endHour, endMinute),
-            capacity: 1,
-            status: 'open',
-          },
-        })
-        count++
-        cursorMinutes += APPOINTMENT_MINUTES
-      }
+      await payload.create({
+        collection: 'slots',
+        data: {
+          resource: resourceId,
+          startsAt: jstToUtcIso(date, startHour, startMinute),
+          endsAt: jstToUtcIso(date, endHour, endMinute),
+          capacity: 1,
+          status: 'open',
+        },
+      })
+      count++
+      cursorMinutes += APPOINTMENT_MINUTES
     }
   }
   return count
@@ -224,21 +254,22 @@ export async function seedBooking(payload: Payload): Promise<void> {
 
   payload.logger.info('🌱 Seeding booking data (bookable-services/resources/slots)...\n')
 
+  const legacyChanged = await deactivateLegacyClinicData(payload)
+  if (legacyChanged > 0) payload.logger.info(`   Deactivated ${legacyChanged} legacy clinic-demo service/resource rows`)
+
   const serviceIds: (number | string)[] = []
   for (const seed of BOOKABLE_SERVICES) {
     serviceIds.push(await upsertBookableService(payload, seed))
   }
-  payload.logger.info(`✅ ${serviceIds.length} bookable services ready`)
+  payload.logger.info(`✅ ${serviceIds.length} bookable services ready (the in-person visit is inactive — see D3)`)
 
-  let totalSlots = 0
-  for (const [i, name] of PRACTITIONERS.entries()) {
-    const resourceId = await upsertResource(payload, name, i + 1)
-    const slotCount = await seedSlotsForResource(payload, resourceId)
-    totalSlots += slotCount
-    payload.logger.info(`   ${name}: ${slotCount} open slots over the next ${SLOT_HORIZON_DAYS} days`)
-  }
+  const resourceId = await upsertResource(payload, DEMO_RESOURCE_NAME, 1)
+  const slotCount = await seedSlotsForResource(payload, resourceId)
 
-  payload.logger.info(`\n✅ Booking seed complete. ${PRACTITIONERS.length} resources, ${totalSlots} total open slots.`)
+  payload.logger.info(
+    `\n✅ Booking seed complete. 1 shared resource ("${DEMO_RESOURCE_NAME}"), ${slotCount} DEMO open slots over the next ` +
+      `${SLOT_HORIZON_DAYS} days — replace with real availability before launch.`,
+  )
 }
 
 async function runStandalone(): Promise<void> {
