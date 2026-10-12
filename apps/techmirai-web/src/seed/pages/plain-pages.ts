@@ -39,7 +39,6 @@ const PLAIN_PAGES: PlainPageSeed[] = [
   { slug: 'security', title: { en: 'Security', ja: '[JA TODO]' } },
   { slug: 'about', title: { en: 'About', ja: '会社紹介' } },
   { slug: 'technology', title: { en: 'Technology', ja: 'AI開発' } },
-  { slug: 'assessment', title: { en: 'Free AI Website Assessment', ja: '無料AIホームページ診断' } },
   { slug: 'faq', title: { en: 'FAQ', ja: 'よくあるご質問' } },
   { slug: 'thanks', title: { en: 'Thank you', ja: '送信完了' } },
   { slug: 'privacy', title: { en: 'Privacy Policy', ja: '[JA TODO]' } },
@@ -72,8 +71,33 @@ async function removeOrphanedProductShell(payload: Payload): Promise<void> {
   }
 }
 
+/**
+ * Pack-4/J1: `/assessment` moved from a catch-all `pages` shell to its own
+ * dedicated route (`[locale]/assessment/page.tsx`), matching `/contact`'s
+ * existing precedent (which never had a `pages` shell at all). Same
+ * guarded-delete pattern as `removeOrphanedProductShell` above — only
+ * removes the old shell doc if its `layout` is still empty, so any
+ * in-progress admin work is never silently destroyed.
+ */
+async function removeOrphanedAssessmentShell(payload: Payload): Promise<void> {
+  const existing = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'assessment' } },
+    limit: 1,
+    depth: 0,
+  })
+  const doc = existing.docs[0]
+  if (!doc) return
+  const layout = doc['layout']
+  if (Array.isArray(layout) && layout.length === 0) {
+    await payload.delete({ collection: 'pages', id: doc['id'] as string | number })
+    payload.logger.info('🧹 Removed orphaned "assessment" page shell (now a dedicated route)')
+  }
+}
+
 export async function seedPlainPages(payload: Payload, media: MediaIds): Promise<void> {
   await removeOrphanedProductShell(payload)
+  await removeOrphanedAssessmentShell(payload)
   for (const page of PLAIN_PAGES) {
     await upsertBySlug(payload, 'pages', page.slug, {
       title: page.title,

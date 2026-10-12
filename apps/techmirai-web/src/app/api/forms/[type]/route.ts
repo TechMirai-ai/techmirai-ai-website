@@ -4,6 +4,7 @@ import config from '../../../../../payload.config'
 import { contactSchema } from '@/lib/validation/contact'
 import { seminarSchema } from '@/lib/validation/seminar'
 import { downloadSchema } from '@/lib/validation/download'
+import { assessmentSchema } from '@/lib/validation/assessment'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { extractIp } from '@/lib/request-ip'
 import { z } from 'zod'
@@ -27,7 +28,7 @@ const jobApplySchema = z.object({
 // Form type
 // ---------------------------------------------------------------------------
 
-const FORM_TYPES = ['contact', 'job-apply', 'seminar', 'download'] as const
+const FORM_TYPES = ['contact', 'job-apply', 'seminar', 'download', 'assessment'] as const
 type FormType = (typeof FORM_TYPES)[number]
 
 function isFormType(s: string): s is FormType {
@@ -218,6 +219,37 @@ export async function POST(request: NextRequest, context: RouteContext) {
         name: parsed.data.name,
         email: parsed.data.email,
         seminarSlug: parsed.data.seminarSlug,
+        message: parsed.data.message,
+      })
+    } catch {
+      return NextResponse.json({ success: false, message: msg(locale, 'serverError') }, { status: 500 })
+    }
+    return NextResponse.json({ success: true }, { status: 200 })
+  }
+
+  if (type === 'assessment') {
+    const parsed = assessmentSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, fieldErrors: parsed.error.flatten().fieldErrors, message: msg(locale, 'required') },
+        { status: 422 },
+      )
+    }
+    if (parsed.data.turnstileToken && !(await verifyTurnstile(parsed.data.turnstileToken))) {
+      return NextResponse.json({ success: false, message: msg(locale, 'turnstileFailed') }, { status: 400 })
+    }
+    try {
+      await persist('assessment', parsed.data.email, locale, {
+        url: parsed.data.url,
+        company: parsed.data.company,
+        name: parsed.data.name,
+        email: parsed.data.email,
+        phone: parsed.data.phone,
+        industry: parsed.data.industry,
+        bookingSystem: parsed.data.bookingSystem,
+        lineAccount: parsed.data.lineAccount,
+        problem: parsed.data.problem,
+        contactPref: parsed.data.contactPref,
         message: parsed.data.message,
       })
     } catch {

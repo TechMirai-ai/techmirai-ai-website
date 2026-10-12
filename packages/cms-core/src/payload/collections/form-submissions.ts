@@ -9,6 +9,11 @@ interface FormSubmissionsConfig {
   contactRecipient: string
   jobApplicationRecipient: string
   seminarRecipient: string
+  // Pack-4/J1: intentionally optional with no default here — a missing
+  // value must make the assessment staff email skip loudly (see
+  // send-form-emails.ts's resolveStaffRecipient), not silently fall back
+  // to contactRecipient.
+  assessmentRecipient?: string
   fromEmail: string
 }
 

@@ -161,6 +161,13 @@ const siteConfig: SiteConfig = {
     contactRecipient: 'reception@sakura-sekkotsu.example',
     // TODO: replace with the client's real inbox before real client launch
     appointmentRecipient: 'reception@sakura-sekkotsu.example',
+    // Pack-4/J1, Spec §12.3: the Spec names info@techmirai-ai.com as the
+    // staff-notification recipient for the assessment form (the same
+    // address it already names for booking notifications). Kept separate
+    // from `contactRecipient` above (deliberately untouched — still the
+    // clinic-demo leftover, out of this step's scope) — see
+    // docs/PLACEHOLDER-REGISTER.md for the pending Jamal confirmation.
+    assessmentRecipient: 'info@techmirai-ai.com',
   },
 
   legal: {

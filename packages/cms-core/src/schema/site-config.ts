@@ -121,6 +121,7 @@ const formsSchema = z.object({
   contactRecipient: z.string().email(),
   jobApplicationRecipient: z.string().email().optional(),
   appointmentRecipient: z.string().email().optional(),
+  assessmentRecipient: z.string().email().optional(),
 })
 
 const legalSchema = z.object({

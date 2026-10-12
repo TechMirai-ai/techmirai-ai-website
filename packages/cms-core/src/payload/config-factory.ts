@@ -78,6 +78,15 @@ export function buildCmsConfig(
       contactRecipient: siteConfig.forms.contactRecipient,
       jobApplicationRecipient: siteConfig.forms.jobApplicationRecipient ?? siteConfig.forms.contactRecipient,
       seminarRecipient: siteConfig.forms.contactRecipient,
+      // Pack-4/J1: deliberately NO `?? contactRecipient` fallback here —
+      // confirmed in plan review. A misconfigured/missing assessment
+      // recipient must skip the staff email loudly (see
+      // send-form-emails.ts), never silently misdirect it to an unrelated
+      // inbox. Conditional spread (not `assessmentRecipient: x | undefined`)
+      // because this tsconfig sets `exactOptionalPropertyTypes: true`, which
+      // requires the key to be omitted entirely rather than present with an
+      // explicit `undefined` value.
+      ...(siteConfig.forms.assessmentRecipient ? { assessmentRecipient: siteConfig.forms.assessmentRecipient } : {}),
       fromEmail: siteConfig.integrations.resendFromEmail,
     }),
     // Booking module: catalog, resources, schedulable slots, customers, and

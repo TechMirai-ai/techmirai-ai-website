@@ -838,3 +838,56 @@ not something to batch-guess. Flagging for a future pass (likely best done
 right before the whole-site launch-scan sweep) to give every built page
 real `meta.title`/`meta.description` and a deliberate `aiVisible` value
 instead of the shell's placeholder.
+
+## 2026-10-12 — Pack-4/J1: `/contact` is still substantially clinic-demo content (observation, not fixed)
+
+While using `/contact/page.tsx` and its `_components/ContactForm.tsx` as the
+architectural precedent for `/assessment` (both are hand-built dedicated
+routes, not the generic catch-all), found that `/contact` itself is still
+heavily clinic-demo-flavored despite being logged elsewhere as "already a
+real, built page": its `inquiryType` options are clinic-specific ("About
+Your First Visit", "Traffic Accident Treatment"), its hero CTA reads "About
+the Clinic" linking to `/company` (a route that doesn't appear in this
+site's Spec), it renders a multi-office grid with さくら接骨院 Japanese copy
+and clinic-style fields (`legalName`, `nearestStations`), and it imports via
+`getPayloadHMR`/`@payload-config`, an inconsistent style versus the
+`getCachedPayload` convention every other recently-built page uses. Not
+touched here — out of Pack-4/J1's scope (J1 is `/assessment` only) — but
+flagging clearly since this is a real content-accuracy gap, not just a
+style inconsistency, for whoever next works on `/contact`.
+
+## 2026-10-12 — Pack-4/J1: `ContactForm.tsx`'s honeypot field is never rendered (observation, not fixed)
+
+`/api/forms/[type]/route.ts`'s `hasHoneypot()` check reads a `_hp` field
+from the submitted body, and `contactSchema` declares it — but
+`ContactForm.tsx` never renders a hidden `_hp` input anywhere in its JSX, so
+a bot that fills in every visible field (or scrapes the raw form markup for
+inputs) would never trip it; this protection is effectively inert on the
+real `/contact` form today. `/assessment`'s new `AssessmentForm.tsx` does
+render one. Not fixed on `ContactForm.tsx` — out of J1's scope.
+
+## 2026-10-12 — Pack-4/J1: `CONTACT_NOTIFICATION_EMAIL` is documented but never read by any code (observation, not fixed)
+
+`.env.example` and `docs/DEPLOY-NEW-CLIENT.md` both document setting
+`CONTACT_NOTIFICATION_EMAIL`, but no code anywhere reads that environment
+variable — the real wiring for staff-notification recipients is
+`site.config.ts`'s `forms.*Recipient` values, read directly by
+`config-factory.ts`. A developer following `DEPLOY-NEW-CLIENT.md`'s own
+instructions to "Set `RESEND_API_KEY`, `FROM_EMAIL`, `CONTACT_NOTIFICATION_EMAIL`"
+would set an env var that has no effect. Not fixed here — out of J1's
+scope — but worth reconciling in whichever step next touches the forms
+email configuration.
+
+## 2026-10-12 — Pack-4/J1: two parallel Resend-calling implementations exist side by side (observation, not fixed)
+
+The forms pipeline (`packages/cms-core/src/payload/hooks/send-form-emails.ts`)
+calls the Resend HTTP API directly via a raw `fetch()` in its own `dispatch()`
+helper. The booking/notifications system (`packages/cms-core/src/notifications/
+channels/email-resend.ts`) uses the typed `resend` SDK (`Resend.emails.send()`)
+through the shared `NotificationChannel` abstraction. Both reach the same
+Resend account, but neither shares code, retry/error handling, or logging
+conventions with the other. `/assessment`'s new email logic extends the
+forms pipeline's existing `dispatch()`, per J1's explicit "reuse the
+existing forms pipeline" instruction — not consolidating the two systems,
+which would be a much larger, unrelated change. Flagging in case a future
+step wants one shared email-sending implementation.
