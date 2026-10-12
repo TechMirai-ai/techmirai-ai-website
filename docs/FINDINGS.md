@@ -891,3 +891,281 @@ forms pipeline's existing `dispatch()`, per J1's explicit "reuse the
 existing forms pipeline" instruction — not consolidating the two systems,
 which would be a much larger, unrelated change. Flagging in case a future
 step wants one shared email-sending implementation.
+
+## 2026-10-12 — Pack-4/J2: consultation booking — what was and was not done
+
+Implemented the D2-independent scope (Spec §12.4): `company` + locale-dependent kana in
+`booking/api/schemas.ts` / `reserve.ts` / `ContactFormStep` / `ConfirmationStep`; Spec labels in
+`apps/techmirai-web/src/messages/{en,ja}.json`; the four email templates carrying the Spec sentences;
+staff recipient `info@techmirai-ai.com`; the 4-service / 1-demo-resource seed (`visit` inactive); and the
+production meeting-tool guard (`booking.meetingToolConfirmed`, default `false`; see register J2-01).
+Open items, none of them resolved by guessing:
+
+- **D2 (time zone) — real bug; FIXED later the same day, see the follow-up entry below.** Every booking screen and email formats times with
+  `timeZone: 'UTC'` (`CalendarStep`, `ConfirmationStep`, `SuccessStep`, `ManageAppointmentView`,
+  `LineManagePicker`, `notifications/templates/shared.ts`). The seed stores true JST instants (9:00 JST =
+  00:00 UTC), so they display as 00:00, and the Spec's "(JST)" is not yet true. Needs Jamal's decision
+  before an engine fix is logged in `ENGINE-FIXES.md` (standing rule 11).
+- **D3 — the engine ignores service duration.** `create-booking.ts` claims one unit of capacity on one
+  `slotId`; `duration_min` is never read. The 60-minute `visit` is therefore seeded inactive.
+- **Booking seed: run successfully on 2026-10-12, after the remote database was confirmed to be a
+  development database.** `apps/techmirai-web/.env.local` points at a *remote* Postgres; nothing in the repo
+  says whether that is dev or production, so the seed was held until that was confirmed and its run approved.
+  Verified before/after with read-only queries and the public API:
+  - Before: 5 clinic services and 5 clinic resources, all active; 780 future slots.
+  - The seed's own log: 10 legacy clinic rows deactivated, 4 services ready, 1 demo resource, 180 demo
+    open slots over the next 14 days.
+  - After: the five legacy clinic services (ids 1–5) and five clinic resources (ids 1–5) are
+    **deactivated, not deleted**. Active: "Free online consultation" / 無料オンライン相談,
+    "Live demo walkthrough" / デモのご案内, "AI受付 Voice demo" / AI受付（電話）のデモ (30 min each), and the
+    resource `[Demo resource — CONFIRM]`. The `visit` service exists but is inactive (D3). Future slots
+    total 180, all on the demo resource.
+  - `GET /api/v1/booking/services?locale=en|ja` now returns exactly those three active services, and
+    `/api/v1/booking/availability` returns open slots for the demo resource (first slot of the first date
+    checked: `2026-10-14T00:00:00Z`, i.e. 9:00 JST stored; it still displays as 00:00 until D2 is resolved).
+  - Still not tested: a full booking, reschedule and cancel against this data, and staff-email delivery.
+- **`pnpm seed:booking` does not work on this Windows machine (observed; fix not applied).**
+  - `pnpm --filter techmirai-web seed:booking` fails immediately with `'NODE_OPTIONS' is not recognized as an
+    internal or external command`: the script is `NODE_OPTIONS="..." tsx ...`, and pnpm runs it through `cmd`.
+    Nothing was executed.
+  - Running the same command through Git Bash (`NODE_OPTIONS=... npx tsx --env-file=.env.local
+    src/seed/booking.ts`) exits 0 but prints no log lines and changes no data (confirmed by the services API
+    still returning the clinic services afterwards). The likely cause, not separately verified, is the
+    "run only when executed directly" guard at the bottom of `src/seed/booking.ts`
+    (`import.meta.url === \`file://${process.argv[1]}\``), which cannot match a Windows path.
+  - An inline `tsx -e "..."` script that dynamically imported the app's `payload.config` also exited 0
+    silently without seeding; the cause was not investigated.
+  - **Workaround used (nothing in the repo changed):** a throwaway script kept outside the repo (in the
+    session scratchpad, not committed) that resolves `payload` from `apps/techmirai-web`, loads
+    `payload.config.ts`, and calls the repo's exported `seedBooking(payload)` unchanged, run as
+    `NODE_OPTIONS="--require ./fix-next-env-interop.cjs" npx tsx --env-file=.env.local <script> seed`
+    from `apps/techmirai-web`. It also has a read-only `check` mode that lists services, resources and the
+    future-slot count. A later step could make the script cross-platform (e.g. `cross-env`) and the
+    direct-run guard path-safe; that is a separate change.
+- **Residual clinic / wrong-language text on the rendered `/en/booking` page.** The HTML still contained
+  "clinic" (25×) and 初診 (2×) on the English page, and 初診 / 診療 on the Japanese one. The booking
+  components and messages are clean (grep); the source was not traced. The likely causes are outside J2: the
+  site-wide reception chat widget (K1/K2 replace the clinic flow) and clinic-leftover values in
+  `site.config.ts` (`seo.titleTemplate`, `seo.defaultDescription`, and the `/booking` page metadata
+  description, which interpolates `siteConfig.site.name`). Gate 4 is therefore not demonstrated for `/en/booking`.
+- **Tests.** Unit: `@techmirai/cms-core` 57 files / 657 tests pass; `@techmirai/reception-engine` 40 pass;
+  `pnpm typecheck` passes in all 3 packages. The integration suites (`reserve.integration.test.ts` incl. the one
+  new company/no-kana case, `booking-notifications.integration.test.ts`) did NOT run: `psql` is not installed
+  here (same gap as the 2026-10-05 F2 entry). `e2e/booking-journey.spec.ts` needed its expectations updated
+  for the new Spec strings (it mocks the booking API) and passes 2/2. The root `package.json` has no `test` or
+  `lint` script, and `techmirai-web` has no unit-test script — tests run per package.
+- **Not done / out of J2:** `/thanks` still omits "Book a 30-minute call below or" (FINDINGS 2026-10-12 I4;
+  needs a real destination and the K2 chat button). `SuccessStep`'s booking card does not show the company
+  (only `ConfirmationStep` does). LINE booking stays off: `NEXT_PUBLIC_LIFF_ID` is blank in `.env.example`;
+  `.env.local` was not inspected for it (it was parsed once, only to classify the database host as remote;
+  no value was printed). The `packages/cms-core/src/i18n/messages/*.json` engine defaults and
+  `VisitTypeStep`'s doc comment still carry clinic wording, but the app loads only its own `messages/`.
+
+## 2026-10-12 — Pack-4/J2 follow-up: Jamal's decisions applied
+
+Applied (approved by Jamal), nothing else:
+
+- **D2 / A2 — Asia/Tokyo display, implemented as a separate engine change.** New `booking/time-zone.ts`
+  (`BOOKING_TIME_ZONE`, `BOOKING_UTC_OFFSET`, `toBookingDate`, `toBookingTime`). Used by: availability
+  grouping and range filter (`booking/api/availability.ts` — slots are now grouped under their Tokyo date),
+  the calendar row times (`calendar-matrix.ts`), `ConfirmationStep`, `SuccessStep`, `ManageAppointmentView`,
+  `LineManagePicker` and the email formatters in `notifications/templates/shared.ts`. Date-only week labels in
+  `CalendarStep` / `ManageAppointmentView` correctly stay `timeZone: 'UTC'` (they format date-only values, not
+  instants). Stored instants are unchanged. **Stored instants verified read-only** against the development
+  database: 180 future slots, start times 09:00–17:30 JST (last slot ends 18:00), Monday–Friday only, 36 per
+  weekday, all on one resource. **Not verified:** the calendar and emails as rendered for a real booking, and
+  the new availability integration case (no `psql`). Times must not be called correct until that is done.
+  Known minor gap, left alone: the "can't go to a past week" guard still derives "today" from the UTC date, so
+  between 00:00 and 09:00 JST it is a day behind.
+- **Reminder timing (A2) — left open on purpose** (`[CHOOSE …]`, register J2-09). `reminder-schedule.ts` only got
+  a comment update.
+- **B1 headings applied** (en + ja, plus the e2e spec). **A4:** the seed now creates one shared "TechMirai"
+  resource and retires the first-run `[Demo resource — CONFIRM]` one. **(Superseded: the seed WAS re-run later the same day — see the next entry.) At this point the seed had NOT been re-run**, so the
+  development database still has the old resource (id 6, 180 slots) and no "TechMirai" resource; re-running
+  needs Jamal's separate approval. All seeded slots are demo availability — real availability is a launch blocker.
+- **A1 — NOT fully applied.** The tool is not chosen. The supplied Japanese sentence was not applied because it
+  duplicates the Spec's own JA sentence and 「ご予約前に」 means "before booking" (details in register J2-01).
+  The production confirmation guard remains enabled.
+- **C1 — Japanese drafts are in register J2-10 for review only**; `ja.json` still has `[JA TODO]` (CLAUDE.md rule 6).
+- **A3** `visit` stays inactive; **A5** staff inbox still `[CONFIRM …]`, Resend domain verification is Jamal's.
+
+Dependencies tracked (not changed):
+
+- **SEO source of the clinic / Japanese text on English pages:** `apps/techmirai-web/site.config.ts` `seo.titleTemplate`
+  (`'%s | さくら接骨院 Sakura Osteopathic Clinic'`) and `seo.defaultDescription` (clinic copy, en + ja). Because
+  the template wraps every page title, an English page's `<title>` carries Japanese and the word "Clinic"
+  (Gate 4). The CMS `seo-defaults` global (`payload/globals/seo-defaults.ts`) has the same localized fields;
+  whether it is seeded from this config was not checked. The frontend layout also mounts the reception chat
+  widget with `siteConfig.reception.clinicPhone` / `site.name`; its clinic flow is replaced in **K1/K2**. The
+  exact split of the ~25 "clinic" and 2 初診 hits on `/en/booking` between these two sources was not measured.
+- **`/thanks` booking call-to-action** stays omitted; restoring it is tracked under **K2**.
+
+Validation for this change: `pnpm typecheck` passes (3 packages); `@techmirai/cms-core` unit tests 58 files / 663
+tests pass (including the new `time-zone.test.ts`, the guard tests and the +9h display expectations);
+`e2e/booking-journey.spec.ts` passes 2/2 after the visit-type heading change (it mocks the booking API).
+**Not run:** the integration suites (no `psql`) and `e2e/manage-appointment.spec.ts` (its mock slot is 03:00Z; not
+checked for time-label assertions). No real booking, reschedule or cancel was run and no email was sent.
+
+## 2026-10-12 — Pack-4/J2 follow-up 2: dev-only staff-email override, seed re-run, A1/A2 decisions
+
+**Decisions applied (Jamal):** A1 tool = Google Meet (staff create and email the link manually); the existing Spec
+Japanese sentence is kept and not duplicated; `meetingToolConfirmed` stays `false`, so production still withholds
+every customer confirmation (register J2-01). A3 `visit` stays inactive. A4 one shared "TechMirai" resource. A5 staff
+inbox monitoring is still OPEN. C1 unreviewed Japanese stays out of shipped copy (drafts only in register J2-10).
+
+**A2 reminder timing (24 h before) — NOT implemented, exact gap in register J2-09.** The only scheduler is one daily
+Vercel cron (`vercel.json`: `0 0 * * *`). A reminder due at T−24h is only sent at the next 00:00 UTC run, 0–24 h late, so
+"24 hours before" cannot be honoured without an at-least-hourly scheduler (a plan/service decision for Jamal) plus
+`scheduledFor = scheduledAt − 24h`. Today's behaviour (day-before 00:00 UTC = 09:00 JST) is exactly 24 h before only for
+a 09:00 JST appointment (~32.5 h for 17:30 JST). Reminders have never been sent or tested end to end; they must not be
+described as working or as "24 hours before".
+
+**Development-only staff-recipient override (new, register J2-11).** `notifications/staff-recipient.ts`
+(`resolveStaffRecipient`, pure, unit-tested) is wired in `apps/techmirai-web/src/lib/notifications.ts`. Only when
+`NODE_ENV === 'development'` is `DEV_STAFF_NOTIFICATION_RECIPIENT` used; without a valid value (empty, malformed, or equal to
+the real inbox) staff booking emails are **withheld entirely** — the real `info@techmirai-ai.com` is never used in
+development. Outside development the override is ignored. `NotificationRuntimeConfig.staffRecipient` is now
+`string | null`; `service.ts` skips only the staff step (the cancelled path still voids the pending reminder) and logs a
+note that never contains an address. The variable is documented, empty, in `.env.example`. **Limits:** it covers booking
+staff mail only — the `/assessment` and contact forms use their own configured inboxes. The Resend account-owner address was
+not used or set, because the key and sending mode are unverified (see below).
+
+**Environment verification before seeding (nothing sensitive printed).** `.env.local`: `DATABASE_URI` set and remote
+Postgres; `NEXT_PUBLIC_SERVER_URL` is localhost; **`RESEND_API_KEY` is not set** (so this environment cannot send email);
+`CRON_SECRET` and `DEV_STAFF_NOTIFICATION_RECIPIENT` are not set; the configured sender is `onboarding@resend.dev`
+(Resend's sandbox sender, delivering only to the account owner). The database host/name carries **no** dev/prod/staging
+marker, so naming alone cannot identify it. Content evidence: 0 appointments, 0 customers, 0 notifications; 2 form
+submissions, both from this session's J1 tests; oldest rows 2026-10-06. Together with Jamal's explicit confirmation earlier in
+this session that it is a development database, the seed was run; the config-only check was inconclusive on its own.
+
+**Seed re-run (dev DB), verified read-only.** Log: 11 legacy rows deactivated (5 clinic services, 5 clinic
+resources, the first-run placeholder resource), 4 services ready, 1 resource "TechMirai", 180 demo slots. After: services
+6/7/8 active (Free online consultation, Live demo walkthrough, AI受付 Voice demo), `visit` (id 9) and the 5 clinic services
+inactive; resources: "TechMirai" (id 7) active, the 6 older ones inactive and **kept, not deleted**; 180 future slots, all on
+"TechMirai", 09:00–17:30 JST starts, Monday–Friday only (36 per weekday). Data was not hand-deleted; the seed's normal
+refresh removed the old placeholder resource's unbooked future slots.
+
+**Windows seed issue (still present).** `pnpm seed:booking` fails on this machine (`'NODE_OPTIONS' is not recognized…` —
+pnpm runs it through `cmd`), and the same command in Git Bash exits 0 doing nothing, probably because of the
+direct-run guard in `seed/booking.ts` (unverified). No supported run path works here, so a throwaway script kept outside the
+repo (session scratchpad) calls the unchanged exported `seedBooking()`; an inline `tsx -e` attempt also exited silently. A
+cross-platform fix (e.g. `cross-env` + a path-safe guard) is a separate change, not made.
+
+**Tests.** `pnpm typecheck` passes (3 packages). `@techmirai/cms-core` unit tests: 59 files / 672 tests pass (new:
+`staff-recipient.test.ts`, three withheld-staff cases in `service.test.ts`). Playwright against a warmed dev server, API fully
+mocked, no Resend key: `booking-journey.spec.ts` 2/2 passed; `manage-appointment.spec.ts` 3/4 passed. An earlier attempt on a
+cold server failed 4 tests with click interception by the site's full-screen overlay and a page-load timeout; the final run used
+a longer command-line timeout (`--timeout=90000`, no test changed). **The one remaining failure is pre-existing and unrelated:**
+`manage-appointment.spec.ts` "shows the clinic phone number…" asserts `+81-3-5432-1188`, but the committed
+`site.config.ts` phone is the placeholder `[080-7701-3004]` (register F1-01); both files are unchanged by J2. Left as is — it
+needs a decision on the expected value. Integration suites still did not run (no `psql`).
+
+**No real-world effect.** After the e2e runs the database still has 0 appointments, 0 customers and 0 notifications; no email
+was sent (no Resend key) and no real booking, reschedule or cancellation was performed.
+
+**Still not verified (do not report as passed):** rendered times on a real booking's screens and emails; any rendered email;
+staff-email delivery to the override address; reminders end to end; the Google Meet workflow and wording; Resend key mode.
+**Remaining blockers:** meeting workflow/copy verification (then flip `meetingToolConfirmed`); Jamal's answers on the English
+Google Meet sentence and the JA bracket line; real availability instead of demo slots; Resend domain/key and staff-inbox
+monitoring (A5); an at-least-hourly scheduler for the 24 h reminder; `visit` facts (area, staff, duration); approval of the
+Japanese drafts (J2-10); K1/K2 clinic wording and the SEO title template; the stale phone assertion (fixed in the final-review entry below).
+
+## 2026-10-13 — Pack-4/J2 final review: security review and regression fixes
+
+Reviewed the whole J2 diff (44 modified + 4 new files): every file is inside J2 scope; no unrelated edits; the only env
+file touched is `.env.example` (one empty, commented variable). Findings and what was done:
+
+**Fixed**
+- **Meeting-tool guard failed open (HIGH).** It withheld customer confirmations only when `NODE_ENV === 'production'`, so any
+  other value (`test`, `staging`, unset) would have sent confirmations carrying the unresolved placeholder. Now fail closed:
+  `NotificationRuntimeConfig.isProduction` became `isLocalDevelopment` (`NODE_ENV === 'development'` only), and the
+  confirmation is withheld whenever `!meetingToolConfirmed && !isLocalDevelopment`. Tests updated accordingly.
+- **Staff-recipient override plus-alias hole (MEDIUM).** `info+test@techmirai-ai.com` differs from the real inbox as a string
+  but is delivered to the same mailbox, so the equality check missed it. The comparison now strips `+tag` from the local part
+  (case-insensitive); multi-address values were already rejected. Tests added, including that a *different* address on the same
+  domain is still allowed.
+- **Availability query**: the date-range bounds are now converted to UTC ISO strings instead of passing a `+09:00` literal to the
+  database layer (behaviour identical, format as before). Read-only check against the seeded dev data: 5 weekdays × 18 slots, first
+  slot `…T00:00:00.000Z` = 09:00 JST, all on resource 7.
+- **Stale e2e phone assertion** (`manage-appointment.spec.ts`): it hard-coded the old clinic number `+81-3-5432-1188`. It now reads
+  `siteConfig.contact.phone` (today the approved placeholder, F1-01) and is scoped to the cutoff message because the number also
+  appears in the footer. No contact detail was invented. `manage-appointment.spec.ts` 4/4 and `booking-journey.spec.ts` 2/2 pass
+  against a warmed dev server with the API mocked. In one combined run the two reschedule tests failed while the page was still
+  "Loading your appointment…" (dev-mode hydration timing); they passed on a re-run — treat these two as timing-sensitive in dev.
+
+**Override verified (NODE_ENV, fail-closed):** active only when `NODE_ENV === 'development'`; missing, blank, malformed,
+multi-address, equal-to-real-inbox or alias-of-real-inbox values all withhold staff booking email entirely; outside development
+the variable is ignored, so it cannot act as a production override. It lives in `.env.local` only (the `.env.example` entry is
+empty). Residual limits, unchanged: it covers booking staff mail only (the `/assessment` and contact forms use their own inboxes);
+a bare `tsx` script that calls the notify functions with `NODE_ENV` unset would use the configured inbox — none exists today.
+
+**Findings left for a decision (not changed)**
+- **(RESOLVED 2026-10-13 — see the "customer email fail-closed policy" entry below.) Reminders and cancellations still go to real customers in production while the confirmation is withheld.** Neither contains the
+  placeholder, so they do not break Jamal's rule, but a customer could get a reminder for a booking they were never confirmed.
+  Recommend also withholding the reminder under the same guard; needs Jamal's OK because an earlier test asserts the reminder is
+  still queued.
+- **Development customer emails go to whatever address is typed in the form.** Today only the missing `RESEND_API_KEY` (and the
+  sandbox sender) prevents a real send; there is no code-level dev guard for customer mail.
+- **Resend key mode is unverified** (and the key is absent from the dev `.env.local`).
+
+**Windows seed failure — root cause confirmed, nothing changed.** Two independent faults: (1) the `seed:booking` script starts with a
+POSIX `NODE_OPTIONS="…"` prefix, which `cmd` (pnpm's script shell) rejects; (2) the "run only when executed directly" guard in
+`seed/booking.ts` compares `import.meta.url` with `` `file://${process.argv[1]}` ``. A scratch check under `tsx` showed
+`import.meta.url = file:///C:/…` against `argv[1] = C:\…`, so it is **false** on Windows while a `pathToFileURL(argv[1]).href`
+comparison is **true** — hence exit 0 with no work. `cross-env` is not installed. Proposed fix, not applied (seed scripts were off
+limits): make the guard path-safe with `pathToFileURL`, and drop the inline env prefix with `tsx --require
+./fix-next-env-interop.cjs --env-file=.env.local …` (unverified). The seed was not re-run in this step.
+
+**24-hour reminder scheduler gap — documented only** (register J2-09; above): one daily 00:00 UTC Vercel cron, so a reminder due at
+T−24h is sent up to 24 h late; no scheduler was added and no email was sent.
+
+**Validation.** `pnpm typecheck` passes (3 packages). `@techmirai/cms-core` 59 files / 675 tests pass; `@techmirai/reception-engine` 40
+pass. Playwright (API mocked, no Resend key, no real actions): `booking-journey` 2/2, `manage-appointment` 4/4. Integration suites did
+not run (no `psql`). **Not verified:** rendered times/emails for a real booking, staff-email delivery, reminders end to end, the Google
+Meet workflow, Resend key mode.
+
+## 2026-10-13 — Pack-4/J2: customer email fail-closed policy (confirmation, reminder, cancellation)
+
+**Decision (Jamal):** withhold customer booking confirmations, reminders and cancellation emails unless
+`NODE_ENV === 'development'`; staging, test, unset or any other value must not send them; booking, reschedule and
+cancellation *data* operations must not be changed just to suppress email; reminders stay disabled until the 24-hour
+scheduler exists and is verified.
+
+**Paths inspected — each customer path is guarded on its own.** A guard on the confirmation did NOT cover the others:
+before this change the reminder was queued `pending` and later sent by the cron, and the cancellation email was sent
+immediately, in production.
+
+| Path | Where | Before | Now (outside local development) |
+|---|---|---|---|
+| Confirmation (incl. reschedule), email and LINE copy | `notifications/service.ts` `notifyBookingCreated` | withheld only while `meetingToolConfirmed=false` | withheld regardless of `meetingToolConfirmed`; `skipped` audit row, no content |
+| Reminder | same, reminder step | queued `pending`, sent by the cron | not queued; `skipped` audit row, no content |
+| Cancellation | `sendCustomerCancellationNotification` | sent immediately | not sent; `skipped` audit row, no content |
+| Cron batch (reminders, retries) | `apps/techmirai-web/src/app/api/cron/notifications/route.ts` | sent every due row | customer rows are marked `skipped`, only `staff-*` rows are sent; unknown/absent template key counts as customer (fail closed) |
+
+The single decision lives in `notifications/customer-send-policy.ts` (`isLocalDevelopmentEnv`, `customerEmailsAllowed`,
+`partitionDueNotifications`, `markNotificationsWithheld`). The due-notifications query now also selects `template_key`
+so the cron can tell customer rows from staff rows. Staff booking emails are unaffected by this policy (they have their own
+dev-only override, J2-11) and the staff email still says when the customer confirmation was not sent. Data operations are
+untouched: a booking, reschedule or cancellation still happens and still notifies staff; only the customer email is withheld.
+There is intentionally no env variable or config flag to re-enable it.
+
+**Tests.** `customer-send-policy.test.ts` (env table: production, staging, test, preview, unset, empty, wrong-case and
+padded values are all blocked; only exact `development` is allowed; partition and mark-skipped behaviour);
+`service.test.ts` runs the full create + cancel flow for each of production, staging, test, unset, `""`, `Development`,
+`DEVELOPMENT` (nothing reaches the customer; only the two staff emails are dispatched; confirmation, reminder and
+cancellation are each `skipped` with no content) and for `development` (unchanged: confirmation and cancellation sent,
+reminder queued `pending` and never sent immediately). The earlier tests that expected the reminder to be queued in
+production and a confirmed meeting tool to re-open the gate were rewritten. `due-notifications.test.ts` covers the new
+`templateKey` mapping. `integration-tests-no-real-email.test.ts` statically fails if any notification integration test
+ever imports Resend/LINE channels, builds the real dispatcher, reads a provider credential or calls `fetch`; today they
+use only `vi.fn` fake dispatchers.
+
+**Validation.** `pnpm typecheck` passes (3 packages); `@techmirai/cms-core` 61 files / 709 tests pass;
+`@techmirai/reception-engine` 40 pass. E2E was not re-run: nothing it covers (mocked booking/manage UI) changed. Integration
+suites still do not run here (no `psql`).
+
+**Not covered by this policy (unchanged, out of scope):** form auto-replies to submitters (`payload/hooks/send-form-emails.ts`,
+e.g. the `/assessment` confirmation) and LINE webhook replies (LINE booking is off). `meetingToolConfirmed` stays `false`.
+Open launch blockers are unchanged: meeting workflow/copy verification, Resend key mode and domain, staff-inbox monitoring,
+Japanese draft approval (J2-10), real availability instead of demo slots, the 24-hour reminder scheduler, the `visit` facts,
+K1/K2 clinic wording and the SEO title template.
