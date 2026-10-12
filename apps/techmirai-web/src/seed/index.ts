@@ -28,6 +28,7 @@ import { seedIntegrationsPage } from './pages/integrations'
 import { seedPricingPage } from './pages/pricing'
 import { seedSecurityPage } from './pages/security'
 import { seedAboutPage } from './pages/about'
+import { seedTechnologyPage } from './pages/technology'
 import { seedCaseStudies } from './case-studies'
 import { seedChat } from './chat'
 import { seedBlog } from './blog'
@@ -99,6 +100,7 @@ async function run(): Promise<void> {
   await seedPricingPage(payload)
   await seedSecurityPage(payload)
   await seedAboutPage(payload, media, team)
+  await seedTechnologyPage(payload)
   await seedCaseStudies(payload)
   await seedChat(payload)
   await seedBlog(payload)

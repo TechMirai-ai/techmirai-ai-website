@@ -704,3 +704,104 @@ different matching logic for each, and Appendix B1 also names the
 not-yet-built case-study/FAQ/chat-answer locations), and it isn't required
 by I2's own Done-when list. Logging for whoever closes out the launch gate
 before go-live (I3's case study and I4's FAQ will hit the same stub).
+
+## 2026-10-12 — Pack-3/I3: the Voice stack is not just "changed recently" — there is no implementation at all
+
+Spec §11.5's own note on the stack table says "CONFIRM the AI and voice
+rows: your voice stack changed recently," which reads as if a previous
+voice stack was swapped for a new one. The I3 truth-check (required by this
+step's own prompt — every stack row must be proven from package.json/env
+usage) found no Azure Speech code, no other speech-to-text/text-to-speech
+code, and no voice-related env var anywhere in the repo. Every "AI受付
+Voice" reference site-wide (`pages/pricing.ts`, `pages/integrations.ts`,
+`blocks/product-edition/config.ts`) independently says "in development."
+By contrast, the AI row's `[Groq — CONFIRM]` bracket, also kept per this
+step's instruction, IS backed by a real implementation
+(`GROQ_API_KEY` + `packages/cms-core/src/verticals/clinic/reception/ai/groq.ts`).
+Not fixed here — both brackets are kept exactly as the Spec gives them
+(docs/PLACEHOLDER-REGISTER.md I3-02/I3-03) — but worth flagging that the
+Voice gap is "no stack exists yet," not "the stack recently changed."
+
+## 2026-10-12 — Pack-3/I3: media storage (Cloudflare R2) is conditional, not unconditional
+
+Spec §11.5 states "Media: Cloudflare R2" as a flat fact. Reading
+`apps/techmirai-web/payload.config.ts` found the real behavior is
+conditional: `s3Storage` is only wired up when all four
+`CLOUDFLARE_R2_*` env vars are set; otherwise the code falls back to local
+disk storage and logs a warning. The stack-table row still says "Cloudflare
+R2" (not bracketed — the code path genuinely exists and is the intended
+production configuration), but this nuance is recorded here rather than
+silently treating "the code can do this" as "this is always active."
+
+## 2026-10-12 — Pack-3/I3: `case-studies` collection's pre-existing fields don't fit the Sadiatec case study's shape
+
+The `case-studies` collection (`packages/cms-core/src/verticals/recruitment/
+collections/case-studies.ts`) was built for a single-metric testimonial
+card (`metricValue`/`metricCaption`, numeric `results[]`, `challenge`/
+`solution`/`outcome` richText) — a recruitment-vertical shape reused
+generically. Spec §13's Sadiatec case study has a different structure (an
+at-a-glance table, before/what-we-built/what-it-means lists, an empty
+client-comment slot) and explicitly bans inventing metrics for this page.
+Rather than force content into the existing fields, Pack-3/I3 added one
+additive `layout` blocks field (reusing `page-hero`/`label-value-list`/
+`security-points`/`cta-banner`, the same block types already used on
+`pages.layout` elsewhere) and left the metric-shaped fields unset. No
+existing field, type or row was changed — the collection had zero seeded
+docs before this step. Flagging in case a future case study (a second
+client, if ever added) is better served by picking one shape consistently
+rather than every case study choosing block-vs-field for itself.
+
+## 2026-10-12 — Pack-3/I3: a `payload.find()` call's full result can reach the HTTP response even when never rendered into JSX
+
+While verifying the case-study route actually keeps Sadiatec content hidden
+(gate: `visible: false`), curling the raw HTML of `/case-studies/sadiatec`
+found the FULL Sadiatec doc (title, clientName, every `layout` block's text)
+embedded in a Next.js RSC flight chunk (`self.__next_f.push([1,"<id>:{"docs":
+[...]}"])`), even though the only thing actually rendered on the page was
+`ComingSoonStub` — the `doc` value returned by `findVisibleCaseStudy()` was
+awaited, checked, and discarded (`return null`) without ever touching JSX.
+
+Comparing against `/about`'s raw HTML confirmed this isn't new or specific
+to this route: `/about`'s own flight output embeds the exact same shape of
+orphaned chunk, holding `/about`'s own `pages` doc (id 12, title "会社紹介")
+— i.e., every page on this site that calls `payload.find()` from an async
+Server Component page/metadata function appears to get that call's full
+result embedded in the response as an unreferenced flight chunk, regardless
+of whether the result is actually rendered. For `/about` this is harmless
+by coincidence (the embedded doc is exactly what's already public on that
+page). It would NOT be harmless for any page gating not-yet-public content
+behind a runtime check in application code rather than at the query level.
+
+Not fixed site-wide here — that would mean auditing every `payload.find()`
+call across the catch-all and every dedicated route, well beyond I3's
+scope. Fixed only where it mattered for this step:
+`[locale]/case-studies/sadiatec/page.tsx` now does a `select`-limited
+`{ visible }`-only lookup first, and only runs the full-content
+`payload.find()` if that comes back `true` — so while `visible` is false,
+the only thing that could ever be serialized anywhere is `{ visible: false }`,
+never the gated content. Flagging for whoever next builds a page with a
+runtime (not query-level) visibility gate — the founder-visibility switch
+in the `[locale]/[slug]/page.tsx` catch-all (Pack-3/I2) likely has the same
+exposure, since it also fetches `company-info` unconditionally and only
+filters blocks afterward in JS, not in the query.
+
+## 2026-10-12 — Pack-3/I3: `/technology` had the same static-stub-shadows-catch-all defect already fixed for `/how-it-works`/`/integrations`
+
+After seeding `/technology`'s real content and confirming the seed log
+reported success, the rendered page still showed only the bare page title
+("Technology"/"AI開発"), none of the seeded hero/stack-table content. Cause:
+`apps/techmirai-web/src/app/(frontend)/[locale]/technology/page.tsx` was a
+leftover static `ComingSoonStub` route, intercepting `/technology` before
+the dynamic `[locale]/[slug]/page.tsx` catch-all (which reads `pages.layout`
+from the database) ever ran — the exact same defect documented in this
+file's 2026-10-08 entry for `/ai-reception`/`/how-it-works`/`/integrations`.
+Spec §11 has no sub-routes under `/technology`, so the same fix applies:
+the stub directory was deleted outright, with no replacement file, letting
+the catch-all serve it. Not caught earlier because I3 is the first step to
+seed real content for this slug — the stub rendered "successfully" (200,
+plausible-looking page) the whole time, which is exactly why this class of
+bug is easy to miss without comparing rendered content against the seeded
+data, not just the HTTP status code. Flagging in case any other
+not-yet-built Pack-3/4 slug (case-study was checked and does NOT have this
+problem — it already uses a dedicated route, not a stub+catch-all pair)
+still has its own leftover stub.
