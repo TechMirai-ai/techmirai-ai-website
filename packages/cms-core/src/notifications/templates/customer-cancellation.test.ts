@@ -6,7 +6,6 @@ const baseInput = {
   patientName: '山田太郎',
   serviceName: '一般診察',
   scheduledAt: '2026-08-06T01:30:00.000Z',
-  visitType: 'first' as const,
   confirmationCode: 'ABC123',
 }
 
@@ -27,6 +26,15 @@ describe('renderCustomerCancellation', () => {
     expect(result.subject).toMatch(/cancel/i)
     expect(result.html).toContain('山田太郎')
     expect(result.text).toContain('ABC123')
+  })
+
+  it('uses the Spec 12.4 cancellation sentence verbatim in both locales', () => {
+    expect(renderCustomerCancellation({ ...baseInput, locale: 'en' }).text).toContain(
+      'Your 一般診察 on August 6, 2026 has been cancelled. You can book a new time any time.',
+    )
+    expect(renderCustomerCancellation({ ...baseInput, locale: 'ja' }).text).toContain(
+      '2026年8月6日の一般診察をキャンセルしました。またいつでもご予約ください。',
+    )
   })
 
   it('falls back to English for an unrecognized or missing locale', () => {

@@ -1,4 +1,4 @@
-import { BOOKING_TIME_ZONE } from '../../booking/time-zone'
+import { BOOKING_TIME_ZONE, toBookingTime } from '../../booking/time-zone'
 
 export type SupportedLocale = 'ja' | 'en'
 
@@ -46,6 +46,21 @@ export function formatDateTime(scheduledAtIso: string, locale: SupportedLocale):
     minute: '2-digit',
     timeZone: BOOKING_TIME_ZONE,
   }).format(new Date(scheduledAtIso))
+}
+
+/** `{date}` in the Spec 12.4 texts, e.g. "October 14, 2026" / "2026年10月14日". */
+export function formatDate(scheduledAtIso: string, locale: SupportedLocale): string {
+  return new Intl.DateTimeFormat(locale === 'ja' ? 'ja-JP' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: BOOKING_TIME_ZONE,
+  }).format(new Date(scheduledAtIso))
+}
+
+/** `{time}` in the Spec 12.4 texts, 24-hour "HH:MM" in the booking zone. */
+export function formatTime(scheduledAtIso: string): string {
+  return toBookingTime(scheduledAtIso)
 }
 
 /**

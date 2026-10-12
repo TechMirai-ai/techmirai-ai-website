@@ -1,8 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { attemptSend, fetchDueNotifications } from '@techmirai/cms-core/notifications'
+import {
+  attemptSend,
+  customerEmailsAllowed,
+  fetchDueNotifications,
+  markNotificationsWithheld,
+  partitionDueNotifications,
+} from '@techmirai/cms-core/notifications'
 
 import { getCachedPayload } from '@/lib/payload'
-import { getNotificationDispatcher } from '@/lib/notifications'
+import { getNotificationDispatcher, getNotificationRuntimeConfig } from '@/lib/notifications'
 
 /**
  * Sends due notifications (reminders, and any earlier immediate send that
@@ -37,10 +43,17 @@ export async function GET(request: NextRequest) {
   const payload = await getCachedPayload()
   const dispatcher = getNotificationDispatcher()
 
+  // Fail-closed customer-email policy (cms-core customer-send-policy.ts): outside
+  // local development, customer-facing rows (reminders, retries of a
+  // confirmation/cancellation) are NOT sent — they are marked 'skipped' with the
+  // reason — and only staff rows go out. This is the second send point after the
+  // immediate sends in notifyBookingCreated/Cancelled.
   const due = await fetchDueNotifications(payload)
-  for (const notification of due) {
+  const { toSend, withheld } = partitionDueNotifications(due, customerEmailsAllowed(getNotificationRuntimeConfig()))
+  await markNotificationsWithheld(payload, withheld)
+  for (const notification of toSend) {
     await attemptSend(payload, dispatcher, notification)
   }
 
-  return NextResponse.json({ success: true, processed: due.length })
+  return NextResponse.json({ success: true, processed: toSend.length, withheld: withheld.length })
 }

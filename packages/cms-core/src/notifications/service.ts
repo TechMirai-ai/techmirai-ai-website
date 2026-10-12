@@ -11,15 +11,64 @@ import { renderCustomerReminder } from './templates/customer-reminder'
 import { renderStaffAppointment } from './templates/staff-appointment'
 import { resolveLocale } from './templates/shared'
 import type { SupportedLocale } from './templates/shared'
-import type { NotificationDispatcher, NotificationRecord } from './types'
+import type { NotificationChannelId, NotificationDispatcher, NotificationRecord } from './types'
+import { CUSTOMER_EMAIL_WITHHELD_REASON, customerEmailsAllowed } from './customer-send-policy'
 
 export type { NotificationDispatcher } from './types'
 
 export interface NotificationRuntimeConfig {
-  staffRecipient: string
+  // `null` means no staff email is sent (see staff-recipient.ts: development
+  // without a valid override). `staffRecipientNote` says why, without an address.
+  staffRecipient: string | null
+  staffRecipientNote?: string | undefined
   reminderHourLocal: number
   defaultLocale: string
   adminBaseUrl: string
+  // Spec 12.4: the meeting tool is still a CONFIRM item; while false the
+  // confirmation email carries a literal bracketed placeholder line.
+  meetingToolConfirmed: boolean
+  // Fail closed (customer-send-policy.ts): ALL customer booking emails —
+  // confirmation, reminder, cancellation — are sent only when this is true,
+  // i.e. only for an explicit `NODE_ENV === 'development'`. Production,
+  // staging, test and an unset NODE_ENV withhold them, recording each as a
+  // 'skipped' audit row.
+  isLocalDevelopment: boolean
+}
+
+/**
+ * Records that a customer email was deliberately NOT sent (see
+ * customer-send-policy.ts): an audit row with status 'skipped' and the reason,
+ * and no subject/html/text — so no customer-facing content exists anywhere to
+ * leak — plus a log line. Uses the same dedupeKey the real row would, so a
+ * retry cannot also create the sendable one.
+ */
+async function recordWithheldCustomerEmail(
+  payload: Payload,
+  row: {
+    appointment: number | string
+    channel: NotificationChannelId
+    templateKey: string
+    locale: string
+    recipient: string
+    dedupeKey: string
+  },
+): Promise<void> {
+  await createNotificationIfAbsent(payload, {
+    ...row,
+    scheduledFor: new Date().toISOString(),
+    status: 'skipped',
+    lastError: CUSTOMER_EMAIL_WITHHELD_REASON,
+  })
+  payload.logger.warn(
+    `notifications: customer ${row.templateKey} withheld for appointment ${row.appointment} — ${CUSTOMER_EMAIL_WITHHELD_REASON}`,
+  )
+}
+
+/** Logs (without any address) that the staff email is intentionally not being sent. */
+function warnStaffWithheld(payload: Payload, event: string, appointmentId: number | string, note: string | undefined): void {
+  payload.logger.warn(
+    `notifications: staff ${event} notification withheld for appointment ${appointmentId} — ${note ?? 'no staff recipient resolved'}`,
+  )
 }
 
 export interface NotifyBookingInput {
@@ -40,6 +89,7 @@ interface AppointmentForNotification {
     id: number | string
     familyName: string
     givenName: string
+    company: string | null | undefined
     email: string | undefined
     locale: string | null | undefined
     lineUserId: string | null | undefined
@@ -73,6 +123,7 @@ async function findAppointmentForNotification(
         customer: RawRelation & {
           familyName: string
           givenName: string
+          company: string | null | undefined
           email: string | undefined
           locale: string | null | undefined
           lineUserId: string | null | undefined
@@ -93,6 +144,7 @@ async function findAppointmentForNotification(
       id: doc.customer.id,
       familyName: doc.customer.familyName,
       givenName: doc.customer.givenName,
+      company: doc.customer.company,
       email: doc.customer.email,
       locale: doc.customer.locale,
       lineUserId: doc.customer.lineUserId,
@@ -189,11 +241,29 @@ export async function notifyBookingCreated(
   // disagree with itself about which field to read.
   const resolved = resolveNotificationChannel(appointment.customer)
 
+  // Fail-closed policy (customer-send-policy.ts): customer booking emails are
+  // sent only in local development. Each customer step below checks it
+  // separately — guarding the confirmation does NOT guard the reminder.
+  const customerAllowed = customerEmailsAllowed(config)
+  let confirmationWithheld = false
+
   if (resolved) {
     const { channel: customerChannel, recipient } = resolved
     const customerLocale = resolveLocale(appointment.customer.locale)
 
     await runNotificationStep(payload, `confirmation for appointment ${appointment.id}`, async () => {
+      if (!customerAllowed) {
+        confirmationWithheld = true
+        await recordWithheldCustomerEmail(payload, {
+          appointment: appointment.id,
+          channel: customerChannel,
+          templateKey: 'booking-confirmation',
+          locale: customerLocale,
+          recipient,
+          dedupeKey: `booking-confirmation:${appointment.id}`,
+        })
+        return
+      }
       const serviceName = await fetchServiceName(payload, appointment.serviceId, customerLocale)
       const manageUrl = buildManageUrl(config, customerLocale, appointment.confirmationCode, appointment.idempotencyKey)
       // Same renderer regardless of channel — its .text is already the
@@ -207,10 +277,10 @@ export async function notifyBookingCreated(
         patientName,
         serviceName,
         scheduledAt: appointment.scheduledAt,
-        visitType: appointment.visitType,
         confirmationCode: appointment.confirmationCode,
         manageUrl,
         isReschedule: input.isReschedule ?? false,
+        meetingToolConfirmed: config.meetingToolConfirmed,
       })
       // LINE already has a "Manage" button in the rich menu straight into
       // the LIFF manage flow, so the manage-URL line in .text is redundant
@@ -246,13 +316,26 @@ export async function notifyBookingCreated(
     // queueing the confirmation must not also prevent the reminder from
     // being queued (or vice versa).
     await runNotificationStep(payload, `reminder for appointment ${appointment.id}`, async () => {
+      // Reminders stay disabled (not queued as pending) until the 24-hour
+      // scheduler is implemented and verified — see J2-09. Checked here on its
+      // own: the confirmation step's guard does not cover this one.
+      if (!customerAllowed) {
+        await recordWithheldCustomerEmail(payload, {
+          appointment: appointment.id,
+          channel: customerChannel,
+          templateKey: 'booking-reminder',
+          locale: customerLocale,
+          recipient,
+          dedupeKey: `booking-reminder:${appointment.id}`,
+        })
+        return
+      }
       const serviceName = await fetchServiceName(payload, appointment.serviceId, customerLocale)
       const reminder = renderCustomerReminder({
         locale: appointment.customer.locale,
         patientName,
         serviceName,
         scheduledAt: appointment.scheduledAt,
-        visitType: appointment.visitType,
         confirmationCode: appointment.confirmationCode,
       })
       await createNotificationIfAbsent(payload, {
@@ -283,22 +366,28 @@ export async function notifyBookingCreated(
   // Independent of both customer-facing steps above — the clinic must learn
   // about a new booking even if something went wrong rendering/queueing the
   // customer's own confirmation or reminder.
+  const staffRecipient = config.staffRecipient
+  if (staffRecipient === null) {
+    warnStaffWithheld(payload, 'created', appointment.id, config.staffRecipientNote)
+    return
+  }
   await runNotificationStep(payload, `staff notification for appointment ${appointment.id}`, async () => {
     const staffServiceName = await fetchServiceName(payload, appointment.serviceId, config.defaultLocale)
     const staff = renderStaffAppointment({
       event: 'created',
       patientName,
+      company: appointment.customer.company ?? undefined,
       serviceName: staffServiceName,
       scheduledAt: appointment.scheduledAt,
-      visitType: appointment.visitType,
       appointmentId: appointment.id,
       adminBaseUrl: config.adminBaseUrl,
+      customerConfirmationWithheld: confirmationWithheld,
     })
     const staffRow = {
       appointment: appointment.id,
       channel: 'email' as const,
       templateKey: 'staff-appointment-created',
-      recipient: config.staffRecipient,
+      recipient: staffRecipient,
       subject: staff.subject,
       html: staff.html,
       text: staff.text,
@@ -322,6 +411,7 @@ async function sendCustomerCancellationNotification(
   dispatcher: NotificationDispatcher,
   appointment: AppointmentForNotification,
   patientName: string,
+  customerAllowed: boolean,
 ): Promise<void> {
   const resolved = resolveNotificationChannel(appointment.customer)
   if (!resolved) {
@@ -334,13 +424,26 @@ async function sendCustomerCancellationNotification(
   const { channel: customerChannel, recipient } = resolved
   await runNotificationStep(payload, `customer cancellation notification for appointment ${appointment.id}`, async () => {
     const customerLocale = resolveLocale(appointment.customer.locale)
+    // The cancellation itself (data) has already happened; only the email is
+    // withheld. Checked here on its own — the confirmation/reminder guards do
+    // not cover this one.
+    if (!customerAllowed) {
+      await recordWithheldCustomerEmail(payload, {
+        appointment: appointment.id,
+        channel: customerChannel,
+        templateKey: 'booking-cancellation',
+        locale: customerLocale,
+        recipient,
+        dedupeKey: `booking-cancellation:${appointment.id}`,
+      })
+      return
+    }
     const serviceName = await fetchServiceName(payload, appointment.serviceId, customerLocale)
     const cancellation = renderCustomerCancellation({
       locale: appointment.customer.locale,
       patientName,
       serviceName,
       scheduledAt: appointment.scheduledAt,
-      visitType: appointment.visitType,
       confirmationCode: appointment.confirmationCode,
     })
     const row = {
@@ -392,19 +495,25 @@ export async function notifyBookingCancelled(
   // prevent the staff alert or the reminder-voiding from happening, and
   // vice versa (same isolation discipline as notifyBookingCreated).
   if (!input.isReschedule) {
-    await sendCustomerCancellationNotification(payload, dispatcher, appointment, patientName)
+    await sendCustomerCancellationNotification(payload, dispatcher, appointment, patientName, customerEmailsAllowed(config))
   }
 
   // Independent of the reminder-skip step below — the clinic must learn a
   // slot freed up even if voiding the reminder fails, and vice versa.
   await runNotificationStep(payload, `staff cancellation notification for appointment ${appointment.id}`, async () => {
+    const staffRecipient = config.staffRecipient
+    if (staffRecipient === null) {
+      // Only this step is skipped — the reminder-voiding step below still runs.
+      warnStaffWithheld(payload, 'cancelled', appointment.id, config.staffRecipientNote)
+      return
+    }
     const serviceName = await fetchServiceName(payload, appointment.serviceId, config.defaultLocale)
     const staff = renderStaffAppointment({
       event: 'cancelled',
       patientName,
+      company: appointment.customer.company ?? undefined,
       serviceName,
       scheduledAt: appointment.scheduledAt,
-      visitType: appointment.visitType,
       appointmentId: appointment.id,
       adminBaseUrl: config.adminBaseUrl,
     })
@@ -412,7 +521,7 @@ export async function notifyBookingCancelled(
       appointment: appointment.id,
       channel: 'email' as const,
       templateKey: 'staff-appointment-cancelled',
-      recipient: config.staffRecipient,
+      recipient: staffRecipient,
       subject: staff.subject,
       html: staff.html,
       text: staff.text,

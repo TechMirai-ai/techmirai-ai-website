@@ -29,7 +29,7 @@ export async function fetchDueNotifications(
   const now = new Date().toISOString()
 
   const result = await db.execute(sql`
-    SELECT id, channel, recipient, subject, html, text, dedupe_key AS "dedupeKey", attempts
+    SELECT id, channel, recipient, subject, html, text, dedupe_key AS "dedupeKey", template_key AS "templateKey", attempts
     FROM notifications
     WHERE status = 'pending' AND scheduled_for <= ${now}
     ORDER BY scheduled_for ASC
@@ -44,6 +44,7 @@ export async function fetchDueNotifications(
     html: row['html'] as string | null,
     text: row['text'] as string | null,
     dedupeKey: row['dedupeKey'] as string,
+    templateKey: row['templateKey'] as string | null | undefined,
     // `attempts` is a Postgres `numeric` column — node-postgres returns
     // numeric/decimal values as STRINGS on a raw driver read (to avoid float
     // precision loss), unlike Payload's own ORM layer, which this raw query

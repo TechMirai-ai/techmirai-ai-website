@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { escapeHtml, formatDateTime, resolveLocale } from './shared'
+import { escapeHtml, formatDate, formatDateTime, formatTime, resolveLocale } from './shared'
 
 describe('resolveLocale', () => {
   it('selects ja for locale "ja"', () => {
@@ -44,5 +44,22 @@ describe('formatDateTime', () => {
   it('renders an en-locale date/time string', () => {
     const result = formatDateTime('2026-08-05T01:30:00.000Z', 'en')
     expect(result).toContain('2026')
+  })
+})
+
+describe('formatDate / formatTime (Spec 12.4 {date} and {time})', () => {
+  it('renders a long locale date', () => {
+    expect(formatDate('2026-08-05T01:30:00.000Z', 'en')).toBe('August 5, 2026')
+    expect(formatDate('2026-08-05T01:30:00.000Z', 'ja')).toBe('2026年8月5日')
+  })
+
+  it('renders a 24-hour HH:MM time in the booking zone (Asia/Tokyo, UTC+9)', () => {
+    expect(formatTime('2026-08-05T01:30:00.000Z')).toBe('10:30')
+    expect(formatTime('2026-08-05T18:05:00.000Z')).toBe('03:05')
+  })
+
+  it('moves the date forward when the booking-zone date is later than the UTC date', () => {
+    expect(formatDate('2026-08-05T18:05:00.000Z', 'en')).toBe('August 6, 2026')
+    expect(formatDate('2026-08-05T18:05:00.000Z', 'ja')).toBe('2026年8月6日')
   })
 })

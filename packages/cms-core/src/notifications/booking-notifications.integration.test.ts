@@ -20,6 +20,8 @@ const config: NotificationRuntimeConfig = {
   reminderHourLocal: 9,
   defaultLocale: 'ja',
   adminBaseUrl: 'https://clinic-demo.example',
+  meetingToolConfirmed: true,
+  isLocalDevelopment: true,
 }
 
 interface NotificationDoc {

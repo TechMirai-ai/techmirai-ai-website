@@ -48,6 +48,10 @@ export interface CreateNotificationInput {
   text?: string
   scheduledFor: string
   dedupeKey: string
+  // Defaults to 'pending'. A row recorded as 'skipped' (with `lastError` as the
+  // reason) is an audit entry for a send that was deliberately withheld.
+  status?: 'pending' | 'skipped'
+  lastError?: string
 }
 
 export interface CreateNotificationResult {

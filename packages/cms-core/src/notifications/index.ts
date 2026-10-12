@@ -23,6 +23,19 @@ export type { CreateNotificationInput, CreateNotificationResult } from './dedupe
 
 export { computeReminderScheduledFor } from './reminder-schedule'
 
+export {
+  CUSTOMER_EMAIL_WITHHELD_REASON,
+  customerEmailsAllowed,
+  isCustomerFacingTemplateKey,
+  isLocalDevelopmentEnv,
+  markNotificationsWithheld,
+  partitionDueNotifications,
+} from './customer-send-policy'
+export type { DuePartition } from './customer-send-policy'
+
+export { resolveStaffRecipient } from './staff-recipient'
+export type { StaffRecipientInput, StaffRecipientResolution } from './staff-recipient'
+
 export { notifyBookingCancelled, notifyBookingCreated } from './service'
 export type { NotificationRuntimeConfig, NotifyBookingInput } from './service'
 

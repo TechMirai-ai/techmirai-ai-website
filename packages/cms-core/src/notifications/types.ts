@@ -49,4 +49,10 @@ export interface NotificationRecord {
   text?: string | null
   dedupeKey: string
   attempts: number
+  /**
+   * Which kind of notification this is ('booking-reminder', 'staff-appointment-created', ...).
+   * The cron batch uses it to tell customer-facing rows from staff rows (see
+   * customer-send-policy.ts); absent means "unknown", which is treated as customer-facing.
+   */
+  templateKey?: string | null | undefined
 }

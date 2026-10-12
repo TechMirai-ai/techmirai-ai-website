@@ -92,6 +92,16 @@ describe('createNotificationIfAbsent', () => {
     })
   })
 
+  it('records an audit row with status "skipped" and a reason when the caller passes them, instead of the default "pending"', async () => {
+    const payload = fakePayload(async () => ({ id: 100 }))
+    const input = { ...customerConfirmationInput, status: 'skipped' as const, lastError: 'Withheld: meeting tool not confirmed' }
+
+    const result = await createNotificationIfAbsent(payload as never, input)
+
+    expect(result).toEqual({ created: true, id: 100 })
+    expect(payload.create).toHaveBeenCalledWith({ collection: 'notifications', data: input })
+  })
+
   it('returns { created: false } without throwing when the dedupeKey unique constraint is hit — customer notification', async () => {
     const payload = fakePayload(async () => {
       throw fakeValidationError('dedupeKey')

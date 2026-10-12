@@ -6,7 +6,6 @@ const baseInput = {
   patientName: '山田太郎',
   serviceName: '一般診察',
   scheduledAt: '2026-08-06T01:30:00.000Z',
-  visitType: 'first' as const,
   confirmationCode: 'ABC123',
   manageUrl: 'https://clinic.example/ja/booking/manage?code=ABC123&token=tok-value',
 }
@@ -87,5 +86,38 @@ describe('renderCustomerConfirmation', () => {
   it('defaults to non-reschedule copy when isReschedule is omitted', () => {
     const result = renderCustomerConfirmation({ ...baseInput, locale: 'en' })
     expect(result.html.toLowerCase()).not.toContain('reschedul')
+  })
+
+  it('uses the Spec 12.4 confirmation sentence verbatim (EN)', () => {
+    const result = renderCustomerConfirmation({ ...baseInput, locale: 'en' })
+    expect(result.text).toContain(
+      'Your 一般診察 is booked for August 6, 2026 at 10:30 (JST). We will send the meeting link by email before the call. To change or cancel, use the link in your confirmation.',
+    )
+  })
+
+  it('uses the Spec 12.4 confirmation sentence verbatim (JA)', () => {
+    const result = renderCustomerConfirmation({ ...baseInput, locale: 'ja' })
+    expect(result.text).toContain(
+      '2026年8月6日 10:30に一般診察のご予約を承りました。面談用のURLは、事前にメールでお送りします。変更・キャンセルは、確認通知内のリンクから行えます。',
+    )
+  })
+
+  it('carries the literal meeting-tool placeholder by default and drops it once meetingToolConfirmed is true', () => {
+    const en = renderCustomerConfirmation({ ...baseInput, locale: 'en' })
+    expect(en.text).toContain('[Meeting tool — CONFIRM: Google Meet, Zoom or Teams]')
+    expect(en.html).toContain('[Meeting tool — CONFIRM: Google Meet, Zoom or Teams]')
+    expect(renderCustomerConfirmation({ ...baseInput, locale: 'ja' }).text).toContain('[JA TODO]')
+
+    const confirmed = renderCustomerConfirmation({ ...baseInput, locale: 'en', meetingToolConfirmed: true })
+    expect(confirmed.text).not.toContain('[Meeting tool')
+    expect(confirmed.html).not.toContain('[Meeting tool')
+    expect(renderCustomerConfirmation({ ...baseInput, locale: 'ja', meetingToolConfirmed: true }).text).not.toContain('[JA TODO]')
+  })
+
+  it('contains no clinic wording', () => {
+    for (const locale of ['en', 'ja']) {
+      const { text } = renderCustomerConfirmation({ ...baseInput, locale })
+      expect(text).not.toMatch(/診療内容|初診|再診|区分|visit type|first visit/i)
+    }
   })
 })

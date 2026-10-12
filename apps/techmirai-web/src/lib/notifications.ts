@@ -1,6 +1,12 @@
 import 'server-only'
 import { Resend } from 'resend'
-import { createDispatcher, EmailResendChannel, LineMessagingChannel } from '@techmirai/cms-core/notifications'
+import {
+  createDispatcher,
+  EmailResendChannel,
+  isLocalDevelopmentEnv,
+  LineMessagingChannel,
+  resolveStaffRecipient,
+} from '@techmirai/cms-core/notifications'
 import type { NotificationDispatcher, NotificationRuntimeConfig } from '@techmirai/cms-core/notifications'
 
 import siteConfig from '../../site.config'
@@ -36,10 +42,24 @@ export function getNotificationDispatcher(): NotificationDispatcher {
 
 /** Tenant-specific values, sourced from site.config.ts/env — never hardcoded. */
 export function getNotificationRuntimeConfig(): NotificationRuntimeConfig {
+  // In development the real staff inbox is never used: staff emails go to
+  // DEV_STAFF_NOTIFICATION_RECIPIENT, or are withheld if it isn't set (see
+  // cms-core/notifications/staff-recipient.ts). Outside development the
+  // override is ignored.
+  const staff = resolveStaffRecipient({
+    configured: siteConfig.forms.appointmentRecipient ?? siteConfig.forms.contactRecipient,
+    devOverride: process.env.DEV_STAFF_NOTIFICATION_RECIPIENT,
+    nodeEnv: process.env.NODE_ENV,
+  })
   return {
-    staffRecipient: siteConfig.forms.appointmentRecipient ?? siteConfig.forms.contactRecipient,
+    staffRecipient: staff.recipient,
+    staffRecipientNote: staff.note,
     reminderHourLocal: siteConfig.notifications.reminderHourLocal,
     defaultLocale: siteConfig.locales.default,
     adminBaseUrl: process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000',
+    meetingToolConfirmed: siteConfig.booking.meetingToolConfirmed,
+    // Fail closed: only an explicit 'development' counts as local development,
+    // and only there are customer booking emails sent (customer-send-policy.ts).
+    isLocalDevelopment: isLocalDevelopmentEnv(process.env.NODE_ENV),
   }
 }

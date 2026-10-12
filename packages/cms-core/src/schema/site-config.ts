@@ -154,6 +154,13 @@ const bookingSchema = z.object({
   // not just as a UI hint — past this, the manage page shows contact.phone
   // instead of the cancel/reschedule buttons.
   cancellationCutoffHours: z.number().int().min(0),
+  // Spec 12.4 CONFIRM item: which meeting tool (Google Meet, Zoom or Teams)
+  // the booking confirmation names. While false, the confirmation email carries
+  // a literal bracketed placeholder and, in every environment except local
+  // development (fail closed), is withheld entirely
+  // (notifications/service.ts). Flip to true only once the tool is confirmed
+  // and the placeholder wording has been finalised.
+  meetingToolConfirmed: z.boolean().default(false),
 })
 
 const receptionSchema = z.object({

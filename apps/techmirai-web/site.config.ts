@@ -159,8 +159,8 @@ const siteConfig: SiteConfig = {
   forms: {
     // TODO: replace with the client's real inbox before real client launch
     contactRecipient: 'reception@sakura-sekkotsu.example',
-    // TODO: replace with the client's real inbox before real client launch
-    appointmentRecipient: 'reception@sakura-sekkotsu.example',
+    // Pack-4/J2, Spec §12.4: booking staff notifications go to info@techmirai-ai.com.
+    appointmentRecipient: 'info@techmirai-ai.com',
     // Pack-4/J1, Spec §12.3: the Spec names info@techmirai-ai.com as the
     // staff-notification recipient for the assessment form (the same
     // address it already names for booking notifications). Kept separate
@@ -208,6 +208,9 @@ const siteConfig: SiteConfig = {
     // Customers can self-service cancel/reschedule up to 24h before their
     // appointment; past that, the manage page shows contact.phone instead.
     cancellationCutoffHours: 24,
+    // Pack-4/J2: the meeting tool is a Spec CONFIRM item — launch blocker in
+    // docs/PLACEHOLDER-REGISTER.md. Keep false until Jamal confirms it.
+    meetingToolConfirmed: false,
   },
 
   reception: {

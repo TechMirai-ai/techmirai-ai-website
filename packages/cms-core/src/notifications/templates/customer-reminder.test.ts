@@ -6,7 +6,6 @@ const baseInput = {
   patientName: '山田太郎',
   serviceName: '一般診察',
   scheduledAt: '2026-08-06T01:30:00.000Z',
-  visitType: 'first' as const,
   confirmationCode: 'ABC123',
 }
 
@@ -51,6 +50,15 @@ describe('renderCustomerReminder', () => {
 
     expect(result.html).toMatch(/2026/)
     expect(result.text).toMatch(/2026/)
+  })
+
+  it('uses the Spec 12.4 reminder sentence verbatim in both locales', () => {
+    expect(renderCustomerReminder({ ...baseInput, locale: 'en' }).text).toContain(
+      'Reminder: your 一般診察 with TechMirai is coming up on August 6, 2026 at 10:30.',
+    )
+    expect(renderCustomerReminder({ ...baseInput, locale: 'ja' }).text).toContain(
+      'リマインド：TechMiraiとの一般診察は2026年8月6日 10:30からです。',
+    )
   })
 
   it('HTML-escapes patient and service names', () => {

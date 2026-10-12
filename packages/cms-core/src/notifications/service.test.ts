@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { isLocalDevelopmentEnv } from './customer-send-policy'
 import { notifyBookingCancelled, notifyBookingCreated } from './service'
 import type { NotificationDispatcher, NotificationRuntimeConfig } from './service'
 
@@ -16,6 +17,8 @@ const config: NotificationRuntimeConfig = {
   reminderHourLocal: 9,
   defaultLocale: 'ja',
   adminBaseUrl: 'https://clinic-demo.example',
+  meetingToolConfirmed: false,
+  isLocalDevelopment: true,
 }
 
 function appointmentDoc(overrides: Record<string, unknown> = {}) {
@@ -255,6 +258,165 @@ describe('notifyBookingCreated', () => {
 
     const confirmationCall = payload.create.mock.calls.find((call) => callData(call)['templateKey'] === 'booking-confirmation')
     expect(callData(confirmationCall!)['subject']).toBe('ご予約変更のお知らせ')
+  })
+})
+
+describe('notifyBookingCreated — customer emails are fail-closed outside local development', () => {
+  // Anything that is not explicitly local development (production, staging, test, unset NODE_ENV).
+  const productionConfig: NotificationRuntimeConfig = { ...config, isLocalDevelopment: false }
+
+  it('withholds the customer confirmation: records an auditable skipped row with the reason, stores no content, sends nothing to the customer', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, productionConfig, { confirmationCode: 'ABC123' })
+
+    const confirmationCall = payload.create.mock.calls.find((call) => callData(call)['templateKey'] === 'booking-confirmation')
+    expect(callData(confirmationCall!)).toMatchObject({
+      status: 'skipped',
+      dedupeKey: 'booking-confirmation:412',
+      lastError: expect.stringContaining('only in local development'),
+    })
+    expect(callData(confirmationCall!)['html']).toBeUndefined()
+    expect(callData(confirmationCall!)['text']).toBeUndefined()
+    expect(payload.logger.warn).toHaveBeenCalledWith(expect.stringContaining('confirmation withheld'))
+    // Only the staff notification is dispatched.
+    expect(dispatcher.send).toHaveBeenCalledTimes(1)
+  })
+
+  it('does NOT queue the reminder as pending — it is recorded as skipped with no content — and tells staff the customer confirmation was not sent', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, productionConfig, { confirmationCode: 'ABC123' })
+
+    const reminderCalls = payload.create.mock.calls.filter((call) => callData(call)['templateKey'] === 'booking-reminder')
+    expect(reminderCalls).toHaveLength(1)
+    expect(callData(reminderCalls[0]!)).toMatchObject({
+      status: 'skipped',
+      dedupeKey: 'booking-reminder:412',
+      lastError: expect.stringContaining('only in local development'),
+    })
+    expect(callData(reminderCalls[0]!)['html']).toBeUndefined()
+    expect(callData(reminderCalls[0]!)['text']).toBeUndefined()
+    const staffCall = payload.create.mock.calls.find((call) => callData(call)['templateKey'] === 'staff-appointment-created')
+    expect(callData(staffCall!)['text']).toContain('Customer confirmation email was NOT sent')
+  })
+
+  it('a confirmed meeting tool does not re-open the gate: confirmation, reminder and the customer dispatch stay withheld', async () => {
+    const payload = fakePayload({ appointment: { customer: { id: 3, familyName: '山田', givenName: '太郎', email: 'patient@example.com', locale: 'en' } } })
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, { ...productionConfig, meetingToolConfirmed: true }, { confirmationCode: 'ABC123' })
+
+    for (const templateKey of ['booking-confirmation', 'booking-reminder']) {
+      const call = payload.create.mock.calls.find((c) => callData(c)['templateKey'] === templateKey)
+      expect(callData(call!)['status']).toBe('skipped')
+    }
+    // Only the staff notification is dispatched.
+    expect(dispatcher.send).toHaveBeenCalledTimes(1)
+    expect(dispatcher.send).toHaveBeenCalledWith('email', expect.objectContaining({ to: 'staff@clinic-demo.example' }))
+  })
+
+  it('in local development still sends the confirmation, carrying the literal placeholder so it can be reviewed', async () => {
+    const payload = fakePayload({ appointment: { customer: { id: 3, familyName: '山田', givenName: '太郎', email: 'patient@example.com', locale: 'en' } } })
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, config, { confirmationCode: 'ABC123' })
+
+    const confirmationCall = payload.create.mock.calls.find((call) => callData(call)['templateKey'] === 'booking-confirmation')
+    expect(callData(confirmationCall!)['text']).toContain('[Meeting tool — CONFIRM: Google Meet, Zoom or Teams]')
+    expect(dispatcher.send).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('customer booking emails across NODE_ENV values (fail closed)', () => {
+  // Build the config exactly the way the app does: from the NODE_ENV string.
+  const configFor = (nodeEnv: string | undefined): NotificationRuntimeConfig => ({
+    ...config,
+    isLocalDevelopment: isLocalDevelopmentEnv(nodeEnv),
+  })
+  const blockedEnvs: Array<string | undefined> = ['production', 'staging', 'test', undefined, '', 'Development', 'DEVELOPMENT']
+
+  it.each(blockedEnvs)(
+    'NODE_ENV=%j: confirmation, reminder and cancellation are each recorded as skipped and never reach the customer; only staff emails are dispatched',
+    async (nodeEnv) => {
+      const payload = fakePayload()
+      const dispatcher = fakeDispatcher()
+
+      await notifyBookingCreated(payload as never, dispatcher, configFor(nodeEnv), { confirmationCode: 'ABC123' })
+      await notifyBookingCancelled(payload as never, dispatcher, configFor(nodeEnv), { confirmationCode: 'ABC123' })
+
+      for (const templateKey of ['booking-confirmation', 'booking-reminder', 'booking-cancellation']) {
+        const rows = payload.create.mock.calls.filter((call) => callData(call)['templateKey'] === templateKey)
+        expect(rows, templateKey).toHaveLength(1)
+        expect(callData(rows[0]!), templateKey).toMatchObject({ status: 'skipped' })
+        expect(callData(rows[0]!)['text'], templateKey).toBeUndefined()
+      }
+      const recipients = dispatcher.send.mock.calls.map((call) => (call[1] as { to: string }).to)
+      expect(recipients).toEqual(['staff@clinic-demo.example', 'staff@clinic-demo.example'])
+    },
+  )
+
+  it('NODE_ENV="development": confirmation and cancellation are sent, the reminder is queued pending — unchanged behaviour', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, configFor('development'), { confirmationCode: 'ABC123' })
+    await notifyBookingCancelled(payload as never, dispatcher, configFor('development'), { confirmationCode: 'ABC123' })
+
+    for (const templateKey of ['booking-confirmation', 'booking-reminder', 'booking-cancellation']) {
+      const row = payload.create.mock.calls.find((call) => callData(call)['templateKey'] === templateKey)
+      expect(callData(row!), templateKey).toMatchObject({ status: 'pending' })
+    }
+    // confirmation + staff-created, then customer cancellation + staff-cancelled. The reminder is sent by the cron, never here.
+    expect(dispatcher.send).toHaveBeenCalledTimes(4)
+  })
+})
+
+describe('staff notifications withheld (staffRecipient: null — development without a valid override)', () => {
+  const withheldConfig: NotificationRuntimeConfig = {
+    ...config,
+    staffRecipient: null,
+    staffRecipientNote: 'DEV_STAFF_NOTIFICATION_RECIPIENT is not set, so staff notifications are withheld in development',
+  }
+
+  it('creates and sends no staff row on a new booking, logs why, and still handles the customer confirmation and reminder', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, withheldConfig, { confirmationCode: 'ABC123' })
+
+    const templateKeys = payload.create.mock.calls.map((call) => callData(call)['templateKey'] as string)
+    expect(templateKeys).not.toContain('staff-appointment-created')
+    expect(templateKeys).toEqual(expect.arrayContaining(['booking-confirmation', 'booking-reminder']))
+    expect(payload.logger.warn).toHaveBeenCalledWith(expect.stringContaining('staff created notification withheld'))
+    expect(payload.logger.warn).toHaveBeenCalledWith(expect.stringContaining('not set'))
+  })
+
+  it('creates no staff row on a cancellation, but still sends the customer cancellation and voids the pending reminder', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCancelled(payload as never, dispatcher, withheldConfig, { confirmationCode: 'ABC123' })
+
+    const templateKeys = payload.create.mock.calls.map((call) => callData(call)['templateKey'] as string)
+    expect(templateKeys).toEqual(['booking-cancellation'])
+    expect(payload.logger.warn).toHaveBeenCalledWith(expect.stringContaining('staff cancelled notification withheld'))
+    expect(payload.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ status: 'skipped' }) }),
+    )
+  })
+
+  it('never routes a staff email to any address when withheld: no staff-templateKey row is ever created', async () => {
+    const payload = fakePayload()
+    const dispatcher = fakeDispatcher()
+
+    await notifyBookingCreated(payload as never, dispatcher, withheldConfig, { confirmationCode: 'ABC123' })
+    await notifyBookingCancelled(payload as never, dispatcher, withheldConfig, { confirmationCode: 'ABC123' })
+
+    const staffRows = payload.create.mock.calls.filter((call) => String(callData(call)['templateKey']).startsWith('staff-'))
+    expect(staffRows).toHaveLength(0)
   })
 })
 

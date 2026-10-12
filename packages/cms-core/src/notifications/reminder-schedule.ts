@@ -24,8 +24,10 @@
  * change — do so when the cron moves to an hourly cadence (tracked for
  * WO-8's production cadence change, see vercel.json's schedule comment).
  *
- * Appointment times are stored/compared UTC-only throughout this app (see
- * templates/shared.ts's formatDateTime).
+ * Appointment instants are stored/compared in UTC; only display uses the
+ * booking zone (Asia/Tokyo, see booking/time-zone.ts). The reminder time of
+ * day is deliberately unchanged here — when reminders should be sent is an
+ * open business decision (docs/PLACEHOLDER-REGISTER.md, J2-09).
  */
 export function computeReminderScheduledFor(
   appointmentScheduledAtIso: string,
