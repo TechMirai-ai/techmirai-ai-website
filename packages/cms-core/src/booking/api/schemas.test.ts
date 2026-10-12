@@ -228,6 +228,36 @@ describe('reserveRequestSchema', () => {
     expect(result.success).toBe(false)
   })
 
+  it('requires both kana fields for a Japanese-locale booking (Spec 12.4)', () => {
+    const { family_name_kana: _f, given_name_kana: _g, ...noKana } = validCustomer
+
+    const missingBoth = reserveRequestSchema.safeParse({ ...base, locale: 'ja', customer: noKana })
+    expect(missingBoth.success).toBe(false)
+    const missingOne = reserveRequestSchema.safeParse({
+      ...base,
+      locale: 'ja',
+      customer: { ...noKana, family_name_kana: 'ヤマダ' },
+    })
+    expect(missingOne.success).toBe(false)
+  })
+
+  it('makes kana optional for an English-locale booking, and accepts an optional company', () => {
+    const { family_name_kana: _f, given_name_kana: _g, ...noKana } = validCustomer
+
+    expect(reserveRequestSchema.safeParse({ ...base, locale: 'en', customer: noKana }).success).toBe(true)
+    expect(
+      reserveRequestSchema.safeParse({ ...base, locale: 'en', customer: { ...noKana, company: 'Acme Co.' } }).success,
+    ).toBe(true)
+  })
+
+  it('rejects an oversized company name', () => {
+    const result = reserveRequestSchema.safeParse({
+      ...base,
+      customer: { ...validCustomer, company: 'a'.repeat(10_000) },
+    })
+    expect(result.success).toBe(false)
+  })
+
   it('accepts an honeypot field as optional', () => {
     expect(reserveRequestSchema.safeParse({ ...base, _hp: '' }).success).toBe(true)
   })

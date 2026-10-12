@@ -1,13 +1,19 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { ContactFormStep } from '../steps/ContactFormStep'
 import { interpolatingTranslate } from './test-utils'
 
+const mockLocale = vi.hoisted(() => ({ value: 'en' }))
+
 vi.mock('next-intl', () => ({
   useTranslations: () => interpolatingTranslate,
-  useLocale: () => 'en',
+  useLocale: () => mockLocale.value,
 }))
+
+afterEach(() => {
+  mockLocale.value = 'en'
+})
 
 function fillValidForm(): void {
   fireEvent.change(screen.getByLabelText('contact.familyName'), { target: { value: '山田' } })
@@ -84,6 +90,47 @@ describe('ContactFormStep', () => {
     expect(onSubmit).not.toHaveBeenCalled()
     expect(screen.getByLabelText('contact.email')).toHaveAttribute('aria-invalid', 'true')
     expect(screen.getByText('invalidEmail')).toBeInTheDocument()
+  })
+
+  it('submits the company when provided, and omits blank optional fields entirely', () => {
+    const onSubmit = vi.fn()
+    render(<ContactFormStep onSubmit={onSubmit} onBack={vi.fn()} />)
+
+    fillValidForm()
+    fireEvent.change(screen.getByLabelText('contact.company'), { target: { value: 'Acme Co.' } })
+    fireEvent.click(screen.getByRole('button', { name: 'contact.continue' }))
+
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({ company: 'Acme Co.' })
+  })
+
+  it('does not require kana for English users: submits without it and sends no kana keys', () => {
+    const onSubmit = vi.fn()
+    render(<ContactFormStep onSubmit={onSubmit} onBack={vi.fn()} />)
+
+    fireEvent.change(screen.getByLabelText('contact.familyName'), { target: { value: 'Smith' } })
+    fireEvent.change(screen.getByLabelText('contact.givenName'), { target: { value: 'Alex' } })
+    fireEvent.change(screen.getByLabelText('contact.phone'), { target: { value: '090-0000-0000' } })
+    fireEvent.click(screen.getByRole('button', { name: 'contact.continue' }))
+
+    expect(onSubmit).toHaveBeenCalledOnce()
+    const submitted = onSubmit.mock.calls[0]?.[0]
+    expect(submitted?.family_name_kana).toBeUndefined()
+    expect(submitted?.given_name_kana).toBeUndefined()
+  })
+
+  it('requires both kana fields for Japanese users and marks them invalid', () => {
+    mockLocale.value = 'ja'
+    const onSubmit = vi.fn()
+    render(<ContactFormStep onSubmit={onSubmit} onBack={vi.fn()} />)
+
+    fireEvent.change(screen.getByLabelText('contact.familyName'), { target: { value: '山田' } })
+    fireEvent.change(screen.getByLabelText('contact.givenName'), { target: { value: '太郎' } })
+    fireEvent.change(screen.getByLabelText('contact.phone'), { target: { value: '090-0000-0000' } })
+    fireEvent.click(screen.getByRole('button', { name: 'contact.continue' }))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('contact.familyNameKana')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByLabelText('contact.givenNameKana')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('calls onBack when the back button is clicked', () => {

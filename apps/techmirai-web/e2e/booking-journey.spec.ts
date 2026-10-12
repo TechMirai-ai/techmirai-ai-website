@@ -64,17 +64,17 @@ test('completes the full booking journey: visit type through the patient-card su
   await page.goto('/en/booking')
 
   await test.step('step 1: visit type', async () => {
-    await expect(page.getByRole('heading', { name: 'Is this your first visit?' })).toBeVisible()
-    await page.getByRole('button', { name: 'First visit (初診)' }).click()
+    await expect(page.getByRole('heading', { name: 'Have you consulted with us before?' })).toBeVisible()
+    await page.getByRole('button', { name: 'First time with us' }).click()
   })
 
   await test.step('step 2: service selection', async () => {
-    await expect(page.getByRole('heading', { name: 'Choose a service' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Choose a consultation' })).toBeVisible()
     await page.getByRole('button', { name: /General Checkup/ }).click()
   })
 
   await test.step('step 3: calendar — pick a slot', async () => {
-    await expect(page.getByRole('heading', { name: 'Choose a date and time' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Pick a date and time' })).toBeVisible()
 
     const accessibilityScan = await new AxeBuilder({ page }).include('.booking-flow').analyze()
     expect(accessibilityScan.violations).toEqual([])
@@ -98,7 +98,7 @@ test('completes the full booking journey: visit type through the patient-card su
   })
 
   await test.step('step 5: confirmation — submit is disabled while reserve() is pending, never optimistic', async () => {
-    await expect(page.getByRole('heading', { name: 'Confirm your appointment' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Confirm', exact: true })).toBeVisible()
     await expect(page.getByText('General Checkup')).toBeVisible()
     await expect(page.getByText('山田 太郎')).toBeVisible()
 
@@ -112,11 +112,11 @@ test('completes the full booking journey: visit type through the patient-card su
     // While the (deliberately delayed) mock is still pending: button
     // disabled, no optimistic success render.
     await expect(confirmButton).toBeDisabled()
-    await expect(page.getByText('Booking confirmed')).not.toBeVisible()
+    await expect(page.getByText('Your consultation is booked.')).not.toBeVisible()
   })
 
-  await test.step('step 6: success — the 診察券 patient card', async () => {
-    await expect(page.getByText('Booking confirmed')).toBeVisible()
+  await test.step('step 6: success — the booking confirmation card', async () => {
+    await expect(page.getByText('Your consultation is booked.')).toBeVisible()
     await expect(page.getByText('E2E1234')).toBeVisible()
     await expect(page.getByText('山田 太郎')).toBeVisible()
   })
@@ -124,7 +124,7 @@ test('completes the full booking journey: visit type through the patient-card su
 
 test('does not allow navigating the calendar into the past', async ({ page }) => {
   await page.goto('/en/booking')
-  await page.getByRole('button', { name: 'First visit (初診)' }).click()
+  await page.getByRole('button', { name: 'First time with us' }).click()
   await page.getByRole('button', { name: /General Checkup/ }).click()
 
   await expect(page.getByRole('button', { name: 'Previous week' })).toBeDisabled()

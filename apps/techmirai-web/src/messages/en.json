@@ -57,20 +57,20 @@
     "ctaBanner": "Get in touch",
     "booking": {
       "visitType": {
-        "title": "Is this your first visit?",
-        "first": "First visit (初診)",
-        "returning": "Returning patient (再診)",
-        "firstVisitUnavailable": "No services are currently available for first-time visitors. Please call the clinic directly."
+        "title": "Have you consulted with us before?",
+        "first": "First time with us",
+        "returning": "Existing client",
+        "firstVisitUnavailable": "[TBD: no consultations available message]"
       },
       "service": {
-        "title": "Choose a service",
+        "title": "Choose a consultation",
         "durationMinutes": "{minutes} min",
         "priceLabel": "¥{price}",
         "noPrice": "Price on request",
         "loading": "Loading services…"
       },
       "calendar": {
-        "title": "Choose a date and time",
+        "title": "Pick a date and time",
         "prevWeek": "Previous week",
         "nextWeek": "Next week",
         "loading": "Loading availability…",
@@ -87,19 +87,22 @@
         "title": "Your details",
         "familyName": "Family name",
         "givenName": "Given name",
+        "kana": "Name in kana (optional for English users)",
         "familyNameKana": "Family name (kana)",
         "givenNameKana": "Given name (kana)",
+        "company": "Company or shop name",
         "phone": "Phone number",
         "email": "Email address",
         "emailOptionalHint": "Optional — we'll only use this to send a confirmation.",
         "continue": "Continue"
       },
       "confirmation": {
-        "title": "Confirm your appointment",
+        "title": "Confirm",
         "visitTypeLabel": "Visit type",
         "serviceLabel": "Service",
         "dateTimeLabel": "Date & time",
         "nameLabel": "Name",
+        "companyLabel": "Company or shop name",
         "phoneLabel": "Phone",
         "emailLabel": "Email",
         "editLink": "Choose a different time",
@@ -107,11 +110,11 @@
         "submitting": "Confirming…"
       },
       "success": {
-        "title": "Booking confirmed",
-        "clinicNameLabel": "Patient Card",
+        "title": "Your consultation is booked.",
+        "clinicNameLabel": "[TBD: booking card label]",
         "confirmationCodeLabel": "Confirmation code",
         "dateTimeLabel": "Appointment",
-        "screenshotHint": "Please save or screenshot this card and bring it to your appointment.",
+        "screenshotHint": "Please save or screenshot this confirmation.",
         "manageLinkLabel": "Manage or cancel your appointment"
       },
       "errors": {
@@ -119,8 +122,8 @@
         "slotClosed": "That time is no longer available. Please choose another time.",
         "rateLimited": "Too many requests. Please wait a moment and try again.",
         "invalidInput": "Some information could not be saved. Please check your details and try again.",
-        "phoneAlreadyRegistered": "This phone number is already registered. Please check your details, or contact the clinic if you believe this is a mistake.",
-        "cutoffPassed": "This appointment is too close to its scheduled time to be changed online. Please call the clinic.",
+        "phoneAlreadyRegistered": "This phone number is already registered. Please check your details, or contact us if you believe this is a mistake.",
+        "cutoffPassed": "This appointment is too close to its scheduled time to be changed online. Please call us.",
         "generic": "Something went wrong. Please try again."
       },
       "progress": {
@@ -140,7 +143,7 @@
           "title": "Choose a new time",
           "confirm": "Confirm new time",
           "success": "Your appointment has been rescheduled.",
-          "successPartial": "Your new appointment is confirmed, but we couldn't automatically cancel your previous one. Please contact the clinic to confirm it's cancelled."
+          "successPartial": "Your new appointment is confirmed, but we couldn't automatically cancel your previous one. Please contact us to confirm it's cancelled."
         }
       },
       "linePicker": {

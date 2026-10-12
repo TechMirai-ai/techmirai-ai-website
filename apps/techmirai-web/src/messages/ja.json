@@ -57,20 +57,20 @@
     "ctaBanner": "お問い合わせ",
     "booking": {
       "visitType": {
-        "title": "今回は初診ですか?",
-        "first": "初診",
-        "returning": "再診",
-        "firstVisitUnavailable": "現在、初診で予約できる診療はありません。お手数ですが、お電話にてお問い合わせください。"
+        "title": "以前、当社にご相談いただいたことはありますか？",
+        "first": "はじめてのご相談",
+        "returning": "既存のお客様",
+        "firstVisitUnavailable": "[JA TODO]"
       },
       "service": {
-        "title": "診療内容を選択",
+        "title": "ご相談内容を選ぶ",
         "durationMinutes": "{minutes}分",
         "priceLabel": "¥{price}",
         "noPrice": "料金はお問い合わせください",
         "loading": "読み込み中…"
       },
       "calendar": {
-        "title": "日時を選択",
+        "title": "日時を選ぶ",
         "prevWeek": "前の週",
         "nextWeek": "次の週",
         "loading": "空き状況を読み込み中…",
@@ -84,22 +84,25 @@
         }
       },
       "contact": {
-        "title": "ご連絡先",
+        "title": "お客様情報",
         "familyName": "姓",
         "givenName": "名",
+        "kana": "お名前（フリガナ）",
         "familyNameKana": "セイ",
         "givenNameKana": "メイ",
+        "company": "会社名・店舗名",
         "phone": "電話番号",
         "email": "メールアドレス",
         "emailOptionalHint": "任意 — 予約確認のみに使用します。",
         "continue": "次へ"
       },
       "confirmation": {
-        "title": "予約内容の確認",
-        "visitTypeLabel": "受診区分",
-        "serviceLabel": "診療内容",
+        "title": "内容の確認",
+        "visitTypeLabel": "[JA TODO]",
+        "serviceLabel": "[JA TODO]",
         "dateTimeLabel": "日時",
         "nameLabel": "お名前",
+        "companyLabel": "会社名・店舗名",
         "phoneLabel": "電話番号",
         "emailLabel": "メールアドレス",
         "editLink": "別の日時を選ぶ",
@@ -107,11 +110,11 @@
         "submitting": "予約中…"
       },
       "success": {
-        "title": "予約が確定しました",
-        "clinicNameLabel": "診察券",
+        "title": "ご予約が完了しました。",
+        "clinicNameLabel": "[JA TODO]",
         "confirmationCodeLabel": "予約番号",
         "dateTimeLabel": "予約日時",
-        "screenshotHint": "この画面を保存またはスクリーンショットし、当日ご来院の際にご提示ください。",
+        "screenshotHint": "[JA TODO]",
         "manageLinkLabel": "予約の変更・キャンセルはこちら"
       },
       "errors": {
@@ -119,7 +122,7 @@
         "slotClosed": "その時間は現在ご利用いただけません。別の時間をお選びください。",
         "rateLimited": "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
         "invalidInput": "入力内容を保存できませんでした。内容をご確認のうえ、もう一度お試しください。",
-        "phoneAlreadyRegistered": "この電話番号はすでに登録されています。内容をご確認いただくか、心当たりがない場合はクリニックまでお問い合わせください。",
+        "phoneAlreadyRegistered": "[JA TODO]",
         "cutoffPassed": "ご予約日時が近いため、オンラインでの変更はできません。お電話にてお問い合わせください。",
         "generic": "エラーが発生しました。もう一度お試しください。"
       },
@@ -140,7 +143,7 @@
           "title": "新しい日時を選択",
           "confirm": "この日時に変更する",
           "success": "ご予約の日時を変更しました。",
-          "successPartial": "新しいご予約は確定しましたが、以前のご予約を自動的にキャンセルできませんでした。以前のご予約のキャンセルについては、クリニックまでお問い合わせください。"
+          "successPartial": "[JA TODO]"
         }
       },
       "linePicker": {

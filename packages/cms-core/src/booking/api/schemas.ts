@@ -86,15 +86,24 @@ export type AvailabilityResponse = z.infer<typeof availabilityResponseSchema>
 
 const nameFieldSchema = z.string().min(1).max(200)
 
+// Kana is optional here and required per locale on the request (see
+// reserveRequestSchema's superRefine) — Spec 12.4: optional for English users,
+// required in Japanese. `company` is the Spec 12.4 "Company or shop name" field.
 export const customerInputSchema = z.object({
   family_name: nameFieldSchema,
   given_name: nameFieldSchema,
-  family_name_kana: nameFieldSchema,
-  given_name_kana: nameFieldSchema,
+  family_name_kana: nameFieldSchema.optional(),
+  given_name_kana: nameFieldSchema.optional(),
+  company: nameFieldSchema.optional(),
   phone: z.string().min(1).max(30),
   email: z.string().email().max(320).optional(),
 })
 export type CustomerInput = z.infer<typeof customerInputSchema>
+
+/** Mirrors the `customers` collection's own rule: kana is required unless the locale is 'en'. */
+export function isKanaRequiredForLocale(locale: string): boolean {
+  return locale !== 'en'
+}
 
 export const reserveRequestSchema = z.object({
   service_id: entityIdSchema,
@@ -134,6 +143,13 @@ export const reserveRequestSchema = z.object({
    * wire, it is not itself a trusted identity.
    */
   line_id_token: z.string().optional(),
+}).superRefine((request, ctx) => {
+  if (!isKanaRequiredForLocale(request.locale)) return
+  for (const field of ['family_name_kana', 'given_name_kana'] as const) {
+    if (!request.customer[field]) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['customer', field], message: 'Kana is required' })
+    }
+  }
 })
 export type ReserveRequest = z.infer<typeof reserveRequestSchema>
 

@@ -67,6 +67,24 @@ describe('handleReserve', () => {
     expect(updatedSlot['bookedCount']).toBe(1)
   })
 
+  it('stores the company, and accepts an English booking with no kana (Spec 12.4)', async () => {
+    const slot = await createSlot(payload, { resourceId, capacity: 1 })
+    const phone = uniquePhone()
+
+    const result = await handleReserve(
+      payload,
+      reserveInput({
+        slot_id: slot.id,
+        locale: 'en',
+        customer: { family_name: 'Smith', given_name: 'Alex', phone, company: 'Acme Co.' },
+      }),
+    )
+
+    expect(result.confirmation_code).toEqual(expect.any(String))
+    const customers = await payload.find({ collection: 'customers', where: { phone: { equals: phone } }, limit: 1 })
+    expect(customers.docs[0]).toMatchObject({ company: 'Acme Co.', locale: 'en' })
+  })
+
   it('returns an access token that authenticates against the stored hash', async () => {
     const slot = await createSlot(payload, { resourceId, capacity: 1 })
 

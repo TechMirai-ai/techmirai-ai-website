@@ -85,6 +85,12 @@ export function ConfirmationStep({
             {customer.family_name} {customer.given_name}
           </dd>
         </div>
+        {customer.company && (
+          <div className="flex justify-between gap-4">
+            <dt className="text-[var(--booking-text-muted)]">{t('confirmation.companyLabel')}</dt>
+            <dd>{customer.company}</dd>
+          </div>
+        )}
         <div className="flex justify-between gap-4">
           <dt className="text-[var(--booking-text-muted)]">{t('confirmation.phoneLabel')}</dt>
           <dd>{customer.phone}</dd>

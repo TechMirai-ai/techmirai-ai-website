@@ -1,13 +1,13 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 
 import { BookingButton } from '../shared/BookingButton'
 import { ProgressIndicator } from '../shared/ProgressIndicator'
 import { StepShell } from '../shared/StepShell'
-import { customerInputSchema } from '../../api/schemas'
+import { customerInputSchema, isKanaRequiredForLocale } from '../../api/schemas'
 import type { CustomerInput } from '../../api/schemas'
 
 interface ContactFormStepProps {
@@ -24,7 +24,14 @@ interface ContactFormStepProps {
   initialValues?: Partial<CustomerInput> | undefined
 }
 
-type FieldName = 'family_name' | 'given_name' | 'family_name_kana' | 'given_name_kana' | 'phone' | 'email'
+type FieldName =
+  | 'family_name'
+  | 'given_name'
+  | 'family_name_kana'
+  | 'given_name_kana'
+  | 'company'
+  | 'phone'
+  | 'email'
 type FormValues = Record<FieldName, string>
 
 const EMPTY_FORM: FormValues = {
@@ -32,6 +39,7 @@ const EMPTY_FORM: FormValues = {
   given_name: '',
   family_name_kana: '',
   given_name_kana: '',
+  company: '',
   phone: '',
   email: '',
 }
@@ -89,15 +97,30 @@ function toFormValues(customer: Partial<CustomerInput> | undefined): FormValues 
     given_name: customer.given_name ?? '',
     family_name_kana: customer.family_name_kana ?? '',
     given_name_kana: customer.given_name_kana ?? '',
+    company: customer.company ?? '',
     phone: customer.phone ?? '',
     email: customer.email ?? '',
   }
 }
 
-/** Step 4: name, kana, phone, email (optional) — field shapes mirror customerInputSchema exactly. */
+/** Blank optional inputs are omitted, not sent as empty strings (the schema rejects '' for names). */
+function toCandidate(values: FormValues): Record<string, string | undefined> {
+  return {
+    family_name: values.family_name,
+    given_name: values.given_name,
+    family_name_kana: values.family_name_kana || undefined,
+    given_name_kana: values.given_name_kana || undefined,
+    company: values.company || undefined,
+    phone: values.phone,
+    email: values.email || undefined,
+  }
+}
+
+/** Step 4: name, kana (required unless English), company, phone, email (optional) — shapes mirror customerInputSchema. */
 export function ContactFormStep({ onSubmit, onBack, initialValues }: ContactFormStepProps) {
   const t = useTranslations('blocks.booking')
   const tForm = useTranslations('form')
+  const locale = useLocale()
   const [values, setValues] = useState<FormValues>(() => toFormValues(initialValues))
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({})
 
@@ -107,16 +130,23 @@ export function ContactFormStep({ onSubmit, onBack, initialValues }: ContactForm
 
   function handleSubmit(event: FormEvent): void {
     event.preventDefault()
-    const candidate = { ...values, email: values.email || undefined }
+    const candidate = toCandidate(values)
     const result = customerInputSchema.safeParse(candidate)
+    const fieldErrors: Partial<Record<FieldName, string>> = {}
     if (!result.success) {
-      const fieldErrors: Partial<Record<FieldName, string>> = {}
       for (const issue of result.error.issues) {
         const field = issue.path[0] as FieldName | undefined
         if (field && !fieldErrors[field]) {
           fieldErrors[field] = field === 'email' ? tForm('invalidEmail') : tForm('required')
         }
       }
+    }
+    if (isKanaRequiredForLocale(locale)) {
+      for (const field of ['family_name_kana', 'given_name_kana'] as const) {
+        if (!candidate[field] && !fieldErrors[field]) fieldErrors[field] = tForm('required')
+      }
+    }
+    if (!result.success || Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors)
       return
     }
@@ -136,10 +166,14 @@ export function ContactFormStep({ onSubmit, onBack, initialValues }: ContactForm
           <Field id="family_name" label={t('contact.familyName')} value={values.family_name} error={errors.family_name} onChange={(v) => set('family_name', v)} autoComplete="family-name" />
           <Field id="given_name" label={t('contact.givenName')} value={values.given_name} error={errors.given_name} onChange={(v) => set('given_name', v)} autoComplete="given-name" />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <Field id="family_name_kana" label={t('contact.familyNameKana')} value={values.family_name_kana} error={errors.family_name_kana} onChange={(v) => set('family_name_kana', v)} />
-          <Field id="given_name_kana" label={t('contact.givenNameKana')} value={values.given_name_kana} error={errors.given_name_kana} onChange={(v) => set('given_name_kana', v)} />
-        </div>
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1 text-sm font-medium text-[var(--booking-text)]">{t('contact.kana')}</legend>
+          <div className="grid grid-cols-2 gap-3">
+            <Field id="family_name_kana" label={t('contact.familyNameKana')} value={values.family_name_kana} error={errors.family_name_kana} onChange={(v) => set('family_name_kana', v)} />
+            <Field id="given_name_kana" label={t('contact.givenNameKana')} value={values.given_name_kana} error={errors.given_name_kana} onChange={(v) => set('given_name_kana', v)} />
+          </div>
+        </fieldset>
+        <Field id="company" label={t('contact.company')} value={values.company} error={errors.company} onChange={(v) => set('company', v)} autoComplete="organization" />
         <Field id="phone" label={t('contact.phone')} value={values.phone} error={errors.phone} onChange={(v) => set('phone', v)} autoComplete="tel" type="tel" />
         <div>
           <Field id="email" label={t('contact.email')} value={values.email} error={errors.email} onChange={(v) => set('email', v)} autoComplete="email" type="email" />

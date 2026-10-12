@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import siteConfig from '../site.config'
+
 /**
  * Manage-appointment page journey: reached via a magic link (?code=&token=),
  * mirroring booking-journey.spec.ts's approach of mocking the booking API at
@@ -79,8 +81,13 @@ test('shows the clinic phone number instead of buttons once past the cutoff', as
   await expect(page.getByText('E2E1234')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Cancel appointment' })).not.toBeVisible()
   await expect(page.getByRole('button', { name: 'Reschedule' })).not.toBeVisible()
-  // apps/techmirai-web/site.config.ts's contact.phone.
-  await expect(page.getByText(/\+81-3-5432-1188/)).toBeVisible()
+  // The page shows site.config.ts's contact.phone — read from the same config
+  // so this does not go stale again (today it is the bracketed placeholder
+  // tracked as F1-01 in docs/PLACEHOLDER-REGISTER.md, not a real number).
+  const contactPhone = siteConfig.contact.phone ?? ''
+  expect(contactPhone).not.toBe('')
+  // The number also appears in the footer, so scope to the cutoff message itself.
+  await expect(page.getByText('too close to its scheduled time').filter({ hasText: contactPhone })).toBeVisible()
 })
 
 test('completes a full reschedule: pick a new slot, confirm, see the success message', async ({ page }) => {

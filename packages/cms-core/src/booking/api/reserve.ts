@@ -175,6 +175,7 @@ async function resolveCustomer(
       givenName: input.customer.given_name,
       familyNameKana: input.customer.family_name_kana,
       givenNameKana: input.customer.given_name_kana,
+      company: input.customer.company,
       phone: input.customer.phone,
       email: input.customer.email,
       locale: input.locale,
