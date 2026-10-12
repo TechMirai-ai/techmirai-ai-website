@@ -87,6 +87,8 @@ Columns: ID | page and field | locale | placeholder text | Spec section | owner 
 | I3-05 | `/case-studies/sadiatec` `label-value-list` row "Screenshots" (Spec §13's closing line) | en/ja | `[PLACEHOLDER: homepage, admin panel (private data hidden) and chatbot-open screenshots — pending Sadiatec's written approval]` (same bracket, both locales) | Spec §13 | Sanaul Haque | OPEN — same F1-14 permission gate; no screenshots exist yet, and CLAUDE.md rule 8 bars any generated substitute |
 | I3-06 | `/case-studies/sadiatec` whole page (Spec §13); `case-studies` collection `sadiatec` doc's own `visible`/`aiVisible` fields | n/a | n/a — process/permission item | Spec §13; WORK-ORDER.md §2.2 decision 14 | Jamal → Sanaul Haque | OPEN — same gate as F1-14. Pack-3/I3 built the full page content but seeded `visible: false` and `aiVisible: false`; the dedicated route (`[locale]/case-studies/sadiatec/page.tsx`) keeps rendering `ComingSoonStub` until a developer flips `visible` to `true` after Sadiatec's written OK. `publishedAt` is seeded as `2026-07-31` (the Spec's build-period end) purely as internal sort metadata — never displayed as a "published on" date |
 
+| I4-01 | `/thanks` `page-hero` body | en/ja | `[1 business day]` / `[1営業日]` and `[3 business days]` / `[3営業日]` | Spec §12.3 | Jamal | OPEN — same underlying facts as whatever /assessment's own Pack-4/J1 build later registers for its own copy of this timeline; a future fix to either number must update both pages |
+
 **Note on the admin-panel screenshot and sample assessment report visuals (Spec §19):** still
 not generated — the Spec gives no explicit pixel size for either, and inventing a
 confident-looking default size would violate CLAUDE.md's "do not invent facts" rule. The homepage

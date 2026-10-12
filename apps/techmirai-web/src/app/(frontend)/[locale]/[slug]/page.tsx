@@ -57,11 +57,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const metaDesc = typeof meta['description'] === 'string' ? meta['description'] : ''
   const metaImage = meta['image'] as Record<string, unknown> | null | undefined
   const metaImageUrl = metaImage && typeof metaImage['url'] === 'string' ? metaImage['url'] : undefined
+  const noindex = meta['noindex'] === true
 
   return {
     title: metaTitle,
     ...(metaDesc ? { description: metaDesc } : {}),
     ...(metaImageUrl ? { openGraph: { images: [metaImageUrl] } } : {}),
+    // Pack-3/I4: generic, reusable — any page with `meta.noindex` checked
+    // (e.g. /thanks, or a future form-result/draft page) gets a real
+    // noindex,nofollow robots directive, not just the robots.txt disallow.
+    ...(noindex ? { robots: { index: false, follow: false } } : {}),
   }
 }
 
@@ -170,6 +175,23 @@ export default async function DynamicPage({ params }: Props) {
             hours: siteConfig.contact.businessHours?.['weekdays'] ?? '',
           },
         } as RawBlock
+      }
+
+      // Pack-3/I4: /thanks's page-hero carries the Spec §12.3 "message us on
+      // LINE" link as its own secondaryButton, with the same '#' sentinel
+      // convention cta-banner already uses above — no other page-hero
+      // secondaryButton in the repo uses '#' (they link to real hrefs like
+      // /assessment or a live-demo URL), so this only ever fires where a
+      // seed file deliberately opts in.
+      if (block.blockType === 'page-hero') {
+        const secondaryButton = block['secondaryButton'] as Record<string, unknown> | undefined
+        if (secondaryButton?.['href'] === '#') {
+          const { lineButton } = await resolveHeaderData(locale)
+          return {
+            ...block,
+            secondaryButton: { ...secondaryButton, href: lineButton.href },
+          } as RawBlock
+        }
       }
 
       // === FOUNDER-VISIBILITY GATING (Pack-3/I2, Spec §2.3) ===

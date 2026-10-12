@@ -146,6 +146,15 @@ export function PagesCollection(siteConfig: SiteConfig): CollectionConfig {
           { name: 'title', type: 'text', localized: true },
           { name: 'description', type: 'textarea', localized: true },
           { name: 'image', type: 'upload', relationTo: 'media' },
+          {
+            name: 'noindex',
+            type: 'checkbox',
+            defaultValue: false,
+            admin: {
+              description:
+                'Adds a noindex,nofollow robots directive to this page (Pack-3/I4 — e.g. /thanks, or any other form-result/draft page).',
+            },
+          },
         ],
       },
       aiVisibleField,

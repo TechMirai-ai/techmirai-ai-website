@@ -41,6 +41,7 @@ const PLAIN_PAGES: PlainPageSeed[] = [
   { slug: 'technology', title: { en: 'Technology', ja: 'AI開発' } },
   { slug: 'assessment', title: { en: 'Free AI Website Assessment', ja: '無料AIホームページ診断' } },
   { slug: 'faq', title: { en: 'FAQ', ja: 'よくあるご質問' } },
+  { slug: 'thanks', title: { en: 'Thank you', ja: '送信完了' } },
   { slug: 'privacy', title: { en: 'Privacy Policy', ja: '[JA TODO]' } },
   { slug: 'terms', title: { en: 'Terms of Use', ja: '[JA TODO]' } },
   { slug: 'legal-notice', title: { en: 'Legal Notice', ja: '[JA TODO]' } },

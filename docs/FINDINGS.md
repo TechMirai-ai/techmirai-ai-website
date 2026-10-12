@@ -805,3 +805,36 @@ data, not just the HTTP status code. Flagging in case any other
 not-yet-built Pack-3/4 slug (case-study was checked and does NOT have this
 problem — it already uses a dedicated route, not a stub+catch-all pair)
 still has its own leftover stub.
+
+## 2026-10-12 — Pack-3/I4: `/thanks` omits the Spec's booking-call CTA (confirmed Spec deviation)
+
+Spec §12.3's thank-you body reads "Want to talk sooner? Book a 30-minute
+call below or message us on LINE." Consultation booking is Pack 4/J2 scope
+and doesn't exist yet, and this page is explicitly generic/reusable for any
+form's success redirect, not specific to the assessment flow that section
+was written for. Per the confirmed I4 plan review, only the clause
+"Book a 30-minute call below or " is removed (the rest of the sentence,
+both `[1 business day]`/`[3 business days]` brackets, and every other word
+are unchanged) rather than inventing a booking URL or building booking
+functionality prematurely. Whoever builds Pack 4/J2 should revisit this
+page once a real booking destination exists — restoring the full sentence
+with a working button is the natural follow-up, not a new decision.
+
+## 2026-10-12 — Pack-3/I1-I3 pages never set `meta.title`/`meta.description`/`aiVisible` from their own content
+
+While building `/thanks`'s seed file (the first one that needs to set
+`meta.noindex`/`aiVisible` correctly, per Spec), checked whether any prior
+page seed file (`pricing.ts`, `security.ts`, `about.ts`, `technology.ts`,
+...) ever touches `meta` or `aiVisible` — none do. Every one of those pages
+still carries whatever `plain-pages.ts`'s initial shell wrote: `meta.title`/
+`meta.description` as the literal placeholder `[TBD: Spec <Page> page title
+not yet seeded]` (visible as the actual `<title>` tag and meta description
+on the live page, not just an admin-only field), and `aiVisible` at its
+schema default of `true` (meaning every one of those pages is currently
+included in the AI chat corpus, whether or not that's actually correct for
+each). Not fixed here — out of scope for I4, and each page's correct
+`meta`/`aiVisible` values are a judgment call for whoever owns that page,
+not something to batch-guess. Flagging for a future pass (likely best done
+right before the whole-site launch-scan sweep) to give every built page
+real `meta.title`/`meta.description` and a deliberate `aiVisible` value
+instead of the shell's placeholder.

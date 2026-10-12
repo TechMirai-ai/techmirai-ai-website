@@ -571,3 +571,42 @@ grep), so no already-seeded content depends on the admin-UI "required" nag for e
 
 **Status:** fixed. Verify `pnpm seed --confirm` completes `/about`'s seed step without a
 `ValidationError`.
+
+## 2026-10-12 — Pack-3/I4: generic page-level noindex support (addition)
+
+**Why:** `/thanks` (Spec p.16: "After any form. noindex") needed a real `<meta name="robots">`
+directive, not just the existing `robots.ts` disallow entry — search engines that already indexed
+a URL before a robots.txt disallow was added can still show it in results; a page-level noindex
+tag is the standard belt-and-suspenders fix, and the pack's own I4 Done-when list requires it
+("/thanks sends a noindex signal").
+
+**Fix:** added one additive `noindex` checkbox field to `PagesCollection`'s existing `meta` group
+(`packages/cms-core/src/payload/collections/pages.ts`) and one additive branch in
+`[locale]/[slug]/page.tsx`'s `generateMetadata` that adds `robots: { index: false, follow: false }`
+when `meta.noindex` is checked. Generic and reusable by any future page (draft pages, other
+form-result pages), not thanks-specific. Defaults to `false`, so every existing page's rendered
+metadata is unchanged.
+
+**Status:** added. Verify `/thanks` and `/en/thanks` render a `noindex,nofollow` robots meta tag
+and that an unrelated page (e.g. `/about`) is unaffected.
+
+## 2026-10-12 — Pack-3/I4: page-hero LINE-link injection, reusing the cta-banner sentinel idiom
+
+**Why:** `/thanks`'s Spec §12.3 body references a "message us on LINE" link. The real LINE URL is
+a WORK-ORDER decision-5/F1-14-adjacent placeholder (`site.config.ts`'s `reception.staffLineUrl`,
+not a real LINE account yet) and is only resolved at render time via `resolveHeaderData()` —
+exactly the mechanism `[locale]/[slug]/page.tsx`'s existing `cta-banner` branch already uses
+(injecting the resolved LINE href into any `cta-banner.secondaryButton` when `showContactStrip`
+is true). `/thanks` uses a `page-hero` block, not `cta-banner` (every existing `cta-banner` usage
+sets a required `primaryButton`, and the Spec gives this page no primary action once the booking
+CTA is omitted — see docs/FINDINGS.md), so `page-hero` had no equivalent injection path.
+
+**Fix:** added one additive branch to the same block-resolution loop: when a `page-hero` block's
+`secondaryButton.href` is the sentinel `'#'`, it's replaced with the real resolved LINE href —
+same sentinel convention `cta-banner` already uses, just extended to one more block type. Confirmed
+no existing `page-hero` usage anywhere in the repo sets `secondaryButton.href` to `'#'` (both
+existing usages, on `/ai-reception`, link to a real demo URL), so this only fires where a seed file
+deliberately opts in.
+
+**Status:** added. Verify `/thanks` and `/en/thanks` render the LINE button with a real resolved
+href (not the literal `'#'`), in both locales.
