@@ -53,35 +53,36 @@ function baseProps(overrides: Partial<Parameters<typeof CalendarGrid>[0]> = {}) 
 describe('CalendarGrid', () => {
   it('renders a cell showing the plenty symbol for a fully-open slot', () => {
     render(<CalendarGrid {...baseProps()} />)
-    expect(screen.getByRole('button', { name: /2027-01-04 01:00, Plenty available/ })).toHaveTextContent('◎')
+    expect(screen.getByRole('button', { name: /2027-01-04 10:00, Plenty available/ })).toHaveTextContent('◎')
   })
 
   it('renders a cell showing the full symbol and disables it', () => {
     render(<CalendarGrid {...baseProps()} />)
-    const fullCell = screen.getByRole('button', { name: /2027-01-05 01:00, Full/ })
+    const fullCell = screen.getByRole('button', { name: /2027-01-05 10:00, Full/ })
     expect(fullCell).toHaveTextContent('×')
     expect(fullCell).toBeDisabled()
   })
 
   it('renders a closed (−) cell for a date with no slot at that time, and disables it', () => {
     render(<CalendarGrid {...baseProps()} />)
-    // Week runs 2027-01-04..10; only 01-04 and 01-05 have a 01:00 slot, so
-    // every other day's 01:00 cell has no matching slot at all.
-    const closedCell = screen.getByRole('button', { name: /2027-01-06 01:00, Closed/ })
+    // Week runs 2027-01-04..10; only 01-04 and 01-05 have a slot at this time
+    // (01:00Z, shown as 10:00 in the booking zone), so every other day's cell
+    // has no matching slot at all.
+    const closedCell = screen.getByRole('button', { name: /2027-01-06 10:00, Closed/ })
     expect(closedCell).toHaveTextContent('−')
     expect(closedCell).toBeDisabled()
   })
 
   it('renders a real <button> for every cell, so it is reachable and activatable via keyboard by default', () => {
     render(<CalendarGrid {...baseProps()} />)
-    const plentyCell = screen.getByRole('button', { name: /2027-01-04 01:00, Plenty available/ })
+    const plentyCell = screen.getByRole('button', { name: /2027-01-04 10:00, Plenty available/ })
     expect(plentyCell.tagName).toBe('BUTTON')
     expect(plentyCell).not.toHaveAttribute('disabled')
   })
 
   it('meets the 48px minimum tap target on every cell', () => {
     render(<CalendarGrid {...baseProps()} />)
-    const plentyCell = screen.getByRole('button', { name: /2027-01-04 01:00, Plenty available/ })
+    const plentyCell = screen.getByRole('button', { name: /2027-01-04 10:00, Plenty available/ })
     expect(plentyCell.className).toContain('min-h-[48px]')
     expect(plentyCell.className).toContain('min-w-[48px]')
   })
@@ -89,7 +90,7 @@ describe('CalendarGrid', () => {
   it('shows the selected state with both a fill (background) and a border class — never color alone', () => {
     const props = baseProps({ selectedSlot: { slotId: 1, resourceId: 10, startsAt: '2027-01-04T01:00:00.000Z', endsAt: '2027-01-04T01:30:00.000Z' } })
     render(<CalendarGrid {...props} />)
-    const selectedCell = screen.getByRole('button', { name: /2027-01-04 01:00, Plenty available/ })
+    const selectedCell = screen.getByRole('button', { name: /2027-01-04 10:00, Plenty available/ })
     expect(selectedCell).toHaveAttribute('aria-pressed', 'true')
     expect(selectedCell.className).toContain('bg-[var(--booking-selected-bg)]')
     expect(selectedCell.className).toContain('border-2')
@@ -99,7 +100,7 @@ describe('CalendarGrid', () => {
   it('calls onSelectSlot with the representative slot when a selectable cell is clicked', () => {
     const onSelectSlot = vi.fn()
     render(<CalendarGrid {...baseProps({ onSelectSlot })} />)
-    fireEvent.click(screen.getByRole('button', { name: /2027-01-04 01:00, Plenty available/ }))
+    fireEvent.click(screen.getByRole('button', { name: /2027-01-04 10:00, Plenty available/ }))
     expect(onSelectSlot).toHaveBeenCalledWith({
       slotId: 1,
       resourceId: 10,
@@ -111,7 +112,7 @@ describe('CalendarGrid', () => {
   it('does not call onSelectSlot when a full (disabled) cell is clicked', () => {
     const onSelectSlot = vi.fn()
     render(<CalendarGrid {...baseProps({ onSelectSlot })} />)
-    fireEvent.click(screen.getByRole('button', { name: /2027-01-05 01:00, Full/ }))
+    fireEvent.click(screen.getByRole('button', { name: /2027-01-05 10:00, Full/ }))
     expect(onSelectSlot).not.toHaveBeenCalled()
   })
 

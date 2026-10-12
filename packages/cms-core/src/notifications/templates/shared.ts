@@ -1,3 +1,5 @@
+import { BOOKING_TIME_ZONE } from '../../booking/time-zone'
+
 export type SupportedLocale = 'ja' | 'en'
 
 export interface RenderedMessage {
@@ -30,9 +32,9 @@ export function escapeHtml(value: string): string {
 }
 
 /**
- * Appointment times are stored and displayed UTC-only throughout this app
- * (see CalendarStep.tsx) — no timezone conversion here, matching that
- * existing convention.
+ * Appointment instants are stored in UTC and displayed in the booking zone
+ * (Asia/Tokyo, approved decision D2 — see booking/time-zone.ts), which the
+ * Spec's "(JST)" confirmation text relies on.
  */
 export function formatDateTime(scheduledAtIso: string, locale: SupportedLocale): string {
   return new Intl.DateTimeFormat(locale === 'ja' ? 'ja-JP' : 'en-US', {
@@ -42,7 +44,7 @@ export function formatDateTime(scheduledAtIso: string, locale: SupportedLocale):
     weekday: 'short',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
+    timeZone: BOOKING_TIME_ZONE,
   }).format(new Date(scheduledAtIso))
 }
 

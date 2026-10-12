@@ -7,6 +7,7 @@ import { ProgressIndicator } from '../shared/ProgressIndicator'
 import { StepShell } from '../shared/StepShell'
 import type { BookableService, CustomerInput, ErrorResponse } from '../../api/schemas'
 import type { SelectedSlot, VisitType } from '../flow/types'
+import { BOOKING_TIME_ZONE } from '../../time-zone'
 
 interface ConfirmationStepProps {
   visitType: VisitType
@@ -54,7 +55,7 @@ export function ConfirmationStep({
   const dateTimeLabel = new Intl.DateTimeFormat(locale, {
     dateStyle: 'long',
     timeStyle: 'short',
-    timeZone: 'UTC',
+    timeZone: BOOKING_TIME_ZONE,
   }).format(new Date(slot.startsAt))
 
   const errorKey = submitError ? (ERROR_KEY_BY_CODE[submitError.code] ?? 'errors.generic') : null

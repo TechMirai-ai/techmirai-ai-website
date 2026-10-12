@@ -25,13 +25,14 @@ vi.mock('../../api/client', () => ({
 const FIXED_NOW = new Date('2027-01-06T09:00:00.000Z')
 const weekStart = startOfWeek(FIXED_NOW)
 const BOOKING_DATE = toDateOnlyString(getWeekDates(weekStart)[0]!)
-const SLOT_TIME = '01:00'
+const SLOT_TIME = '01:00' // UTC time the mocked availability is built at
+const SLOT_LABEL_TIME = '10:00' // the same instant as shown in the booking zone (Asia/Tokyo, UTC+9)
 const AVAILABILITY = buildAvailability(BOOKING_DATE, SLOT_TIME)
 
 function slotAriaLabel(): string {
   return interpolatingTranslate('calendar.selectedSlotLabel', {
     date: BOOKING_DATE,
-    time: SLOT_TIME,
+    time: SLOT_LABEL_TIME,
     symbolLabel: 'calendar.legend.plenty',
   })
 }

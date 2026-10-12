@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 
 import { BookingButton } from './shared/BookingButton'
 import type { LineManageAppointment } from '../api/schemas'
+import { BOOKING_TIME_ZONE } from '../time-zone'
 
 export interface LineManagePickerProps {
   appointments: LineManageAppointment[]
@@ -29,7 +30,7 @@ export function LineManagePicker({ appointments, onSelect }: LineManagePickerPro
         const dateTimeLabel = new Intl.DateTimeFormat(locale, {
           dateStyle: 'long',
           timeStyle: 'short',
-          timeZone: 'UTC',
+          timeZone: BOOKING_TIME_ZONE,
         }).format(new Date(appointment.scheduled_at))
 
         return (

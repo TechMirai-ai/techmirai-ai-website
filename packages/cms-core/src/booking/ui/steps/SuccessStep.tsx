@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 import { PatientCard } from '../shared/PatientCard'
 import type { ReserveResult } from '../flow/types'
+import { BOOKING_TIME_ZONE } from '../../time-zone'
 
 interface SuccessStepProps {
   clinicName: string
@@ -29,7 +30,7 @@ export function SuccessStep({ clinicName, customerName, startsAt, reserveResult,
   const dateTimeLabel = new Intl.DateTimeFormat(locale, {
     dateStyle: 'long',
     timeStyle: 'short',
-    timeZone: 'UTC',
+    timeZone: BOOKING_TIME_ZONE,
   }).format(new Date(startsAt))
 
   return (

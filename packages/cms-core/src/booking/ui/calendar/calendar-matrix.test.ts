@@ -26,7 +26,8 @@ describe('buildCalendarMatrix', () => {
       weekDates,
     )
 
-    expect(rows.map((r) => r.time)).toEqual(['01:00', '02:00'])
+    // starts_at is UTC; row times are shown in the booking zone (Asia/Tokyo, UTC+9).
+    expect(rows.map((r) => r.time)).toEqual(['10:00', '11:00'])
   })
 
   it('marks a cell as undefined (closed) when no slot exists for that date/time', () => {
@@ -44,7 +45,7 @@ describe('buildCalendarMatrix', () => {
       weekDates,
     )
 
-    const row = rows.find((r) => r.time === '01:00')!
+    const row = rows.find((r) => r.time === '10:00')!
     expect(row.cellsByDate['2027-01-04']).toBeDefined()
     expect(row.cellsByDate['2027-01-05']).toBeUndefined()
   })

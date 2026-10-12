@@ -5,6 +5,7 @@ import { assertResourceActive, assertServiceActive } from './entities'
 import type { SlotDoc } from './entities'
 import { isValidCalendarDate } from './schemas'
 import type { AvailabilityRequest, AvailabilityResponse } from './schemas'
+import { BOOKING_UTC_OFFSET, toBookingDate } from '../time-zone'
 
 /** Cache-Control max-age applied by the route handler — a plain HTTP TTL, no cache store. */
 export const AVAILABILITY_CACHE_TTL_SECONDS = 30
@@ -31,7 +32,8 @@ function assertValidRange(from: string, to: string): void {
 }
 
 /**
- * Slots in [from, to], grouped by (UTC) calendar date — including
+ * Slots in [from, to], grouped by booking-zone (Asia/Tokyo, see
+ * ../time-zone.ts) calendar date — including
  * fully-booked ones (remaining_capacity: 0), so the client can distinguish a
  * full slot from a time with no slot at all. service_id is validated but
  * does not filter results — see the comment on
@@ -47,8 +49,10 @@ export async function handleAvailability(payload: Payload, input: AvailabilityRe
   const where: Where = {
     status: { equals: 'open' },
     startsAt: {
-      greater_than_equal: `${input.from}T00:00:00.000Z`,
-      less_than_equal: `${input.to}T23:59:59.999Z`,
+      // [from 00:00, to 23:59:59.999] in the booking zone, passed to the
+      // database as UTC ISO instants (same format the query always used).
+      greater_than_equal: new Date(`${input.from}T00:00:00.000${BOOKING_UTC_OFFSET}`).toISOString(),
+      less_than_equal: new Date(`${input.to}T23:59:59.999${BOOKING_UTC_OFFSET}`).toISOString(),
     },
   }
   if (input.resource_id !== undefined) {
@@ -67,7 +71,7 @@ export async function handleAvailability(payload: Payload, input: AvailabilityRe
   for (const doc of result.docs as unknown as SlotDoc[]) {
     const remaining = Math.max(0, doc.capacity - doc.bookedCount)
 
-    const date = doc.startsAt.slice(0, 10)
+    const date = toBookingDate(doc.startsAt)
     const slots = grouped.get(date) ?? []
     slots.push({
       slot_id: doc.id,

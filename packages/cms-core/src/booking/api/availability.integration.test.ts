@@ -69,6 +69,21 @@ describe('handleAvailability', () => {
     expect(dates).not.toContain('2027-02-01')
   })
 
+  it('groups and range-filters by the booking-zone (Asia/Tokyo) date, not the UTC date', async () => {
+    // 2027-04-01T16:00Z is 2027-04-02 01:00 JST: it belongs to the 2nd, not the 1st.
+    await createSlotWithBookedCount({
+      resourceId,
+      startsAt: '2027-04-01T16:00:00.000Z',
+      endsAt: '2027-04-01T16:30:00.000Z',
+    })
+
+    const first = await handleAvailability(payload, { from: '2027-04-01', to: '2027-04-01', service_id: serviceId })
+    expect(first.dates.find((d) => d.date === '2027-04-01')).toBeUndefined()
+
+    const second = await handleAvailability(payload, { from: '2027-04-02', to: '2027-04-02', service_id: serviceId })
+    expect(second.dates.find((d) => d.date === '2027-04-02')?.slots).toHaveLength(1)
+  })
+
   it('excludes blocked and closed slots', async () => {
     const from = '2027-03-01'
     const to = '2027-03-01'

@@ -1,5 +1,6 @@
 import type { AvailabilityResponse } from '../../api/schemas'
 import type { SelectedSlot } from '../flow/types'
+import { toBookingTime } from '../../time-zone'
 
 export interface CalendarCellData {
   capacity: number
@@ -15,7 +16,7 @@ export interface CalendarCellData {
 }
 
 export interface CalendarMatrixRow {
-  /** "HH:MM", UTC, matching the API's starts_at convention. */
+  /** "HH:MM" in the booking zone (Asia/Tokyo, see ../../time-zone.ts); the API's starts_at stays UTC. */
   time: string
   cellsByDate: Record<string, CalendarCellData | undefined>
 }
@@ -26,14 +27,14 @@ export function buildCalendarMatrix(availability: AvailabilityResponse, weekDate
   const times = new Set<string>()
   for (const date of weekDates) {
     for (const slot of slotsByDate.get(date) ?? []) {
-      times.add(slot.starts_at.slice(11, 16))
+      times.add(toBookingTime(slot.starts_at))
     }
   }
 
   return [...times].sort().map((time) => {
     const cellsByDate: Record<string, CalendarCellData | undefined> = {}
     for (const date of weekDates) {
-      const slotsAtTime = (slotsByDate.get(date) ?? []).filter((slot) => slot.starts_at.slice(11, 16) === time)
+      const slotsAtTime = (slotsByDate.get(date) ?? []).filter((slot) => toBookingTime(slot.starts_at) === time)
       if (slotsAtTime.length === 0) continue
 
       const capacity = slotsAtTime.reduce((sum, slot) => sum + slot.capacity, 0)

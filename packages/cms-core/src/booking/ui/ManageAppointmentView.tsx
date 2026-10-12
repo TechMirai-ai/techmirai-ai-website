@@ -7,6 +7,7 @@ import type { AvailabilityLabelKey } from './calendar/availability-symbol'
 import { getWeekDates } from './calendar/week'
 import { useManageAppointment } from './flow/useManageAppointment'
 import { BookingButton } from './shared/BookingButton'
+import { BOOKING_TIME_ZONE } from '../time-zone'
 
 export interface ManageAppointmentViewProps {
   clinicName: string
@@ -65,7 +66,7 @@ export function ManageAppointmentView({
   const dateTimeLabel = new Intl.DateTimeFormat(locale, {
     dateStyle: 'long',
     timeStyle: 'short',
-    timeZone: 'UTC',
+    timeZone: BOOKING_TIME_ZONE,
   }).format(new Date(appointment.scheduledAt))
 
   const isPastCutoff =
