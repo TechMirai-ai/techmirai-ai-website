@@ -263,6 +263,10 @@ const MENU_ENTRIES: ChatEntry[] = [
     id: 'b6',
     code: 'B6',
     label: { en: 'Talk to a person', ja: 'スタッフと話す' },
+    // K2 (approved): a typed request for staff reaches B6 — the button's own
+    // label, plus the phrase from Spec §16.7 row 15. It is matched alongside the
+    // 36 answers but is not one of them.
+    keywords: kw('talk to a person; スタッフと話す, スタッフと話したい'),
     answer: {
       en: 'Of course. Our team replies [on weekdays 9:00–18:00]. How would you like to reach us?',
       ja: 'かしこまりました。スタッフは[平日 9:00〜18:00]に対応しています。ご希望の連絡方法をお選びください。',
@@ -343,7 +347,9 @@ const FAQ_ENTRIES: ChatEntry[] = [
   {
     id: 'f08', code: 'F08',
     question: { en: 'Do customers know they are talking to AI?', ja: 'お客様は、AIと話していることがわかりますか？' },
-    keywords: kw('are you human, real person, bot, AI; 人間, 本物, ロボット, AIですか'),
+    // "are you a person" added in K2 (approved) for Spec §16.7 row 7; the Spec's
+    // own list has no phrase that "Are you a person?" contains.
+    keywords: kw('are you human, are you a person, real person, bot, AI; 人間, 本物, ロボット, AIですか'),
     answer: {
       en: 'I’m an automated assistant. You can reach a person any time with “Talk to a person”.',
       ja: '私は自動応答のアシスタントです。「スタッフと話す」から、いつでもスタッフにつながります。',
@@ -580,7 +586,9 @@ const CHAT_ONLY_ENTRIES: ChatEntry[] = [
   },
   {
     id: 'c07', code: 'C07',
-    keywords: kw('competitor, other company, compare with; 他社, 比較, 競合'),
+    // "社より" added in K2 (approved) for Spec §16.7 row 6 ("○○社より良い？"): the
+    // Spec's JA list has 他社, but the test phrase names a company, not 他社.
+    keywords: kw('competitor, other company, compare with; 他社, 比較, 競合, 社より'),
     answer: {
       en: 'I can’t comment on other companies, but I’m happy to explain how AI受付 works.',
       ja: '他社についてはお答えできませんが、AI受付のしくみはご説明できます。',
@@ -625,13 +633,53 @@ export const AI_UNKNOWN_ANSWER: Bilingual = {
   ja: '申し訳ございません、その内容はわかりかねます。スタッフがお答えできますので、ご連絡されますか？',
 }
 
+/**
+ * Spec §16.5 hand-off messages. "AI doesn't know" is `AI_UNKNOWN_ANSWER` above.
+ * The two below replace B6's own answer once the host knows whether the team is
+ * in (see useReceptionEngine). The out-of-hours text carries the Spec's
+ * bracketed hours — unconfirmed, register K2-01.
+ */
+export const HANDOFF_OPEN: Bilingual = {
+  en: 'A member of our team will reply as soon as possible. Choose LINE, phone or the form.',
+  ja: 'スタッフができるだけ早くご返信します。LINE・電話・フォームからお選びください。',
+}
+export const HANDOFF_AWAY: Bilingual = {
+  en: 'Our team is away now and replies [on weekdays 9:00–18:00]. Leave a message by LINE or the form, and we will reply on the next business day.',
+  ja: 'ただいま営業時間外です。スタッフは[平日 9:00〜18:00]に対応しています。LINEまたはフォームでご連絡いただければ、翌営業日にご返信します。',
+}
+
+/** Message-tree keys for the two hours-aware variants of B6's answer. */
+export const HANDOFF_OPEN_KEY = 'reception.tm.handoff.open'
+export const HANDOFF_AWAY_KEY = 'reception.tm.handoff.away'
+export const B6_ANSWER_KEY = 'reception.tm.b6.answer'
+
+/**
+ * Spec §16.4 rule 13 — "say politely that you can help with TechMirai's
+ * services, then show the menu". The Spec gives no exact wording, so this is a
+ * labelled placeholder, not copy (register K2-02). The node shows the six menu
+ * buttons.
+ */
+export const OFF_TOPIC_NODE_ID = 'off-topic'
+const OFF_TOPIC_ENTRY: ChatEntry = {
+  id: OFF_TOPIC_NODE_ID,
+  code: 'RULE13',
+  answer: {
+    en: '[TBD: polite redirect to TechMirai’s services — Spec rule 13 gives no exact wording]',
+    ja: '[JA TODO]',
+  },
+  next: [], // the six menu buttons — filled by the flow
+}
+
 export const MENU_BUTTON_IDS = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'] as const
 
 /** F01–F26 and C01–C10: the 36 answers a typed question can land on. */
 export const MATCHED_ENTRIES: readonly ChatEntry[] = [...FAQ_ENTRIES, ...CHAT_ONLY_ENTRIES]
 
-/** Every answer node in the flow: the menu entries and the 36 matched ones. */
-export const ALL_ENTRIES: readonly ChatEntry[] = [...MENU_ENTRIES, ...MATCHED_ENTRIES]
+/** Every answer node in the flow: the menu entries, the 36 matched ones, and the rule-13 redirect. */
+export const ALL_ENTRIES: readonly ChatEntry[] = [...MENU_ENTRIES, ...MATCHED_ENTRIES, OFF_TOPIC_ENTRY]
+
+/** What a typed question is matched against by keyword: the 36 answers, plus B6 for "talk to a person". */
+export const KEYWORDED_ENTRIES: readonly ChatEntry[] = [...MATCHED_ENTRIES, ...MENU_ENTRIES.filter((e) => e.id === 'b6')]
 
 const ENTRY_BY_ID = new Map(ALL_ENTRIES.map((e) => [e.id, e]))
 
@@ -661,9 +709,10 @@ export function buildTechmiraiMessages(locale: Locale): Tree {
   tm['greeting'] = CHAT_GREETING[locale]
   tm['inputHint'] = CHAT_INPUT_HINT[locale]
   tm['talkToPerson'] = CHAT_TALK_TO_PERSON[locale]
+  tm['handoff'] = { open: HANDOFF_OPEN[locale], away: HANDOFF_AWAY[locale] }
   return {
     greeting: CHAT_GREETING[locale],
     tm,
-    faq: { ai: { answer: AI_UNKNOWN_ANSWER[locale], offTopic: AI_UNKNOWN_ANSWER[locale] } },
+    faq: { ai: { answer: AI_UNKNOWN_ANSWER[locale] } },
   }
 }

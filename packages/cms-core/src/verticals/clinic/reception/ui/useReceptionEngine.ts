@@ -2,13 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { advance, getInteraction, goTo, start } from '@techmirai/reception-engine'
-import type { ChatMessage, EngineState, Interaction, Locale as EngineLocale } from '@techmirai/reception-engine'
+import type { ChatMessage, EngineState, Interaction, Locale as EngineLocale, TextResolver } from '@techmirai/reception-engine'
 import enMessages from '../../../../i18n/messages/en.json'
 import jaMessages from '../../../../i18n/messages/ja.json'
+import { isWithinHandoffHours, type HandoffHours } from '../handoff-hours'
 import { createReceptionTextResolver } from '../resolver'
 import { screenQuestion } from '../screening'
 import {
+  B6_ANSWER_KEY,
   buildTechmiraiMessages,
+  HANDOFF_AWAY_KEY,
+  HANDOFF_OPEN_KEY,
   HOST_LINK_PREFIX,
   QUESTION_FIELD,
   TALK_TO_PERSON_NODE_ID,
@@ -28,7 +32,8 @@ const BASE_MESSAGES: Record<'en' | 'ja', MessageTree> = {
 
 const flow = techmiraiReceptionFlow
 
-const AI_OFF_TOPIC_KEY = 'reception.faq.ai.offTopic'
+/** The Spec rule-13 redirect (a labelled placeholder until the Spec gives wording) — for the server's `off-topic` status. */
+const AI_OFF_TOPIC_KEY = 'reception.tm.off-topic.answer'
 /** Spec 16.3 F09 — the same "no medical or legal advice" answer the triage routes to. */
 const REFUSAL_KEY = 'reception.tm.f09.answer'
 
@@ -37,6 +42,20 @@ const MIN_DIALABLE_DIGITS = 8
 
 function toEngineLocale(locale: string): 'en' | 'ja' {
   return locale === 'ja' ? 'ja' : 'en'
+}
+
+const realClock = (): Date => new Date()
+
+/**
+ * Which text answers "talk to a person" right now: Spec §16.5's during-hours or
+ * outside-hours message when the schedule is known, B6's own answer (Spec §16.2,
+ * which makes no claim about the moment) when it is not or cannot be read.
+ */
+function handoffAnswerKey(hours: HandoffHours | undefined, now: () => Date): string {
+  if (!hours) return B6_ANSWER_KEY
+  const open = isWithinHandoffHours(now(), hours)
+  if (open === null) return B6_ANSWER_KEY
+  return open ? HANDOFF_OPEN_KEY : HANDOFF_AWAY_KEY
 }
 
 /** Per-client URLs the package-level flow cannot hold. A missing one hides its button. */
@@ -84,6 +103,15 @@ export interface UseReceptionEngineArgs {
   /** The configured phone number; becomes the "Call" button when dialable. */
   clinicPhone: string
   hostLinks?: HostLinks
+  /**
+   * When the team replies (site.config reception.handoffHours). With it, a
+   * request for a person shows the Spec §16.5 "during hours" or "outside hours"
+   * message; without it, B6's own answer. The schedule is an unconfirmed
+   * launch blocker (register K2-01).
+   */
+  handoffHours?: HandoffHours
+  /** Injectable clock, so the out-of-hours case is testable. Defaults to the real time. */
+  now?: () => Date
   /** Injectable for tests; defaults to the real POST /api/reception/ai client. */
   requestAiAnswer?: RequestReceptionAiAnswer
 }
@@ -119,6 +147,8 @@ export function useReceptionEngine({
   greeting,
   clinicPhone,
   hostLinks,
+  handoffHours,
+  now = realClock,
   requestAiAnswer = requestReceptionAiAnswer,
 }: UseReceptionEngineArgs): UseReceptionEngineResult {
   const engineLocale = toEngineLocale(locale)
@@ -138,14 +168,20 @@ export function useReceptionEngine({
     }
     const merged: MessageTree = { ...BASE_MESSAGES[engineLocale], reception: receptionOverride }
 
-    return createReceptionTextResolver({
+    const base = createReceptionTextResolver({
       messages: { [engineLocale]: merged },
       faqAnswers: {},
       phone: clinicPhone,
       aiAnswer: () => aiAnswerRef.current,
     })
+    // B6 is asked for from many places (the menu, the header link, a typed
+    // request, the AI hand-off). Choosing its wording here, at the moment the
+    // message is made, covers all of them without a second node per variant.
+    const resolveText: TextResolver = (key, resolveLocale, params) =>
+      base(key === B6_ANSWER_KEY ? handoffAnswerKey(handoffHours, now) : key, resolveLocale, params)
+    return resolveText
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engineLocale, locale, greeting, clinicPhone])
+  }, [engineLocale, locale, greeting, clinicPhone, handoffHours, now])
 
   const triage = useMemo(() => createTechmiraiTriageResolver(engineLocale), [engineLocale])
   const links = useMemo(() => resolveHostLinks(hostLinks, clinicPhone), [hostLinks, clinicPhone])

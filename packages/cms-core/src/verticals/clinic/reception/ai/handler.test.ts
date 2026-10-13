@@ -7,7 +7,7 @@ import { handleReceptionAiRequest, RECEPTION_AI_RATE_LIMIT_PREFIX } from './hand
 // database, no Groq.
 
 const corpus: CorpusDocument[] = [
-  { type: 'faq', slug: 'parking', title: '駐車場はありますか', content: '建物裏に3台分ございます。', sources: [] },
+  { type: 'faq', slug: 'f05', title: '対応言語は？', content: '日本語と英語に標準対応しています。', sources: [] },
 ]
 
 function groqReturning(body: unknown, status = 200) {
@@ -19,21 +19,19 @@ function groqReturning(body: unknown, status = 200) {
   return { fetchImpl, groq: { apiKey: 'test-key', fetchImpl: fetchImpl as unknown as typeof fetch } }
 }
 
-const ANSWER_BODY = { choices: [{ message: { content: '現金とカードがご利用いただけます。' } }], usage: {} }
+const ANSWER_BODY = { choices: [{ message: { content: '日本語と英語に標準対応しています。' } }], usage: {} }
 
 function deps(overrides: Partial<Parameters<typeof handleReceptionAiRequest>[1]> = {}) {
   return {
     enabled: true,
     checkRateLimit: vi.fn(async () => ({ success: true })),
     loadCorpus: vi.fn(async () => corpus),
-    clinicName: 'さくら接骨院',
-    phone: '+81-3-5432-1188',
     ...groqReturning(ANSWER_BODY),
     ...overrides,
   }
 }
 
-const validBody = { question: 'クレジットカードは使えますか', locale: 'ja' }
+const validBody = { question: 'ペットを連れて行っても良いですか', locale: 'ja' }
 
 describe('handleReceptionAiRequest — the happy path', () => {
   it('answers 200 with the grounded answer', async () => {
@@ -41,7 +39,7 @@ describe('handleReceptionAiRequest — the happy path', () => {
 
     const result = await handleReceptionAiRequest({ body: validBody, ip: '1.2.3.4' }, d)
 
-    expect(result).toEqual({ status: 200, body: { status: 'answered', answer: '現金とカードがご利用いただけます。' } })
+    expect(result).toEqual({ status: 200, body: { status: 'answered', answer: '日本語と英語に標準対応しています。' } })
     expect(d.loadCorpus).toHaveBeenCalledWith('ja')
   })
 })
@@ -132,6 +130,20 @@ describe('handleReceptionAiRequest — gating and degradation', () => {
     expect(result).toEqual({ status: 200, body: { status: 'unavailable' } })
     expect(logError).toHaveBeenCalledWith(expect.stringContaining('rate-limited'))
     expect(JSON.stringify(result.body)).not.toContain('rate-limited')
+  })
+
+  it('answers a guarded reply (an unpublished price) as plain unavailable, logging the reason for the operator only', async () => {
+    const logError = vi.fn()
+    const d = deps({
+      ...groqReturning({ choices: [{ message: { content: '初期費用は10万円です。' } }], usage: {} }),
+      logError,
+    })
+
+    const result = await handleReceptionAiRequest({ body: validBody, ip: '1.2.3.4' }, d)
+
+    expect(result).toEqual({ status: 200, body: { status: 'unavailable' } })
+    expect(JSON.stringify(result.body)).not.toContain('10万円')
+    expect(logError).toHaveBeenCalledWith(expect.stringContaining('guarded:price'))
   })
 
   it('degrades to unavailable when the corpus cannot be loaded, without leaking the error', async () => {

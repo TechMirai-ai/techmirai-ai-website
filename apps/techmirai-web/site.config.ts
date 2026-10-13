@@ -230,6 +230,14 @@ const siteConfig: SiteConfig = {
     // functional; swap for the real LINE add-friend URL before launch. See
     // docs/PLACEHOLDER-REGISTER.md.
     staffLineUrl: 'https://line.me/R/ti/p/~techmirai-placeholder',
+    // Pack-4/K2: when a person is likely to reply — drives the Spec §16.5
+    // during-hours / out-of-hours hand-off message. UNCONFIRMED: this mirrors
+    // the Spec's bracketed phrase "[on weekdays 9:00–18:00]" (same fact as
+    // contact.businessHours above), it is not a confirmed schedule, and it must
+    // not be published as business hours. Launch blocker — see
+    // docs/PLACEHOLDER-REGISTER.md K2-01. Delete the field to make the chat
+    // stop making any claim about hours.
+    handoffHours: { timeZone: 'Asia/Tokyo', days: [1, 2, 3, 4, 5], start: '09:00', end: '18:00' },
   },
 }
 

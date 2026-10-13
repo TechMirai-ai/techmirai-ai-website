@@ -112,6 +112,7 @@ export default async function LocaleLayout({
             locale={locale}
             clinicPhone={siteConfig.reception.clinicPhone}
             hostLinks={hostLinks}
+            {...(siteConfig.reception.handoffHours ? { handoffHours: siteConfig.reception.handoffHours } : {})}
             clinicName={siteConfig.site.name}
             accentColor={siteConfig.brand.colors.primary}
           />

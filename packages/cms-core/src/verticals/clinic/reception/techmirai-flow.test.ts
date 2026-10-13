@@ -64,11 +64,11 @@ describe('techmiraiReceptionFlow structure', () => {
     }
   })
 
-  it('whitelists exactly the 36 matched answers for triage, and refuses to F09', () => {
+  it('whitelists the 36 matched answers, "Talk to a person" and the rule-13 redirect for triage, and refuses to F09', () => {
     const triage = flow.nodes['triage']
     expect(triage?.type).toBe('triage')
     if (triage?.type !== 'triage') return
-    expect([...triage.allow].sort()).toEqual(MATCHED_ENTRIES.map((e) => e.id).sort())
+    expect([...triage.allow].sort()).toEqual([...MATCHED_ENTRIES.map((e) => e.id), 'b6', 'off-topic'].sort())
     expect(triage.allow).toContain(triage.refuseTo)
     expect(triage.aiFallback).toBe('ai')
   })

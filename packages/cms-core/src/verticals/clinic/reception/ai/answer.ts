@@ -12,6 +12,7 @@
 
 import { screenQuestion } from '../screening'
 import type { CorpusDocument } from './corpus'
+import { guardAnswer, type GuardVerdict } from './guard'
 import { callGroq, type CallGroqOptions, type GroqFailureReason, type GroqUsage } from './groq'
 import { buildReceptionPrompt, type PromptLocale } from './prompt'
 
@@ -22,14 +23,16 @@ export type ReceptionAnswerResult =
   | { status: 'refused' }
   /** Screened as off-topic but not medical. No LLM call was made. */
   | { status: 'off-topic' }
-  /** Anything went wrong upstream. `reason` is for logs, never for the visitor. */
-  | { status: 'unavailable'; reason: GroqFailureReason }
+  /**
+   * Anything went wrong upstream, or the reply was blocked by guard.ts (an
+   * unsupported price or a "Voice is available" claim). `reason` is for logs,
+   * never for the visitor; a guarded reply is never returned.
+   */
+  | { status: 'unavailable'; reason: GroqFailureReason | Extract<GuardVerdict, { ok: false }>['reason'] }
 
 export interface AnswerReceptionQuestionArgs {
   question: string
   locale: PromptLocale
-  clinicName: string
-  phone: string
   corpus: readonly CorpusDocument[]
   groq?: CallGroqOptions
   maxContextTokens?: number
@@ -45,8 +48,6 @@ export interface AnswerReceptionQuestionArgs {
 export async function answerReceptionQuestion({
   question,
   locale,
-  clinicName,
-  phone,
   corpus,
   groq,
   maxContextTokens,
@@ -58,14 +59,18 @@ export async function answerReceptionQuestion({
   const prompt = buildReceptionPrompt({
     question,
     locale,
-    clinicName,
-    phone,
     corpus,
     ...(maxContextTokens !== undefined ? { maxContextTokens } : {}),
   })
 
   const result = await callGroq(prompt.messages, groq ?? {})
   if (!result.ok) return { status: 'unavailable', reason: result.reason }
+
+  // Deterministic last check (guard.ts): an unsupported price or a "Voice is
+  // available" claim is dropped, never shown. The visitor gets the same fixed
+  // hand-off as any other model failure.
+  const verdict = guardAnswer(result.text)
+  if (!verdict.ok) return { status: 'unavailable', reason: verdict.reason }
 
   return {
     status: 'answered',

@@ -235,15 +235,18 @@ describe('ReceptionPanel — free-text question box', () => {
     expect(screen.getByRole('link', { name: 'メールフォーム' })).toBeInTheDocument()
   })
 
-  it('answers an off-topic question from fixed copy without ever calling the server', async () => {
+  it('answers an off-topic question with the rule-13 redirect and the menu, without ever calling the server', async () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: '晴れです' }))
     renderPanel(requestAiAnswer)
 
     ask('今日の天気はどうですか')
 
+    // Spec rule 13 gives no wording, so the reply is the labelled placeholder
+    // (register K2-02) — and the six menu buttons follow it.
     await waitFor(() => {
-      expect(screen.getByText(AI_UNKNOWN)).toBeInTheDocument()
+      expect(screen.getByText('[JA TODO]')).toBeInTheDocument()
     })
+    expect(button('AI受付とは？')).toBeInTheDocument()
     expect(requestAiAnswer).not.toHaveBeenCalled()
     expect(screen.queryByText('晴れです')).not.toBeInTheDocument()
   })

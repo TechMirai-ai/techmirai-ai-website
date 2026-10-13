@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { BookingFlow } from '../../../../booking/ui'
 import { CHAT_INPUT_HINT, CHAT_TALK_TO_PERSON, CHAT_WIDGET_TITLE } from '../techmirai-chat-content'
 import type { RequestReceptionAiAnswer } from './ai-client'
+import type { HandoffHours } from '../handoff-hours'
 import { useReceptionEngine, type HostLinks } from './useReceptionEngine'
 
 const CHOICE_BUTTON_CLASS =
@@ -31,6 +32,10 @@ export interface ReceptionPanelProps {
   clinicName: string
   /** Per-client URLs for the LINE, demo and brochure buttons — see useReceptionEngine. */
   hostLinks?: HostLinks
+  /** When the team replies — see useReceptionEngine. */
+  handoffHours?: HandoffHours
+  /** Injectable clock for tests. */
+  now?: () => Date
   /** Injectable for tests; defaults to the real POST /api/reception/ai client. */
   requestAiAnswer?: RequestReceptionAiAnswer
 }
@@ -43,6 +48,8 @@ export function ReceptionPanel({
   clinicPhone,
   clinicName,
   hostLinks,
+  handoffHours,
+  now,
   requestAiAnswer,
 }: ReceptionPanelProps) {
   const [locale, setLocale] = useState(initialLocale)
@@ -51,6 +58,8 @@ export function ReceptionPanel({
     greeting,
     clinicPhone,
     ...(hostLinks ? { hostLinks } : {}),
+    ...(handoffHours ? { handoffHours } : {}),
+    ...(now ? { now } : {}),
     ...(requestAiAnswer ? { requestAiAnswer } : {}),
   })
   const textLocale = locale === 'ja' ? 'ja' : 'en'

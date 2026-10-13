@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import type { HandoffHours } from '../handoff-hours'
 import { CHAT_WIDGET_TITLE } from '../techmirai-chat-content'
 import { ReceptionPanel } from './ReceptionPanel'
 import type { HostLinks } from './useReceptionEngine'
@@ -16,6 +17,8 @@ export interface ReceptionWidgetProps {
   clinicName: string
   /** Per-client URLs for the LINE, demo and brochure buttons — see useReceptionEngine. */
   hostLinks?: HostLinks
+  /** When the team replies (site.config reception.handoffHours) — see useReceptionEngine. */
+  handoffHours?: HandoffHours
   accentColor?: string
 }
 
@@ -33,6 +36,7 @@ export function ReceptionWidget({
   clinicPhone,
   clinicName,
   hostLinks,
+  handoffHours,
   accentColor = '#0F6E56',
 }: ReceptionWidgetProps) {
   const [open, setOpen] = useState(false)
@@ -99,6 +103,7 @@ export function ReceptionWidget({
             clinicPhone={clinicPhone}
             clinicName={clinicName}
             {...(hostLinks ? { hostLinks } : {})}
+            {...(handoffHours ? { handoffHours } : {})}
           />
         </div>
       )}

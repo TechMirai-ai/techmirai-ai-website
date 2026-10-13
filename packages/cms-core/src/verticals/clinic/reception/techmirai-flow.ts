@@ -6,6 +6,7 @@ import {
   MATCHED_ENTRIES,
   MENU_BUTTON_IDS,
   MENU_NODE_ID,
+  OFF_TOPIC_NODE_ID,
   QUESTION_FIELD,
   START_NODE_ID,
   TALK_TO_PERSON_NODE_ID,
@@ -53,8 +54,9 @@ function toOption(button: NextButton, index: number, fromNodeId: string): Choice
 }
 
 function answerNode(entry: ChatEntry): FlowNode {
-  // C01 is the main menu: its buttons are the six menu entries.
-  const options = entry.id === MENU_NODE_ID ? menuOptions() : entry.next.map((b, i) => toOption(b, i, entry.id))
+  // C01 is the main menu, and the rule-13 redirect "shows the menu": both offer the six menu entries.
+  const showsMenu = entry.id === MENU_NODE_ID || entry.id === OFF_TOPIC_NODE_ID
+  const options = showsMenu ? menuOptions() : entry.next.map((b, i) => toOption(b, i, entry.id))
   return { id: entry.id, type: 'choice', promptKey: answerKey(entry.id), options }
 }
 
@@ -84,7 +86,9 @@ export const techmiraiReceptionFlow: FlowGraph = {
       type: 'triage',
       field: QUESTION_FIELD,
       refuseTo: 'f09',
-      allow: MATCHED_ENTRIES.map((entry) => entry.id),
+      // The 36 matched answers, "Talk to a person" (a typed request for staff) and
+      // the rule-13 redirect (an off-topic question).
+      allow: [...MATCHED_ENTRIES.map((entry) => entry.id), TALK_TO_PERSON_NODE_ID, OFF_TOPIC_NODE_ID],
       aiFallback: AI_NODE_ID,
     },
 

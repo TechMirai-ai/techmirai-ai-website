@@ -183,6 +183,20 @@ const receptionSchema = z.object({
   // option (see useReceptionEngine's staffLineUrl handling) rather than
   // getting a dead link.
   staffLineUrl: z.string().optional(),
+  // When a person is likely to reply to a hand-off (Content Spec §16.5). With it
+  // the chat answers "talk to a person" with the during-hours or out-of-hours
+  // message; without it, with the neutral Spec §16.2 B6 answer. The VALUES are a
+  // launch blocker until the business confirms its hours — they are not
+  // published business hours (docs/PLACEHOLDER-REGISTER.md K2-01).
+  handoffHours: z
+    .object({
+      timeZone: z.string().min(1),
+      // ISO weekdays: 1 = Monday … 7 = Sunday.
+      days: z.array(z.number().int().min(1).max(7)).min(1),
+      start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'HH:MM, 24-hour'),
+      end: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'HH:MM, 24-hour'),
+    })
+    .optional(),
 })
 
 const integrationsSchema = z.object({

@@ -48,8 +48,6 @@ export async function POST(request: NextRequest) {
       enabled: siteConfig.features.aiAgent && siteConfig.reception.enabled,
       checkRateLimit,
       loadCorpus: getCachedCorpus,
-      clinicName: siteConfig.site.name,
-      phone: siteConfig.reception.clinicPhone,
       logError: (message, error) => {
         if (error === undefined) console.error(message)
         else console.error(message, error)

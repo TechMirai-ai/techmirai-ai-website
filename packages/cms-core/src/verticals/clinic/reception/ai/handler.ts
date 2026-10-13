@@ -33,8 +33,6 @@ export interface ReceptionAiHandlerDeps {
   /** The app's shared limiter (5 req/60s/IP, Upstash-or-memory), keyed by this endpoint's namespace. */
   checkRateLimit: (key: string) => Promise<{ success: boolean }>
   loadCorpus: (locale: PromptLocale) => Promise<CorpusDocument[]>
-  clinicName: string
-  phone: string
   groq?: CallGroqOptions
   /** Operator-facing only. Nothing logged here is ever returned to the caller. */
   logError?: (message: string, error?: unknown) => void
@@ -77,8 +75,6 @@ export async function handleReceptionAiRequest(
       question,
       locale,
       corpus,
-      clinicName: deps.clinicName,
-      phone: deps.phone,
       ...(deps.groq ? { groq: deps.groq } : {}),
     })
 
