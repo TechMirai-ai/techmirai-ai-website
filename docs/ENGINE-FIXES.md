@@ -610,3 +610,17 @@ deliberately opts in.
 
 **Status:** added. Verify `/thanks` and `/en/thanks` render the LINE button with a real resolved
 href (not the literal `'#'`), in both locales.
+
+## 2026-10-13 — Pack-4/J2: `seed:booking` silently did nothing on Windows (fix)
+
+**Symptom:** `pnpm --filter techmirai-web seed:booking` failed on this Windows machine with `'NODE_OPTIONS' is not recognized as an internal or external command` (pnpm runs scripts through `cmd`, which rejects the POSIX `NODE_OPTIONS="…"` prefix). Run through Git Bash instead, the command exited 0 but printed nothing and changed no data.
+
+**Cause (two independent faults):** (1) the inline `NODE_OPTIONS=` prefix in the `seed:booking` script; (2) the "run only when executed directly" guard at the bottom of `apps/techmirai-web/src/seed/booking.ts` compared `import.meta.url` with `` `file://${process.argv[1]}` ``. On Windows `import.meta.url` is `file:///C:/…` while `process.argv[1]` is `C:\…`, so the comparison was always false and `runStandalone()` never ran.
+
+**Fix (approved by Jamal as D-10):** the guard now compares `import.meta.url` with `pathToFileURL(process.argv[1]).href` (and is skipped when `argv[1]` is absent), and the `seed:booking` script is `tsx --require ./fix-next-env-interop.cjs --env-file=.env.local src/seed/booking.ts`, with no inline environment prefix. Only `seed:booking` was changed: the `seed` and `db:*` scripts carry the same inline prefix and are left alone (logged in docs/FINDINGS.md, rule 13).
+
+**Safety guard (added before commit, approved by Jamal):** because the fix makes `seed:booking` actually run on Windows, `runStandalone()` now also refuses unless `DATABASE_ENV === 'development'` (the same opt-in the unified `pnpm seed` already requires in `seed/index.ts`), exiting 1 before `getPayload` and any DB connection. It is an attestation, not proof: code cannot verify that a remote database is really a development one.
+
+**Verification:** `pnpm typecheck` and the unit tests only. **The live seed run is UNVERIFIED**: the target is a remote Postgres whose name carries no dev/prod marker, Jamal has not confirmed in this session that it is the development database, and he declined the run. That the script now starts and logs on Windows, and that `tsx --require` is accepted, has therefore not been observed.
+
+**Status:** code changed, live behaviour unverified.

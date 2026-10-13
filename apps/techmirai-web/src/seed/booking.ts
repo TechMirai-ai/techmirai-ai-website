@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'node:url'
 import { getPayload } from 'payload'
 import type { Payload, Where } from 'payload'
 import config from '../../payload.config'
@@ -277,14 +278,29 @@ async function runStandalone(): Promise<void> {
     console.log('⏭️ Skipping booking seed in production build')
     return
   }
+  // Same explicit opt-in the unified `pnpm seed` already requires (seed/index.ts):
+  // this seed deactivates rows and deletes then recreates future open slots, so it
+  // only runs against a database declared as a development database.
+  if (process.env['DATABASE_ENV'] !== 'development') {
+    console.error(
+      `🛑 Refusing to run: DATABASE_ENV is not set to "development" (got "${process.env['DATABASE_ENV'] ?? '<unset>'}"). ` +
+        'seed:booking only runs against a database explicitly declared as a dev database via ' +
+        'DATABASE_ENV=development in .env.local. Aborting.',
+    )
+    process.exit(1)
+  }
   const payload = await getPayload({ config })
   await seedBooking(payload)
   process.exit(0)
 }
 
 // Only run the CLI wrapper when this file is executed directly (`pnpm
-// seed:booking`), not when `seedBooking` is imported by index.ts.
-if (import.meta.url === `file://${process.argv[1]}`) {
+// seed:booking`), not when `seedBooking` is imported by index.ts. The entry
+// path is converted with pathToFileURL: on Windows `process.argv[1]` is
+// `C:\...` while `import.meta.url` is `file:///C:/...`, so comparing against
+// a hand-built `file://` string never matched and the seed silently did nothing.
+const entryPath = process.argv[1]
+if (entryPath !== undefined && import.meta.url === pathToFileURL(entryPath).href) {
   runStandalone().catch((err: unknown) => {
     console.error('Booking seed failed:', err)
     process.exit(1)

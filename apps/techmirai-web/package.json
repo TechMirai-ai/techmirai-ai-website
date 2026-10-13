@@ -8,7 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "seed": "RUN_SEED=true NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/index.ts",
-    "seed:booking": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/booking.ts",
+    "seed:booking": "tsx --require ./fix-next-env-interop.cjs --env-file=.env.local src/seed/booking.ts",
     "db:apply-indexes": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-db-indexes.ts",
     "db:migrate-faq-keywords-category": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-faq-schema-migration.ts",
     "a11y": "tsx scripts/a11y-check.ts",
