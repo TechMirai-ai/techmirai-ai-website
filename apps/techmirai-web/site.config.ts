@@ -194,13 +194,13 @@ const siteConfig: SiteConfig = {
   },
 
   notifications: {
-    // Local hour (see notifications/templates/shared.ts's formatDateTime doc
-    // comment — appointment times are stored/compared UTC-only, matching the
-    // rest of this app) at which the day-before reminder becomes due.
-    // Currently INERT: the cron only runs once daily (vercel.json), so
-    // reminders always target 00:00 UTC regardless of this value — see
-    // notifications/reminder-schedule.ts's doc comment. Takes effect again
-    // once the cron moves to an hourly cadence (tracked for WO-8).
+    // D-4 Option B (approved): the reminder goes out about 09:00 JST on the
+    // day before the appointment's Tokyo date — NOT exactly 24 hours before.
+    // This value is INERT: the only scheduler is the daily cron in vercel.json
+    // (00:00 UTC = 09:00 JST), so reminders always target that instant
+    // regardless of this number (9 is kept to match). See
+    // notifications/reminder-schedule.ts's doc comment. It would only take
+    // effect again if an hourly scheduler were ever added (not planned).
     reminderHourLocal: 9,
   },
 

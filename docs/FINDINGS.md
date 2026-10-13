@@ -1169,3 +1169,18 @@ e.g. the `/assessment` confirmation) and LINE webhook replies (LINE booking is o
 Open launch blockers are unchanged: meeting workflow/copy verification, Resend key mode and domain, staff-inbox monitoring,
 Japanese draft approval (J2-10), real availability instead of demo slots, the 24-hour reminder scheduler, the `visit` facts,
 K1/K2 clinic wording and the SEO title template.
+
+## 2026-10-13 — Pack-4/J2 batch 1: meeting-tool copy, reminder timing, `visit` deferral
+
+Applied exactly the approved scope (Jamal): D-2, C-1, D-4 Option B, D-5. `meetingToolConfirmed` stays `false`; customer email stays fail-closed (J2-12); no email was sent, no database was written, nothing was committed.
+
+- **D-2 / C-1.** `notifications/templates/customer-confirmation.ts`: the Japanese bracket line is gone (the JA email keeps the Spec sentence 面談用のURLは、事前にメールでお送りします。 and never names a tool). English: with the flag `false` the Spec sentence plus the literal `[Meeting tool — CONFIRM: …]` line (unchanged); with the flag `true` the approved sentence "We will send the Google Meet link by email before the call." and no bracket. Tests updated and extended; none deleted or weakened. Register J2-01 updated.
+- **D-4 Option B.** `reminder-schedule.ts` now takes the day before on the Tokyo calendar (`toBookingDate`), at 00:00 UTC = about 09:00 JST via the existing daily cron. It is not an exact 24-hour reminder; no paid plan or external scheduler. Previously the UTC calendar day was used (same result for 09:00–17:30 JST slots, wrong for an early-morning JST appointment). Comments in `reminder-schedule.ts`, `site.config.ts`, the cron route and `customer-send-policy.ts` rewritten. Register J2-09 and J2-12 updated. Reminders remain withheld outside local development and have never been observed end to end.
+- **D-5.** `visit` stays inactive (already seeded so; register J2-02 now DEFERRED). No public in-person claim exists in the app code. The Spec's FAQ F25 and the chat answer F25 ("In-person visits: [area — CONFIRM]") must be omitted or kept bracketed by Pack-3/I4 (FAQ page, F25 not yet seeded) and K1 (chat).
+
+## 2026-10-13 — Pack-4/J2 batch 1: Windows booking seed script (D-10)
+
+Applied as approved by Jamal. Nothing was committed, no email was sent, and the live seed was **not run**.
+
+- **D-10.** Windows `seed:booking` fix and a fail-closed guard, see docs/ENGINE-FIXES.md (2026-10-13). The direct-run check now uses `pathToFileURL`, the script no longer uses an inline `NODE_OPTIONS=` prefix, and `runStandalone()` now refuses unless `DATABASE_ENV=development` (the opt-in the unified `pnpm seed` already needs), before any database connection. **The live write remains UNVERIFIED**: the target is a remote Postgres whose name carries no dev/prod marker and Jamal has not confirmed it is the development database. The guard is an attestation, not proof of identity. A real run deactivates legacy rows and deletes then recreates future unbooked slots on the "TechMirai" resource.
+- **Also noticed, not changed:** the `seed`, `db:apply-indexes` and `db:migrate-faq-keywords-category` scripts use the same inline `NODE_OPTIONS=` prefix and will fail under `cmd` on Windows the same way.

@@ -25,12 +25,12 @@ import { getNotificationDispatcher, getNotificationRuntimeConfig } from '@/lib/n
  * has — never opens a connection per row. A failure on one row (attemptSend
  * never throws) never stops the rest of the batch from being processed.
  *
- * NOTE — reminder timing: because this only runs once daily (at ~00:00 UTC),
- * `computeReminderScheduledFor` targets 00:00 UTC on the day before an
- * appointment, not a configurable hour (`reminderHourLocal` is currently
- * inert — see that function's doc comment). When WO-8's production cadence
- * moves this to hourly, re-enable `reminderHourLocal` there — it's already
- * threaded through as a one-line change.
+ * NOTE — reminder timing (D-4 Option B, approved): because this only runs once
+ * daily (at ~00:00 UTC = ~09:00 JST), `computeReminderScheduledFor` targets
+ * 00:00 UTC on the Tokyo day before an appointment — about 09:00 JST the day
+ * before, NOT an exact 24-hour reminder. `reminderHourLocal` is inert (see that
+ * function's doc comment). Customer reminders are in any case withheld outside
+ * local development (customer-send-policy.ts, J2-12).
  */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')

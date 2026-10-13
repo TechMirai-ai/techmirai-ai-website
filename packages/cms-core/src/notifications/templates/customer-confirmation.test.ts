@@ -102,16 +102,36 @@ describe('renderCustomerConfirmation', () => {
     )
   })
 
-  it('carries the literal meeting-tool placeholder by default and drops it once meetingToolConfirmed is true', () => {
+  it('carries the literal English meeting-tool placeholder by default and drops it once meetingToolConfirmed is true', () => {
     const en = renderCustomerConfirmation({ ...baseInput, locale: 'en' })
     expect(en.text).toContain('[Meeting tool — CONFIRM: Google Meet, Zoom or Teams]')
     expect(en.html).toContain('[Meeting tool — CONFIRM: Google Meet, Zoom or Teams]')
-    expect(renderCustomerConfirmation({ ...baseInput, locale: 'ja' }).text).toContain('[JA TODO]')
+    expect(en.text).toContain('We will send the meeting link by email before the call.')
 
     const confirmed = renderCustomerConfirmation({ ...baseInput, locale: 'en', meetingToolConfirmed: true })
     expect(confirmed.text).not.toContain('[Meeting tool')
     expect(confirmed.html).not.toContain('[Meeting tool')
-    expect(renderCustomerConfirmation({ ...baseInput, locale: 'ja', meetingToolConfirmed: true }).text).not.toContain('[JA TODO]')
+  })
+
+  it('names Google Meet in the English sentence only once meetingToolConfirmed is true (C-1)', () => {
+    const sentence = 'We will send the Google Meet link by email before the call.'
+    const confirmed = renderCustomerConfirmation({ ...baseInput, locale: 'en', meetingToolConfirmed: true })
+    expect(confirmed.text).toContain(sentence)
+    expect(confirmed.html).toContain(sentence)
+    expect(confirmed.lineText).toContain(sentence)
+
+    const unconfirmed = renderCustomerConfirmation({ ...baseInput, locale: 'en' })
+    expect(unconfirmed.text).not.toContain('Google Meet link')
+  })
+
+  it('never adds a bracket line to the Japanese email, confirmed or not (D-2), and keeps the Spec sentence', () => {
+    for (const meetingToolConfirmed of [false, true]) {
+      const ja = renderCustomerConfirmation({ ...baseInput, locale: 'ja', meetingToolConfirmed })
+      expect(ja.text).not.toContain('[')
+      expect(ja.html).not.toContain('[JA TODO]')
+      expect(ja.lineText).not.toContain('[')
+      expect(ja.text).toContain('面談用のURLは、事前にメールでお送りします。')
+    }
   })
 
   it('contains no clinic wording', () => {

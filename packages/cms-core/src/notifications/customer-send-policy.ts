@@ -9,8 +9,8 @@ import type { Payload } from 'payload'
  * the immediate sends in service.ts AND the cron batch — because guarding one
  * customer email type does not guard the others.
  *
- * To go live this must be changed deliberately (and the 24-hour reminder
- * scheduler verified first — see docs/PLACEHOLDER-REGISTER.md J2-09); there is
+ * To go live this must be changed deliberately (and the day-before reminder
+ * delivery verified first — see docs/PLACEHOLDER-REGISTER.md J2-09); there is
  * intentionally no environment variable or site-config flag that enables it.
  */
 
