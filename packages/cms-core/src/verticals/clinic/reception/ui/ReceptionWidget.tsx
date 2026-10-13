@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { CHAT_WIDGET_TITLE } from '../techmirai-chat-content'
 import { ReceptionPanel } from './ReceptionPanel'
+import type { HostLinks } from './useReceptionEngine'
 
 export interface ReceptionWidgetProps {
   enabled: boolean
@@ -12,9 +14,8 @@ export interface ReceptionWidgetProps {
   locale: string
   clinicPhone: string
   clinicName: string
-  faqAnswers: Record<string, Record<string, string>>
-  /** site.config.ts's reception.staffLineUrl — see useReceptionEngine. */
-  staffLineUrl?: string
+  /** Per-client URLs for the LINE, demo and brochure buttons — see useReceptionEngine. */
+  hostLinks?: HostLinks
   accentColor?: string
 }
 
@@ -31,8 +32,7 @@ export function ReceptionWidget({
   locale,
   clinicPhone,
   clinicName,
-  faqAnswers,
-  staffLineUrl,
+  hostLinks,
   accentColor = '#0F6E56',
 }: ReceptionWidgetProps) {
   const [open, setOpen] = useState(false)
@@ -98,8 +98,7 @@ export function ReceptionWidget({
             greeting={greeting}
             clinicPhone={clinicPhone}
             clinicName={clinicName}
-            faqAnswers={faqAnswers}
-            {...(staffLineUrl !== undefined ? { staffLineUrl } : {})}
+            {...(hostLinks ? { hostLinks } : {})}
           />
         </div>
       )}
@@ -117,7 +116,7 @@ export function ReceptionWidget({
       <button
         type="button"
         onClick={toggle}
-        aria-label={clinicName}
+        aria-label={CHAT_WIDGET_TITLE}
         aria-expanded={open}
         className="relative grid h-14 w-14 place-items-center rounded-full bg-[var(--reception-accent)] text-white shadow-lg outline-none transition hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[var(--reception-accent)] focus-visible:ring-offset-2"
       >

@@ -5,7 +5,6 @@ import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { buildCssVariables } from '@techmirai/cms-core/tokens'
-import { buildStaticFaqAnswers } from '@techmirai/cms-core/reception'
 import { ReceptionWidget } from '@techmirai/cms-core/reception/ui'
 import siteConfig from '../../../../site.config'
 import { Header } from './_components/Header'
@@ -51,16 +50,14 @@ export default async function LocaleLayout({
   const messages = await getMessages()
   const { lineButton } = await resolveHeaderData(locale)
 
-  // Static and synchronous (faq-content.ts, no Payload query) — kept here
-  // rather than the root layout so ReceptionWidget, and anything it mounts
-  // (BookingFlow), sits inside NextIntlClientProvider's React tree below;
-  // BookingFlow's steps all call useTranslations/useLocale and throw
-  // without a provider ancestor.
-  const faqAnswersByLocale: Record<string, Record<string, string>> = {}
-  if (siteConfig.reception.enabled) {
-    for (const l of siteConfig.reception.locales) {
-      faqAnswersByLocale[l] = buildStaticFaqAnswers(l)
-    }
+  // The chat's text is static (techmirai-chat-content.ts). Only per-client
+  // URLs come from config, and only an http(s) one is a real link: the demo
+  // URL is still a bracketed CONFIRM placeholder, so its button stays hidden
+  // (docs/PLACEHOLDER-REGISTER.md, K1-03). The widget sits here, not in the
+  // root layout, so BookingFlow inside it has NextIntlClientProvider above it.
+  const hostLinks = {
+    ...(siteConfig.reception.staffLineUrl ? { line: siteConfig.reception.staffLineUrl } : {}),
+    ...(siteConfig.integrations.demoUrl ? { demo: siteConfig.integrations.demoUrl } : {}),
   }
 
   const dir = (siteConfig.locales.direction[locale] ?? 'ltr') as 'ltr' | 'rtl'
@@ -114,11 +111,8 @@ export default async function LocaleLayout({
             locales={siteConfig.reception.locales}
             locale={locale}
             clinicPhone={siteConfig.reception.clinicPhone}
-            {...(siteConfig.reception.staffLineUrl !== undefined
-              ? { staffLineUrl: siteConfig.reception.staffLineUrl }
-              : {})}
+            hostLinks={hostLinks}
             clinicName={siteConfig.site.name}
-            faqAnswers={faqAnswersByLocale}
             accentColor={siteConfig.brand.colors.primary}
           />
         )}

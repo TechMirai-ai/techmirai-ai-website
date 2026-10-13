@@ -624,3 +624,16 @@ href (not the literal `'#'`), in both locales.
 **Verification:** `pnpm typecheck` and the unit tests only. **The live seed run is UNVERIFIED**: the target is a remote Postgres whose name carries no dev/prod marker, Jamal has not confirmed in this session that it is the development database, and he declined the run. That the script now starts and logs on Windows, and that `tsx --require` is accepted, has therefore not been observed.
 
 **Status:** code changed, live behaviour unverified.
+
+## 2026-10-13 — Pack-4/K1: choice buttons can be links, and the host can jump to a node (engine addition)
+
+**Need (not a bug):** Spec §16.2–16.3 give most answers "next buttons" that mix pages to open (some in a new tab), inline booking, and Menu. The engine's choice options could only step to another node, and its `link` node is a single-button dead end, so the Spec's answers could not be expressed. Under `docs/WORK-ORDER.md` §1.4 this was a Spec-versus-engine conflict; Jamal approved this small generic fix. The Spec also asks for an always-visible "Talk to a person" link, which needs a way to reach a node from any point in the conversation.
+
+**Change (generic; nothing TechMirai-specific):**
+- `packages/reception-engine/src/types.ts`: `ChoiceOption` gains optional `href` and `newTab`; `Interaction`'s choice options carry them through. `next` stays required: a link option points it back at the node it lives on.
+- `packages/reception-engine/src/engine.ts`: `getInteraction` passes `href`/`newTab` through. New exported `goTo(flow, state, nodeId, locale, resolve, triage?)` jumps to a named node and runs forward; pure, clones state, clears a pending prompt suppression, and leaves the state untouched for an unknown node id. `advance` is unchanged: a link option is rendered as an anchor by the host and never sent to it.
+- `packages/reception-engine/src/index.ts`: exports `goTo`.
+
+**Verification:** `packages/reception-engine/src/engine.links.test.ts` (7 tests: link fields exposed on link options only; `goTo` jumps and shows the prompt; runs through auto-advancing nodes; does not mutate the previous state and keeps its data; clears prompt suppression; unknown node leaves state untouched; a normal choice still advances afterwards). The existing 40 engine tests are unchanged and pass.
+
+**Status:** code changed and unit-tested. Not observed in a browser by this entry; see FINDINGS.md (K1) for the end-to-end evidence.

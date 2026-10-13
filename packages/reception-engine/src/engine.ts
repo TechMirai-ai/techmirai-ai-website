@@ -198,6 +198,33 @@ export function start(
   return runForward(flow, createInitialState(flow), locale, resolve, triage)
 }
 
+/**
+ * Jump to a named node from anywhere (e.g. an always-visible "Talk to a
+ * person" link) and run forward from it. Pure relative to `prev`. An unknown
+ * node id leaves the state untouched.
+ */
+export function goTo(
+  flow: FlowGraph,
+  prev: EngineState,
+  nodeId: string,
+  locale: Locale,
+  resolve: TextResolver,
+  triage?: TriageResolver,
+): { state: EngineState; messages: ChatMessage[] } {
+  if (!flow.nodes[nodeId]) return { state: prev, messages: [] }
+  const state: EngineState = {
+    ...prev,
+    data: { ...prev.data },
+    history: [...prev.history],
+    effects: [],
+    error: null,
+    currentNodeId: nodeId,
+    status: 'active',
+    suppressNextPrompt: false,
+  }
+  return runForward(flow, state, locale, resolve, triage)
+}
+
 /** Derive what the UI must render now from the current node. */
 export function getInteraction(state: EngineState, flow: FlowGraph, locale: Locale, resolve: TextResolver): Interaction {
   if (!state.currentNodeId) return { kind: 'none' }
@@ -207,7 +234,12 @@ export function getInteraction(state: EngineState, flow: FlowGraph, locale: Loca
   if (node.type === 'choice') {
     return {
       kind: 'choice',
-      options: node.options.map((o) => ({ label: resolve(o.labelKey, locale), value: o.value })),
+      options: node.options.map((o) => ({
+        label: resolve(o.labelKey, locale),
+        value: o.value,
+        ...(o.href !== undefined ? { href: o.href } : {}),
+        ...(o.newTab !== undefined ? { newTab: o.newTab } : {}),
+      })),
     }
   }
 

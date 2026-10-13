@@ -3,8 +3,14 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { BookingFlow } from '../../../../booking/ui'
+import { CHAT_INPUT_HINT, CHAT_TALK_TO_PERSON, CHAT_WIDGET_TITLE } from '../techmirai-chat-content'
 import type { RequestReceptionAiAnswer } from './ai-client'
-import { useReceptionEngine } from './useReceptionEngine'
+import { useReceptionEngine, type HostLinks } from './useReceptionEngine'
+
+const CHOICE_BUTTON_CLASS =
+  'rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-[var(--reception-accent,#0F6E56)] transition hover:border-[var(--reception-accent,#0F6E56)] hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#0F6E56)]'
+
+const EXTERNAL_URL = /^(https?:|tel:|mailto:)/
 
 const RECEPTION_LOCALES: Array<{ code: 'ja' | 'en'; label: string }> = [
   { code: 'ja', label: '日本語' },
@@ -21,10 +27,10 @@ export interface ReceptionPanelProps {
   onClose: () => void
   greeting: Record<string, string>
   clinicPhone: string
+  /** The site name — the booking flow's success screen needs it. */
   clinicName: string
-  faqAnswers: Record<string, Record<string, string>>
-  /** site.config.ts's reception.staffLineUrl — see useReceptionEngine. */
-  staffLineUrl?: string
+  /** Per-client URLs for the LINE, demo and brochure buttons — see useReceptionEngine. */
+  hostLinks?: HostLinks
   /** Injectable for tests; defaults to the real POST /api/reception/ai client. */
   requestAiAnswer?: RequestReceptionAiAnswer
 }
@@ -36,25 +42,23 @@ export function ReceptionPanel({
   greeting,
   clinicPhone,
   clinicName,
-  faqAnswers,
-  staffLineUrl,
+  hostLinks,
   requestAiAnswer,
 }: ReceptionPanelProps) {
   const [locale, setLocale] = useState(initialLocale)
-  const { messages, interaction, done, error, send, submitQuestion, restart } = useReceptionEngine({
+  const { messages, interaction, done, error, send, submitQuestion, talkToPerson, restart } = useReceptionEngine({
     locale,
     greeting,
     clinicPhone,
-    faqAnswers: faqAnswers[locale] ?? {},
-    ...(staffLineUrl !== undefined ? { staffLineUrl } : {}),
+    ...(hostLinks ? { hostLinks } : {}),
     ...(requestAiAnswer ? { requestAiAnswer } : {}),
   })
+  const textLocale = locale === 'ja' ? 'ja' : 'en'
 
-  // Draft text for the one free-text input node (faq.ask). `pending` covers the
-  // window between submit and the flow actually advancing — now a real one:
-  // submitQuestion screens the question, fetches a grounded answer when the
-  // flow is about to need one, and only then advances the engine. The
-  // disabled input and spinner this drives are Part 2's, unchanged.
+  // Draft text for the always-visible question box. `pending` covers the
+  // window between submit and the flow advancing: submitQuestion fetches a
+  // grounded answer when the flow is about to need one, and only then routes
+  // the question through the triage node.
   const [draft, setDraft] = useState('')
   const [pending, setPending] = useState(false)
 
@@ -82,7 +86,7 @@ export function ReceptionPanel({
   return (
     <div className="flex h-[min(80vh,600px)] w-[calc(100vw-2.5rem)] max-w-[400px] flex-col overflow-hidden rounded-2xl shadow-2xl sm:w-[400px]">
       <header className="flex items-center gap-2 bg-[var(--reception-accent,#0F6E56)] px-4 py-3">
-        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{clinicName}</p>
+        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{CHAT_WIDGET_TITLE}</p>
 
         {localeOptions.length > 1 && (
           <div className="flex overflow-hidden rounded-full border border-white/30 text-[11px]">
@@ -128,9 +132,17 @@ export function ReceptionPanel({
 
       {/* Pack-2/E2: AI disclosure tag, required on every page (Content Spec
           §16.1, mandated site-wide by §18 item 8) — "Automated assistant"/自動応答. */}
-      <p className="bg-zinc-100 px-4 py-1.5 text-center text-[11px] font-medium tracking-wide text-zinc-500">
-        {locale === 'ja' ? '自動応答' : 'Automated assistant'}
-      </p>
+      <div className="flex items-center justify-between gap-2 bg-zinc-100 px-4 py-1.5 text-[11px] font-medium tracking-wide text-zinc-500">
+        <span>{locale === 'ja' ? '自動応答' : 'Automated assistant'}</span>
+        {/* Spec 16.1: always visible, whatever the conversation is doing. */}
+        <button
+          type="button"
+          onClick={talkToPerson}
+          className="rounded px-1 font-semibold text-[var(--reception-accent,#0F6E56)] underline underline-offset-2 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#0F6E56)]"
+        >
+          {CHAT_TALK_TO_PERSON[textLocale]}
+        </button>
+      </div>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-zinc-50 px-4 py-4">
         {messages.map((m) => (
@@ -187,33 +199,46 @@ export function ReceptionPanel({
 
         {interaction.kind === 'choice' && (
           <div className="flex flex-wrap gap-2">
-            {interaction.options.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => send(o.value)}
-                className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-[var(--reception-accent,#0F6E56)] transition hover:border-[var(--reception-accent,#0F6E56)] hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#0F6E56)]"
-              >
-                {o.label}
-              </button>
-            ))}
+            {interaction.options.map((o) => {
+              if (!o.href) {
+                return (
+                  <button key={o.value} type="button" onClick={() => send(o.value)} className={CHOICE_BUTTON_CLASS}>
+                    {o.label}
+                  </button>
+                )
+              }
+              // A link option never advances the flow. External URLs (LINE, tel, the demo
+              // site) are raw; internal paths get the locale prefix. `newTab` is the Spec's
+              // "(new tab)" and always carries rel=noopener.
+              const external = EXTERNAL_URL.test(o.href)
+              const newTabProps = o.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+              return external ? (
+                <a key={o.value} href={o.href} {...newTabProps} className={CHOICE_BUTTON_CLASS}>
+                  {o.label}
+                </a>
+              ) : (
+                <Link key={o.value} href={`/${locale}${o.href}`} {...newTabProps} className={CHOICE_BUTTON_CLASS}>
+                  {o.label}
+                </Link>
+              )
+            })}
           </div>
         )}
 
-        {interaction.kind === 'input' && (
+        {interaction.kind !== 'component' && (
           <form
             onSubmit={(e) => {
               e.preventDefault()
               void submitFreeText()
             }}
-            className="flex items-center gap-2"
+            className="mt-2 flex items-center gap-2 first:mt-0"
           >
             <input
-              type={interaction.inputType === 'email' ? 'email' : interaction.inputType === 'phone' ? 'tel' : 'text'}
+              type="text"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder={interaction.placeholder}
-              aria-label={interaction.placeholder}
+              placeholder={CHAT_INPUT_HINT[textLocale]}
+              aria-label={CHAT_INPUT_HINT[textLocale]}
               disabled={pending}
               className="min-w-0 flex-1 rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-[var(--reception-accent,#0F6E56)] focus:outline-none disabled:opacity-60"
             />

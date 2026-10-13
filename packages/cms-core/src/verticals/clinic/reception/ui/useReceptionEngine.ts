@@ -1,14 +1,21 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { advance, getInteraction, start } from '@techmirai/reception-engine'
-import type { ChatMessage, EngineState, Interaction, Locale as EngineLocale, NodeId } from '@techmirai/reception-engine'
+import { advance, getInteraction, goTo, start } from '@techmirai/reception-engine'
+import type { ChatMessage, EngineState, Interaction, Locale as EngineLocale } from '@techmirai/reception-engine'
 import enMessages from '../../../../i18n/messages/en.json'
 import jaMessages from '../../../../i18n/messages/ja.json'
-import { clinicReceptionFlow, FAQ_STAFF_LINK_NODE_ID, FAQ_STAFF_OPTION_VALUE } from '../flow'
 import { createReceptionTextResolver } from '../resolver'
 import { screenQuestion } from '../screening'
-import { createClinicTriageResolver } from '../triage'
+import {
+  buildTechmiraiMessages,
+  HOST_LINK_PREFIX,
+  QUESTION_FIELD,
+  TALK_TO_PERSON_NODE_ID,
+  TRIAGE_NODE_ID,
+} from '../techmirai-chat-content'
+import { techmiraiReceptionFlow } from '../techmirai-flow'
+import { createTechmiraiTriageResolver } from '../techmirai-triage'
 import { requestReceptionAiAnswer, type RequestReceptionAiAnswer } from './ai-client'
 
 type MessageNode = string | { [key: string]: MessageNode }
@@ -19,47 +26,54 @@ const BASE_MESSAGES: Record<'en' | 'ja', MessageTree> = {
   ja: jaMessages,
 }
 
+const flow = techmiraiReceptionFlow
+
 const AI_OFF_TOPIC_KEY = 'reception.faq.ai.offTopic'
-const REFUSAL_KEY = 'reception.refusal.text'
+/** Spec 16.3 F09 — the same "no medical or legal advice" answer the triage routes to. */
+const REFUSAL_KEY = 'reception.tm.f09.answer'
+
+/** Digits needed before a configured phone number is dialable. */
+const MIN_DIALABLE_DIGITS = 8
 
 function toEngineLocale(locale: string): 'en' | 'ja' {
   return locale === 'ja' ? 'ja' : 'en'
 }
 
-/**
- * True when the node awaiting input feeds a triage node — i.e. when what the
- * visitor is about to submit is a free-text question that may need an AI
- * answer fetched before the flow advances. Derived from the graph rather than
- * hardcoded to `faq.ask`, so a second free-text node would not silently skip
- * the fetch (or a non-triage input node pay for one).
- */
-function leadsToTriage(nodeId: NodeId | null): boolean {
-  if (!nodeId) return false
-  const node = clinicReceptionFlow.nodes[nodeId]
-  if (!node || node.type !== 'input') return false
-  return clinicReceptionFlow.nodes[node.next]?.type === 'triage'
+/** Per-client URLs the package-level flow cannot hold. A missing one hides its button. */
+export interface HostLinks {
+  /** The staff LINE account (site.config reception.staffLineUrl). */
+  line?: string
+  /** The live demo site. Must be an http(s) URL — a bracketed placeholder is not one. */
+  demo?: string
+  /** The brochure PDF. */
+  brochure?: string
+}
+
+const HTTP_URL = /^https?:\/\//
+
+function resolveHostLinks(hostLinks: HostLinks | undefined, phone: string): Record<string, string> {
+  const resolved: Record<string, string> = {}
+  for (const name of ['line', 'demo', 'brochure'] as const) {
+    const url = hostLinks?.[name]?.trim()
+    if (url && HTTP_URL.test(url)) resolved[name] = url
+  }
+  const dialable = phone.replace(/[^\d+]/g, '')
+  if (dialable.replace(/\D/g, '').length >= MIN_DIALABLE_DIGITS) resolved['tel'] = `tel:${dialable}`
+  return resolved
 }
 
 /**
- * Site-config-driven visibility for the "Talk to staff" LINE link (part 5).
- * `staffLineUrl` is per-client config the flow graph itself cannot hold (see
- * flow.ts's faq.staff doc comment), so the host applies it here: the faq.menu
- * choice never offers the option without a configured URL, and — as a second
- * line of defense in case that node were ever reached anyway — the link node
- * itself degrades to `{ kind: 'none' }` rather than rendering an empty href.
+ * Swaps a `@name` option href for its configured URL and drops the option when
+ * there is none, so the chat never renders a dead button or an empty href.
  */
-function withStaffLineAvailability(interaction: Interaction, nodeId: NodeId | null, staffLineUrl: string | undefined): Interaction {
-  const trimmedUrl = staffLineUrl?.trim()
-
-  if (interaction.kind === 'choice' && nodeId === 'faq.menu' && !trimmedUrl) {
-    return { ...interaction, options: interaction.options.filter((o) => o.value !== FAQ_STAFF_OPTION_VALUE) }
-  }
-
-  if (interaction.kind === 'link' && nodeId === FAQ_STAFF_LINK_NODE_ID) {
-    return trimmedUrl ? { ...interaction, href: trimmedUrl } : { kind: 'none' }
-  }
-
-  return interaction
+function withHostLinks(interaction: Interaction, links: Record<string, string>): Interaction {
+  if (interaction.kind !== 'choice') return interaction
+  const options = interaction.options.flatMap((option) => {
+    if (!option.href?.startsWith(HOST_LINK_PREFIX)) return [option]
+    const url = links[option.href.slice(HOST_LINK_PREFIX.length)]
+    return url ? [{ ...option, href: url }] : []
+  })
+  return { ...interaction, options }
 }
 
 export interface UseReceptionEngineArgs {
@@ -67,14 +81,9 @@ export interface UseReceptionEngineArgs {
   /** Per-locale greeting override from site.config.reception.greeting — takes
    * priority over the package's built-in reception.greeting i18n copy. */
   greeting: Record<string, string>
+  /** The configured phone number; becomes the "Call" button when dialable. */
   clinicPhone: string
-  /** FAQ answers for this locale, keyed faq.<slug> — see faq-answers.ts (static, sourced from faq-content.ts, not fetched here). */
-  faqAnswers: Record<string, string>
-  /**
-   * site.config.ts's reception.staffLineUrl. The faq.menu "Talk to staff"
-   * option is hidden entirely when this is unset — see withStaffLineAvailability.
-   */
-  staffLineUrl?: string
+  hostLinks?: HostLinks
   /** Injectable for tests; defaults to the real POST /api/reception/ai client. */
   requestAiAnswer?: RequestReceptionAiAnswer
 }
@@ -85,22 +94,23 @@ export interface UseReceptionEngineResult {
   interaction: Interaction
   done: boolean
   error: string | null
-  /** Synchronous advance — for menu buttons and any input that cannot need an AI answer. */
+  /** Synchronous advance — for menu buttons. */
   send: (value: string) => void
-  /** Free-text submit: resolves the AI answer first (when one is needed), then advances. */
+  /** Free-text submit: resolves the AI answer first (when one is needed), then routes the question. */
   submitQuestion: (value: string) => Promise<void>
+  /** The always-visible "Talk to a person" link: jumps to the hand-off node from anywhere. */
+  talkToPerson: () => void
   restart: () => void
 }
 
 /**
- * Bridges the pure reception-engine to React state. Owns EngineState,
- * builds the host TextResolver (static i18n copy + FAQ answers +
- * config-supplied greeting override), and re-runs `start` when the locale
- * changes — mirroring sadiatec-assistant's useFlowEngine, minus any fetch:
- * FAQ content arrives as a plain prop, already built by faq-answers.ts.
+ * Bridges the pure reception-engine to React state. Owns EngineState, builds
+ * the host TextResolver (the TechMirai message tree over the base i18n copy,
+ * with the config-supplied greeting override on top), and re-runs `start` when
+ * the locale changes.
  *
- * The one fetch that does live here is the AI answer, and it happens BEFORE
- * `advance` rather than in response to it: the engine is synchronous and its
+ * The one fetch that lives here is the AI answer, and it happens BEFORE the
+ * engine is told about the question: the engine is synchronous and its
  * `ai-fallback` node resolves its text through the TextResolver like every
  * other node, so the answer has to be in hand by the time that node renders.
  */
@@ -108,45 +118,40 @@ export function useReceptionEngine({
   locale,
   greeting,
   clinicPhone,
-  faqAnswers,
-  staffLineUrl,
+  hostLinks,
   requestAiAnswer = requestReceptionAiAnswer,
 }: UseReceptionEngineArgs): UseReceptionEngineResult {
   const engineLocale = toEngineLocale(locale)
 
   // Holds the text for the ai-fallback node currently being answered. A ref,
   // not state: it is read synchronously by the resolver inside the very
-  // `advance` call that follows setting it, which a state update would not be
+  // engine call that follows setting it, which a state update would not be
   // visible to. Cleared before every submission so a stale answer can never
   // be shown against a new question.
   const aiAnswerRef = useRef<string | null>(null)
 
   const resolve = useMemo(() => {
-    const base = BASE_MESSAGES[engineLocale]
-    const baseReception = base['reception']
+    const tm = buildTechmiraiMessages(engineLocale)
     const receptionOverride: MessageTree = {
-      ...(typeof baseReception === 'object' ? baseReception : {}),
+      ...(tm as MessageTree),
       ...(greeting[locale] !== undefined ? { greeting: greeting[locale] } : {}),
     }
-    const merged: MessageTree = { ...base, reception: receptionOverride }
+    const merged: MessageTree = { ...BASE_MESSAGES[engineLocale], reception: receptionOverride }
 
     return createReceptionTextResolver({
       messages: { [engineLocale]: merged },
-      faqAnswers,
+      faqAnswers: {},
       phone: clinicPhone,
       aiAnswer: () => aiAnswerRef.current,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engineLocale, locale, greeting, clinicPhone, faqAnswers])
+  }, [engineLocale, locale, greeting, clinicPhone])
 
-  // Routing for the faq.ask.triage node: the medical screen (Part 4) in front
-  // of the static fuse.js FAQ match (Part 3, sourced from faq-content.ts —
-  // no longer CMS/i18n-dependent), falling through to the AI node. Rebuilt
-  // only when the locale changes.
-  const triage = useMemo(() => createClinicTriageResolver(engineLocale), [engineLocale])
+  const triage = useMemo(() => createTechmiraiTriageResolver(engineLocale), [engineLocale])
+  const links = useMemo(() => resolveHostLinks(hostLinks, clinicPhone), [hostLinks, clinicPhone])
 
   const [session, setSession] = useState<{ state: EngineState; messages: ChatMessage[] }>(() => {
-    const result = start(clinicReceptionFlow, engineLocale, resolve, triage)
+    const result = start(flow, engineLocale, resolve, triage)
     return { state: result.state, messages: result.messages }
   })
 
@@ -160,20 +165,26 @@ export function useReceptionEngine({
       return
     }
     aiAnswerRef.current = null
-    const result = start(clinicReceptionFlow, engineLocale, resolve, triage)
+    const result = start(flow, engineLocale, resolve, triage)
     setSession({ state: result.state, messages: result.messages })
     // Locale switch restarts the conversation, matching the reference widget.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [engineLocale])
 
   // Side effects (`capture`/`handoff`) are surfaced by advance()/start() but
-  // deliberately not consumed here — clinicReceptionFlow has no capture or
-  // handoff nodes today (booking/manage go through dedicated component/link
-  // nodes instead). A future flow that adds one will need this hook to also
-  // act on `result.state.effects` (e.g. notify staff, persist a lead).
+  // deliberately not consumed here — the flow has no capture or handoff nodes
+  // (booking and contact go through the inline component and link buttons).
   function send(value: string) {
     setSession((prev) => {
-      const result = advance(clinicReceptionFlow, prev.state, value, engineLocale, resolve, triage)
+      const result = advance(flow, prev.state, value, engineLocale, resolve, triage)
+      return { state: result.state, messages: [...prev.messages, ...result.messages] }
+    })
+  }
+
+  function talkToPerson() {
+    aiAnswerRef.current = null
+    setSession((prev) => {
+      const result = goTo(flow, prev.state, TALK_TO_PERSON_NODE_ID, engineLocale, resolve, triage)
       return { state: result.state, messages: [...prev.messages, ...result.messages] }
     })
   }
@@ -181,14 +192,12 @@ export function useReceptionEngine({
   /**
    * Turns one free-text question into the text the ai-fallback node will show.
    * Returns null for every outcome that should fall back to the static
-   * "we could not answer that, please call us" copy — a failed, timed-out,
-   * rate-limited or unconfigured model all land here, and none of them can
-   * surface an error string or leave the bubble empty.
+   * "I'm not sure about that" copy — a failed, timed-out, rate-limited or
+   * unconfigured model all land here, and none of them can surface an error
+   * string or leave the bubble empty.
    */
   async function resolveAiText(question: string): Promise<string | null> {
-    // Layer 2, browser side: recognizably off-topic but not medical. Answered
-    // from fixed copy without a request, so junk costs nothing. The route
-    // re-runs the same screen for callers that skip the widget.
+    // Recognizably off-topic but not medical: fixed copy, no request, so junk costs nothing.
     if (screenQuestion(question) === 'off-topic') return resolve(AI_OFF_TOPIC_KEY, engineLocale)
 
     const result = await requestAiAnswer({ question, locale: engineLocale })
@@ -198,10 +207,8 @@ export function useReceptionEngine({
       case 'off-topic':
         return resolve(AI_OFF_TOPIC_KEY, engineLocale)
       case 'refused':
-        // Unreachable through the widget — `triage` already routed medical
-        // text to refusal.medical without calling this. Mapped anyway so the
-        // server staying stricter than the client can never produce a
-        // mismatched message.
+        // The triage already routes medical text to F09 without calling this;
+        // mapped anyway so a stricter server can never produce a mismatched message.
         return resolve(REFUSAL_KEY, engineLocale)
       default:
         return null
@@ -211,37 +218,37 @@ export function useReceptionEngine({
   async function submitQuestion(value: string): Promise<void> {
     aiAnswerRef.current = null
     const question = value.trim()
+    if (!question) return
 
-    if (question && leadsToTriage(session.state.currentNodeId)) {
-      // The same pure verdict `advance` will compute a moment later, asked
-      // early so nothing is fetched for a question that is about to be
-      // refused or answered from an existing FAQ entry.
-      if (triage(question, engineLocale).kind === 'ai') {
-        aiAnswerRef.current = await resolveAiText(question)
-      }
+    // The same pure verdict the engine computes a moment later, asked early so
+    // nothing is fetched for a question answered from a matched entry.
+    if (triage(question, engineLocale).kind === 'ai') {
+      aiAnswerRef.current = await resolveAiText(question)
     }
 
-    send(value)
+    setSession((prev) => {
+      const withQuestion: EngineState = { ...prev.state, data: { ...prev.state.data, [QUESTION_FIELD]: question } }
+      const result = goTo(flow, withQuestion, TRIAGE_NODE_ID, engineLocale, resolve, triage)
+      const asked: ChatMessage = { id: `q_${Date.now().toString(36)}`, role: 'user', text: question, timestamp: Date.now() }
+      return { state: result.state, messages: [...prev.messages, asked, ...result.messages] }
+    })
   }
 
   function restart() {
     aiAnswerRef.current = null
-    const result = start(clinicReceptionFlow, engineLocale, resolve, triage)
+    const result = start(flow, engineLocale, resolve, triage)
     setSession({ state: result.state, messages: result.messages })
   }
 
   return {
     locale: engineLocale,
     messages: session.messages,
-    interaction: withStaffLineAvailability(
-      getInteraction(session.state, clinicReceptionFlow, engineLocale, resolve),
-      session.state.currentNodeId,
-      staffLineUrl,
-    ),
+    interaction: withHostLinks(getInteraction(session.state, flow, engineLocale, resolve), links),
     done: session.state.status === 'done',
     error: session.state.error,
     send,
     submitQuestion,
+    talkToPerson,
     restart,
   }
 }

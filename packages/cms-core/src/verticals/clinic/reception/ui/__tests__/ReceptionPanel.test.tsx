@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { buildStaticFaqAnswers } from '../../faq-answers'
 import { ReceptionPanel } from '../ReceptionPanel'
 import type { RequestReceptionAiAnswer } from '../ai-client'
 import type { ReceptionAiResponse } from '../../ai-contract'
@@ -15,307 +14,339 @@ const defaultProps = {
   onClose: () => {},
   greeting: { ja: 'こんにちは', en: 'Hello' },
   clinicPhone: '+81-3-5432-1188',
-  clinicName: 'さくら接骨院',
-  faqAnswers: { ja: {}, en: {} },
+  clinicName: 'TechMirai',
 }
 
+/** A menu or next button by its label. The last match: "Talk to a person" is also the always-visible header link. */
+function button(name: string) {
+  return screen.getAllByRole('button', { name }).at(-1)!
+}
+
+function pressButton(name: string) {
+  fireEvent.click(button(name))
+}
+
+// K1 rewrite of the clinic-era panel tests (docs/FINDINGS.md, K1). The intent of
+// each test is kept — inline booking, links, greeting override, locale, the
+// free-text path and its four outcomes — against the TechMirai flow.
 describe('ReceptionPanel', () => {
-  it('mounts BookingFlow inline when 予約したい is chosen', () => {
+  it('mounts BookingFlow inline when "Book a call" is chosen', () => {
     render(<ReceptionPanel {...defaultProps} />)
 
-    fireEvent.click(screen.getByText('予約したい'))
+    pressButton('無料診断・相談')
+    pressButton('面談を予約')
 
-    expect(screen.getByTestId('booking-flow-mock')).toHaveTextContent('さくら接骨院')
+    expect(screen.getByTestId('booking-flow-mock')).toHaveTextContent('TechMirai')
   })
 
-  it('renders a link to the manage page when 予約の変更・キャンセル is chosen', () => {
+  it('renders an internal link button, locale-prefixed, that does not leave the conversation', () => {
     render(<ReceptionPanel {...defaultProps} />)
 
-    fireEvent.click(screen.getByText('予約の変更・キャンセル'))
+    pressButton('料金について')
 
-    const link = screen.getByRole('link')
-    expect(link).toHaveAttribute('href', '/ja/booking/manage')
+    expect(screen.getByRole('link', { name: '料金ページ' })).toHaveAttribute('href', '/ja/pricing')
+    // The same node is still showing its buttons.
+    expect(screen.getByRole('link', { name: '無料診断' })).toHaveAttribute('href', '/ja/assessment')
+    expect(button('メニュー')).toBeInTheDocument()
   })
 
-  it('shows the fixed refusal message with the clinic phone number for "other" questions, never a clinical answer', () => {
+  it('"Send my website" goes to /assessment', () => {
     render(<ReceptionPanel {...defaultProps} />)
 
-    fireEvent.click(screen.getByText('質問がある'))
-    fireEvent.click(screen.getByText('症状・施術についてのご質問'))
+    pressButton('無料診断・相談')
 
-    expect(screen.getByText(/担当の施術者に直接ご確認ください/)).toBeInTheDocument()
-    expect(screen.getByText(/\+81-3-5432-1188/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'ホームページを送る' })).toHaveAttribute('href', '/ja/assessment')
   })
 
   it('renders the config-supplied greeting override instead of the built-in default', () => {
     render(<ReceptionPanel {...defaultProps} greeting={{ ja: 'いらっしゃいませ！', en: 'Welcome!' }} />)
     expect(screen.getByText('いらっしゃいませ！')).toBeInTheDocument()
   })
+
+  it('shows the widget title, the automated-assistant tag and the Talk to a person link on the first screen', () => {
+    render(<ReceptionPanel {...defaultProps} />)
+
+    expect(screen.getByText('TechMirai AI受付')).toBeInTheDocument()
+    expect(screen.getByText('自動応答')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'スタッフと話す' }).length).toBeGreaterThan(0)
+  })
+
+  it('keeps "Talk to a person" visible after navigating, and it opens the hand-off answer from anywhere', () => {
+    render(<ReceptionPanel {...defaultProps} />)
+
+    pressButton('業種別の活用例')
+    pressButton('クリニック・治療院')
+    fireEvent.click(screen.getAllByRole('button', { name: 'スタッフと話す' })[0]!)
+
+    expect(screen.getByText(/かしこまりました/)).toBeInTheDocument()
+  })
+
+  it('switches language and restarts the conversation', () => {
+    render(<ReceptionPanel {...defaultProps} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'EN' }))
+
+    expect(screen.getByText('Hello')).toBeInTheDocument()
+    expect(screen.getByText('Automated assistant')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'What is AI受付?' })).toBeInTheDocument()
+  })
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// "Talk to staff" LINE link (part 5) — plain outbound link, not lead-saving.
+// Per-client links (LINE, call, demo) — resolved by the host, hidden when unset.
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe('ReceptionPanel — talk to staff (faq.staff)', () => {
-  const STAFF_LINE_URL = 'https://line.me/R/ti/p/@sakura-sekkotsu-placeholder'
+describe('ReceptionPanel — host-resolved links', () => {
+  const LINE_URL = 'https://line.me/R/ti/p/@techmirai-test'
 
-  it('renders an external LINE link, opened in a new tab, when staffLineUrl is configured', () => {
-    render(<ReceptionPanel {...defaultProps} staffLineUrl={STAFF_LINE_URL} />)
+  it('renders the LINE button as an external link in a new tab when configured', () => {
+    render(<ReceptionPanel {...defaultProps} hostLinks={{ line: LINE_URL }} />)
 
-    fireEvent.click(screen.getByText('質問がある'))
-    fireEvent.click(screen.getByText('LINEでスタッフに相談する'))
+    pressButton('スタッフと話す')
 
-    const link = screen.getByRole('link')
-    expect(link).toHaveAttribute('href', STAFF_LINE_URL)
+    const link = screen.getByRole('link', { name: 'LINE' })
+    expect(link).toHaveAttribute('href', LINE_URL)
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
-  it('hides the option entirely — never a dead/broken button — when staffLineUrl is unset', () => {
-    render(<ReceptionPanel {...defaultProps} />)
+  it('hides the LINE button entirely — never a dead button — when unset or blank', () => {
+    const { unmount } = render(<ReceptionPanel {...defaultProps} />)
+    pressButton('スタッフと話す')
+    expect(screen.queryByRole('link', { name: 'LINE' })).not.toBeInTheDocument()
+    unmount()
 
-    fireEvent.click(screen.getByText('質問がある'))
-
-    expect(screen.queryByText('LINEでスタッフに相談する')).not.toBeInTheDocument()
+    render(<ReceptionPanel {...defaultProps} hostLinks={{ line: '   ' }} />)
+    pressButton('スタッフと話す')
+    expect(screen.queryByRole('link', { name: 'LINE' })).not.toBeInTheDocument()
   })
 
-  it('also hides the option when staffLineUrl is an empty/whitespace string', () => {
-    render(<ReceptionPanel {...defaultProps} staffLineUrl="   " />)
+  it('offers Call as a tel: link when the phone number is dialable, and the email form always', () => {
+    render(<ReceptionPanel {...defaultProps} />)
 
-    fireEvent.click(screen.getByText('質問がある'))
+    pressButton('スタッフと話す')
 
-    expect(screen.queryByText('LINEでスタッフに相談する')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '電話' })).toHaveAttribute('href', 'tel:+81354321188')
+    expect(screen.getByRole('link', { name: 'メールフォーム' })).toHaveAttribute('href', '/ja/contact')
+  })
+
+  it('hides Call when the configured phone is not dialable', () => {
+    render(<ReceptionPanel {...defaultProps} clinicPhone="[TBD]" />)
+
+    pressButton('スタッフと話す')
+
+    expect(screen.queryByRole('link', { name: '電話' })).not.toBeInTheDocument()
+  })
+
+  it('opens the demo in a new tab only when the demo URL is a real http(s) URL', () => {
+    const { unmount } = render(<ReceptionPanel {...defaultProps} hostLinks={{ demo: '[demo.techmirai-ai.com]' }} />)
+    pressButton('デモを見る')
+    expect(screen.queryByRole('link', { name: 'デモを開く' })).not.toBeInTheDocument()
+    unmount()
+
+    render(<ReceptionPanel {...defaultProps} hostLinks={{ demo: 'https://demo.example.test' }} />)
+    pressButton('デモを見る')
+    const link = screen.getByRole('link', { name: 'デモを開く' })
+    expect(link).toHaveAttribute('href', 'https://demo.example.test')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Free-text (faq.ask) — the composer itself, and the four things that can
+// Free text — the always-visible question box, and the four things that can
 // come back from it. The Groq call is never made here: `requestAiAnswer` is
-// the injected seam standing in for POST /api/reception/ai, and the two
-// screening layers are exercised by asserting it is NOT called.
+// the injected seam standing in for POST /api/reception/ai, and the matched and
+// screened paths are exercised by asserting it is NOT called.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const ASK_PLACEHOLDER = 'ご質問を入力してください。お答えできる範囲でご案内します。'
+const HINT = 'ご質問は、下の欄に入力することもできます。'
 const SEND = { name: '送信' }
-// Nothing the six FAQ menu topics cover, and nothing either screen catches
-// — falls through to the AI node. NOT 'クレジットカードは使えますか': that
-// used to be this clean ai-fallback case, but after the FAQ content
-// replacement (faq-content.ts) it now static-matches faq.prices, since
-// faq-36's real question ("健康保険は使えますか？") shares the literal
-// phrase "は使えますか" with it — see faq-matcher.test.ts's "ambiguous
-// phrasings" suite for the full explanation.
-const CLINIC_QUESTION = 'ペットを連れて行っても良いですか'
+const AI_UNKNOWN = /その内容はわかりかねます/
+// Nothing in the 36 matched answers covers it and neither screen catches it.
+const UNMATCHED_QUESTION = 'ペットを連れて行っても良いですか'
 
-describe('ReceptionPanel — free-text input (faq.ask)', () => {
-  function atFreeTextInput(requestAiAnswer?: RequestReceptionAiAnswer) {
-    render(<ReceptionPanel {...defaultProps} {...(requestAiAnswer ? { requestAiAnswer } : {})} />)
-    fireEvent.click(screen.getByText('質問がある'))
-    fireEvent.click(screen.getByText('質問を入力する'))
+describe('ReceptionPanel — free-text question box', () => {
+  function renderPanel(requestAiAnswer?: RequestReceptionAiAnswer) {
+    return render(<ReceptionPanel {...defaultProps} {...(requestAiAnswer ? { requestAiAnswer } : {})} />)
   }
 
   function ask(text: string) {
-    fireEvent.change(screen.getByPlaceholderText(ASK_PLACEHOLDER), { target: { value: text } })
+    fireEvent.change(screen.getByPlaceholderText(HINT), { target: { value: text } })
     fireEvent.click(screen.getByRole('button', SEND))
   }
 
-  it('renders a text input with the resolved faq.ask prompt as its placeholder — never a raw key', () => {
-    atFreeTextInput()
+  it('is visible from the first screen, with the Spec hint as its placeholder — never a raw key', () => {
+    renderPanel()
 
-    const input = screen.getByPlaceholderText(ASK_PLACEHOLDER)
+    const input = screen.getByPlaceholderText(HINT)
     expect(input).toBeInTheDocument()
     expect(input).not.toBeDisabled()
   })
 
-  it('disables the submit button while the draft is empty', () => {
-    atFreeTextInput()
+  it('disables the submit button while the draft is empty and enables it once the user types', () => {
+    renderPanel()
 
     expect(screen.getByRole('button', SEND)).toBeDisabled()
-  })
-
-  it('enables the submit button once the user types something', () => {
-    atFreeTextInput()
-
-    fireEvent.change(screen.getByPlaceholderText(ASK_PLACEHOLDER), { target: { value: CLINIC_QUESTION } })
+    fireEvent.change(screen.getByPlaceholderText(HINT), { target: { value: UNMATCHED_QUESTION } })
     expect(screen.getByRole('button', SEND)).not.toBeDisabled()
   })
 
-  it('disables the input and submit button while the answer is in flight', async () => {
+  it('disables the submit button while the answer is in flight', async () => {
     let release: (value: ReceptionAiResponse) => void = () => {}
     const pending = new Promise<ReceptionAiResponse>((resolve) => {
       release = resolve
     })
-    atFreeTextInput(() => pending)
+    renderPanel(() => pending)
 
-    ask(CLINIC_QUESTION)
+    ask(UNMATCHED_QUESTION)
 
-    // The real pending window now: the request is out and unresolved.
     expect(screen.getByRole('button', SEND)).toBeDisabled()
 
-    release({ status: 'answered', answer: '現金とクレジットカードがご利用いただけます。' })
+    release({ status: 'answered', answer: 'ペットのお連れについては、スタッフにご確認ください。' })
     await waitFor(() => {
-      expect(screen.getByText('現金とクレジットカードがご利用いただけます。')).toBeInTheDocument()
+      expect(screen.getByText('ペットのお連れについては、スタッフにご確認ください。')).toBeInTheDocument()
     })
   })
 
-  it('shows the grounded answer, then returns to the button menu — one answer, not a chat', async () => {
-    const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: '土曜日は13時まで受付しております。' }))
-    atFreeTextInput(requestAiAnswer)
+  it('shows the grounded answer, then the hand-off buttons — one answer, not a chat', async () => {
+    const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: 'スタッフがご案内します。' }))
+    renderPanel(requestAiAnswer)
 
-    ask(CLINIC_QUESTION)
+    ask(UNMATCHED_QUESTION)
 
     await waitFor(() => {
-      expect(screen.getByText('土曜日は13時まで受付しております。')).toBeInTheDocument()
+      expect(screen.getByText('スタッフがご案内します。')).toBeInTheDocument()
     })
-    expect(requestAiAnswer).toHaveBeenCalledWith({ question: CLINIC_QUESTION, locale: 'ja' })
-    // The submitted question renders as its own bubble; the composer is gone.
-    expect(screen.getByText(CLINIC_QUESTION)).toBeInTheDocument()
-    expect(screen.queryByPlaceholderText(ASK_PLACEHOLDER)).not.toBeInTheDocument()
-    expect(screen.getByText('営業時間')).toBeInTheDocument()
+    expect(requestAiAnswer).toHaveBeenCalledWith({ question: UNMATCHED_QUESTION, locale: 'ja' })
+    // The question renders as its own bubble, and the flow ends at a person.
+    expect(screen.getByText(UNMATCHED_QUESTION)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'メールフォーム' })).toBeInTheDocument()
   })
 
-  it('degrades to the fixed contact-us copy when the answer is unavailable — never an error, never an empty bubble', async () => {
-    atFreeTextInput(async () => ({ status: 'unavailable' }))
+  it('degrades to the Spec "AI does not know" copy when the answer is unavailable — never an error, never an empty bubble', async () => {
+    renderPanel(async () => ({ status: 'unavailable' }))
 
-    ask(CLINIC_QUESTION)
+    ask(UNMATCHED_QUESTION)
 
     await waitFor(() => {
-      expect(screen.getByText(/ただいま自動でのご案内ができませんでした/)).toBeInTheDocument()
+      expect(screen.getByText(AI_UNKNOWN)).toBeInTheDocument()
     })
-    expect(screen.getByText(/\+81-3-5432-1188/)).toBeInTheDocument()
-    expect(screen.getByText('営業時間')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'メールフォーム' })).toBeInTheDocument()
   })
 
   it('answers an off-topic question from fixed copy without ever calling the server', async () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: '晴れです' }))
-    atFreeTextInput(requestAiAnswer)
+    renderPanel(requestAiAnswer)
 
     ask('今日の天気はどうですか')
 
     await waitFor(() => {
-      expect(screen.getByText(/当院のご利用に関するご質問のみお答えしております/)).toBeInTheDocument()
+      expect(screen.getByText(AI_UNKNOWN)).toBeInTheDocument()
     })
     expect(requestAiAnswer).not.toHaveBeenCalled()
     expect(screen.queryByText('晴れです')).not.toBeInTheDocument()
   })
 
-  it('routes a medical free-text question to the refusal node without ever calling the server', async () => {
+  it('routes a medical free-text question to the F09 "no advice" answer without ever calling the server', async () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: '3回で治ります' }))
-    atFreeTextInput(requestAiAnswer)
+    renderPanel(requestAiAnswer)
 
-    ask('腰が痛いのですが何回くらいで良くなりますか')
+    ask('腰が痛い')
 
     await waitFor(() => {
-      expect(screen.getByText(/担当の施術者に直接ご確認ください/)).toBeInTheDocument()
+      expect(screen.getByText(/AI受付は医療や法律の助言を行わず/)).toBeInTheDocument()
     })
     expect(requestAiAnswer).not.toHaveBeenCalled()
     expect(screen.queryByText('3回で治ります')).not.toBeInTheDocument()
   })
 
-  it('does not advance the flow on an empty submission — the required validator on faq.ask is respected', () => {
+  it('does not route anything on an empty submission', () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'unavailable' as const }))
-    const { container } = render(<ReceptionPanel {...defaultProps} requestAiAnswer={requestAiAnswer} />)
-    fireEvent.click(screen.getByText('質問がある'))
-    fireEvent.click(screen.getByText('質問を入力する'))
-
+    const { container } = renderPanel(requestAiAnswer)
     const messageCountBefore = container.querySelectorAll('[class*="rounded-2xl"][class*="px-3.5"]').length
 
-    // Bypass the disabled submit button to exercise submitFreeText's own
-    // guard directly, not just the disabled attribute.
+    // Bypass the disabled submit button to exercise submitFreeText's own guard.
     const form = container.querySelector('form')
     expect(form).not.toBeNull()
     fireEvent.submit(form!)
 
-    expect(screen.getByPlaceholderText(ASK_PLACEHOLDER)).toBeInTheDocument()
     expect(container.querySelectorAll('[class*="rounded-2xl"][class*="px-3.5"]').length).toBe(messageCountBefore)
     expect(requestAiAnswer).not.toHaveBeenCalled()
   })
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The six FAQ menu buttons (hours/access/parking/prices/bring/first-visit) —
-// wired directly to faq-content.ts. Before this, `faqAnswers` was always {}
-// in practice (the CMS-backed resolveClinicFaqAnswers never had seeded
-// content for these slugs — see the delivery report), so every button
-// rendered the "not ready yet, please call us" fallback regardless of props.
-// These tests use the REAL buildStaticFaqAnswers output, not a stub, so a
-// regression back to an empty/missing key shows up as the fallback message
-// reappearing, exactly like the bug Jamal reported.
+// The six menu buttons — Spec §16.2 answers, in both languages, plus the
+// sub-buttons and the way back. A button and a typed question give one answer.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const REAL_FAQ_ANSWERS = { ja: buildStaticFaqAnswers('ja'), en: buildStaticFaqAnswers('en') }
-const FALLBACK_SNIPPET = { ja: '現在準備中です', en: "isn't ready yet" }
-
-describe('ReceptionPanel — the six FAQ menu buttons now show real content, not the CMS fallback', () => {
-  function openFaqMenu(locale: 'ja' | 'en') {
-    render(<ReceptionPanel {...defaultProps} initialLocale={locale} faqAnswers={REAL_FAQ_ANSWERS} />)
-    fireEvent.click(screen.getByText(locale === 'ja' ? '質問がある' : 'Ask a question'))
-  }
-
+describe('ReceptionPanel — the six menu buttons show the Spec answer', () => {
   it.each([
-    ['営業時間', /診療時間は/],
-    ['アクセス', /梅丘|世田谷区/],
-    ['駐車場', /アクセス.*ページ/],
-    ['料金', /施術内容/],
-    ['持ち物', /保険証/],
-    ['初診の流れ', /問診|45.?.?60分/],
-  ])('ja: tapping "%s" shows the real faq-content.ts answer, not the fallback', (buttonLabel, expectedSnippet) => {
-    openFaqMenu('ja')
-    fireEvent.click(screen.getByText(buttonLabel))
-
-    expect(screen.queryByText(new RegExp(FALLBACK_SNIPPET.ja))).not.toBeInTheDocument()
-    expect(screen.getByText(expectedSnippet)).toBeInTheDocument()
+    ['AI受付とは？', /ホームページ・チャット・LINEで働く受付の仕組みです/],
+    ['デモを見る', /実際に動くクリニックのホームページです/],
+    ['料金について', /初期費用\[30万円\]〜、月額\[3万円\]〜/],
+    ['業種別の活用例', /どちらの業種でしょうか/],
+    ['無料診断・相談', /30分のオンライン面談/],
+    ['スタッフと話す', /平日 9:00〜18:00/],
+  ])('ja: tapping "%s" shows its answer', (label, expected) => {
+    render(<ReceptionPanel {...defaultProps} />)
+    pressButton(label)
+    expect(screen.getByText(expected)).toBeInTheDocument()
   })
 
   it.each([
-    ['Business hours', /open/i],
-    ['Access / directions', /Access page/i],
-    ['Parking', /Access page/i],
-    ['Prices', /insurance/i],
-    ['What to bring', /identification|insurance documents/i],
-    ['What to expect at your first visit', /45.?.?60 minutes|arrive a few minutes/i],
-  ])('en: tapping "%s" shows the real faq-content.ts answer, not the fallback', (buttonLabel, expectedSnippet) => {
-    openFaqMenu('en')
-    fireEvent.click(screen.getByText(buttonLabel))
-
-    expect(screen.queryByText(new RegExp(FALLBACK_SNIPPET.en, 'i'))).not.toBeInTheDocument()
-    expect(screen.getByText(expectedSnippet)).toBeInTheDocument()
+    ['What is AI受付?', /AI受付 is a front desk for your website, chat and LINE/],
+    ['See the live demo', /Our live demo is a working clinic website/],
+    ['Pricing', /Starter Package starts from \[¥300,000\] for setup and \[¥30,000\] per month/],
+    ['Examples by industry', /Which business are you in\?/],
+    ['Free assessment or consultation', /book a 30-minute online call/],
+    ['Talk to a person', /Of course\. Our team replies/],
+  ])('en: tapping "%s" shows its answer', (label, expected) => {
+    render(<ReceptionPanel {...defaultProps} initialLocale="en" />)
+    pressButton(label)
+    expect(screen.getByText(expected)).toBeInTheDocument()
   })
 
-  it('ja: "hours" combines BOTH mapped entries (faq-31 + faq-32) — neither is dropped', () => {
-    openFaqMenu('ja')
-    fireEvent.click(screen.getByText('営業時間'))
+  it('B1 offers B1a, B1b and Menu; B1a answers and Menu returns to the main menu', () => {
+    render(<ReceptionPanel {...defaultProps} initialLocale="en" />)
 
-    // faq-31 (general hours) and faq-32 (Sundays/holidays) are different
-    // sentences — both must appear, not just whichever was written first.
-    expect(screen.getByText(/診療時間は/)).toBeInTheDocument()
-    expect(screen.getByText(/日曜日・祝日の診療については/)).toBeInTheDocument()
+    pressButton('What is AI受付?')
+    expect(button('How accurate is it?')).toBeInTheDocument()
+    expect(button('Web and Voice')).toBeInTheDocument()
+
+    pressButton('How accurate is it?')
+    expect(screen.getByText(/Prices and availability always come from booking data, never AI/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'How it works' })).toHaveAttribute('href', '/en/how-it-works')
+
+    pressButton('Menu')
+    expect(screen.getByText('Hello! How can I help?')).toBeInTheDocument()
+    expect(button('Pricing')).toBeInTheDocument()
   })
 
-  it('tapping "Prices" and typing "how much does it cost?" give materially the same answer — both read faq-content.ts now', async () => {
+  it('B4 offers the five industries, each with its answer', () => {
+    render(<ReceptionPanel {...defaultProps} initialLocale="en" />)
+
+    pressButton('Examples by industry')
+    for (const label of ['Clinic', 'Beauty', 'Auto', 'Hotel', 'Other']) {
+      expect(button(label)).toBeInTheDocument()
+    }
+
+    pressButton('Hotel')
+    expect(screen.getByText(/Room bookings stay with your current booking system/)).toBeInTheDocument()
+  })
+
+  it('tapping "Pricing" and typing "how much does it cost?" give the same answer — one source', async () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: 'AI FALLBACK — SHOULD NOT BE USED' }))
-    render(<ReceptionPanel {...defaultProps} faqAnswers={REAL_FAQ_ANSWERS} requestAiAnswer={requestAiAnswer} />)
+    render(<ReceptionPanel {...defaultProps} initialLocale="en" requestAiAnswer={requestAiAnswer} />)
 
-    fireEvent.click(screen.getByText('質問がある'))
-    fireEvent.click(screen.getByText('料金'))
-    // getByText normalizes an element's rendered text (collapsing the raw
-    // \n\n buildStaticFaqAnswers joins multi-entry answers with) before
-    // matching — normalize the captured text the same way so the later
-    // getAllByText comparison isn't comparing raw vs. normalized whitespace.
-    const buttonAnswer = screen.getByText(/施術内容/).textContent!.replace(/\s+/g, ' ').trim()
+    pressButton('Pricing')
+    fireEvent.change(screen.getByPlaceholderText('Or type your question below.'), { target: { value: 'How much does it cost?' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
 
-    fireEvent.click(screen.getByText('質問を入力する'))
-    fireEvent.change(screen.getByPlaceholderText('ご質問を入力してください。お答えできる範囲でご案内します。'), {
-      target: { value: '料金はいくらですか' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: '送信' }))
-
-    // The static matcher (faq-matcher.test.ts) resolves this free-text
-    // question to the SAME node — no AI call, and the same answer text
-    // buildStaticFaqAnswers already gave the button.
-    expect(requestAiAnswer).not.toHaveBeenCalled()
     await waitFor(() => {
-      expect(screen.getAllByText(buttonAnswer).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/Starter Package starts from \[¥300,000\]/)).toHaveLength(2)
     })
+    expect(requestAiAnswer).not.toHaveBeenCalled()
   })
 })

@@ -30,8 +30,13 @@ const defaultProps = {
   onClose: () => {},
   greeting: { ja: 'こんにちは', en: 'Hello' },
   clinicPhone: '+81-3-5432-1188',
-  clinicName: 'Sakura Osteopathic Clinic',
-  faqAnswers: { ja: {}, en: {} },
+  clinicName: 'TechMirai',
+}
+
+/** K1: booking is reached from the B5 "Free assessment or consultation" answer, not a top-level button. */
+function openBooking() {
+  fireEvent.click(screen.getByRole('button', { name: 'Free assessment or consultation' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Book a call' }))
 }
 
 beforeEach(() => {
@@ -50,7 +55,7 @@ describe('ReceptionPanel — real BookingFlow mounted via the chat "component" i
       </NextIntlClientProvider>,
     )
 
-    fireEvent.click(screen.getByText('Book an appointment'))
+    openBooking()
 
     expect(screen.getByText(enMessages.blocks.booking.visitType.title)).toBeInTheDocument()
   })
@@ -60,7 +65,7 @@ describe('ReceptionPanel — real BookingFlow mounted via the chat "component" i
 
     expect(() => {
       render(<ReceptionPanel {...defaultProps} />)
-      fireEvent.click(screen.getByText('Book an appointment'))
+      openBooking()
     }).toThrow()
 
     consoleError.mockRestore()

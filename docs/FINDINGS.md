@@ -1184,3 +1184,39 @@ Applied as approved by Jamal. Nothing was committed, no email was sent, and the 
 
 - **D-10.** Windows `seed:booking` fix and a fail-closed guard, see docs/ENGINE-FIXES.md (2026-10-13). The direct-run check now uses `pathToFileURL`, the script no longer uses an inline `NODE_OPTIONS=` prefix, and `runStandalone()` now refuses unless `DATABASE_ENV=development` (the opt-in the unified `pnpm seed` already needs), before any database connection. **The live write remains UNVERIFIED**: the target is a remote Postgres whose name carries no dev/prod marker and Jamal has not confirmed it is the development database. The guard is an attestation, not proof of identity. A real run deactivates legacy rows and deletes then recreates future unbooked slots on the "TechMirai" resource.
 - **Also noticed, not changed:** the `seed`, `db:apply-indexes` and `db:migrate-faq-keywords-category` scripts use the same inline `NODE_OPTIONS=` prefix and will fail under `cmd` on Windows the same way.
+
+## 2026-10-13 — Pack-4/K1: TechMirai chat content (Spec §16.1–16.3, pp. 87–96)
+
+Nothing was committed, no email was sent, no database was written, and the seed was not run.
+
+**What changed.** The widget now runs a TechMirai flow instead of the clinic flow: greeting, "Automated assistant" tag, an always-visible "Talk to a person" link, the six menu buttons with B1a/B1b/B4 sub-buttons, and the 36 matched answers (F01–F26, C01–C10) with keywords. Typed questions are matched by exact FAQ question, then keywords, then the existing fuse matcher; symptom text goes to F09. Files: `cms-core/src/verticals/clinic/reception/techmirai-{chat-content,flow,triage}.ts` (+ tests), the hook, panel, widget, `[locale]/layout.tsx`, `seed/chat.ts`. Engine addition: `docs/ENGINE-FIXES.md` (2026-10-13, K1). Placeholders: register K1-01 to K1-07.
+
+**Where the flow lives.** There is no `flows` folder. The clinic flow is `reception/flow.ts` in the cms-core package; the TechMirai flow is a sibling file, and the clinic files are left in place (not removed; removing them needs approval).
+
+**Decisions applied (Jamal).** Engine fix approved. `/thanks` booking CTA (D-9) left for K2: `/thanks` is untouched. The two panel test files were rewritten for the TechMirai flow (below).
+
+**Deviations from the plan, and why.**
+- Chat text lives in one TypeScript module (`techmirai-chat-content.ts`) and the message tree is built from it, not copied into `en.json`/`ja.json`. One source avoids the same 36 answers existing twice.
+- Typing is always available: the panel shows the question box on every screen except the booking form, and the hook jumps to a triage node. The Spec's "Or type your question below." is its placeholder. The old `faq.ask` input node is not used.
+- "How it works (link) / 仕組み（リンク）" (B1a): the label is "How it works" / 仕組み; "(link)" is read as a note, not label text.
+- B6 offers LINE, Call and Email form with no Menu button, exactly as the Spec lists. The panel's restart button and the "Talk to a person" link remain.
+- `chat-answers` C01–C10 are seeded as editable records only. The widget does not read them at runtime.
+
+**Test changes (rule 14 / WORK-ORDER Gate 2).** `ReceptionPanel.test.tsx` (30 tests) and `ReceptionPanel.booking-integration.test.tsx` (2) asserted the clinic menu and clinic FAQ content, so they could not pass against the new flow. Rewritten with the same intent, none dropped: inline booking, links, greeting override, locale switch, always-visible link, free-text outcomes (in flight, grounded answer, unavailable, off-topic, medical, empty submit), LINE/call/demo visibility, and "button and typed question give one answer". The clinic-specific FAQ-content assertions (hours/access/parking/prices/bring/first-visit text, the staff-LINE node, the refusal text with the phone number) were replaced by the Spec §16.2 answers; the clinic flow's own unit tests (`flow.test.ts`, `faq-*.test.ts`, `triage.test.ts`) are unchanged and pass.
+
+**Verification (evidence).**
+- `pnpm typecheck`: 3 of 3 packages pass.
+- Tests: `@techmirai/reception-engine` 47 pass (7 new); `@techmirai/cms-core` 64 files / 896 tests pass (was 61 / 709). New: content parity (36 answers, EN and JA, brackets, `[JA TODO]` list), flow structure and behaviour in both languages, triage (each FAQ question in EN and JA, the first keyword of each of the 36 entries in EN and JA, Spec §16.7 rows 1, 2, 3, 4, 5, 8, 9, 12, 13 in EN and JA).
+- `pnpm dev` booted after clearing `.next`. Every chat link target returns 200 in both languages (`/ja/...` takes one 307 hop to the unprefixed URL, since Japanese is the default locale; this was already how internal chat links behaved). In the browser (EN, narrow viewport): the first screen shows the tag, the "Talk to a person" link, the six buttons in order, and the typing box; pressing Pricing shows the Spec answer, "Pricing page" and "Free assessment" links (`/en/pricing`, `/en/assessment`) and a Menu button. The only console error was a 504 on the home page hero image on a cold dev compile (not the chat).
+
+**NOT verified.**
+- **"Book a call" completing a booking from inside the chat.** Only the mount is proven (flow and panel tests, plus the existing test that mounts the real `BookingFlow` inside the panel). Completing one would write to the remote database and could email staff; I did not do it.
+- The Japanese chat was not viewed in a browser; JA is covered by tests only.
+- The seed `seed/chat.ts` was not run.
+- The header row and the mobile-bar overlap were seen once at one narrow size only.
+
+**Spec §16.7 rows not owned by K1 matching.** Rows 6, 7, 10, 11, 14, 15 depend on the AI fallback, rule 13 wording and the out-of-hours message, which are K2. Noted: row 7 "Are you a person?" has no F08 keyword ("are you human" is the keyword), and row 6's JA "○○社より良い？" contains none of C07's JA keywords; both will reach the AI unless K2 or the Spec adds wording.
+
+**Known weak spots in matching (kept to the Spec's keyword lists, none invented).** Generic keywords can mis-route (for example "book a call" typed contains "call", which is F06's keyword; "office" matches C04). Scoring is keyword length times an entry weight; F01 (0.4) and F04 (0.5) are down-weighted so they lose to specific entries. `materials` is a keyword of both F13 and C05; the earlier entry (F13) wins.
+
+**Clinic leftovers noticed, not changed (rule 13).** `reception/flow.ts`, `faq-answers.ts`, `faq-content.ts`, `faq-matcher.ts`, `triage.ts` and their tests are still the clinic set. `screening.ts`, `ai/corpus.ts`, `ai/prompt.ts` and the AI route carry clinic wording; they are K2's. `en.json`/`ja.json` still hold the clinic `reception.*` strings, which the new flow no longer reads. `site.config.ts` still names `clinicPhone`.

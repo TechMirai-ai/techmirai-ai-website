@@ -1,4 +1,4 @@
-export { advance, createInitialState, getInteraction, start } from './engine'
+export { advance, createInitialState, getInteraction, goTo, start } from './engine'
 export type {
   AiFallbackNode,
   BaseNode,

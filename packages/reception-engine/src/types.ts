@@ -49,6 +49,15 @@ export interface ChoiceOption {
   set?: Partial<CollectedData>
   /** Optionally fix which collection captures target from here on. */
   setTarget?: string
+  /**
+   * Makes this option a link instead of a step: the host renders an anchor to
+   * `href` and never calls `advance` for it, so the conversation stays on this
+   * node. `next` is still required by the type; link options point it at the
+   * node they live on.
+   */
+  href?: string
+  /** With `href`: open in a new tab. */
+  newTab?: boolean
 }
 
 export interface ChoiceNode extends BaseNode {
@@ -210,7 +219,7 @@ export interface ChatMessage {
 
 /** What the UI must render *now* to move the conversation forward. */
 export type Interaction =
-  | { kind: 'choice'; options: Array<{ label: string; value: string }> }
+  | { kind: 'choice'; options: Array<{ label: string; value: string; href?: string; newTab?: boolean }> }
   | {
       kind: 'input'
       field: string
