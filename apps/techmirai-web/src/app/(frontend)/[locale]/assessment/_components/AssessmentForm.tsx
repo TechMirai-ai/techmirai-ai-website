@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { Alert, Badge } from '@techmirai/cms-core/components/ui'
+import { Link } from '@/i18n/routing'
 import siteConfig from '../../../../../../site.config'
 
 // Pack-4/J1: /assessment's form (Spec §12.2, lines 1031-1047 of
@@ -511,9 +512,10 @@ export function AssessmentForm({ locale: rawLocale }: AssessmentFormProps) {
           />
           <span>
             {t.consent} <Badge variant="accent">{t.required}</Badge> —{' '}
-            <a href={siteConfig.legal.privacyPolicySlug} className="underline hover:no-underline">
+            {/* Pack-4/M1: locale-aware, so /en/assessment links to /en/privacy. */}
+            <Link href={siteConfig.legal.privacyPolicySlug} className="underline hover:no-underline">
               {privacyLinkLabels[locale]}
-            </a>
+            </Link>
           </span>
         </label>
         {fieldErrors['consent'] && (

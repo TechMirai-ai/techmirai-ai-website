@@ -1378,3 +1378,55 @@ Nothing was committed or deployed, no database was touched, no seed was run, no 
   - Cosmetic only: long titles wrap at any character, so a line can break inside a word (e.g. 連｜携, 車｜検). Not a glyph issue; not changed.
 
 **L1 deviations unchanged:** heading order, old-site anchor redirects, `/thanks` `[TBD]` meta (`updateLocalizedDoc`), `/legal` vs `/legal-notice` (M1).
+
+## 2026-10-15 — Pack-4/M1: legal pages (Spec §18, pp.107–111)
+
+**Decisions (Jamal, 2026-10-15).**
+
+1. **Placeholders.** Every Spec §18 heading carries exactly:
+   - EN: `[PLACEHOLDER: wording to be written by a professional. Do not launch with this text.]`
+   - JA: `専門家による文案作成が必要です。この文章のまま公開しないでください。`
+
+   The JA string was supplied by Jamal, not written or translated by ECC.
+2. **Phone:** placeholder only. The configured `[080-7701-3004]` is unconfirmed and is not shown on any legal page.
+3. **URL:** the page stays at `/legal-notice`. New 301s in `next.config.ts`: `/legal` → `/legal-notice` and `/en/legal` → `/en/legal-notice`. L1's three `/legal/*.html` 301s are unchanged.
+
+**Changes.**
+
+- **Headings:** `apps/techmirai-web/src/lib/legal-headings.ts` holds the Spec §18 headings word for word (privacy 9, terms 6, legal notice 10, EN and JA; the bracketed English glosses after the JA cells are not headings).
+- **Page component:** `_components/LegalPage.tsx` renders the §4 title as the only H1, an H2 per heading, and the placeholder. It replaces `_components/LegalPlaceholder.tsx` (deleted).
+- **Confirmed facts shown alongside the placeholder:**
+  - "TechMirai" under Business information / 事業者情報 and Seller / 販売事業者
+  - info@techmirai-ai.com under Contact / お問い合わせ窓口 and Email / メールアドレス
+- **Consent-link fix:** the assessment form's consent link (the Spec's only consent field, §12.2) was a plain `<a href="/privacy">`, so `/en/assessment` linked to the Japanese policy. It is now the locale-aware `Link`. Footer links were already locale-aware and are unchanged.
+- **Register:** E2-01 closed; M1-01 to M1-03 added.
+
+**Compliance items (checked, no code change).**
+
+- **Item 8:** the chat panel shows "Automated assistant" / 自動応答 on every page.
+- **Item 7:** the fictional-demo sentence is rendered on `/solutions/clinic` and `/en/solutions/clinic` (the demo clinic name is still bracketed, F1-19).
+- **Item 11:** no analytics code; no `Set-Cookie` header on `/`, `/en` or `/en/privacy`; nothing was added.
+
+**Verification.**
+
+- **Gates 1 and 2:** typecheck passed; web unit suite 36/36 (new `legal-headings.test.ts` re-reads the Spec rows); cms-core unit suite 1012/1012.
+- **Gate 3:** `.next` cleared and the dev server restarted. Privacy, terms, legal-notice and assessment return 200 in `/ja/…` and `/en/…`. No browser console errors or warnings on those 8 pages.
+- **Gate 4:** JA pages show only the approved JA placeholder and Japanese headings.
+- **Gate 6:** register updated.
+- **Rendered check, all 6 legal pages:** one H1; H2s equal to the Spec rows; one placeholder per heading; no other text in `<main>`.
+- **Redirects:** `/legal` and `/en/legal` return 301 to the right targets; the L1 legacy 301s still work.
+
+**Launch-scan gap: resolved (option 1, chosen by Jamal 2026-10-15).** Rule B6 only matched `[bracketed]` text, so the approved JA placeholder was not flagged (0 hits). `scripts/launch-scan-rules.mjs` now has `B6_UNBRACKETED_PLACEHOLDERS` holding the exact approved JA string; `checkB6BracketPlaceholders` reports it under rule ID `B6_BRACKET_PLACEHOLDERS`. Legal-page content and approved wording are unchanged. New test: `src/lib/launch-scan-placeholder.test.ts`.
+
+Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 hits parsed; split by route, locale and scope):
+
+| Route | JA text scope | JA markup scope | EN text scope | EN markup scope |
+|---|---|---|---|---|
+| `/legal-notice` | 10 | 1 | 10 | 10 |
+| `/privacy` | 9 | 1 | 9 | 9 |
+| `/terms` | 6 | 1 | 6 | 6 |
+
+- Text-scope JA hits equal the Spec heading counts (10 / 9 / 6), so every section is flagged in rendered text.
+- The JA string appears on no route other than these three.
+- Tests after the change: web unit suite 36/36; typecheck printed no errors.
+- The placeholders must still be replaced with professionally written text before launch.

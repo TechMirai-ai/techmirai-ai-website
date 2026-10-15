@@ -79,6 +79,11 @@ const nextConfig: NextConfig = {
       { source: '/legal/privacy.html', destination: '/privacy', statusCode: 301 },
       { source: '/legal/terms.html', destination: '/terms', statusCode: 301 },
       { source: '/legal/tokutei.html', destination: '/legal-notice', statusCode: 301 },
+      // Pack-4/M1: the Spec's /legal path → this repo's /legal-notice (Jamal,
+      // 2026-10-15). Config redirects run before the locale middleware, so the
+      // EN path needs its own entry. Exact sources; /legal/*.html is unaffected.
+      { source: '/legal', destination: '/legal-notice', statusCode: 301 },
+      { source: '/en/legal', destination: '/en/legal-notice', statusCode: 301 },
     ]
   },
 }

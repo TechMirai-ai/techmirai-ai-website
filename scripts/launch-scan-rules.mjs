@@ -208,8 +208,21 @@ export function checkB5GlossaryRules(content) {
 // those components.
 const BRACKET_PATTERN = /\[[^\]\n]+\]/g
 
+// Approved launch-blocking placeholders that carry no brackets, so the
+// pattern above cannot see them. Matched as exact strings. Pack-4/M1: the
+// Japanese legal-page placeholder supplied by Jamal (2026-10-15); must stay
+// identical to LEGAL_PLACEHOLDER.ja in apps/techmirai-web/src/lib/legal-headings.ts.
+export const B6_UNBRACKETED_PLACEHOLDERS = [
+  '専門家による文案作成が必要です。この文章のまま公開しないでください。',
+]
+
 export function checkB6BracketPlaceholders(content) {
-  return findPatternHits(content, BRACKET_PATTERN, 'B6_BRACKET_PLACEHOLDERS', 'bracket placeholder left in published text/config/structured data')
+  return [
+    ...findPatternHits(content, BRACKET_PATTERN, 'B6_BRACKET_PLACEHOLDERS', 'bracket placeholder left in published text/config/structured data'),
+    ...B6_UNBRACKETED_PLACEHOLDERS.flatMap((placeholder) =>
+      findHits(content, placeholder, 'B6_BRACKET_PLACEHOLDERS', 'approved placeholder (no brackets) left in published text'),
+    ),
+  ]
 }
 
 // Convenience: every check that is safe to run on raw source code (static
