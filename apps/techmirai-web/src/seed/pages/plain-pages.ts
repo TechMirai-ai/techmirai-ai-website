@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
-import { upsertBySlug } from '@techmirai/cms-core/seed'
+import { updateLocalizedDoc, upsertBySlug } from '@techmirai/cms-core/seed'
+import { LEGAL_PAGE_META, PAGE_META, pathForPageSlug } from '../../lib/seo/page-meta'
 import type { MediaIds } from '../media'
 
 interface PlainPageSeed {
@@ -95,6 +96,35 @@ async function removeOrphanedAssessmentShell(payload: Payload): Promise<void> {
   }
 }
 
+/**
+ * Pack-4/L1: Spec §17.1 titles/descriptions (lib/seo/page-meta.ts) for every
+ * shell that has a row. upsertBySlug never touches an existing doc, so this
+ * also updates docs created by earlier seeds — but only while their meta is
+ * still a seeded placeholder, so a title edited in /admin is never clobbered.
+ * One single-locale write per locale, NOT one locale:'all' write: verified
+ * against this DB that a locale:'all' update silently drops localized leaves
+ * inside a group (and clears the upload) — docs/FINDINGS.md 2026-10-14 L1.
+ * `meta` holds no array/blocks fields, so the per-locale clobbering that
+ * updateLocalizedDoc exists to avoid cannot happen here. The doc's existing
+ * share image is re-sent so it is kept. Exported so it can run on its own
+ * against an already-seeded database without the full (clearing) seed.
+ */
+export async function seedSpecMeta(payload: Payload, slug: string): Promise<void> {
+  const row = PAGE_META[pathForPageSlug(slug)] ?? LEGAL_PAGE_META[pathForPageSlug(slug)]
+  if (!row) return
+
+  const current = await payload.find({ collection: 'pages', where: { slug: { equals: slug } }, locale: 'en', limit: 1, depth: 0 })
+  const currentMeta = current.docs[0]?.['meta'] as { title?: unknown; image?: unknown } | undefined
+  const currentTitle = currentMeta?.title
+  const image = currentMeta?.image ?? null
+  const isPlaceholder = typeof currentTitle !== 'string' || currentTitle === '' || currentTitle.startsWith('[TBD')
+  if (!isPlaceholder) return
+
+  for (const locale of ['en', 'ja'] as const) {
+    await updateLocalizedDoc(payload, 'pages', slug, { [locale]: { meta: { ...row[locale], image } } })
+  }
+}
+
 export async function seedPlainPages(payload: Payload, media: MediaIds): Promise<void> {
   await removeOrphanedProductShell(payload)
   await removeOrphanedAssessmentShell(payload)
@@ -108,6 +138,7 @@ export async function seedPlainPages(payload: Payload, media: MediaIds): Promise
         image: media.ogImages[page.slug],
       },
     })
+    await seedSpecMeta(payload, page.slug)
   }
   payload.logger.info(`📄 ${PLAIN_PAGES.length} page shells ready (${PLAIN_PAGES.map((p) => p.slug).join(', ')})`)
 }

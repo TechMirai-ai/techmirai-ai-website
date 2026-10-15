@@ -5,6 +5,7 @@ import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../site.config'
 import { resolveHeaderData } from './_components/resolveHeaderData'
 import { generateQrCodeDataUrl } from '@/lib/qr-code'
+import { buildPageMetadata, metadataFromPageDoc } from '@/lib/seo/build-metadata'
 export const revalidate = 3600
 
 const SUPPORTED_LOCALES = ['en', 'ja'] as const
@@ -42,20 +43,9 @@ export async function generateMetadata({
     limit: 1,
   })
   const page = result.docs[0]
-  if (!page) return { title: siteConfig.site.name }
+  if (!page) return buildPageMetadata({ locale, path: '', title: siteConfig.site.name })
 
-  const meta = (page.meta ?? {}) as Record<string, unknown>
-  const metaTitle = typeof meta['title'] === 'string' && meta['title']
-    ? meta['title']
-    : typeof page['title'] === 'string' && page['title']
-      ? page['title']
-      : siteConfig.site.name
-  const metaDesc = typeof meta['description'] === 'string' ? meta['description'] : undefined
-
-  return {
-    title: metaTitle,
-    ...(metaDesc ? { description: metaDesc } : {}),
-  }
+  return metadataFromPageDoc(page as Record<string, unknown>, locale, '')
 }
 
 export default async function HomePage({

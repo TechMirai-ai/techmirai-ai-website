@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { buildPageMetadata } from '@/lib/seo/build-metadata'
 import siteConfig from '../../../../../../site.config'
 import { getCachedPayload } from '@/lib/payload'
 import {
@@ -73,40 +74,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getBlogPost(slug, locale)
   if (!post) return {}
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const canonicalPath =
-    locale === defaultLocale ? `/blog/${slug}` : `/${locale}/blog/${slug}`
-
-  const languages: Record<string, string> = { 'x-default': `${base}/blog/${slug}` }
-  for (const loc of siteConfig.locales.enabled) {
-    languages[loc] =
-      loc === defaultLocale ? `${base}/blog/${slug}` : `${base}/${loc}/blog/${slug}`
-  }
-
   const description = post.excerpt ?? post.subtitle ?? undefined
   const thumbnailUrl = post.featuredImage?.url
-  const ogImages = thumbnailUrl ? [{ url: thumbnailUrl }] : undefined
 
-  return {
+  return buildPageMetadata({
+    locale,
+    path: `/blog/${slug}`,
     title: post.title,
-    ...(description ? { description } : {}),
+    description,
     openGraph: {
-      title: post.title,
-      ...(description ? { description } : {}),
-      url: `${base}${canonicalPath}`,
-      siteName: siteConfig.site.name,
-      locale,
       type: 'article',
       publishedTime: post.publishedAt,
       ...(post.updatedAt ? { modifiedTime: post.updatedAt } : {}),
-      ...(ogImages ? { images: ogImages } : {}),
+      ...(thumbnailUrl ? { images: [{ url: thumbnailUrl }] } : {}),
     },
-    alternates: {
-      canonical: `${base}${canonicalPath}`,
-      languages,
-    },
-  }
+  })
 }
 
 const homeLabels: Record<Locale, string> = {

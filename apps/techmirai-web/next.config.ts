@@ -63,6 +63,18 @@ const nextConfig: NextConfig = {
     }
     return config
   },
+
+  // 5. Pack-4/L1: old techmirai-ai.com legal pages (Spec §17.2). statusCode 301,
+  // not `permanent: true` (which Next sends as 308). Targets are the Japanese
+  // (unprefixed) pages; /legal-notice is this repo's path for the Spec's /legal
+  // (docs/FINDINGS.md 2026-10-14). Old-site anchor redirects await the old URL list.
+  async redirects() {
+    return [
+      { source: '/legal/privacy.html', destination: '/privacy', statusCode: 301 },
+      { source: '/legal/terms.html', destination: '/terms', statusCode: 301 },
+      { source: '/legal/tokutei.html', destination: '/legal-notice', statusCode: 301 },
+    ]
+  },
 }
 
 export default withPayload(withNextIntl(nextConfig))

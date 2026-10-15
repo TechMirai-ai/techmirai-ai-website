@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { staticPageMetadata } from '@/lib/seo/build-metadata'
 import siteConfig from '../../../../../site.config'
 import { PageHeroBlock, CTABannerBlock } from '@techmirai/cms-core/blocks'
 import type { PageHeroBlockProps, CTABannerBlockProps } from '@techmirai/cms-core/blocks'
@@ -97,10 +98,6 @@ const titles: Record<Locale, string> = {
   ja: 'お問い合わせ',
 }
 
-const descriptions: Record<Locale, string> = {
-  en: `Get in touch with ${siteConfig.site.name} for appointments, treatment questions, or general enquiries.`,
-  ja: 'さくら接骨院へのご予約・施術に関するご相談・一般的なお問い合わせはこちらからどうぞ。',
-}
 
 const heroSubheadings: Record<Locale, string> = {
   en: "We'd love to hear from you. Reach out and we'll respond within one business day.",
@@ -140,31 +137,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const canonicalPath = locale === defaultLocale ? '/contact' : `/${locale}/contact`
-
-  const languages: Record<string, string> = { 'x-default': `${base}/contact` }
-  for (const loc of siteConfig.locales.enabled) {
-    languages[loc] = loc === defaultLocale ? `${base}/contact` : `${base}/${loc}/contact`
-  }
-
-  return {
-    title: titles[locale],
-    description: descriptions[locale],
-    openGraph: {
-      title: titles[locale],
-      description: descriptions[locale],
-      url: `${base}${canonicalPath}`,
-      siteName: siteConfig.site.name,
-      locale,
-      type: 'website',
-    },
-    alternates: {
-      canonical: `${base}${canonicalPath}`,
-      languages,
-    },
-  }
+  return staticPageMetadata('/contact', locale)
 }
 
 // ---------------------------------------------------------------------------

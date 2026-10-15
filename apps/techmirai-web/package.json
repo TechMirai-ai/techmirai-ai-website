@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"src/**/*.test.ts\"",
     "seed": "RUN_SEED=true NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/index.ts",
     "seed:booking": "tsx --require ./fix-next-env-interop.cjs --env-file=.env.local src/seed/booking.ts",
     "db:apply-indexes": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-db-indexes.ts",

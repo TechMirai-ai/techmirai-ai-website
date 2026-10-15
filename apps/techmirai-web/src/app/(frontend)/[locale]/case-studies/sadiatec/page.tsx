@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
+import { buildPageMetadata, staticPageMetadata } from '@/lib/seo/build-metadata'
 import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import { ComingSoonStub } from '../../_components/ComingSoonStub'
 
 export const revalidate = 3600
+
+const CASE_STUDY_PATH = '/case-studies/sadiatec'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -51,10 +54,12 @@ async function findVisibleCaseStudy(locale: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const doc = await findVisibleCaseStudy(locale)
-  if (!doc) return { title: locale === 'ja' ? '導入事例' : 'Case study' }
-
-  const title = typeof doc['title'] === 'string' ? doc['title'] : locale === 'ja' ? '導入事例' : 'Case study'
-  return { title }
+  // Pack-4/L1: the Spec §17.1 title names Sadiatec, so it is used only once the
+  // permission switch is on; until then the stub keeps its generic title.
+  if (!doc) {
+    return buildPageMetadata({ locale, path: CASE_STUDY_PATH, title: locale === 'ja' ? '導入事例' : 'Case study' })
+  }
+  return staticPageMetadata(CASE_STUDY_PATH, locale)
 }
 
 export default async function CaseStudySadiatecPage({ params }: Props) {

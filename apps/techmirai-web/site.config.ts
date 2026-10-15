@@ -175,11 +175,17 @@ const siteConfig: SiteConfig = {
     termsSlug: '/terms',
   },
 
+  // Pack-4/L1: replaces the leftover Sakura-clinic values (FINDINGS 2026-10-05).
+  // Per-page titles come from lib/seo/page-meta.ts (Spec §17.1) and already end
+  // in "TechMirai", so the template adds nothing. The default description is the
+  // Spec §17.1 Home row. sitemapIncludeCollections is no longer read by
+  // sitemap.ts (lib/seo/sitemap-entries.ts owns the URL list) but the schema
+  // still requires it.
   seo: {
-    titleTemplate: '%s | さくら接骨院 Sakura Osteopathic Clinic',
+    titleTemplate: '%s',
     defaultDescription: {
-      en: 'Sakura Osteopathic Clinic is a neighborhood clinic in Setagaya, Tokyo, offering insured orthopedic and sports-injury treatment alongside self-pay pelvic alignment and traffic-accident aftercare.',
-      ja: 'さくら接骨院は東京都世田谷区の地域密着型接骨院です。打撲・捻挫・スポーツ外傷などの保険診療から、骨盤矯正や交通事故治療まで幅広く対応しています。',
+      en: 'AI reception for small businesses in Japan. Answer questions, take bookings and connect LINE 24/7, in Japanese and English. Free AI website assessment.',
+      ja: '中小企業・店舗のためのAI受付。よくある質問への回答、予約受付、LINE連携を24時間、日本語・英語で。無料AIホームページ診断を受付中です。',
     },
     sitemapIncludeCollections: ['pages', 'news', 'blog', 'services', 'team', 'company', 'faq', 'contact'],
   },

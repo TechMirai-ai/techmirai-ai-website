@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MotionConfig } from 'framer-motion'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
@@ -14,6 +15,7 @@ import { HtmlLangSetter } from './_components/HtmlLangSetter'
 import { FloatingCTAs } from '@techmirai/cms-core/components/ui' 
 // Import the new wrapper
 import { LayoutWrapper } from './_components/LayoutWrapper'
+import { SITE_ORIGIN } from '@/lib/seo/build-metadata'
 
 
 const interFont = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-latin', display: 'swap', preload: false })
@@ -28,6 +30,9 @@ const localeFontConfig: Record<string, { variableClass: string; cssVar: string }
   en: { variableClass: interFont.variable, cssVar: '--font-latin' },
   ja: { variableClass: notoSansJP.variable, cssVar: '--font-ja' },
 }
+
+// Pack-4/L1: resolves relative share-image URLs (meta.image) to absolute ones.
+export const metadata: Metadata = { metadataBase: new URL(SITE_ORIGIN) }
 
 export function generateStaticParams() {
   return siteConfig.locales.enabled.map((locale) => ({ locale }))

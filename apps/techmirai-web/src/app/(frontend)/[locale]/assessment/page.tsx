@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { staticPageMetadata } from '@/lib/seo/build-metadata'
 import { notFound } from 'next/navigation'
 import siteConfig from '../../../../../site.config'
 import { PageHeroBlock, ProcessStepsBlock } from '@techmirai/cms-core/blocks'
@@ -111,7 +112,7 @@ const nextSteps: Record<Locale, string[]> = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
-  return { title: titles[locale], description: subs[locale] }
+  return staticPageMetadata('/assessment', locale)
 }
 
 // ---------------------------------------------------------------------------

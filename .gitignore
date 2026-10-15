@@ -52,6 +52,9 @@ apps/*/public/media/
 # playwright MCP tool artifacts
 .playwright-mcp/
 
+# playwright test run output (e2e failure traces)
+apps/techmirai-web/test-results/
+
 # turbo
 .turbo/
 

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../../site.config'
+import { metadataFromPageDoc } from '@/lib/seo/build-metadata'
 import { resolveHeaderData } from '../_components/resolveHeaderData'
 
 export const revalidate = 3600
@@ -37,23 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = result.docs[0]
   if (!page) return {}
 
-  const meta = (page.meta ?? {}) as Record<string, unknown>
-  const metaTitle =
-    typeof meta['title'] === 'string' && meta['title']
-      ? meta['title']
-      : typeof page['title'] === 'string'
-        ? page['title']
-        : ''
-  const metaDesc = typeof meta['description'] === 'string' ? meta['description'] : ''
-  const metaImage = meta['image'] as Record<string, unknown> | null | undefined
-  const metaImageUrl =
-    metaImage && typeof metaImage['url'] === 'string' ? metaImage['url'] : undefined
-
-  return {
-    title: metaTitle,
-    ...(metaDesc ? { description: metaDesc } : {}),
-    ...(metaImageUrl ? { openGraph: { images: [metaImageUrl] } } : {}),
-  }
+  return metadataFromPageDoc(page as Record<string, unknown>, locale, '/solutions')
 }
 
 export default async function SolutionsHubPage({ params }: Props) {

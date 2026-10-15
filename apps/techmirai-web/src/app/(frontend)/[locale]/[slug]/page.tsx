@@ -4,6 +4,8 @@ import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../../site.config'
 import { resolveHeaderData } from '../_components/resolveHeaderData'
+import { metadataFromPageDoc } from '@/lib/seo/build-metadata'
+import { pathForPageSlug } from '@/lib/seo/page-meta'
 
 export const revalidate = 3600
 
@@ -50,24 +52,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = result.docs[0]
   if (!page) return {}
 
-  const meta = (page.meta ?? {}) as Record<string, unknown>
-  const metaTitle = typeof meta['title'] === 'string' && meta['title']
-    ? meta['title']
-    : typeof page['title'] === 'string' ? page['title'] : ''
-  const metaDesc = typeof meta['description'] === 'string' ? meta['description'] : ''
-  const metaImage = meta['image'] as Record<string, unknown> | null | undefined
-  const metaImageUrl = metaImage && typeof metaImage['url'] === 'string' ? metaImage['url'] : undefined
-  const noindex = meta['noindex'] === true
-
-  return {
-    title: metaTitle,
-    ...(metaDesc ? { description: metaDesc } : {}),
-    ...(metaImageUrl ? { openGraph: { images: [metaImageUrl] } } : {}),
-    // Pack-3/I4: generic, reusable — any page with `meta.noindex` checked
-    // (e.g. /thanks, or a future form-result/draft page) gets a real
-    // noindex,nofollow robots directive, not just the robots.txt disallow.
-    ...(noindex ? { robots: { index: false, follow: false } } : {}),
-  }
+  // Pack-3/I4's generic `meta.noindex` switch (e.g. /thanks) is honoured
+  // inside the helper; Pack-4/L1 adds canonical + hreflang.
+  return metadataFromPageDoc(page as Record<string, unknown>, locale, pathForPageSlug(slug))
 }
 
 export default async function DynamicPage({ params }: Props) {

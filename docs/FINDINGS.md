@@ -1267,3 +1267,68 @@ Nothing was committed or deployed, no database was touched, no seed was run, no 
 **Known weak spots (not changed, none invented).** `screening.ts` is untouched: its English `condition` and `recover`/`heal` patterns will send "terms and conditions" or a "recovery" question to F09. Generic keywords can mis-route ("book a call" contains "call", F06's keyword; "office" is C04's). Row 6 in English matches only when the question says "other company" or "compare with"; row 6 in Japanese now matches on 社より. Both ends of these are tests of the keyword lists, not of an understanding model. **F08's keyword `AI` is a false-positive risk:** a short keyword matched as a whole word, so an ordinary question that merely contains the word ("How does the AI work?") routes to F08 ("I’m an automated assistant…"), unless a longer keyword of another entry outscores it. **The output guard has blind spots by design:** prices written in words ("fifty thousand yen"), `半額`/half price, "free", other currencies' names, delivery dates and integration promises, and a Voice claim phrased without the words it looks for are not caught; it is a narrow last check, not a reviewer of the reply.
 
 **Belongs to a later pack, not K2.** Real hours, phone, address, LINE and demo URLs (launch confirmations); real `/privacy` text and the legal pages; blog AI-visibility after Japanese review; the Sadiatec case study's `aiVisible` and its confirmation; the `/thanks` booking CTA (D-9); `reception@sakura-sekkotsu.example` as `forms.contactRecipient` in `site.config.ts` (a form setting, found while reading); removal of the clinic flow, FAQ and matcher files and their tests (needs separate approval); the unused clinic `reception.*` strings in `en.json`/`ja.json`; a runtime read of `chat-answers`; a `voice-demo` booking service with a preselect.
+
+## 2026-10-15 — Pack-4/L1: metadata and technical SEO — decisions, blockers and open items
+
+**Decisions applied (Jamal, 2026-10-14).**
+
+1. **Japanese URLs stay unprefixed (Spec-vs-engine deviation).** The Spec (§4, §17.2) says "/ja" URLs and "x-default pointing to /ja". The site uses next-intl `localePrefix: 'as-needed'` with `ja` as the default, so `/ja/...` returns a 307 to the unprefixed URL. L1 treats the unprefixed URL as the Japanese one: JA canonical `https://techmirai-ai.com/pricing`, EN `https://techmirai-ai.com/en/pricing`, x-default = the JA URL. The JA home is the bare origin `https://techmirai-ai.com`, which is the form Next prints for a root canonical. Routing is unchanged. The single URL builder is `apps/techmirai-web/src/lib/seo/build-metadata.ts` `localizedUrl()`. The next-intl middleware's `Link` hreflang header (checked on `/en/pricing`) gives the same ja/en/x-default mapping.
+2. **`/legal/tokutei.html` returns a 301 to `/legal-notice`, not the Spec's `/legal`.** `/legal` does not exist. The legal-notice route, the seed slug and the footer link all use `/legal-notice`. Whether to rename it to `/legal` is left to M1. The three legacy redirects are in `next.config.ts` with `statusCode: 301` (`permanent: true` would send 308).
+3. **noindex on `/thanks` and `/booking/manage`** (both locales). `/thanks` already had `meta.noindex` saved (I4). `/booking/manage` already set `robots: noindex` in its own metadata. No code change was needed for either.
+
+**Open items (not done in L1).**
+
+1. **Old-site anchor redirects: BLOCKED.** The Spec (§17.2) asks for 301s from the old site's "anchors". A URL fragment (`#...`) never reaches the server, so it cannot be redirected. No anchor redirect was added and no target was invented. Needs the old techmirai-ai.com list of real URLs from Jamal (PACK-4 pre-flight item).
+2. **Heading order: about 15 page/locale combinations go from h1 straight to h3.** Every crawled page has exactly one `<h1>`. The skip happens because shared blocks render card or section titles as `<h3>` with no `<h2>` above them:
+   - card/item grids: `/solutions`, `/how-it-works`, `/integrations`
+   - the `ceo-message` title: `/about`
+   - the "お渡しするもの" box: `/assessment`
+   - the clinic-era sidebar: `/blog`
+   - `/` and `/ai-reception` also fail the check (the specific block was not traced)
+
+   Fixing this means changing heading levels in several shared engine blocks, which affects every page that uses them. That is over L1's "handful of files" stop-and-ask limit. Not fixed; needs a decision. `e2e/seo.spec.ts` checks the order with a soft assertion, so these pages fail while their head checks still run.
+3. **`/blog` renders an empty `<h1>`.** It is also still the clinic-era page: hero copy "ブログ・インサイト", Sakura sidebar and CTA text. L1 changed only its metadata, which now uses the Spec §17.1 Blog row.
+4. **Engine bug: `updateLocalizedDoc` drops localized fields inside a `group` (not fixed).** Verified against this repo's database. A `locale: 'all'` update of `pages.meta` returned and kept the old `meta.title`/`meta.description`, and set `meta.image` to null. The non-localized `noindex` did save. Effect today: `/thanks` still has its seeded `[TBD: Spec Thank you page …]` / `[JA TODO]` meta title and description and no share image, even though `seed/pages/thanks.ts` writes "Thank you" / "送信完了". L1 works around it in `seed/pages/plain-pages.ts` `seedSpecMeta()` with one single-locale write per locale. That is safe because `meta` has no array/blocks fields. A generic fix belongs in `docs/ENGINE-FIXES.md` as its own small change (CLAUDE.md rule 11).
+5. **Sadiatec case study gated in `/llms.txt` and the sitemap.** The Spec §17.4 `llms.txt` lists "Case study: Sadiatec". `/llms.txt` serves the Spec block word for word but leaves out that one line while the case study's `visible` switch is off (PLACEHOLDER-REGISTER F1-14). The sitemap omits the URL under the same condition. While the page is hidden it keeps its generic title ("導入事例" / "Case study"), because the Spec §17.1 title names Sadiatec.
+6. **Routes left out of the sitemap (behaviour unchanged).** `/thanks`, `/booking`, `/booking/manage`, `/line/*` and the clinic-era routes (`/company`, `/gallery`, `/jobs`, `/news`, `/services`, `/team`, `/about/[slug]`) are not listed, because they are not public pages in Spec §4. Those routes still respond as before. `site.config.ts` `seo.sitemapIncludeCollections` is no longer read; the schema still requires it.
+7. **Browser crawl (2026-10-15, final run).** Setup: `pnpm --filter techmirai-web typecheck` passed; `.next` was cleared, the dev server restarted, and all 46 routes warmed one at a time (all 200). `e2e/seo.spec.ts` was then run once: **36 passed, 16 failed.**
+   - 15 failures are the known heading skips in item 2 (soft assertion). On those pages the title, description, canonical, hreflang, indexability and unique-title checks ran and passed. That includes `/`, which now has canonical `https://techmirai-ai.com`.
+   - The 16th failure is `/en`, which returned 500 during the crawl (it returned 200 during warm-up). The dev log shows the same `SyntaxError: Unexpected end of JSON input` dev-server fault seen in the earlier runs, so this is an environment fault, not L1 code. It was not retried, by decision. `/en`'s head tags therefore have no browser evidence yet.
+   - Also passed: noindex on `/thanks`, `/en/thanks`, `/booking/manage` and `/en/booking/manage`; the three legacy paths return 301 to targets that return 200; `/sitemap.xml` lists both locales of every public page with x-default and none of the excluded routes; `/llms.txt` serves the Spec block; in non-production, `robots.txt` gives `Disallow: /` and pages send `X-Robots-Tag: noindex`.
+   - Unit tests: 12/12 pass.
+
+**Decisions on the open items (Jamal, 2026-10-15).**
+- Heading order (item 2): accepted as a **known L1 deviation** for now. Not fixed.
+- Old-site anchor redirects (item 1): L1 ships **without** them. Still a blocker/deviation until the old techmirai-ai.com URL list is supplied.
+- `updateLocalizedDoc` (item 4): **not changed in L1.** `/thanks` keeps its `[TBD]`/`[JA TODO]` meta title and description until a separate rule-11 engine fix is approved.
+- `/legal` vs `/legal-notice` (decision 2): left to **M1**.
+
+**Final L1 status (2026-10-15): PASS WITH APPROVED DEVIATIONS — not a clean PASS.**
+
+| Done-when item | Result |
+|---|---|
+| Gate 1 typecheck | PASS |
+| Gate 2 tests | PASS: SEO unit tests 12/12 (`pnpm --filter techmirai-web test`). The cms-core suite was not rerun; L1 made no cms-core changes |
+| Unique title per page, Spec §17.1 copy | PASS on every crawled page and locale except `/en` (no browser evidence; see item 7) |
+| Self-canonical + hreflang ja/en/x-default | PASS on every crawled page and locale except `/en` (no browser evidence) |
+| Exactly one H1 per page | PASS wherever the page rendered (every page except `/en`, whose crawl request got a 500) |
+| Headings in order | FAIL on 15 page/locale combinations: **approved known deviation** (item 2) |
+| noindex on /thanks and the form-result page | PASS |
+| Sitemap lists every public URL in both languages | PASS |
+| Production robots.txt (D2-gated) | PASS (unit test, production branch); non-production branch PASS in the browser |
+| /llms.txt | PASS |
+| 301s for the three legacy legal paths | PASS |
+| Old-site anchor redirects | NOT DONE: **approved deviation**, blocked on the old URL list (item 1) |
+| Gate 5 git status | PASS: only planned files. The generated `apps/techmirai-web/test-results/` folder (Playwright output from the final crawl: `.last-run.json` and 16 `seo-head-headings-*` folders, 33 untracked files) was removed. It is now ignored by a single-path rule in the root `.gitignore` (`apps/techmirai-web/test-results/`), so future crawls do not leave untracked output |
+| Gate 6 register | PASS: L1-01, L1-02 added |
+
+**Remaining blockers / follow-ups:**
+- the old-site URL list for anchor redirects
+- heading-order fix in the shared blocks (needs approval)
+- the `updateLocalizedDoc` group-localization engine fix (rule 11), which also fixes `/thanks`'s `[TBD]` meta
+- `/en` browser verification, blocked by the intermittent dev-server JSON-parse fault (an environment problem)
+- `/legal` path, in M1
+- clinic-era `/blog` page content and its empty `<h1>`
+- L1-01 legal-page meta descriptions
+
+**Also noted.** `robots.txt` was already the Spec §17.2 text, gated by the D2 switch `SITE_ENV === 'production'`, and is unchanged. Two points follow from the Spec's text as written: `Disallow: /thanks` stops crawlers from ever seeing that page's noindex tag, and it does not cover `/en/thanks`, which relies on its own noindex tag. The leftover Sakura-clinic `seo.titleTemplate`/`defaultDescription` in `site.config.ts` (FINDINGS 2026-10-05) were replaced: the template is `'%s'` and the default description is the Spec §17.1 Home row. The full seed was **not** run, because it clears existing content and needs `--confirm`. Spec meta was applied to the 17 existing page shells with the non-destructive `seedSpecMeta()` only.

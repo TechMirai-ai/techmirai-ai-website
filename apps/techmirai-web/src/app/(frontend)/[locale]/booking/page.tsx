@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { buildPageMetadata } from '@/lib/seo/build-metadata'
 import siteConfig from '../../../../../site.config'
 import { BookingFlow } from '@techmirai/cms-core/booking/ui'
 import { Container, Heading, Section } from '@techmirai/cms-core/components/ui'
@@ -31,31 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const canonicalPath = locale === defaultLocale ? '/booking' : `/${locale}/booking`
-
-  const languages: Record<string, string> = { 'x-default': `${base}/booking` }
-  for (const loc of siteConfig.locales.enabled) {
-    languages[loc] = loc === defaultLocale ? `${base}/booking` : `${base}/${loc}/booking`
-  }
-
-  return {
-    title: titles[locale],
-    description: descriptions[locale],
-    openGraph: {
-      title: titles[locale],
-      description: descriptions[locale],
-      url: `${base}${canonicalPath}`,
-      siteName: siteConfig.site.name,
-      locale,
-      type: 'website',
-    },
-    alternates: {
-      canonical: `${base}${canonicalPath}`,
-      languages,
-    },
-  }
+  return buildPageMetadata({ locale, path: '/booking', title: titles[locale], description: descriptions[locale] })
 }
 
 export default async function BookingPage({ params }: Props) {

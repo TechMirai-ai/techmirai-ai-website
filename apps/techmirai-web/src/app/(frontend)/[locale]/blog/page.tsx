@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { staticPageMetadata } from '@/lib/seo/build-metadata'
 import Link from 'next/link'
 import siteConfig from '../../../../../site.config'
 import type { Where } from 'payload'
@@ -136,31 +137,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   if (!isLocale(locale)) return {}
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const canonicalPath = locale === defaultLocale ? '/blog' : `/${locale}/blog`
-
-  const languages: Record<string, string> = { 'x-default': `${base}/blog` }
-  for (const loc of siteConfig.locales.enabled) {
-    languages[loc] = loc === defaultLocale ? `${base}/blog` : `${base}/${loc}/blog`
-  }
-
-  return {
-    title: titles[locale],
-    description: descriptions[locale],
-    openGraph: {
-      title: titles[locale],
-      description: descriptions[locale],
-      url: `${base}${canonicalPath}`,
-      siteName: siteConfig.site.name,
-      locale,
-      type: 'website',
-    },
-    alternates: {
-      canonical: `${base}${canonicalPath}`,
-      languages,
-    },
-  }
+  return staticPageMetadata('/blog', locale)
 }
 
 export default async function BlogIndexPage({ params, searchParams }: IndexProps) {
