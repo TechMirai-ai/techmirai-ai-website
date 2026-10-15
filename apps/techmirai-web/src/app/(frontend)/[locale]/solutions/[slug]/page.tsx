@@ -5,6 +5,8 @@ import { blockRegistry } from '@techmirai/cms-core/blocks'
 import { SOLUTIONS_PAGE_SLUGS } from '@/lib/solutions-slugs'
 import siteConfig from '../../../../../../site.config'
 import { metadataFromPageDoc } from '@/lib/seo/build-metadata'
+import { breadcrumbJsonLd } from '@/lib/seo/json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
 import { resolveHeaderData } from '../../_components/resolveHeaderData'
 
 export const revalidate = 3600
@@ -88,6 +90,14 @@ export default async function SolutionsIndustryPage({ params }: Props) {
 
   return (
     <>
+      {/* Pack-4/L2: BreadcrumbList on industry pages (Spec §17.3, §4 labels). */}
+      <JsonLd
+        data={breadcrumbJsonLd(locale === 'en' ? 'en' : 'ja', [
+          { path: '' },
+          { path: '/solutions' },
+          { path: `/solutions/${slug}` },
+        ])}
+      />
       {blocks.map((block, index) => {
         const renderer = blockRegistry[block.blockType]
         if (!renderer) return null

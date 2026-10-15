@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import siteConfig from '../../../site.config'
 import { LEGAL_PAGE_META, PAGE_META, type MetaLocale } from './page-meta'
+import { OG_IMAGE_SIZE, isSeededPlaceholderImage, ogImageUrl } from './og-image'
 
 // Pack-4/L1: the one place that turns a locale-less path into URLs, so every
 // page's canonical/hreflang tags and the sitemap agree. Japanese is the default
@@ -35,6 +36,11 @@ export interface PageMetadataInput {
   title: string
   description?: string | undefined
   noindex?: boolean
+  /**
+   * Share-image URL chosen by an editor (CMS upload, post thumbnail). Without
+   * one, the page's generated /og image is used (Pack-4/L2).
+   */
+  image?: string | undefined
   openGraph?: Metadata['openGraph']
 }
 
@@ -44,9 +50,11 @@ export function buildPageMetadata({
   title,
   description,
   noindex = false,
+  image,
   openGraph,
 }: PageMetadataInput): Metadata {
   const url = localizedUrl(path, locale)
+  const shareImage = image ?? ogImageUrl(path, locale)
   return {
     title,
     ...(description ? { description } : {}),
@@ -58,7 +66,14 @@ export function buildPageMetadata({
       siteName: siteConfig.site.name,
       locale,
       type: 'website',
+      ...(shareImage ? { images: [image ? shareImage : { url: shareImage, ...OG_IMAGE_SIZE, alt: title }] } : {}),
       ...openGraph,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      ...(description ? { description } : {}),
+      ...(shareImage ? { images: [shareImage] } : {}),
     },
     ...(noindex ? { robots: { index: false, follow: false } } : {}),
   }
@@ -83,7 +98,12 @@ export function metadataFromPageDoc(
         : siteConfig.site.name
   const description = typeof meta['description'] === 'string' && meta['description'] ? meta['description'] : undefined
   const image = meta['image'] as Record<string, unknown> | null | undefined
-  const imageUrl = image && typeof image['url'] === 'string' ? image['url'] : undefined
+  // The seeded og-*.png placeholders (English-only labels) give way to the
+  // generated per-locale image; a real editor upload still wins (Pack-4/L2).
+  const imageUrl =
+    image && typeof image['url'] === 'string' && !isSeededPlaceholderImage(image['filename'])
+      ? image['url']
+      : undefined
 
   return buildPageMetadata({
     locale,
@@ -91,7 +111,7 @@ export function metadataFromPageDoc(
     title,
     description,
     noindex: meta['noindex'] === true,
-    ...(imageUrl ? { openGraph: { images: [imageUrl] } } : {}),
+    image: imageUrl,
   })
 }
 

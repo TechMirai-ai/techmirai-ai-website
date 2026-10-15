@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { buildPageMetadata, staticPageMetadata } from '@/lib/seo/build-metadata'
+import { breadcrumbJsonLd } from '@/lib/seo/json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
 import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import { ComingSoonStub } from '../../_components/ComingSoonStub'
@@ -74,6 +76,8 @@ export default async function CaseStudySadiatecPage({ params }: Props) {
 
   return (
     <>
+      {/* Pack-4/L2: BreadcrumbList — reached only past the visibility gate above. */}
+      <JsonLd data={breadcrumbJsonLd(locale === 'en' ? 'en' : 'ja', [{ path: '' }, { path: CASE_STUDY_PATH }])} />
       {blocks.map((block, index) => {
         const renderer = blockRegistry[block.blockType]
         if (!renderer) return null

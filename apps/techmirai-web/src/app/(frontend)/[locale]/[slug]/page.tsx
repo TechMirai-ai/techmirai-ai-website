@@ -6,6 +6,10 @@ import siteConfig from '../../../../../site.config'
 import { resolveHeaderData } from '../_components/resolveHeaderData'
 import { metadataFromPageDoc } from '@/lib/seo/build-metadata'
 import { pathForPageSlug } from '@/lib/seo/page-meta'
+import { serviceJsonLd } from '@/lib/seo/json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
+
+const SERVICE_PAGE_SLUGS: readonly string[] = ['ai-reception', 'pricing']
 
 export const revalidate = 3600
 
@@ -218,6 +222,8 @@ export default async function DynamicPage({ params }: Props) {
 
   return (
     <>
+      {/* Pack-4/L2: Spec §17.3 Service markup on the product and pricing pages only. */}
+      {SERVICE_PAGE_SLUGS.includes(slug) && <JsonLd data={serviceJsonLd()} />}
       {blocks.map((block, index) => {
         const renderer = blockRegistry[block.blockType]
         if (!renderer) return null

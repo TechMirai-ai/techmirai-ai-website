@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
     workerThreads: false,
     cpus: 2,
   },
+  // Pack-4/L2: /og reads the bundled Noto Sans JP font from disk at runtime
+  // (no runtime font fetch), so make sure the file ships with that route.
+  outputFileTracingIncludes: {
+    '/og': ['./src/lib/seo/fonts/NotoSansJP-Bold.otf'],
+  },
+
   // 1. Force proper frontend/UI bundling for Payload and its styling dependencies
   transpilePackages: [
     '@techmirai/cms-core',

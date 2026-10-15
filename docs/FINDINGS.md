@@ -1332,3 +1332,49 @@ Nothing was committed or deployed, no database was touched, no seed was run, no 
 - L1-01 legal-page meta descriptions
 
 **Also noted.** `robots.txt` was already the Spec §17.2 text, gated by the D2 switch `SITE_ENV === 'production'`, and is unchanged. Two points follow from the Spec's text as written: `Disallow: /thanks` stops crawlers from ever seeing that page's noindex tag, and it does not cover `/en/thanks`, which relies on its own noindex tag. The leftover Sakura-clinic `seo.titleTemplate`/`defaultDescription` in `site.config.ts` (FINDINGS 2026-10-05) were replaced: the template is `'%s'` and the default description is the Spec §17.1 Home row. The full seed was **not** run, because it clears existing content and needs `--confirm`. Spec meta was applied to the 17 existing page shells with the non-destructive `seedSpecMeta()` only.
+
+## 2026-10-15 — Pack-4/L2: structured data, GEO and share images (Spec §17.3–17.4, §19)
+
+**Decisions applied (Jamal, 2026-10-15).**
+
+1. **Share-image font:** Noto Sans JP Bold is bundled at `apps/techmirai-web/src/lib/seo/fonts/NotoSansJP-Bold.otf`, with its license as `OFL.txt` (SIL Open Font License 1.1). Both come from the official `notofonts/noto-cjk` repo (`Sans/SubsetOTF/JP`). Before copying, the file was checked: 4,656,448 bytes, `OTTO` OpenType signature, and the license text names SIL OFL 1.1. `/og` reads the file from disk and never fetches a font at runtime. `next.config.ts` adds an `outputFileTracingIncludes` entry for `/og` so the font ships with that route. Glyph coverage could not be checked with an installed font tool (none available); it was checked by rendering every Japanese share image instead (see "Verification" below).
+2. **The Spec contradicts itself on the Organization `description`.** §17.3's JSON example gives "TechMirai builds AI受付, an AI reception system that turns small-business websites in Japan into 24/7 front desks for questions, reservations and LINE." §17.4 says to use its canonical company-facts sentences word for word in schema. L2 uses §17.4 sentences 1–2 in the page's language (`json-ld.ts` `ORGANIZATION_DESCRIPTION`). `json-ld.test.ts` checks them against the Spec file. §17.3's sentence is not used anywhere.
+3. **Chat company answers unchanged.** §17.4 also asks for the canonical sentences in the chatbot. They were **not** added, because that would change K1's word-for-word Spec §16 answers and the K1/K2 tests. Open item for a later, separately approved change.
+4. **Organization `logo` omitted.** The Spec's logo path is bracketed and the current logo is the placeholder wordmark (D2-02). Register row L2-01.
+
+**What L2 added.**
+
+- **JSON-LD.** `json-ld.ts` builds Organization, WebSite, Service, FAQPage, BlogPosting and BreadcrumbList. `JsonLd.tsx` renders them with `<` escaped. Every bracketed value is removed by `stripBracketed()`, so no JSON-LD output contains a bracket. Omissions are in register rows L2-01 to L2-03. Placement:
+  - Organization and WebSite: every page, from `[locale]/layout.tsx`. The founder (`Person` "Jamal Shah", read in English from `company-info.founder.person`) is included only when `company-info.founder.visible` is exactly `true`; a read failure leaves it out.
+  - Service: `/ai-reception` and `/pricing`, both locales, from the `[slug]` catch-all. `offers` is left out while the price is bracketed (L2-02).
+  - BreadcrumbList: the four industry pages (Home › Solutions › industry); blog posts (Home › Insights › post); the case study (Home › case study), which renders only past the existing Sadiatec visibility gate. Names are the Spec §4 page titles.
+  - BlogPosting: blog posts, in the Spec §17.3 shape. The old clinic-era BlogPosting/Breadcrumb code on that page was replaced.
+- **Share images.** `/og?path=&locale=` draws a 1200×630 image with the page's Spec §17.1 title in the page's language. It serves only paths with a §17.1 or legal-page row and returns 404 for anything else. While the case study is hidden it uses the generic title ("Case study" / "導入事例"), the same gate as the page. Every page's `og:image` and `twitter:image` default to it, with `twitter:card` = `summary_large_image`. An editor-uploaded `meta.image` (or a post's featured image) still wins. The seeded `og-*.png` placeholders (English-only labels) are ignored (`isSeededPlaceholderImage`). Register row L2-05.
+- **GEO.** The four §17.4 canonical sentences were already word for word on About (Pack-3/I2) and in the Organization description (sentences 1–2). The "direct one-sentence answer first" habit comes from the Spec copy already seeded in Pack 3; no page copy was changed in L2.
+
+**Blockers and open items (not done in L2).**
+
+1. **FAQPage is disabled.** `/faq` is still a ComingSoonStub, and FAQ markup must match the questions shown on the page. The builder exists and is tested; enable it when the page displays the real FAQ (L2-04).
+2. **BlogPosting has no live output.** No blog posts exist and none were invented (L2-03). The builder is unit-tested only.
+3. **Case-study breadcrumb has no live output.** It waits for Sadiatec's written permission (F1-14). The visibility switch was not touched.
+4. **Rich Results Test and validator.schema.org** need a deployed preview; to be run by Jamal or the developer. Not done.
+5. **Chat answers lack the §17.4 sentences** (decision 3). Needs a separately approved K1/K2 change.
+6. **Share-image branding** uses the temporary colours and the text wordmark (D2-01, D2-02) and updates automatically when those land.
+7. **Clinic-era JSON-LD left unchanged** (outside L2's list): the BreadcrumbLists on `/blog`, `/contact`, `/company` and `/services`.
+8. `.tmp-font-dl/` (the font download used for verification) is still in the repo root, untracked, per instruction. Remove it before committing.
+
+**Verification (2026-10-15).**
+
+- **Checks run:** `pnpm --filter techmirai-web exec tsc --noEmit` passed; the unit suite passed 28/28.
+- **Rendered JSON-LD** on 12 pages: `/`, `/en`, `/ai-reception`, `/en/ai-reception`, `/pricing`, `/en/pricing`, `/solutions/hotel`, `/en/solutions/clinic`, `/faq`, `/en/faq`, `/case-studies/sadiatec`, `/en/about`. Every page returned 200, and every block was valid JSON with `@context` schema.org and no bracket.
+  - Each page had exactly the expected types: Organization + WebSite everywhere; Service on the four product/pricing URLs; BreadcrumbList on the industry pages; no FAQPage on `/faq`; no breadcrumb on the hidden case study.
+  - The Organization description was in the page's language. `logo`, `telephone` and `sameAs` were absent.
+  - **Founder:** present on all 12 pages, which matches `founder.visible` seeded `true` (F1-04). The check could not read `company-info` over REST (request timed out), so that match is inferred. The founder-hidden case is covered by `json-ld.test.ts`.
+- **Bug found and fixed (L2):** `/og` returned an HTML 404 for every request. The next-intl middleware matcher caught `/og` (no dot, no excluded prefix) and rewrote it to `/ja/og`, which the `[slug]` catch-all 404s. `src/middleware.ts` now excludes exactly `og$|og/`; nothing else in the matcher changed. After the fix:
+  - all 21 JA share images return `200 image/png`, 1200×630
+  - unknown paths or locales get the route's own 404
+  - `/` and `/en/pricing` still route normally
+- **Glyphs:** all 21 JA share images (every §17.1 and legal page) were viewed. Every Japanese character rendered in Noto Sans JP Bold, with no missing-glyph boxes, including full-width （）, ・ and ｜, kana with dakuten/handakuten, and the 24/7 digits. The hidden case study shows the generic 導入事例.
+  - Cosmetic only: long titles wrap at any character, so a line can break inside a word (e.g. 連｜携, 車｜検). Not a glyph issue; not changed.
+
+**L1 deviations unchanged:** heading order, old-site anchor redirects, `/thanks` `[TBD]` meta (`updateLocalizedDoc`), `/legal` vs `/legal-notice` (M1).

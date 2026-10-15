@@ -16,6 +16,9 @@ import { FloatingCTAs } from '@techmirai/cms-core/components/ui'
 // Import the new wrapper
 import { LayoutWrapper } from './_components/LayoutWrapper'
 import { SITE_ORIGIN } from '@/lib/seo/build-metadata'
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
+import { getCachedPayload } from '@/lib/payload'
 
 
 const interFont = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-latin', display: 'swap', preload: false })
@@ -33,6 +36,27 @@ const localeFontConfig: Record<string, { variableClass: string; cssVar: string }
 
 // Pack-4/L1: resolves relative share-image URLs (meta.image) to absolute ones.
 export const metadata: Metadata = { metadataBase: new URL(SITE_ORIGIN) }
+
+/**
+ * Pack-4/L2: the Organization `founder` appears only when company-info
+ * `founder.visible` is exactly true (WORK-ORDER decision 5). The name is read
+ * in English to match Spec §17.3. Any read failure omits it rather than guessing.
+ */
+async function resolveFounderName(): Promise<string | undefined> {
+  try {
+    const payload = await getCachedPayload()
+    const info = (await payload.findGlobal({ slug: 'company-info', depth: 1, locale: 'en' })) as Record<string, unknown>
+    const founder = info['founder'] as { visible?: unknown; person?: unknown } | undefined
+    if (founder?.visible !== true) return undefined
+    const person = founder.person
+    if (!person || typeof person !== 'object') return undefined
+    const name = (person as Record<string, unknown>)['name']
+    return typeof name === 'string' && name ? name : undefined
+  } catch (error: unknown) {
+    console.error('[seo] company-info could not be read; Organization founder omitted', error)
+    return undefined
+  }
+}
 
 export function generateStaticParams() {
   return siteConfig.locales.enabled.map((locale) => ({ locale }))
@@ -66,6 +90,7 @@ export default async function LocaleLayout({
   }
 
   const dir = (siteConfig.locales.direction[locale] ?? 'ltr') as 'ltr' | 'rtl'
+  const founderName = await resolveFounderName()
   const brandVars = buildCssVariables(siteConfig)
 
   const activeFontConfig = localeFontConfig[locale]
@@ -90,6 +115,9 @@ export default async function LocaleLayout({
           app-wide (blocks, header, mobile menu, etc.) without touching each file. */}
       <MotionConfig reducedMotion="user">
       <HtmlLangSetter locale={locale} dir={dir} />
+      {/* Pack-4/L2: site-wide Organization + WebSite (Spec §17.3). */}
+      <JsonLd data={organizationJsonLd({ locale: locale === 'en' ? 'en' : 'ja', founderName })} />
+      <JsonLd data={websiteJsonLd()} />
       <div className={fontClasses} style={wrapperStyle}>
         <a
           href="#main-content"

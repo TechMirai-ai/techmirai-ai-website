@@ -16,5 +16,7 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|admin|_next|_vercel|.*\\..*).*)', '/'],
+  // Pack-4/L2: `og$|og/` keeps the /og share-image route out of next-intl's
+  // locale rewrite (otherwise /og becomes /ja/og and 404s in the catch-all).
+  matcher: ['/((?!api|admin|og$|og/|_next|_vercel|.*\\..*).*)', '/'],
 }

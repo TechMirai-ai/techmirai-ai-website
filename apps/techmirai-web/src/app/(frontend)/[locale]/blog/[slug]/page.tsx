@@ -2,6 +2,8 @@ import { unstable_cache } from 'next/cache'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { buildPageMetadata } from '@/lib/seo/build-metadata'
+import { blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/seo/json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
 import siteConfig from '../../../../../../site.config'
 import { getCachedPayload } from '@/lib/payload'
 import {
@@ -82,23 +84,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/blog/${slug}`,
     title: post.title,
     description,
+    image: thumbnailUrl ?? undefined,
     openGraph: {
       type: 'article',
       publishedTime: post.publishedAt,
       ...(post.updatedAt ? { modifiedTime: post.updatedAt } : {}),
-      ...(thumbnailUrl ? { images: [{ url: thumbnailUrl }] } : {}),
     },
   })
-}
-
-const homeLabels: Record<Locale, string> = {
-  en: 'Home',
-  ja: 'ホーム',
-}
-
-const blogTitles: Record<Locale, string> = {
-  en: 'Blog & Insights',
-  ja: 'ブログ・インサイト',
 }
 
 const byLabels: Record<Locale, string> = {
@@ -130,46 +122,18 @@ export default async function BlogDetailPage({ params }: Props) {
   const post = await getBlogPost(slug, locale)
   if (!post) notFound()
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const homeUrl = locale === defaultLocale ? base : `${base}/${locale}`
-  const listUrl = locale === defaultLocale ? `${base}/blog` : `${base}/${locale}/blog`
-  const pageUrl =
-    locale === defaultLocale ? `${base}/blog/${slug}` : `${base}/${locale}/blog/${slug}`
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: homeLabels[locale], item: homeUrl },
-      { '@type': 'ListItem', position: 2, name: blogTitles[locale], item: listUrl },
-      { '@type': 'ListItem', position: 3, name: post.title, item: pageUrl },
-    ],
-  }
-
-  const thumbnailUrl = post.featuredImage?.url
-  const description = post.excerpt ?? post.subtitle
-
-  const blogPostingJsonLd: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+  // Pack-4/L2: Spec §17.3 BlogPosting + BreadcrumbList (Spec §4 labels).
+  const breadcrumbData = breadcrumbJsonLd(locale, [{ path: '' }, { path: '/blog' }, { path: `/blog/${slug}`, name: post.title }])
+  const blogPostingData = blogPostingJsonLd({
+    locale,
+    slug,
     headline: post.title,
     datePublished: post.publishedAt,
-    dateModified: post.updatedAt ?? post.publishedAt,
-    url: pageUrl,
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-      ...(post.author.jobTitle ? { jobTitle: post.author.jobTitle } : {}),
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: siteConfig.site.name,
-      url: base,
-    },
-    ...(description ? { description } : {}),
-    ...(thumbnailUrl ? { image: thumbnailUrl } : {}),
-  }
+    dateModified: post.updatedAt,
+    authorName: post.author?.name,
+  })
+
+  const thumbnailUrl = post.featuredImage?.url
 
   const postSubtitle = post.subtitle
   const heroProps: HeroBlockProps = {
@@ -202,14 +166,8 @@ export default async function BlogDetailPage({ params }: Props) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
-      />
+      <JsonLd data={breadcrumbData} />
+      <JsonLd data={blogPostingData} />
       <HeroBlock {...heroProps} />
       <Section padding="sm">
         <Container>
