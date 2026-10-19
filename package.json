@@ -13,7 +13,8 @@
     "lint": "turbo lint",
     "seed": "pnpm --filter techmirai-web seed",
     "preflight": "node scripts/preflight-check.mjs",
-    "preflight:launch": "node scripts/preflight-check.mjs --launch"
+    "preflight:launch": "node scripts/preflight-check.mjs --launch",
+    "a11y": "pnpm --filter techmirai-web a11y"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",

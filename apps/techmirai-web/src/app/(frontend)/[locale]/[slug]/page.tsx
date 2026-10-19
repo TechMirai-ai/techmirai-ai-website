@@ -11,6 +11,12 @@ import { JsonLd } from '@/lib/seo/JsonLd'
 
 const SERVICE_PAGE_SLUGS: readonly string[] = ['ai-reception', 'pricing']
 
+// Slugs that have their own route folder. A `pages` document may still exist
+// for them (seed scaffolding), but this catch-all must not prerender them:
+// the duplicate path made the production build serve the document's empty
+// layout instead of the dedicated page (docs/ENGINE-FIXES.md, Pack-4/O2).
+const DEDICATED_ROUTE_SLUGS: ReadonlySet<string> = new Set(['assessment'])
+
 export const revalidate = 3600
 
 function isSupportedLocale(s: string): boolean {
@@ -35,7 +41,7 @@ export async function generateStaticParams() {
 
   return locales.flatMap((locale) =>
     result.docs
-      .filter((doc) => typeof doc.slug === 'string')
+      .filter((doc) => typeof doc.slug === 'string' && !DEDICATED_ROUTE_SLUGS.has(doc.slug))
       .map((doc) => ({ locale, slug: doc.slug as string }))
   )
 }

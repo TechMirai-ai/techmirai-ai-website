@@ -637,3 +637,17 @@ href (not the literal `'#'`), in both locales.
 **Verification:** `packages/reception-engine/src/engine.links.test.ts` (7 tests: link fields exposed on link options only; `goTo` jumps and shows the prompt; runs through auto-advancing nodes; does not mutate the previous state and keeps its data; clears prompt suppression; unknown node leaves state untouched; a normal choice still advances afterwards). The existing 40 engine tests are unchanged and pass.
 
 **Status:** code changed and unit-tested. Not observed in a browser by this entry; see FINDINGS.md (K1) for the end-to-end evidence.
+
+## 2026-10-19 — Pack-4/O2: the `[locale]/[slug]` catch-all prerendered pages that have their own route (fix)
+
+**Problem.** `apps/techmirai-web/src/app/(frontend)/[locale]/[slug]/page.tsx` builds its static params from every document in the `pages` collection. A `pages` document with slug `assessment` exists (seed scaffolding), and the dedicated route `[locale]/assessment/page.tsx` generates the same two URLs. In a production build, `/ja/assessment` and `/en/assessment` were prerendered from the catch-all (`srcRoute: "/[locale]/[slug]"` in `.next/prerender-manifest.json`) and served that document's empty layout: an empty `<main>`, no `<h1>`, and the placeholder title `[TBD: Spec Free AI Website Assessment page title not yet seeded]` / `[JA TODO]`. The dev server hid it because dev does not prerender and routes to the static folder.
+
+**Fix.** `generateStaticParams` skips slugs listed in `DEDICATED_ROUTE_SLUGS` (currently `assessment`). Runtime routing is unchanged: a static route folder still wins over the catch-all.
+
+**Files.** `apps/techmirai-web/src/app/(frontend)/[locale]/[slug]/page.tsx` only (a new constant and one `.filter` condition). No database change, no reseed, no test change.
+
+**Verification.** `pnpm typecheck` passes; `pnpm build` passes (105/105 pages); the manifest now lists `/en/assessment` and `/ja/assessment` with `srcRoute: "/[locale]/assessment"`; the prerendered HTML has one `<h1>` and the real titles ("Free AI Website Assessment — TechMirai", "無料AIホームページ診断｜TechMirai"); `pnpm a11y` passes on both routes; `e2e/seo.spec.ts` no longer fails them on `<h1>` count.
+
+**Known limit.** The list is hand-maintained. Another dedicated route that also has a `pages` document would repeat the bug in production builds only. See `docs/O2-CODE-REVIEW.md` (medium 1).
+
+**Status:** code changed, built and observed in a production build.

@@ -1458,3 +1458,28 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 4. **Favicon** is still the old clinic icon (D2-02).
 5. **`/blog` hero** still uses the clinic `hero-placeholder.jpg` (N1-01).
 6. **Dev server:** started once for the audit and still running on port 3000.
+
+## 2026-10-19 — Pack-4/O1 and O2: sweep, tests, accessibility, build — results and open items
+
+**O2 results (final tree).** `pnpm typecheck` pass (3/3). Unit tests pass: `techmirai-web` 48/48, `cms-core` 1,012/1,012 (67 files, integration tests excluded), `reception-engine` 47/47. `pnpm build` pass (105/105 pages, no errors). `pnpm a11y` pass: 46 routes (23 x ja/en), 0 serious/critical, 0 moderate/minor, exit 0. Details: `docs/O2-ACCESSIBILITY.md`, `docs/O2-QUALITY-GATE.md`, `docs/O2-CODE-REVIEW.md` (APPROVE with comments: 0 critical, 0 high, 2 medium, 3 low).
+
+**Found and fixed in O2.** The production build served `/assessment` and `/en/assessment` from the generic catch-all as an empty page with a placeholder title (the first axe run was therefore vacuous for those two routes). Fixed in `[locale]/[slug]/page.tsx`; see `docs/ENGINE-FIXES.md` (2026-10-19).
+
+**Unresolved, not fixed (each needs a decision or is out of scope):**
+1. **Heading order: 14 route/locale combinations** fail the soft assertion in `e2e/seo.spec.ts` (`h1 -> h3`): `/`, `/ai-reception`, `/solutions`, `/how-it-works`, `/integrations`, `/about`, `/assessment`, each in ja and en. Same cause as L1 item 2 (shared engine blocks render card titles as `<h3>` with no `<h2>`). The brief said 12; L1's list already included `/assessment`. Tests unchanged. Fix = change shared blocks (needs a decision).
+2. **`<html lang="ja">` in server-rendered HTML on `/en` pages** (O1 "Option C"). `(frontend)/layout.tsx:22` uses the default locale; `HtmlLangSetter` corrects it after hydration, so axe cannot see it. Fix when approved: move `<html>` into `[locale]/layout.tsx` (watch the `notFound()` and invalid-locale 404 behaviour).
+3. **`/quality-gate` was not executed.** The repo has no formatter (no Biome or Prettier config or dependency) and the gate script is not in the repo. No formatter was added, as decided. See `docs/O2-QUALITY-GATE.md`.
+4. **`apps/techmirai-web/scripts/` is outside `tsconfig` `include`**, so `a11y-check.ts` and the other scripts are not type-checked by `pnpm typecheck`.
+5. **Three E2E suites not run** (`booking-journey`, `manage-appointment`, `reception-journey`): they write to the database or call the booking and chat APIs.
+6. **Production-mode checks not done:** `SITE_ENV=production` (robots allow-indexing, no `X-Robots-Tag`, `/thanks` noindex under the production header logic) still needs its own approved pass. The a11y and `seo.spec` runs used `next start` with `SITE_ENV` unset.
+7. **`blog/[slug]/page.tsx` lines 102-107** still show the recruitment CTA ("Stay informed on Japan's employment landscape" / "Talk to Our Experts"); the same strings sit unused in `src/messages/en.json` and `ja.json` (lines 161-162). Outside the O1 route fixes.
+8. **`/contact`** is still clinic-flavoured (inquiry types, offices grid, さくら接骨院 copy); only its hero button was changed in `fface4f` (FINDINGS J1 stands).
+9. **Nine static preflight hits remain** (O1 scope closed): `site.config.ts` lines 131-134 and 161 (placeholder social URLs, `.example` recipient) and four engine files: `hero/component.tsx:113`, `services-grid/component.tsx:210`, `payload/globals/header.ts:102`, `clinic/reception/faq-content.ts:389`.
+10. **Launch-scan items still open:** scanner `ROUTES` lacks `case-studies/sadiatec` and `booking/manage`; `/news` and `/team` have no canonical/hreflang and `/company` and `/services` have no `<h1>` (noindex routes the scan still checks); `B1_ALLOWED_SADIATEC_LOCATIONS` is an empty stub; the 完全 allow-list entry is still marked not applicable; B4 static scanning matches code comments and CSS `100%`; B5 flags "Available now" on the Web edition (false positives). No allow-list or scanner change was made.
+11. **`case-studies.ts` stray `\u0096`** (O1): the seed source is fixed and now equals Spec §13 exactly, but the `case-studies` document already in the database still holds the old string until a reseed. Check `/ja/case-studies/sadiatec` after the next reseed.
+12. **The `catch-all` fix list is hand-maintained** (`DEDICATED_ROUTE_SLUGS`); a future dedicated route with a same-slug `pages` document would repeat the production-only empty-page bug (`docs/O2-CODE-REVIEW.md`, medium 1).
+13. **Axe limits:** temporary brand colours (D2-01) need a contrast recheck when real colours arrive; placeholder images and `[JA TODO]` alt text; no manual keyboard or screen-reader pass; WCAG 2.1 AA tags only.
+14. **Build notes:** `getPayloadHMR` deprecation warnings (known, J1) and "R2 not configured, using local file storage" appear during `next build`.
+15. **Stale note:** the N1 entry above ("Dev server: started once for the audit and still running on port 3000") is out of date. The dev server was stopped for the production build and the production server is stopped at the end of O2.
+
+**Rules kept.** No database change or reseed, no test deleted or weakened, no commit, push or deploy. O2 edits remain uncommitted: `apps/techmirai-web/scripts/a11y-check.ts`, `[locale]/[slug]/page.tsx`, root `package.json`, and the docs.
