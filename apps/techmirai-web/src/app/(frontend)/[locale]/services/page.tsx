@@ -37,13 +37,8 @@ export async function generateStaticParams() {
 }
 
 const titles: Record<Locale, string> = {
-  en: 'Treatment Menu',
-  ja: '施術メニュー',
-}
-
-const descriptions: Record<Locale, string> = {
-  en: `Explore ${siteConfig.site.name}'s full treatment menu — insured orthopedic and sports-injury care alongside self-pay pelvic alignment and traffic-accident treatment.`,
-  ja: '整形外科的施術・スポーツ障害・交通事故治療・産前産後骨盤矯正まで、さくら接骨院の施術メニューをご覧ください。',
+  en: 'Services',
+  ja: 'サービス',
 }
 
 const homeLabels: Record<Locale, string> = {
@@ -71,10 +66,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: titles[locale],
-    description: descriptions[locale],
     openGraph: {
       title: titles[locale],
-      description: descriptions[locale],
       url: `${base}${canonicalPath}`,
       siteName: siteConfig.site.name,
       locale,
@@ -84,6 +77,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `${base}${canonicalPath}`,
       languages,
     },
+    // Not a Spec §4 page (O1): reachable, never indexed.
+    robots: { index: false, follow: false },
   }
 }
 

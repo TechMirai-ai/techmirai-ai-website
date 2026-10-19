@@ -83,6 +83,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `${base}${canonicalPath}`,
       languages,
     },
+    // Not a Spec §4 page (O1): reachable, never indexed.
+    robots: { index: false, follow: false },
   }
 }
 

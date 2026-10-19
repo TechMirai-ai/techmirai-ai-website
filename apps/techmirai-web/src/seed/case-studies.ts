@@ -192,7 +192,7 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
         heading: '構築したもの',
         points: [
           { text: 'テンプレートを使わない、完全な独自開発のサイト' },
-          { text: '管理項目11種類・権限\u00962種類の管理画面。スタッフご自身で更新できます' },
+          { text: '管理項目11種類・権限2種類の管理画面。スタッフご自身で更新できます' },
           { text: '英語・日本語・ベンガル語を、ひとつの管理画面で運用' },
           { text: 'サイトに組み込まれ、訪問者の質問に答えるAIチャットボット' },
           { text: 'WhatsAppでの担当者への引き継ぎ' },

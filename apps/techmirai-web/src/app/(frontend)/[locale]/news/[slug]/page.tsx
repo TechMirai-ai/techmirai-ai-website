@@ -8,6 +8,9 @@ import siteConfig from '../../../../../../site.config'
 
 export const revalidate = 3600
 
+// Not a Spec §4 page (O1): reachable, never indexed.
+export const metadata: Metadata = { robots: { index: false, follow: false } }
+
 function isSupportedLocale(s: string): boolean {
   return (siteConfig.locales.enabled as string[]).includes(s)
 }

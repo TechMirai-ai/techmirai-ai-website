@@ -105,8 +105,8 @@ const heroSubheadings: Record<Locale, string> = {
 }
 
 const aboutButtonLabels: Record<Locale, string> = {
-  en: 'About the Clinic',
-  ja: '院について',
+  en: 'About',
+  ja: '会社紹介',
 }
 
 const homeLabels: Record<Locale, string> = {
@@ -175,7 +175,7 @@ export default async function ContactPage({ params }: Props) {
   const heroProps: PageHeroBlockProps = {
     heading: titles[locale],
     body: heroSubheadings[locale],
-    primaryButton: { label: aboutButtonLabels[locale], href: '/company' },
+    primaryButton: { label: aboutButtonLabels[locale], href: '/about' },
     overlayOpacity: 40,
   }
 

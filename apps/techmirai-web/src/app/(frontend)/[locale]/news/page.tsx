@@ -11,7 +11,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  return { title: TITLES[locale] ?? TITLES['en'] }
+  // Not a Spec §4 page (O1): reachable, never indexed.
+  return { title: TITLES[locale] ?? TITLES['en'], robots: { index: false, follow: false } }
 }
 
 function formatNewsDate(iso: string | undefined, locale: string): string {

@@ -100,6 +100,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: descriptions[locale],
     openGraph: { title: titles[locale], description: descriptions[locale], url: `${base}${canonicalPath}`, siteName: siteConfig.site.name, locale, type: 'website' },
     alternates: { canonical: `${base}${canonicalPath}`, languages },
+    // Not a Spec §4 page (O1): reachable, never indexed.
+    robots: { index: false, follow: false },
   }
 }
 

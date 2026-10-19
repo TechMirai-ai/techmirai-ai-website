@@ -6,8 +6,8 @@ import Link from 'next/link'
 import siteConfig from '../../../../../site.config'
 import type { Where } from 'payload'
 import { getCachedPayload } from '@/lib/payload'
-import { HeroBlock, CTABannerBlock } from '@techmirai/cms-core/blocks'
-import type { HeroBlockProps, CTABannerBlockProps } from '@techmirai/cms-core/blocks'
+import { PageHeroBlock, CTABannerBlock } from '@techmirai/cms-core/blocks'
+import type { PageHeroBlockProps, CTABannerBlockProps } from '@techmirai/cms-core/blocks'
 import {
 
   Container,
@@ -88,14 +88,15 @@ export async function generateStaticParams() {
   return siteConfig.locales.enabled.map((locale) => ({ locale }))
 }
 
+// Spec §15.1 (Blog index): H1 and intro, copied exactly.
 const titles: Record<Locale, string> = {
-  en: 'Blog & Insights',
-  ja: 'ブログ・インサイト',
+  en: 'Insights',
+  ja: 'コラム',
 }
 
 const descriptions: Record<Locale, string> = {
-  en: `Self-care tips, treatment explainers, and news from ${siteConfig.site.name}.`,
-  ja: 'セルフケアのコツや施術の解説、さくら接骨院からのお知らせをお届けします。',
+  en: 'Practical notes on front desks, booking, LINE and AI for small businesses — written plainly.',
+  ja: '中小企業・店舗の受付、予約、LINE、AIについて、わかりやすく実践的にお届けします。',
 }
 
 const homeLabels: Record<Locale, string> = {
@@ -103,10 +104,7 @@ const homeLabels: Record<Locale, string> = {
   ja: 'ホーム',
 }
 
-const heroSubheadings: Record<Locale, string> = {
-  en: `Self-care tips, treatment explainers, and news from ${siteConfig.site.name}.`,
-  ja: 'セルフケアのコツや施術の解説、さくら接骨院からのお知らせをお届けします。',
-}
+const heroSubheadings: Record<Locale, string> = descriptions
 
 const allCategoryLabels: Record<Locale, string> = {
   en: 'All',
@@ -123,14 +121,15 @@ const byLabels: Record<Locale, string> = {
   ja: '著者',
 }
 
+// Spec §15.1 "End-of-post box" (reused on the index) and the §4 primary CTA label.
 const ctaHeadings: Record<Locale, string> = {
-  en: "Stay informed on Japan's employment landscape",
-  ja: '日本の雇用動向を把握しましょう',
+  en: 'Want to know what AI受付 could handle for your business? Get a free AI website assessment.',
+  ja: 'あなたのお店では、AI受付で何ができるでしょうか。無料AIホームページ診断でお確かめください。',
 }
 
 const ctaButtons: Record<Locale, string> = {
-  en: 'Talk to Our Experts',
-  ja: '専門家に相談する',
+  en: 'Get a free AI website assessment',
+  ja: '無料AIホームページ診断を申し込む',
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -167,18 +166,15 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
     ],
   }
 
-  const heroProps: HeroBlockProps = {
+  const heroProps: PageHeroBlockProps = {
     heading: titles[locale],
-    subheading: heroSubheadings[locale],
+    body: heroSubheadings[locale],
     overlayOpacity: 40,
-    variant: 'center',
-    minHeight: 'medium',
-    transparentHeader: false,
   }
 
   const ctaProps: CTABannerBlockProps = {
     heading: ctaHeadings[locale],
-    primaryButton: { label: ctaButtons[locale], href: '/contact' },
+    primaryButton: { label: ctaButtons[locale], href: '/assessment' },
     variant: 'filled',
   }
 
@@ -188,7 +184,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <HeroBlock {...heroProps} />
+      <PageHeroBlock {...heroProps} />
       <Section>
         <Container>
           {categories.length > 0 && (
