@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 import { createLocalizedDoc } from '@techmirai/cms-core/seed'
+import { SPEC_ALT, type ImageAlt } from '../lib/image-slots'
 import { createInitialsAvatarPng } from './lib/placeholder-image'
 import { richText } from './lib/rich-text'
 import { upsertMedia } from './media'
@@ -15,6 +16,8 @@ export interface TeamIds {
 interface TeamSeedInput {
   slug: string
   photoFilename: string
+  /** Spec p.113 alt text, where the Spec gives one (Jamal, Haruka). */
+  portraitAlt?: ImageAlt
   initials: string
   en: { name: string; title: string; shortBio: string; bio?: string[] }
   ja: { name: string; title: string; shortBio: string; bio?: string[] }
@@ -39,10 +42,15 @@ async function upsertTeamMember(payload: Payload, input: TeamSeedInput): Promise
   if (existing.docs[0]) return existing.docs[0]['id'] as string | number
 
   const buffer = await createInitialsAvatarPng(input.initials, 1200)
-  const photo = await upsertMedia(payload, input.photoFilename, buffer, {
-    en: `Placeholder portrait for ${input.en.name} — real photo pending written consent (F1-15)`,
-    ja: '[JA TODO]',
-  })
+  const photo = await upsertMedia(
+    payload,
+    input.photoFilename,
+    buffer,
+    input.portraitAlt ?? {
+      en: `Placeholder portrait for ${input.en.name} — real photo pending written consent (F1-15)`,
+      ja: '[JA TODO]',
+    },
+  )
 
   const doc = await createLocalizedDoc(payload, 'team', {
     en: {
@@ -73,6 +81,7 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
   const jamal = await upsertTeamMember(payload, {
     slug: 'jamal-shah',
     photoFilename: 'placeholder-team-jamal.png',
+    portraitAlt: SPEC_ALT.jamalPortrait,
     initials: 'JS',
     en: {
       name: 'Jamal Shah',
@@ -120,6 +129,7 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
   const haruka = await upsertTeamMember(payload, {
     slug: 'haruka-fujimori',
     photoFilename: 'placeholder-team-haruka.png',
+    portraitAlt: SPEC_ALT.harukaPortrait,
     initials: 'HF',
     en: {
       name: 'Haruka Fujimori',

@@ -11,7 +11,7 @@
  */
 
 import { chromium } from 'playwright'
-import { runSharedChecks, checkB3BareNumbers, checkB6BracketPlaceholders } from '../../../scripts/launch-scan-rules.mjs'
+import { runSharedChecks, checkB3BareNumbers, checkB6BracketPlaceholders, checkB7Images } from '../../../scripts/launch-scan-rules.mjs'
 
 const BASE_URL = process.env['BASE_URL'] ?? 'http://localhost:3000'
 
@@ -137,11 +137,7 @@ async function checkStructural(page: import('playwright').Page, response: import
       alt: img.getAttribute('alt'),
     }))
   )
-  for (const { src, alt } of images) {
-    if (!alt || !alt.trim()) {
-      hits.push({ ruleId: 'B7_TECHNICAL', line: null, snippet: src, note: 'image missing alt text' })
-    }
-  }
+  hits.push(...checkB7Images(images))
 
   const linkTags = await page.evaluate(() => ({
     canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,

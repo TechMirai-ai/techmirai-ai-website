@@ -1430,3 +1430,31 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 - The JA string appears on no route other than these three.
 - Tests after the change: web unit suite 36/36; typecheck printed no errors.
 - The placeholders must still be replaced with professionally written text before launch.
+
+## 2026-10-19 — Pack-4/N1: image slots, alt text, launch-scan image rule (Spec §19, pp.111–113)
+
+**What N1 did.**
+
+- **`docs/IMAGE-SLOTS.md`** lists every Spec §19 slot (23 rows) with size, page, file, status, EN and JA alt, supplier and register ID. Its code twin is `apps/techmirai-web/src/lib/image-slots.ts`.
+- **QR code:** already built in G2 and not touched. It encodes `siteConfig.integrations.demoUrl`; its empty alt is documented as decorative.
+- **Share images:** the generated `/og` route (L2-05) stays the answer. The seeded `og-*.png` files are listed as superseded.
+- **Spec p.113 alt text** is now seeded word for word for the hero (`media.ts`), Jamal (`team.ts`, `about.ts`, EN and JA) and Haruka (`team.ts`). The layers-diagram sentence is recorded as data only (see below).
+- **Launch scan (B7):** new `checkB7Images` in `scripts/launch-scan-rules.mjs`, used by `launch-scan-pages.ts`. It fails a missing `alt` attribute and any file whose name contains `placeholder`; it accepts an empty `alt` as decorative and skips `data:` images. Before, an empty alt was reported as "missing" and placeholder images were not reported at all.
+- **Register:** N1-01 to N1-09 added.
+- **Tests:** `image-slots.test.ts` and `launch-scan-images.test.ts`.
+
+**Rendered audit (dev server, `sitemap.xml`, 40 routes, 154 `<img>` tags).** No tag lacks `alt`. Empty alt: the QR code (`/`, `/en`) and `/hero-placeholder.jpg` (`/blog`, `/en/blog`).
+
+**Deviations from the approved plan.**
+
+1. **No new placeholder image files were generated** for the three-step strip, before/after, layers diagram, admin screenshot and sample report. The Spec gives no size for them, and a made-up size would break rule 5 (the F3 note says the same). Each is a documented slot with a register row instead. The three-step strip is text pills in the live-demo block and the layers diagram is an inline SVG block, so neither needs a file.
+2. **The seed alt fixes need a reseed** to reach the local database: `upsertMedia` reuses an existing media doc and `upsertTeamMember` returns early for an existing person. The rendered audit above ran before the fix, so `/about` (JA) still showed `[JA TODO]` for Jamal's portrait alt. Not reseeded here.
+
+**Observations, not changed (rule 13).**
+
+1. **Team cards use `alt={name}`.** `packages/cms-core/src/blocks/team-grid/component.tsx` ignores the media alt, so the page shows "Jamal Shah" and not the Spec's "Jamal Shah, founder of TechMirai". Fixing it is an engine change (rule 11).
+2. **Layers diagram:** the SVG is `aria-hidden` with a screen-reader list; the Spec's alt sentence is not on the page. Same engine block.
+3. **Placeholder portraits are 1200×1200**, the Spec says 1200×1500 (N1-08).
+4. **Favicon** is still the old clinic icon (D2-02).
+5. **`/blog` hero** still uses the clinic `hero-placeholder.jpg` (N1-01).
+6. **Dev server:** started once for the audit and still running on port 3000.

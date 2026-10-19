@@ -225,6 +225,31 @@ export function checkB6BracketPlaceholders(content) {
   ]
 }
 
+// B7, images: `images` is [{ src, alt }] read from the rendered DOM (alt is null when the
+// attribute is absent). An empty alt is a decorative image and is allowed. A placeholder
+// image is one whose file name contains "placeholder" (the seed's naming, and the clinic
+// template's /hero-placeholder.jpg), including when it arrives through Next's
+// /_next/image?url=... wrapper. Inline data: URIs (the generated QR code) are skipped.
+export function checkB7Images(images) {
+  const hits = []
+  for (const { src, alt } of images) {
+    if (alt === null || alt === undefined) {
+      hits.push({ ruleId: 'B7_TECHNICAL', line: null, snippet: src, note: 'image missing alt attribute' })
+    }
+    if (src.startsWith('data:')) continue
+    let decoded = src
+    try {
+      decoded = decodeURIComponent(src)
+    } catch {
+      // keep the raw value when the URL is not valid percent-encoding
+    }
+    if (/\/[^/?&#]*placeholder/i.test(decoded)) {
+      hits.push({ ruleId: 'B7_TECHNICAL', line: null, snippet: src, note: 'placeholder image published' })
+    }
+  }
+  return hits
+}
+
 // Convenience: every check that is safe to run on raw source code (static
 // pass) AND on rendered page text — i.e. everything except B3's bare-number
 // catch-all and B7 (which is rendered-only/structural, implemented directly

@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { SPEC_ALT } from '../lib/image-slots'
 import { createInitialsAvatarPng, createLabelledPlaceholderPng, paletteColor } from './lib/placeholder-image'
 
 export interface MediaIds {
@@ -124,10 +125,12 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
   // moment. 750×1334 is a standard phone-screenshot aspect ratio; the real
   // chat/booking/LINE screenshots this stands in for don't exist yet.
   const heroPhoneMockupBuffer = await createLabelledPlaceholderPng(750, 1334, 'PLACEHOLDER: Hero phone mockup 750×1334')
-  const heroPhoneMockup = await upsertMedia(payload, 'placeholder-hero-phone-mockup.png', heroPhoneMockupBuffer, {
-    en: 'AI受付 answering a question and confirming a booking on a smartphone',
-    ja: 'スマートフォンでAI受付が質問に答え、予約を確定している画面',
-  })
+  const heroPhoneMockup = await upsertMedia(
+    payload,
+    'placeholder-hero-phone-mockup.png',
+    heroPhoneMockupBuffer,
+    SPEC_ALT.heroMockup,
+  )
   payload.logger.info('   Hero phone-mockup placeholder ready')
 
   return { ogImages, teamGroupPhoto, individualPortrait, heroPhoneMockup, partnerPhoto }

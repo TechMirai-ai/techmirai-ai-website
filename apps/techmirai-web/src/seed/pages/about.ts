@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 import { updateLocalizedDoc } from '@techmirai/cms-core/seed'
+import { SPEC_ALT } from '../../lib/image-slots'
 import { richText } from '../lib/rich-text'
 import type { MediaIds } from '../media'
 import type { TeamIds } from '../team'
@@ -49,7 +50,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
     {
       blockType: 'ceo-message',
       portrait: jamalPhoto,
-      portraitAlt: 'Placeholder portrait for Jamal Shah — real photo pending written consent (F1-15)',
+      portraitAlt: SPEC_ALT.jamalPortrait.en,
       name: 'Jamal Shah',
       title: 'Founder, TechMirai',
       // Spec §10.2 DRAFT, seeded as written — see docs/PLACEHOLDER-REGISTER.md I2-01.
@@ -157,7 +158,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
     {
       blockType: 'ceo-message',
       portrait: jamalPhoto,
-      portraitAlt: '[JA TODO]',
+      portraitAlt: SPEC_ALT.jamalPortrait.ja,
       name: 'ジャマル・シャー',
       title: 'TechMirai 代表',
       message: richText(
