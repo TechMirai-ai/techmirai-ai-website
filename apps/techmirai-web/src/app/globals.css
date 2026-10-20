@@ -1,2 +1,29 @@
 @import "../../../../packages/cms-core/src/styles/globals.css";
 @import "../../../../packages/cms-core/src/booking/ui/tokens.css";
+
+/*
+ * Height of the fixed site header (HeaderClient.tsx: h-18 / md:h-20 / lg:h-22
+ * plus its 1px bottom border). <main> is padded by this so page content starts
+ * below the header, and in-page anchors scroll to just below it. If the header
+ * height changes, change it here (breakpoints match Tailwind md = 768px,
+ * lg = 1024px).
+ */
+:root {
+  --header-h: 73px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 81px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 89px;
+  }
+}
+
+html {
+  scroll-padding-top: var(--header-h);
+}

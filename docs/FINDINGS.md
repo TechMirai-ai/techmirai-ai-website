@@ -1495,3 +1495,18 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 2. The mobile bottom bar (`HeaderClient.tsx`) is fixed and covers content near the page bottom; no bottom padding was checked.
 3. During this check a dev server was already running on port 3000 and returned HTTP 500 for every page, so checks ran on port 3001. The 500s were not investigated. One transient 500 on `/ja/news` at 1280px came from a dev webpack-cache error (`__webpack_modules__[moduleId] is not a function`) and did not recur.
 4. The hero `placeholder-hero-phone-mockup.png` image request timed out in dev (`upstream image response timed out`).
+
+## 2026-10-20 — Content hidden under the fixed header: fix and observations
+
+**Cause.** `HeaderClient.tsx` renders a `fixed top-0` header (73/81/89px at base/md/lg including its border) but `<main>` had no top offset, so the first 73-89px of every page sat under it. Pages and blocks each guessed their own top padding; the home hero (lg+) and `/team` were hidden (first content at y=43 and y=5).
+
+**Fix.** One variable, `--header-h` (73/81/89px at base/768/1024), in `apps/techmirai-web/src/app/globals.css`; `<main>` is padded by it in `[locale]/layout.tsx`; `html` gets `scroll-padding-top` so anchors land below the header. The per-page header compensation was removed or reduced so gaps do not double: `page-hero` (both text and image variants, now `pt-6 md:pt-10`), `news/page.tsx` (`pt-8`), `team/page.tsx` (padding added), and in `hero/component.tsx` the `pt-4`, the headline `mt-15 sm:mt-12`, the logo's negative top margin, and `lg:min-h-screen` (now viewport minus `--header-h`). If the header height changes, update `--header-h`.
+
+**Evidence.** Browser measurement (header bottom vs. top of first text in `<main>`) over 14 routes at 375/768/1024/1280/1600px: before, home (lg+) and `/ja/team` were hidden; after, 0 hidden, gap below header 17-43px. One transient evaluate error (`/ja/pricing` at 375px) passes at the other widths. `pnpm typecheck` passes; `techmirai-web` tests 48/48. Not run: `cms-core` tests, `pnpm build`, `pnpm a11y`, E2E.
+
+**Observed, not changed:**
+1. The mobile bottom bar (`fixed bottom-0`, ~56px) covers the end of the footer on phones; `<main>`/footer have no bottom offset.
+2. `/ja/services`, `/en/services` and `/ja/company` render no text inside `<main>` in the dev server (measured as empty); not investigated.
+3. Several route files render their own `<main>` inside the layout's `<main>` (nested `main`, invalid HTML), e.g. `team/page.tsx`, `news/page.tsx`.
+4. Other blocks with a large first-section top padding (`py-16 md:py-24` etc.) now have that padding in addition to the header offset when they come first on a page; looks fine but is extra whitespace.
+5. Dev-server note: two `next dev` servers sharing one `.next` folder made routes return 404 until restarted; the server on port 3000 (pid 4092) is not mine and was left running.

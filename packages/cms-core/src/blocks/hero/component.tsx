@@ -144,7 +144,7 @@ export function HeroBlock({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[68%_32%] xl:grid-cols-[70%_30%] lg:grid-rows-[auto_1fr] w-full lg:min-h-screen px-0 sm:px-6 lg:px-10 pt-4 lg:pt-0">
+    <div className="grid grid-cols-1 lg:grid-cols-[68%_32%] xl:grid-cols-[70%_30%] lg:grid-rows-[auto_1fr] w-full lg:min-h-[calc(100svh-var(--header-h,0px))] px-0 sm:px-6 lg:px-10 pt-0">
       {/* Row 1, left column — logo + headline */}
       <div className="lg:col-start-1 lg:row-start-1 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 pb-0">
         <Image
@@ -153,10 +153,10 @@ export function HeroBlock({
           width={350}
           height={100}
           priority
-          className="hidden lg:block sm:-mt-8 xl:-mt-15 shrink-0 lg:w-64 xl:w-86"
+          className="hidden lg:block shrink-0 lg:w-64 xl:w-86"
         />
         {/* Headline – allow wrapping, remove forced nowrap */}
-        <div className="max-w-xl mt-15 sm:mt-12 lg:mt-6">
+        <div className="max-w-xl mt-0 lg:mt-6">
           {eyebrow && (
             <p className="mb-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-accent">
               {eyebrow}

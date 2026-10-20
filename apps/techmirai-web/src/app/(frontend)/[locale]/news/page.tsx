@@ -41,7 +41,7 @@ export default async function NewsPage({
   const articles = result.docs
 
   return (
-    <main className="bg-[var(--color-background)] min-h-screen pt-24 pb-16">
+    <main className="bg-[var(--color-background)] min-h-screen pt-8 pb-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-extrabold text-[var(--color-text)] tracking-tight mb-8">
           {TITLES[locale] ?? TITLES['en']}

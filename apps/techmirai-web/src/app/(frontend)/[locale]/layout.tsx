@@ -128,7 +128,7 @@ export default async function LocaleLayout({
         <Header locale={locale} />
         
         {/* Wrapping children in LayoutWrapper prevents the jumpy behavior */}
-        <main id="main-content" className="flex-1">
+        <main id="main-content" className="flex-1 pt-[var(--header-h)]">
           <LayoutWrapper>
             {children}
           </LayoutWrapper>
