@@ -200,35 +200,35 @@ export function HeroBlock({
         </div>
 
         {/* Call & LINE Buttons */}
-        <div className="grid grid-cols-2 gap-2 xl:gap-4 w-full">
+        <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2 2xl:gap-4 w-full">
           {/* Call Button */}
           <a href={resolvedPhone.phoneHref} className="flex flex-col items-center group w-full">
-            <div className="relative w-full h-12 xl:h-14 bg-white border border-gray-200 shadow-sm group-hover:border-brand-primary rounded-full px-2 xl:px-4 flex items-center justify-center group-hover:shadow-md transition-all duration-200 group-hover:-translate-y-0.5">
-              <span className="absolute -top-3 bg-[#EE7A93] text-white text-[10px] xl:text-xs font-bold px-2 xl:px-3 py-0.5 rounded-full shadow-sm whitespace-nowrap transition-transform duration-200 group-hover:scale-105">
+            <div className="relative w-full min-h-12 xl:min-h-14 py-2 bg-white border border-gray-200 shadow-sm group-hover:border-brand-primary rounded-full px-2 xl:px-4 flex items-center justify-center group-hover:shadow-md transition-all duration-200 group-hover:-translate-y-0.5">
+              <span className="absolute -top-3 max-w-[90%] text-center leading-tight bg-[#EE7A93] text-white text-[10px] xl:text-xs font-bold px-2 xl:px-3 py-0.5 rounded-full shadow-sm transition-transform duration-200 group-hover:scale-105">
                 {resolvedPhone.badgeLabel}
               </span>
-              <div className="flex items-center gap-1 xl:gap-2 text-gray-900 group-hover:text-brand-primary font-black text-xs xl:text-base tracking-tight whitespace-nowrap transition-colors duration-200">
+              <div className="flex min-w-0 items-center justify-center gap-1 xl:gap-2 text-center leading-tight text-gray-900 group-hover:text-brand-primary font-black text-sm 2xl:text-base tracking-tight transition-colors duration-200">
                 <Phone className="w-3.5 h-3.5 xl:w-5 xl:h-5 fill-current text-gray-900 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
                 <span>{resolvedPhone.phoneDisplay}</span>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 group-hover:text-brand-primary mt-1.5 h-4 transition-colors duration-200">
+            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 group-hover:text-brand-primary mt-1.5 min-h-4 transition-colors duration-200">
               <Phone className="w-3 h-3 text-gray-700 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
-              <span className="whitespace-nowrap">{resolvedPhone.subLabel}</span>
+              <span className="min-w-0 text-center leading-tight">{resolvedPhone.subLabel}</span>
             </div>
           </a>
 
           {/* LINE Button */}
           <a href={resolvedLine.href} className="flex flex-col items-center group w-full">
-            <div className="w-full h-12 xl:h-14 bg-[#06C755] hover:bg-[#05b34c] text-white shadow-sm rounded-full px-2 xl:px-4 flex items-center justify-center gap-1.5 transition-opacity">
+            <div className="w-full min-h-12 xl:min-h-14 py-2 bg-[#06C755] hover:bg-[#05b34c] text-white shadow-sm rounded-full px-2 xl:px-4 flex items-center justify-center gap-1.5 transition-opacity">
               <svg className="w-4 h-4 xl:w-6 xl:h-6 fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63h-1.625v1.25h1.625c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.256c-.348 0-.63-.285-.63-.629V8.108c0-.345.282-.63.63-.63h2.256c.349 0 .63.285.63.63 0 .349-.281.63-.63.63h-1.625v1.125h1.625zm-3.896 3.14c0 .248-.146.467-.37.561-.089.038-.184.057-.278.057-.152 0-.301-.052-.422-.152l-2.732-3.414v2.888c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.247.146-.467.37-.561.225-.094.484-.04.65.129l2.731 3.414V8.108c0-.345.282-.63.63-.63.349 0 .63.285.63.63v4.895zm-6.173 0c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.895zm-2.487 0c0 .344-.282.629-.63.629H3.923c-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.266h1.89c.348 0 .63.283.63.629zM24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314z" />
               </svg>
-              <span className="font-medium text-xs xl:text-base tracking-wide whitespace-nowrap">{resolvedLine.label}</span>
+              <span className="min-w-0 text-center leading-tight font-medium text-sm 2xl:text-base tracking-wide">{resolvedLine.label}</span>
             </div>
-            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 mt-1.5 h-4">
+            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 mt-1.5 min-h-4">
               <span className="w-3.5 h-3.5 bg-[#06C755] rounded-full flex items-center justify-center text-[8px] text-white font-black shrink-0">L</span>
-              <span className="whitespace-nowrap">{resolvedLine.subLabel}</span>
+              <span className="min-w-0 text-center leading-tight">{resolvedLine.subLabel}</span>
             </div>
           </a>
         </div>
@@ -428,10 +428,10 @@ export function HeroBlock({
   </div>
 
   {/* 2. PRIMARY + SECONDARY BUTTONS (Placed after First-Time Visitors card) */}
-  <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 w-full mt-2">
+  <div className="flex flex-col sm:flex-row lg:flex-col justify-center items-center gap-2.5 w-full mt-2">
     <Link
       href={resolvedReservation.href}
-      className="group bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 rounded-full shadow-md transition-all duration-200 h-12 xl:h-14 w-full sm:w-auto max-w-xs leading-tight"
+      className="group bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-md transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
     >
       <Calendar className="w-4 h-4 sm:w-5 sm:h-5 xl:w-6 xl:h-6 shrink-0 text-white group-hover:text-brand-primary transition-colors" />
       <span>{resolvedReservation.label}</span>
@@ -443,7 +443,7 @@ export function HeroBlock({
       // containing "[" / "]", which the current bracketed placeholder does.
       <a
         href={secondaryButton.href}
-        className="group bg-white hover:bg-brand-primary border border-brand-primary text-brand-primary hover:text-white active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 rounded-full shadow-sm transition-all duration-200 h-12 xl:h-14 w-full sm:w-auto max-w-xs leading-tight"
+        className="group bg-white hover:bg-brand-primary border border-brand-primary text-brand-primary hover:text-white active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-sm transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
       >
         <span>{secondaryButton.label}</span>
       </a>

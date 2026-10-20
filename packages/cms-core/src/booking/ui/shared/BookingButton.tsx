@@ -36,7 +36,7 @@ export function BookingButton({
       disabled={isDisabled}
       aria-busy={isLoading}
       className={[
-        'inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-md px-4 text-base font-semibold',
+        'inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-center text-base font-semibold leading-snug break-words',
         'transition-colors duration-[var(--booking-transition-duration)] ease-out',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--booking-accent)] focus-visible:ring-offset-2',
         VARIANT_CLASSES[variant],

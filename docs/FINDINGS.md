@@ -1483,3 +1483,15 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 15. **Stale note:** the N1 entry above ("Dev server: started once for the audit and still running on port 3000") is out of date. The dev server was stopped for the production build and the production server is stopped at the end of O2.
 
 **Rules kept.** No database change or reseed, no test deleted or weakened, no commit, push or deploy. O2 edits remain uncommitted: `apps/techmirai-web/scripts/a11y-check.ts`, `[locale]/[slug]/page.tsx`, root `package.json`, and the docs.
+
+## 2026-10-20 — Button label overflow fix: results and observations
+
+**Done.** Button labels no longer extend outside their buttons. Root causes were fixed heights (`h-12`/`h-14`) with wrapping Japanese labels, `whitespace-nowrap` inside narrow pills, and side-by-side buttons in the hero's ~30%-wide right column at `lg`/`xl`. Changes are className-only in `hero/component.tsx`, `HeaderClient.tsx`, `MobileMenu.tsx`, `ui/Button.tsx`, `booking/ui/shared/BookingButton.tsx` and `case-studies-grid/component.tsx`. At `lg`+ the hero Call/LINE pills and the two main buttons now stack at full width (Call/LINE go two-up again at `2xl`).
+
+**Evidence.** A headless-browser check (button text box vs. button box) over 12 routes (ja/en home, services, company, contact, news, team, blog, assessment, pricing) at 375/768/1280px found 0 overflowing buttons. The check was confirmed to fire on the old fixed-height pattern. `pnpm typecheck` passes; `techmirai-web` tests 48/48. Not run: `cms-core` tests, `pnpm build`, `pnpm a11y`, Playwright E2E.
+
+**Observed, not changed:**
+1. At 375px the floating chat button covers the right end of the hero primary button when scrolled to it; the label itself is inside the button.
+2. The mobile bottom bar (`HeaderClient.tsx`) is fixed and covers content near the page bottom; no bottom padding was checked.
+3. During this check a dev server was already running on port 3000 and returned HTTP 500 for every page, so checks ran on port 3001. The 500s were not investigated. One transient 500 on `/ja/news` at 1280px came from a dev webpack-cache error (`__webpack_modules__[moduleId] is not a function`) and did not recur.
+4. The hero `placeholder-hero-phone-mockup.png` image request timed out in dev (`upstream image response timed out`).

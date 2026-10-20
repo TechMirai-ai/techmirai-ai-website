@@ -280,7 +280,7 @@ export function HeaderClient({
 
           {ctaLabel && (
             <Link href={ctaHref}>
-              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3 xl:px-4 2xl:px-5 py-2 text-xs xl:text-sm font-semibold tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md whitespace-nowrap">
+              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3 xl:px-4 2xl:px-5 py-2 text-center text-xs xl:text-sm leading-tight font-semibold tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md">
                 <span>{ctaLabel}</span>
               </button>
             </Link>
@@ -309,7 +309,7 @@ export function HeaderClient({
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 grid grid-cols-3 border-t border-border-default bg-white shadow-sm">
       <Link
         href="/assessment"
-        className="flex items-center justify-center h-14 text-xs font-semibold text-white bg-brand-primary"
+        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-white bg-brand-primary"
       >
         {mobileBarLabels.assessment}
       </Link>
@@ -317,13 +317,13 @@ export function HeaderClient({
         href={lineButton?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center h-14 text-xs font-semibold text-white bg-[#06C755]"
+        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-white bg-[#06C755]"
       >
         {mobileBarLabels.line}
       </a>
       <a
         href={phoneButton?.phoneHref}
-        className="flex items-center justify-center h-14 text-xs font-semibold text-text-primary bg-[var(--color-surface-alt)] border-l border-border-default"
+        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-text-primary bg-[var(--color-surface-alt)] border-l border-border-default"
       >
         {mobileBarLabels.call}
       </a>

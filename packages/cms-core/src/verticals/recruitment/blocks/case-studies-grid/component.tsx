@@ -74,7 +74,7 @@ export function CaseStudiesGridBlock({
 
             <Link
               href={`/${locale}${buttonHref}`}
-              className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primary/90 text-white px-6 md:px-8 py-3 md:py-3.5 rounded-full font-medium transition-all text-sm md:text-base"
+              className="inline-flex max-w-full items-center justify-center gap-2 text-center leading-snug bg-brand-primary hover:bg-brand-primary/90 text-white px-6 md:px-8 py-3 md:py-3.5 rounded-full font-medium transition-all text-sm md:text-base"
             >
               {buttonLabel} →
             </Link>

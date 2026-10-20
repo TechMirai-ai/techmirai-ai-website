@@ -48,7 +48,7 @@ export function Button({
       disabled={isDisabled}
       aria-busy={isLoading}
       className={[
-        'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors duration-150',
+        'inline-flex max-w-full items-center justify-center gap-2 rounded-md text-center font-medium leading-snug break-words transition-colors duration-150',
         // 48px minimum tap target site-wide; the phone/booking CTA gets the
         // stricter 56px minimum called for by the older-skewing patient audience.
         'focus-visible:outline-none min-h-[48px]',

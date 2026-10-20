@@ -250,7 +250,7 @@ export function MobileMenu({
                 <a
                   href={phoneButton?.phoneHref}
                   onClick={close}
-                  className="group relative flex items-center justify-center gap-2 h-12 rounded-full border border-gray-200 hover:border-brand-primary bg-white text-gray-900 hover:text-brand-primary font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                  className="group relative flex items-center justify-center gap-2 min-h-12 px-3 py-2 text-center leading-tight rounded-full border border-gray-200 hover:border-brand-primary bg-white text-gray-900 hover:text-brand-primary font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <Phone className="w-4 h-4 fill-current text-gray-900 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
                   <span>{phoneButton?.phoneDisplay}</span>
@@ -259,7 +259,7 @@ export function MobileMenu({
                 <a
                   href={lineButton?.href}
                   onClick={close}
-                  className="group flex items-center justify-center gap-2 h-12 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200"
+                  className="group flex items-center justify-center gap-2 min-h-12 px-3 py-2 text-center leading-tight rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200"
                 >
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 fill-current shrink-0 transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24">
                     <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63h-1.625v1.25h1.625c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.256c-.348 0-.63-.285-.63-.629V8.108c0-.345.282-.63.63-.63h2.256c.349 0 .63.285.63.63 0 .349-.281.63-.63.63h-1.625v1.125h1.625zm-3.896 3.14c0 .248-.146.467-.37.561-.089.038-.184.057-.278.057-.152 0-.301-.052-.422-.152l-2.732-3.414v2.888c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.247.146-.467.37-.561.225-.094.484-.04.65.129l2.731 3.414V8.108c0-.345.282-.63.63-.63.349 0 .63.285.63.63v4.895zm-6.173 0c0 .344-.282.629-.63.629-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.895zm-2.487 0c0 .344-.282.629-.63.629H3.923c-.349 0-.63-.285-.63-.629V8.108c0-.345.281-.63.63-.63.348 0 .63.285.63.63v4.266h1.89c.348 0 .63.283.63.629zM24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314z" />
