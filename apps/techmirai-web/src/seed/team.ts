@@ -48,7 +48,7 @@ async function upsertTeamMember(payload: Payload, input: TeamSeedInput): Promise
     buffer,
     input.portraitAlt ?? {
       en: `Placeholder portrait for ${input.en.name} — real photo pending written consent (F1-15)`,
-      ja: '[JA TODO]',
+      ja: 'プレースホルダーのポートレート（実際の写真は書面による同意待ち）',
     },
   )
 
@@ -89,7 +89,7 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
       shortBio: "Master's in software engineering. Builds the AI and the systems behind AI受付.",
       // Spec §10.4 full bio, verbatim — bracket kept per CLAUDE.md rule 5.
       bio: [
-        "Born in Bangladesh, studied in Egypt and India, and has lived in Japan for [about seven years]. Master's in software engineering from a Japanese university. Has worked on deep learning, computer vision and voice AI in Japanese corporate research and manufacturing. Speaks five languages. Designs the AI and systems behind AI受付.",
+        "Has lived in Japan for [about seven years]. Master's in software engineering from a Japanese university. Has worked on deep learning, computer vision and voice AI in Japanese corporate research and manufacturing. Speaks five languages. Designs the AI and systems behind AI受付.",
       ],
     },
     ja: {
@@ -97,7 +97,7 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
       title: '代表 (representative)',
       shortBio: 'ソフトウェア工学修士。AI受付を支えるAIとシステムを設計しています。',
       bio: [
-        'バングラデシュ生まれ。エジプトとインドで学び、日本在住は[約7年]。日本の大学院でソフトウェア工学の修士号を取得。日本企業の研究開発や製造の現場で、ディープラーニング、画像認識、音声AIに携わってきました。5か国語を話します。AI受付を支えるAIとシステムを設計しています。',
+        '日本在住は[約7年]。日本の大学院でソフトウェア工学の修士号を取得。日本企業の研究開発や製造の現場で、ディープラーニング、画像認識、音声AIに携わってきました。5か国語を話します。AI受付を支えるAIとシステムを設計しています。',
       ],
     },
     sortOrder: 1,

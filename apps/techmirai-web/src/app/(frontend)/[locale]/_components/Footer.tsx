@@ -32,16 +32,16 @@ interface FooterProps {
 // labels dictionary.
 const footerCopy: Record<string, { brandLine: string; bottomLine: string; legalNotice: string; privacy: string; terms: string; lineQr: string }> = {
   en: {
-    brandLine: 'TechMirai — AI reception for small businesses in Japan.',
-    bottomLine: 'Built in Japan, for businesses in Japan.',
+    brandLine: 'TechMirai — AI voice agent for call centers and phone desks.',
+    bottomLine: 'Built by an international engineering team.',
     legalNotice: 'Legal Notice',
     privacy: 'Privacy Policy',
     terms: 'Terms of Use',
     lineQr: 'LINE QR',
   },
   ja: {
-    brandLine: 'TechMirai｜中小企業・店舗のためのAI受付',
-    bottomLine: '日本で、日本のお店のためにつくっています。',
+    brandLine: 'TechMirai｜コールセンター・電話窓口向け AI音声エージェント',
+    bottomLine: '国際的なエンジニアチームが開発しています。',
     legalNotice: '特定商取引法に基づく表記',
     privacy: 'プライバシーポリシー',
     terms: '利用規約',

@@ -37,7 +37,7 @@ export async function seedDownloads(payload: Payload): Promise<DownloadIds> {
     payload,
     'techmirai-brochure-placeholder.pdf',
     buffer,
-    { en: 'TechMirai brochure (placeholder PDF)', ja: '[JA TODO]' },
+    { en: 'TechMirai brochure (placeholder PDF)', ja: 'TechMiraiパンフレット（プレースホルダーPDF）' },
     'application/pdf',
   )
 
@@ -53,7 +53,7 @@ export async function seedDownloads(payload: Payload): Promise<DownloadIds> {
     },
     ja: {
       title: 'TechMirai 資料',
-      description: '[JA TODO] — 実際の資料は未提供のプレースホルダーです。',
+      description: '実際の資料は未提供のプレースホルダーです。',
       file: fileId,
       category: '会社資料',
       meta: 'PDF（プレースホルダー）',

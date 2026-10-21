@@ -89,6 +89,41 @@ const nextConfig: NextConfig = {
     return config
   },
 
+  // 4b. Voice-pivot (ECC Master Prompt v2 §13): baseline security headers.
+  // The CSP is Report-Only on purpose: Next inline scripts, Payload admin,
+  // Turnstile and the map embeds all need an allow-list, and an enforced
+  // policy written blind could break the site. Review the console reports,
+  // then switch the header name to Content-Security-Policy (FINDINGS.md).
+  // The microphone stays blocked everywhere because the demo never uses it.
+  async headers() {
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data:",
+      "connect-src 'self' https://challenges.cloudflare.com",
+      "frame-src https://challenges.cloudflare.com https://www.google.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+    ].join('; ')
+
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'Content-Security-Policy-Report-Only', value: csp },
+        ],
+      },
+    ]
+  },
+
   // 5. Pack-4/L1: old techmirai-ai.com legal pages (Spec §17.2). statusCode 301,
   // not `permanent: true` (which Next sends as 308). Targets are the Japanese
   // (unprefixed) pages; /legal-notice is this repo's path for the Spec's /legal

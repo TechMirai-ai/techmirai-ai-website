@@ -114,7 +114,7 @@ export const CompanyInfoGlobal: GlobalConfig = {
       name: 'offices',
       type: 'array',
       label: 'Offices',
-      admin: { description: 'Add Japan, Bangladesh, Malaysia offices with their own map and stations' },
+      admin: { description: 'Add offices with their own map and stations' },
       fields: [
         {
           name: 'country',

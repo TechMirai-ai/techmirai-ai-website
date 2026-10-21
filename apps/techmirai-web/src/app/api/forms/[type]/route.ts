@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '../../../../../payload.config'
-import { contactSchema } from '@/lib/validation/contact'
+import { contactSchema, type InquiryPath } from '@/lib/validation/contact'
 import { seminarSchema } from '@/lib/validation/seminar'
 import { downloadSchema } from '@/lib/validation/download'
 import { assessmentSchema } from '@/lib/validation/assessment'
@@ -27,6 +27,11 @@ const jobApplySchema = z.object({
 // ---------------------------------------------------------------------------
 // Form type
 // ---------------------------------------------------------------------------
+
+const INQUIRY_PATH_LABELS: Record<InquiryPath, string> = {
+  adoption: 'AI voice agent adoption',
+  partnership: 'White-label partnership',
+}
 
 const FORM_TYPES = ['contact', 'job-apply', 'seminar', 'download', 'assessment'] as const
 type FormType = (typeof FORM_TYPES)[number]
@@ -165,13 +170,26 @@ export async function POST(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ success: false, message: msg(locale, 'turnstileFailed') }, { status: 400 })
     }
     try {
-      await persist('contact', parsed.data.email, locale, {
-        name: parsed.data.name,
-        furigana: parsed.data.furigana,
-        email: parsed.data.email,
-        company: parsed.data.company,
-        inquiryType: parsed.data.inquiryType,
-        message: parsed.data.message,
+      // `inquiryType` and `message` keep the keys the notification email
+      // hook (send-form-emails.ts) already prints; the other fields are
+      // stored on the JSON payload as-is. Consent is recorded with a
+      // timestamp so it can be shown later (ECC prompt v2 §2).
+      const { data } = parsed
+      await persist('contact', data.email, locale, {
+        name: data.name,
+        company: data.company,
+        role: data.role,
+        email: data.email,
+        phone: data.phone,
+        inquiryPath: data.inquiryPath,
+        inquiryType: INQUIRY_PATH_LABELS[data.inquiryPath],
+        callVolume: data.callVolume,
+        hoursToCover: data.hoursToCover,
+        languages: data.languages,
+        goal: data.goal,
+        message: data.goal ?? '',
+        consent: true,
+        consentAt: new Date().toISOString(),
       })
     } catch {
       return NextResponse.json({ success: false, message: msg(locale, 'serverError') }, { status: 500 })

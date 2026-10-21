@@ -12,7 +12,6 @@ import { Header } from './_components/Header'
 import { resolveHeaderData } from './_components/resolveHeaderData'
 import { Footer } from './_components/Footer'
 import { HtmlLangSetter } from './_components/HtmlLangSetter'
-import { FloatingCTAs } from '@techmirai/cms-core/components/ui' 
 // Import the new wrapper
 import { LayoutWrapper } from './_components/LayoutWrapper'
 import { SITE_ORIGIN } from '@/lib/seo/build-metadata'
@@ -22,7 +21,10 @@ import { getCachedPayload } from '@/lib/payload'
 
 
 const interFont = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-latin', display: 'swap', preload: false })
-const notoSansJP = Noto_Sans_JP({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-ja', display: 'swap', preload: false })
+const notoSansJP = Noto_Sans_JP({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-ja', display: 'optional', preload: false })
+// display 'optional' (voice-pivot, ECC prompt §7 performance): the large
+// Japanese font no longer swaps in late and delays LCP on slow phones; text
+// renders at once in the system Japanese font until the cached font is ready.
 
 const skipLabel: Record<string, string> = {
   en: 'Skip to main content',
@@ -142,7 +144,7 @@ export default async function LocaleLayout({
         </main>
         
         <Footer locale={locale} />
-        <FloatingCTAs lineUrl={lineButton?.href} />
+        {/* Voice-pivot: the floating LINE pill is removed — the mobile sticky bar carries Demo / Contact. */}
         {siteConfig.reception.enabled && (
           <ReceptionWidget
             enabled={siteConfig.reception.enabled}

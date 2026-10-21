@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import siteConfig from '../../../site.config'
 import { LEGAL_PAGE_META, PAGE_META, type MetaLocale } from './page-meta'
+import { VOICE_META } from './voice-meta'
 import { OG_IMAGE_SIZE, isSeededPlaceholderImage, ogImageUrl } from './og-image'
 
 // Pack-4/L1: the one place that turns a locale-less path into URLs, so every
@@ -120,7 +121,8 @@ export function metadataFromPageDoc(
  * the legal-page row) for `path`. Unknown locale → {} (the route 404s anyway).
  */
 export function staticPageMetadata(path: string, locale: string, options: { noindex?: boolean } = {}): Metadata {
-  const row = PAGE_META[path] ?? LEGAL_PAGE_META[path]
+  // Voice-pivot rows win over the older Spec §17.1 rows (see voice-meta.ts).
+  const row = VOICE_META[path] ?? PAGE_META[path] ?? LEGAL_PAGE_META[path]
   if (!row) throw new Error(`[seo] no Spec §17.1 row for ${path}`)
   if (locale !== 'en' && locale !== 'ja') return {}
   const { title, description } = row[locale as MetaLocale]

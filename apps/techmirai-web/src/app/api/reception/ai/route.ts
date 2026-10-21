@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { unstable_cache } from 'next/cache'
 import { compileAiCorpus, handleReceptionAiRequest, type CorpusDocument } from '@techmirai/cms-core/reception/ai'
+import { redactPii } from '@techmirai/cms-core/payload/lib/redact'
 import { getCachedPayload } from '@/lib/payload'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { extractIp } from '@/lib/request-ip'
@@ -49,8 +50,9 @@ export async function POST(request: NextRequest) {
       checkRateLimit,
       loadCorpus: getCachedCorpus,
       logError: (message, error) => {
-        if (error === undefined) console.error(message)
-        else console.error(message, error)
+        // Provider errors can echo visitor text: mask emails and phone numbers.
+        if (error === undefined) console.error(redactPii(message))
+        else console.error(redactPii(message), redactPii(error instanceof Error ? error.message : String(error)))
       },
     },
   )

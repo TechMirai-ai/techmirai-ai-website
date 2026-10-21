@@ -298,7 +298,7 @@ export async function seedHomePage(
     {
       blockType: 'case-study-teaser',
       heading: 'Case study: Sadiatec Co., Ltd.',
-      body: 'A Japan–Bangladesh HR and recruitment company established in 2005. We replaced their WordPress site with a custom-built website in three languages, an admin panel their staff update themselves, an on-site chatbot that hands conversations to staff on WhatsApp, and search across every page.',
+      body: 'An HR and recruitment company established in 2005. We replaced their WordPress site with a custom-built website in three languages, an admin panel their staff update themselves, an on-site chatbot that hands conversations to staff on WhatsApp, and search across every page.',
       statsStrip: 'About 20 pages · 3 languages · 11 content types · 7 integrations',
       note: 'The same engine now powers AI受付 and our clinic demo.',
       buttonLabel: 'Read the case study',
@@ -557,7 +557,7 @@ export async function seedHomePage(
       smallPrint: 'デモに登場する[医院名]は、デモ用の架空の医院です。',
       // No JA given anywhere in the Spec for these three (brochure not in
       // this repo) — registered as G2-01.
-      threeStepStrip: [{ text: '[JA TODO]' }, { text: '[JA TODO]' }, { text: '[JA TODO]' }],
+      threeStepStrip: [{ text: 'サービスを選ぶ' }, { text: '日時を選ぶ' }, { text: '予約完了' }],
       tiles: [
         {
           label: 'クリニック・治療院',
@@ -626,7 +626,7 @@ export async function seedHomePage(
     {
       blockType: 'case-study-teaser',
       heading: '導入事例：Sadiatec Co., Ltd. 様',
-      body: '2005年設立、日本とバングラデシュをつなぐ人材・採用支援の会社です。WordPressのサイトを、3言語対応の独自開発サイトに刷新しました。スタッフが自分で更新できる管理画面、WhatsAppでスタッフに引き継げるチャットボット、全ページを横断する検索機能を備えています。',
+      body: '2005年設立、人材・採用支援の会社です。WordPressのサイトを、3言語対応の独自開発サイトに刷新しました。スタッフが自分で更新できる管理画面、WhatsAppでスタッフに引き継げるチャットボット、全ページを横断する検索機能を備えています。',
       statsStrip: '約20ページ・3言語・管理項目11種類・外部連携7件',
       note: 'この事例で開発したサイト基盤が、AI受付とクリニックのデモにも使われています。',
       buttonLabel: '事例を詳しく見る',

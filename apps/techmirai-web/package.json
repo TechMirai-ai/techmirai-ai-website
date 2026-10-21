@@ -9,6 +9,8 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"src/**/*.test.ts\"",
     "seed": "RUN_SEED=true NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/index.ts",
+    "ringi:pdf": "tsx scripts/generate-ringi-pdf.ts",
+    "seed:voice": "RUN_SEED=true NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local src/seed/voice-pivot-run.ts",
     "seed:booking": "tsx --require ./fix-next-env-interop.cjs --env-file=.env.local src/seed/booking.ts",
     "db:apply-indexes": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-db-indexes.ts",
     "db:migrate-faq-keywords-category": "NODE_OPTIONS=\"--require ./fix-next-env-interop.cjs\" tsx --env-file=.env.local scripts/apply-faq-schema-migration.ts",

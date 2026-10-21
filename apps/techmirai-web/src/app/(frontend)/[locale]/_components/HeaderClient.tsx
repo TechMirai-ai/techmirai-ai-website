@@ -160,9 +160,12 @@ export function HeaderClient({
     )
   }
 
+  // Voice-pivot (ECC Master Prompt v2 §6): the sticky bar carries Demo and
+  // Contact only. Japanese: the demo label is the prompt's exact string;
+  // "Contact" reuses the footer's existing お問い合わせ.
   const mobileBarLabels = locale === 'ja'
-    ? { assessment: '無料診断', line: 'LINE', call: '電話' }
-    : { assessment: 'Free assessment', line: 'LINE', call: 'Call' }
+    ? { demo: '音声デモを体験する', contact: 'お問い合わせ' }
+    : { demo: 'Try the voice demo', contact: 'Contact' }
 
   return (
     <>
@@ -305,28 +308,20 @@ export function HeaderClient({
       </div>
     </header>
 
-    {/* Mobile sticky bottom bar (Pack-2/E1): Free assessment / LINE / Call, phone width only */}
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 grid grid-cols-3 border-t border-border-default bg-white shadow-sm">
+    {/* Mobile sticky bottom bar (voice-pivot): Demo / Contact, phone width only */}
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 grid grid-cols-2 border-t border-border-default bg-white shadow-sm">
       <Link
-        href="/assessment"
+        href="/demo"
         className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-white bg-brand-primary"
       >
-        {mobileBarLabels.assessment}
+        {mobileBarLabels.demo}
       </Link>
-      <a
-        href={lineButton?.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-white bg-[#06C755]"
-      >
-        {mobileBarLabels.line}
-      </a>
-      <a
-        href={phoneButton?.phoneHref}
+      <Link
+        href="/contact"
         className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-text-primary bg-[var(--color-surface-alt)] border-l border-border-default"
       >
-        {mobileBarLabels.call}
-      </a>
+        {mobileBarLabels.contact}
+      </Link>
     </div>
     </>
   )

@@ -1,0 +1,69 @@
+import type { Block } from 'payload'
+
+// Voice-pivot (ECC Master Prompt v2 §9, /demo): consent-gated, scripted
+// simulation. No microphone is ever opened by this block; the live AI call is
+// shown only as a disabled "integration required" placeholder.
+const text = (name: string, required = false) =>
+  ({ name, type: 'text', localized: true, ...(required ? { required: true } : {}) }) as const
+
+export const DemoSimulatorBlockConfig: Block = {
+  slug: 'demo-simulator',
+  interfaceName: 'DemoSimulatorBlock',
+  labels: { singular: 'Voice Demo Simulator', plural: 'Voice Demo Simulators' },
+  fields: [
+    text('heading'),
+    { name: 'intro', type: 'textarea', localized: true },
+    text('simulationLabel'),
+    text('fictionalNotice'),
+    text('noticeTitle'),
+    { name: 'noticeBody', type: 'textarea', localized: true },
+    text('consentLabel'),
+    text('privacyLabel'),
+    { name: 'privacyHref', type: 'text', defaultValue: '/privacy' },
+    text('startLabel'),
+    text('liveLabel'),
+    text('liveNote'),
+    text('scenarioHeading'),
+    text('transcriptHeading'),
+    text('summaryHeading'),
+    text('callerLabel'),
+    text('aiLabel'),
+    text('demoDataLabel'),
+    text('restartLabel'),
+    {
+      name: 'scenarios',
+      type: 'array',
+      required: true,
+      minRows: 1,
+      maxRows: 3,
+      fields: [
+        text('title', true),
+        { name: 'description', type: 'textarea', localized: true },
+        text('businessName'),
+        {
+          name: 'turns',
+          type: 'array',
+          required: true,
+          minRows: 1,
+          fields: [
+            {
+              name: 'speaker',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'Caller', value: 'caller' },
+                { label: 'AI', value: 'ai' },
+              ],
+            },
+            { name: 'text', type: 'textarea', localized: true, required: true },
+          ],
+        },
+        {
+          name: 'summaryRows',
+          type: 'array',
+          fields: [text('label', true), text('value')],
+        },
+      ],
+    },
+  ],
+}

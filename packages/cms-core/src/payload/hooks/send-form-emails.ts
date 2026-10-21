@@ -1,4 +1,5 @@
 import type { CollectionAfterChangeHook } from 'payload'
+import { escapeHtml as esc, redactPii } from '../lib/redact'
 
 interface EmailConfig {
   contactRecipient: string
@@ -28,6 +29,14 @@ interface FormPayload {
   lineAccount?: string
   problem?: string[]
   contactPref?: string
+  // Voice-pivot /contact additions.
+  role?: string
+  inquiryPath?: string
+  callVolume?: string
+  hoursToCover?: string
+  languages?: string
+  goal?: string
+  consentAt?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -59,12 +68,14 @@ async function dispatch(to: string, subject: string, html: string, fromEmail: st
 
     if (!response.ok) {
       const error = await response.text()
-      console.error(`Resend API error (${response.status}):`, error)
+      // Provider error text can echo the recipient: redact before logging.
+      console.error(`Resend API error (${response.status}):`, redactPii(error))
     } else {
-      console.log(`✅ Email sent to ${to} | Subject: ${subject}`)
+      // Subjects carry the submitter's name, so nothing identifying is logged.
+      console.log('✅ Email sent')
     }
   } catch (err) {
-    console.error('Failed to send email via Resend:', err)
+    console.error('Failed to send email via Resend:', redactPii(err instanceof Error ? err.message : String(err)))
   }
 }
 
@@ -80,28 +91,35 @@ export function staffHtml(formType: FormType, p: FormPayload, locale?: string): 
   return `
     <h2>New ${formType} submission</h2>
     <p><strong>Locale:</strong> ${locale || 'en'}</p>
-    ${p.name ? `<p><strong>Name:</strong> ${p.name}</p>` : ''}
-    ${p.email ? `<p><strong>Email:</strong> ${p.email}</p>` : ''}
-    ${p.company ? `<p><strong>Company:</strong> ${p.company}</p>` : ''}
-    ${p.inquiryType ? `<p><strong>Inquiry Type:</strong> ${p.inquiryType}</p>` : ''}
-    ${p.jobSlug ? `<p><strong>Job:</strong> ${p.jobSlug}</p>` : ''}
-    ${p.seminarSlug ? `<p><strong>Seminar:</strong> ${p.seminarSlug}</p>` : ''}
-    ${p.resourceSlug ? `<p><strong>Resource:</strong> ${p.resourceSlug}</p>` : ''}
-    ${p.url ? `<p><strong>Website:</strong> ${p.url}</p>` : ''}
-    ${p.phone ? `<p><strong>Phone:</strong> ${p.phone}</p>` : ''}
-    ${p.industry ? `<p><strong>Industry:</strong> ${p.industry}</p>` : ''}
-    ${p.bookingSystem ? `<p><strong>Current booking system:</strong> ${p.bookingSystem}</p>` : ''}
-    ${p.lineAccount ? `<p><strong>LINE Official Account:</strong> ${p.lineAccount}</p>` : ''}
-    ${p.problem && p.problem.length > 0 ? `<p><strong>Main problems:</strong> ${p.problem.join(', ')}</p>` : ''}
-    ${p.contactPref ? `<p><strong>Preferred contact:</strong> ${p.contactPref}</p>` : ''}
-    ${p.message ? `<hr><p><strong>Message:</strong></p><p>${p.message.replace(/\n/g, '<br>')}</p>` : ''}
+    ${p.name ? `<p><strong>Name:</strong> ${esc(p.name)}</p>` : ''}
+    ${p.email ? `<p><strong>Email:</strong> ${esc(p.email)}</p>` : ''}
+    ${p.company ? `<p><strong>Company:</strong> ${esc(p.company)}</p>` : ''}
+    ${p.role ? `<p><strong>Role:</strong> ${esc(p.role)}</p>` : ''}
+    ${p.inquiryType ? `<p><strong>Inquiry Type:</strong> ${esc(p.inquiryType)}</p>` : ''}
+    ${p.callVolume ? `<p><strong>Call volume:</strong> ${esc(p.callVolume)}</p>` : ''}
+    ${p.hoursToCover ? `<p><strong>Hours to cover:</strong> ${esc(p.hoursToCover)}</p>` : ''}
+    ${p.languages ? `<p><strong>Languages:</strong> ${esc(p.languages)}</p>` : ''}
+    ${p.consentAt ? `<p><strong>Consent given at:</strong> ${esc(p.consentAt)}</p>` : ''}
+    ${p.jobSlug ? `<p><strong>Job:</strong> ${esc(p.jobSlug)}</p>` : ''}
+    ${p.seminarSlug ? `<p><strong>Seminar:</strong> ${esc(p.seminarSlug)}</p>` : ''}
+    ${p.resourceSlug ? `<p><strong>Resource:</strong> ${esc(p.resourceSlug)}</p>` : ''}
+    ${p.url ? `<p><strong>Website:</strong> ${esc(p.url)}</p>` : ''}
+    ${p.phone ? `<p><strong>Phone:</strong> ${esc(p.phone)}</p>` : ''}
+    ${p.industry ? `<p><strong>Industry:</strong> ${esc(p.industry)}</p>` : ''}
+    ${p.bookingSystem ? `<p><strong>Current booking system:</strong> ${esc(p.bookingSystem)}</p>` : ''}
+    ${p.lineAccount ? `<p><strong>LINE Official Account:</strong> ${esc(p.lineAccount)}</p>` : ''}
+    ${p.problem && p.problem.length > 0 ? `<p><strong>Main problems:</strong> ${esc(p.problem.join(', '))}</p>` : ''}
+    ${p.contactPref ? `<p><strong>Preferred contact:</strong> ${esc(p.contactPref)}</p>` : ''}
+    ${p.message ? `<hr><p><strong>Message:</strong></p><p>${esc(p.message).replace(/\n/g, '<br>')}</p>` : ''}
     <p><em>Submitted at: ${new Date().toLocaleString()}</em></p>
   `
 }
 
-export function confirmationHtml(formType: FormType, name: string, locale?: string, payload?: FormPayload): string {
+export function confirmationHtml(formType: FormType, rawName: string, locale?: string, payload?: FormPayload): string {
+  // The submitter's own text goes into the auto-reply: escape it.
+  const name = esc(rawName)
   if (formType === 'assessment') {
-    const url = payload?.url ?? ''
+    const url = esc(payload?.url ?? '')
     if (locale === 'ja') {
       return `
         <p>${name} 様</p>

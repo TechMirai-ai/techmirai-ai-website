@@ -145,3 +145,18 @@ not a static image asset, so it never needed a pixel-size placeholder. Logged as
 `docs/FINDINGS.md` for whichever later step places the remaining two.
 
 **Note on Appendix A's "found in later sections" items** (timelines, integrations detail, pricing detail, security, founder message, team bios beyond #15/#16, company profile detail, technology table, booking, case-study detail beyond #14, FAQ items F19/F20/F24/F25, blog bylines, chat answer C09): these are explicitly out of F1's scope — F1's own Read list names only Spec p.2-6 and p.11-14 (Appendix A's 21 numbered items), and `docs/WORK-ORDER.md` Appendix A itself frames the later-sections bullets as "not exhaustive; Step C1 builds the full list." None of that content exists in the repo yet. Each Pack-3/4 step that builds a page is responsible for adding its own register row(s) when it creates the field, the same way F1-02/05/11/12/13/16/17/20 above are already pre-registered against steps that haven't run yet.
+
+## Voice pivot (docs/ECC MASTER PROMPT TechMirai Voice Website v2.md)
+
+| ID | Page / field | Locale | Placeholder | Owner | Status |
+| --- | --- | --- | --- | --- | --- |
+| V1-01 | All launch pages, every Japanese string the prompt did not supply | ja | [JA TODO] | Native Japanese reviewer | open |
+| V1-02 | /, /contact: last-updated date and responsible company | en/ja | [TBD: owner to confirm date], [TBD: legal company name] | Jamal | open |
+| V1-03 | /demo: recording retention, who can see recordings, public call-length limit (suggested about 3 min) | en | [TBD: owner to confirm] | Jamal | open |
+| V1-04 | /partners: founding-partner benefits and conditions, OEM / white-label terms | en | [TBD: ...] | Jamal | open |
+| V1-05 | /partners and /: PoC target task, duration, deliverables, partner inputs | en | [X weeks] etc. | Jamal | open |
+| V1-06 | /company: legal name, representative, address, registration; team photos, names, roles (written consent needed) | en | [TBD: ...] | Jamal | open |
+| V1-07 | /privacy: full policy text incl. demo recording, transcription, retention | en/ja | professional wording | Legal reviewer | open |
+| V1-08 | Ringi PDF: all [TBD] fields (company, contact person, email, retention) | en | [TBD] | Jamal | open |
+
+**V1-01 update (2026-10-21):** at the owner's explicit request, Japanese for the launch pages, navigation, footer, SEO titles/descriptions, demo, contact form, privacy scope note, image alt text and booking messages was written by Claude as DRAFT. It replaces every `[JA TODO]` on the public pages. A native Japanese speaker must review it before launch. Strings given verbatim in the ECC prompt are unchanged. `[TBD：…]` markers inside Japanese text are the same unconfirmed facts as the English `[TBD: …]`. Remaining `[JA TODO]` markers exist only in code paths and tests that depend on them (chat content tests, corpus filter, image-slots tests, seeded placeholder meta).

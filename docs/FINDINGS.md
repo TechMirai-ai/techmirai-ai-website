@@ -1536,3 +1536,21 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 **All `[locale]` pages made dynamic.** The `[locale]` layout, header, footer and nearly every page read the database, so `export const dynamic = 'force-dynamic'` was added to `src/app/(frontend)/[locale]/layout.tsx`. Every page under it now renders per request; the per-page `revalidate = 3600` exports no longer take effect (no ISR cache), so each request queries the database. To get caching back, remove that line once `DATABASE_URI` is reachable at build time.
 
 **Evidence.** `pnpm build` with `DATABASE_URI=postgres://u:p@127.0.0.1:1/none` (unreachable) exits 0; the four wrapped `generateStaticParams` log `[static-params] ... skipping prerender`. Only `/{ja,en}/line/booking`, `/{ja,en}/line/manage` and `_not-found` are prerendered (none read the database). In the route table `●` on `[locale]` routes only marks that they have `generateStaticParams`; no HTML was generated for them. `tsc --noEmit` passes. Not run: tests, a build against a reachable database, a deployed-site check.
+
+## 2026-10-21 — Voice pivot (ECC Master Prompt v2)
+
+- **/company sitemap blocked:** `seo.test.ts` asserts `/company` is excluded from the sitemap; the new brief wants it listed. Not changed (rule 14, stop trigger). Needs Jamal's approval to update that test.
+- **Email "or" phone:** the form requires email (the form-submissions collection and notification hook key on it); phone is optional.
+- **send-form-emails.ts** interpolates submitted values into HTML unescaped (HTML injection into staff emails). Not fixed here; fix before enabling emails.
+- **CSP is Report-Only** until reviewed in a browser; then enforce.
+- **site.config.ts** still has clinic-era tagline, social placeholders, contact recipient and a bracketed phone; footer displays the tagline. Replace once confirmed.
+- **Windows seed scripts:** `RUN_SEED=true ...` in package.json scripts fails under the Windows script shell; run from Git Bash (as done for seed:voice).
+- **Old pages kept:** `/ai-reception`, `/solutions/*`, `/pricing` etc. still carry the earlier product copy and prices; they are unlinked from main nav only. `/pricing` shows bracketed prices.
+- **FAQPage JSON-LD** still emitted on kept pages with FAQ content; prompt says none until that content exists. Owner decision.
+- **Unverified:** `pnpm build`, e2e, axe, Lighthouse, reduced-motion visual check, end-to-end successful submission.
+
+- **(2026-10-21, second pass)** Fixed: unescaped HTML in the form emails; PII in email logs. Found: the 2 s splash hid the site; Japanese font swap delayed LCP. Still open: pages are all `force-dynamic` (LCP/TTFB); the chatbot still answers about the old AI受付 product and its content is locked by tests; AIRI, Callix, KARAKURI and AI Worker were not researched (no results retrieved); dev database now contains two test form submissions named "automated check".
+
+- **(2026-10-21, Japanese pass)** Owner explicitly asked for Japanese to be written for every `[JA TODO]`, overriding CLAUDE.md rule 6 for this task; it is marked DRAFT everywhere it matters (needs native review). Also found: a combined `locale:'all'` update kept the old Japanese `pages.title` while updating English; titles are now set per locale in `seed/pages/voice-pivot.ts`.
+
+- **(2026-10-21, screenshot restyle)** Differences from `docs/screenshots/screenshot.jpeg`, all because the ECC prompt wins: header nav kept as Demo / Partners / Company / Contact (screenshot has Home, case studies, engineering track, download); supporting line and secondary button keep the prompt's exact Japanese; the demo is described as a scripted simulation (screenshot says "real call"); "current phone environment" wording dropped; routing list carries a "consultation option" badge because transfer-to-person and routing rules are not built; photos/illustrations of people replaced by icons (rule 8). Illustrations in the screenshot are not reproduced pixel-for-pixel.

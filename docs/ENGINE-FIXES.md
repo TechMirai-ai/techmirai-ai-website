@@ -661,3 +661,30 @@ href (not the literal `'#'`), in both locales.
 **Files.** `apps/techmirai-web/next.config.ts` only.
 
 **Status:** code changed; verification below in FINDINGS.md entry. Live behaviour unverified until redeployed with the R2 variables set.
+
+## 2026-10-21 — Voice pivot engine changes (additive)
+
+- New blocks `call-flow` and `demo-simulator` (cms-core): additive Payload blocks, no existing rows touched.
+- Contact form: `contactSchema` replaced with the two-path B2B schema; consent (`z.literal(true)`) is enforced on the server; honeypot field now rendered; consent and timestamp stored in the existing JSON `payload`.
+- `next.config.ts`: added `headers()` (nosniff, referrer policy, frame options, permissions policy, CSP Report-Only).
+- Removed `[locale]/company/page.tsx` so the CMS-driven `company` page is served by the catch-all.
+
+## 2026-10-21 — Voice pivot, second pass
+
+- `LayoutWrapper.tsx`: removed the timed 2 s splash screen that hid the whole site and faded it in over 1 s (LCP 9–17 s on a throttled phone). Children now render immediately.
+- `[locale]/layout.tsx`: Noto Sans JP `display: 'swap'` → `'optional'` so the large Japanese font cannot delay first text.
+- `send-form-emails.ts`: submitted values are HTML-escaped in staff and auto-reply emails; logs no longer include recipient addresses or subjects (names). New helper `payload/lib/redact.ts` (+ tests), exported as `@techmirai/cms-core/payload/lib/redact`.
+- `api/reception/ai/route.ts`: chatbot error logs mask emails and phone numbers.
+- `call-flow` block: inactive step cards no longer use `opacity-80` (WCAG contrast).
+- New `lib/seo/voice-json-ld.ts`: Service, ContactPoint, BreadcrumbList for launch pages (Organization/WebSite untouched).
+- Footer brand line and bottom line now describe the voice agent.
+
+## 2026-10-21 — Home page restyled from the owner's screenshot
+
+- Five new additive blocks in `packages/cms-core/src/blocks/voice-sections/`: `voice-hero` (animated call-flow diagram), `icon-cards` (problems, demo scenarios), `day-flow`, `routing-dashboard` (list + dashboard mock, dummy data), `role-split`. Shared icon list from lucide-react; adapters unit-tested.
+- Home seed (`seed/pages/voice-home.ts`) rebuilt on these blocks; still exactly 6 sections (the screenshot's timeline, routing/dashboard and AI-vs-people parts form section 3 "How it works").
+
+## 2026-10-21 — Same style applied to the other launch pages
+
+- New block `page-intro` (gradient header with pill label, heading, buttons, last-updated note) used on /demo, /partners, /company.
+- /partners and /company content moved onto the `icon-cards` block (rounded cards with icon tiles); `demo-simulator`, the contact page (`/contact`) and `LegalPage` (privacy, terms, legal notice) restyled to the same cards, pills and rounded buttons. Copy and behaviour unchanged.

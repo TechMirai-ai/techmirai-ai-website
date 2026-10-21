@@ -60,7 +60,7 @@
         "title": "以前、当社にご相談いただいたことはありますか？",
         "first": "はじめてのご相談",
         "returning": "既存のお客様",
-        "firstVisitUnavailable": "[JA TODO]"
+        "firstVisitUnavailable": "[TBD：ご相談枠がない場合のメッセージ]"
       },
       "service": {
         "title": "ご相談内容を選ぶ",
@@ -98,8 +98,8 @@
       },
       "confirmation": {
         "title": "内容の確認",
-        "visitTypeLabel": "[JA TODO]",
-        "serviceLabel": "[JA TODO]",
+        "visitTypeLabel": "ご相談の種類",
+        "serviceLabel": "サービス",
         "dateTimeLabel": "日時",
         "nameLabel": "お名前",
         "companyLabel": "会社名・店舗名",
@@ -111,10 +111,10 @@
       },
       "success": {
         "title": "ご予約が完了しました。",
-        "clinicNameLabel": "[JA TODO]",
+        "clinicNameLabel": "[TBD：予約カードのラベル]",
         "confirmationCodeLabel": "予約番号",
         "dateTimeLabel": "予約日時",
-        "screenshotHint": "[JA TODO]",
+        "screenshotHint": "この確認内容を保存するか、スクリーンショットを撮ってください。",
         "manageLinkLabel": "予約の変更・キャンセルはこちら"
       },
       "errors": {
@@ -122,7 +122,7 @@
         "slotClosed": "その時間は現在ご利用いただけません。別の時間をお選びください。",
         "rateLimited": "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
         "invalidInput": "入力内容を保存できませんでした。内容をご確認のうえ、もう一度お試しください。",
-        "phoneAlreadyRegistered": "[JA TODO]",
+        "phoneAlreadyRegistered": "この電話番号はすでに登録されています。入力内容をご確認いただくか、誤りと思われる場合はお問い合わせください。",
         "cutoffPassed": "ご予約日時が近いため、オンラインでの変更はできません。お電話にてお問い合わせください。",
         "generic": "エラーが発生しました。もう一度お試しください。"
       },
@@ -143,7 +143,7 @@
           "title": "新しい日時を選択",
           "confirm": "この日時に変更する",
           "success": "ご予約の日時を変更しました。",
-          "successPartial": "[JA TODO]"
+          "successPartial": "新しいご予約は確定しましたが、以前のご予約を自動でキャンセルできませんでした。キャンセルされているか、お問い合わせのうえご確認ください。"
         }
       },
       "linePicker": {

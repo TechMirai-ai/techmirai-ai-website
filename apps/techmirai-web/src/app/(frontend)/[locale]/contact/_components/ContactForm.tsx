@@ -1,137 +1,147 @@
 'use client'
 
-import { useState, type FormEvent, type FocusEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { z } from 'zod'
 import { Alert, Badge } from '@techmirai/cms-core/components/ui'
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+// Voice-pivot contact form (docs/ECC MASTER PROMPT TechMirai Voice Website v2
+// §2, §9): two inquiry paths, short B2B fields, an unchecked consent box that
+// is required before anything is sent. The server enforces consent again.
 
-type InquiryType = 'general' | 'visa' | 'recruitment' | 'other'
+export type InquiryPath = 'adoption' | 'partnership'
 
-type FormLabels = {
+export type FormLabels = {
+  adoptionPath: string
+  partnershipPath: string
+  pathLegend: string
   name: string
-  furigana: string
-  email: string
   company: string
-  inquiryType: string
-  message: string
+  role: string
+  email: string
+  phone: string
+  optionalHeading: string
+  callVolume: string
+  hoursToCover: string
+  languages: string
+  goal: string
+  consent: string
+  privacyLink: string
   submit: string
   submitting: string
   success: string
   error: string
-  inquiryOptions: Record<InquiryType, string>
   required: string
+  consentRequired: string
 }
 
 type ContactFormProps = {
   locale: string
   labels: FormLabels
   apiPath: string
+  initialPath: InquiryPath
 }
 
 type FieldErrors = Partial<Record<string, string[]>>
 
-// ---------------------------------------------------------------------------
-// Client-side schema (mirrors server schema)
-// ---------------------------------------------------------------------------
-
 const clientSchema = z.object({
-  name: z.string().min(1),
-  furigana: z.string().optional(),
-  email: z.string().email(),
-  company: z.string().optional(),
-  inquiryType: z.enum(['general', 'visa', 'recruitment', 'other']),
-  message: z.string().min(10),
+  name: z.string().trim().min(1),
+  company: z.string().trim().min(1),
+  role: z.string().trim().min(1),
+  email: z.string().trim().email(),
+  consent: z.literal(true),
 })
 
-const fieldSchemas = {
-  name: clientSchema.shape.name,
-  email: clientSchema.shape.email,
-  message: clientSchema.shape.message,
+const fieldClass =
+  'w-full min-h-[48px] rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-base text-[var(--color-text)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20'
+const errorClass = 'mt-1 text-sm text-[var(--color-error)]'
+const labelClass = 'flex items-center gap-2 text-sm font-medium text-[var(--color-text)] mb-1'
+
+type TextFieldProps = {
+  id: string
+  label: string
+  value: string
+  onChange: (value: string) => void
+  required?: boolean
+  requiredLabel?: string
+  type?: string
+  autoComplete?: string
+  error?: string | undefined
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+function TextField({ id, label, value, onChange, required, requiredLabel, type = 'text', autoComplete, error }: TextFieldProps) {
+  return (
+    <div>
+      <label htmlFor={id} className={labelClass}>
+        {label} {required && <Badge variant="accent">{requiredLabel}</Badge>}
+      </label>
+      <input
+        id={id}
+        type={type}
+        autoComplete={autoComplete}
+        required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={fieldClass}
+      />
+      {error && (
+        <p id={`${id}-error`} role="alert" className={errorClass}>
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
 
-export function ContactForm({ locale, labels, apiPath }: ContactFormProps) {
-  const [name, setName] = useState('')
-  const [furigana, setFurigana] = useState('')
-  const [email, setEmail] = useState('')
-  const [company, setCompany] = useState('')
-  const [inquiryType, setInquiryType] = useState<InquiryType>('general')
-  const [message, setMessage] = useState('')
-
+export function ContactForm({ locale, labels, apiPath, initialPath }: ContactFormProps) {
+  const [path, setPath] = useState<InquiryPath>(initialPath)
+  const [values, setValues] = useState({
+    name: '', company: '', role: '', email: '', phone: '',
+    callVolume: '', hoursToCover: '', languages: '', goal: '',
+  })
+  const [consent, setConsent] = useState(false)
+  const [honeypot, setHoneypot] = useState('')
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [serverMessage, setServerMessage] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+
+  const setField = (key: keyof typeof values) => (value: string) => setValues((prev) => ({ ...prev, [key]: value }))
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setFieldErrors({})
     setServerMessage(null)
 
-    const values = { name, furigana: furigana || undefined, email, company: company || undefined, inquiryType, message }
-
-    // Client-side Zod validation
-    const parsed = clientSchema.safeParse(values)
+    const parsed = clientSchema.safeParse({ ...values, consent })
     if (!parsed.success) {
-      setFieldErrors(parsed.error.flatten().fieldErrors as FieldErrors)
+      const errors = parsed.error.flatten().fieldErrors as FieldErrors
+      if (errors['consent']) errors['consent'] = [labels.consentRequired]
+      setFieldErrors(errors)
       return
     }
 
     setStatus('submitting')
-
-    // Collect Turnstile token if widget is present
-    let turnstileToken: string | undefined
-    if (typeof window !== 'undefined' && 'turnstile' in window) {
-      try {
-        turnstileToken = (window.turnstile as { getResponse: () => string }).getResponse() || undefined
-      } catch {
-        // no widget present
-      }
-    }
+    const optional = Object.fromEntries(Object.entries(values).filter(([, v]) => v.trim() !== ''))
 
     try {
       const res = await fetch(apiPath, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...parsed.data, locale, ...(turnstileToken ? { turnstileToken } : {}) }),
+        body: JSON.stringify({ ...optional, inquiryPath: path, consent: true, locale, _hp: honeypot }),
       })
-
-      const json = (await res.json()) as {
-        success: boolean
-        message?: string
-        fieldErrors?: FieldErrors
-      }
-
+      const json = (await res.json()) as { success: boolean; message?: string; fieldErrors?: FieldErrors }
       if (json.success) {
         setStatus('success')
-      } else {
-        setStatus('error')
-        setServerMessage(json.message ?? labels.error)
-        if (json.fieldErrors) setFieldErrors(json.fieldErrors)
+        return
       }
+      setStatus('error')
+      setServerMessage(json.message ?? labels.error)
+      if (json.fieldErrors) setFieldErrors(json.fieldErrors)
     } catch {
       setStatus('error')
       setServerMessage(labels.error)
     }
-  }
-
-  // Live inline validation: re-check a single field on blur so errors surface
-  // before the user reaches submit, not only after.
-  function validateField(field: keyof typeof fieldSchemas, value: string) {
-    const result = fieldSchemas[field].safeParse(value)
-    setFieldErrors((prev) => ({
-      ...prev,
-      [field]: result.success ? undefined : result.error.flatten().formErrors,
-    }))
-  }
-
-  function handleBlur(field: keyof typeof fieldSchemas) {
-    return (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => validateField(field, e.target.value)
   }
 
   if (status === 'success') {
@@ -142,134 +152,65 @@ export function ContactForm({ locale, labels, apiPath }: ContactFormProps) {
     )
   }
 
-  const fieldClass =
-    'w-full min-h-[48px] rounded-md border border-neutral-300 bg-white px-4 py-2.5 text-base text-[var(--color-text)] placeholder:text-neutral-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-colors'
-  const errorClass = 'mt-1 text-sm text-[var(--color-error)]'
-  const labelClass = 'flex items-center gap-2 text-sm font-medium text-[var(--color-text)] mb-1'
-
   return (
     <form onSubmit={handleSubmit} noValidate aria-busy={status === 'submitting'} className="space-y-5">
-      {/* Screen-reader announcement for async state changes */}
       <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {status === 'submitting' ? labels.submitting : ''}
       </p>
 
-      {/* Name */}
+      <fieldset className="space-y-2">
+        <legend className={labelClass}>{labels.pathLegend}</legend>
+        {(['adoption', 'partnership'] as const).map((value) => (
+          <label key={value} className="flex items-center gap-3 rounded-md border border-neutral-300 p-3 text-sm">
+            <input type="radio" name="inquiryPath" value={value} checked={path === value} onChange={() => setPath(value)} />
+            {value === 'adoption' ? labels.adoptionPath : labels.partnershipPath}
+          </label>
+        ))}
+      </fieldset>
+
+      <TextField id="cf-name" label={labels.name} value={values.name} onChange={setField('name')} required requiredLabel={labels.required} autoComplete="name" error={fieldErrors['name']?.[0]} />
+      <TextField id="cf-company" label={labels.company} value={values.company} onChange={setField('company')} required requiredLabel={labels.required} autoComplete="organization" error={fieldErrors['company']?.[0]} />
+      <TextField id="cf-role" label={labels.role} value={values.role} onChange={setField('role')} required requiredLabel={labels.required} autoComplete="organization-title" error={fieldErrors['role']?.[0]} />
+      <TextField id="cf-email" label={labels.email} type="email" value={values.email} onChange={setField('email')} required requiredLabel={labels.required} autoComplete="email" error={fieldErrors['email']?.[0]} />
+      <TextField id="cf-phone" label={labels.phone} type="tel" value={values.phone} onChange={setField('phone')} autoComplete="tel" />
+
+      <fieldset className="space-y-4 rounded-md border border-neutral-200 p-4">
+        <legend className="px-1 text-sm font-semibold">{labels.optionalHeading}</legend>
+        <TextField id="cf-volume" label={labels.callVolume} value={values.callVolume} onChange={setField('callVolume')} />
+        <TextField id="cf-hours" label={labels.hoursToCover} value={values.hoursToCover} onChange={setField('hoursToCover')} />
+        <TextField id="cf-languages" label={labels.languages} value={values.languages} onChange={setField('languages')} />
+        <div>
+          <label htmlFor="cf-goal" className={labelClass}>{labels.goal}</label>
+          <textarea id="cf-goal" rows={4} value={values.goal} onChange={(e) => setField('goal')(e.target.value)} className={`${fieldClass} resize-y`} />
+        </div>
+      </fieldset>
+
+      {/* Honeypot: hidden from people, filled in by simple bots */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="cf-website">Website</label>
+        <input id="cf-website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+      </div>
+
       <div>
-        <label htmlFor="cf-name" className={labelClass}>
-          {labels.name} <Badge variant="accent">{labels.required}</Badge>
+        <label className="flex items-start gap-3 text-sm leading-relaxed">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            aria-invalid={Boolean(fieldErrors['consent'])}
+            aria-describedby={fieldErrors['consent'] ? 'cf-consent-error' : undefined}
+            className="mt-1 h-4 w-4"
+          />
+          <span>
+            {labels.consent}{' '}
+            <a href={locale === 'en' ? '/en/privacy' : '/privacy'} className="underline">{labels.privacyLink}</a>
+          </span>
         </label>
-        <input
-          id="cf-name"
-          type="text"
-          autoComplete="name"
-          required
-          aria-invalid={Boolean(fieldErrors['name'])}
-          aria-describedby={fieldErrors['name'] ? 'cf-name-error' : undefined}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onBlur={handleBlur('name')}
-          className={fieldClass}
-        />
-        {fieldErrors['name'] && (
-          <p id="cf-name-error" role="alert" className={errorClass}>{fieldErrors['name']?.[0]}</p>
+        {fieldErrors['consent'] && (
+          <p id="cf-consent-error" role="alert" className={errorClass}>{fieldErrors['consent'][0]}</p>
         )}
       </div>
 
-      {/* Furigana (optional) */}
-      <div>
-        <label htmlFor="cf-furigana" className={labelClass}>
-          {labels.furigana}
-        </label>
-        <input
-          id="cf-furigana"
-          type="text"
-          autoComplete="off"
-          value={furigana}
-          onChange={(e) => setFurigana(e.target.value)}
-          className={fieldClass}
-        />
-      </div>
-
-      {/* Email */}
-      <div>
-        <label htmlFor="cf-email" className={labelClass}>
-          {labels.email} <Badge variant="accent">{labels.required}</Badge>
-        </label>
-        <input
-          id="cf-email"
-          type="email"
-          autoComplete="email"
-          required
-          aria-invalid={Boolean(fieldErrors['email'])}
-          aria-describedby={fieldErrors['email'] ? 'cf-email-error' : undefined}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={handleBlur('email')}
-          className={fieldClass}
-        />
-        {fieldErrors['email'] && (
-          <p id="cf-email-error" role="alert" className={errorClass}>{fieldErrors['email']?.[0]}</p>
-        )}
-      </div>
-
-      {/* Company */}
-      <div>
-        <label htmlFor="cf-company" className={labelClass}>
-          {labels.company}
-        </label>
-        <input
-          id="cf-company"
-          type="text"
-          autoComplete="organization"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-          className={fieldClass}
-        />
-      </div>
-
-      {/* Inquiry type */}
-      <div>
-        <label htmlFor="cf-inquiry" className={labelClass}>
-          {labels.inquiryType} <Badge variant="accent">{labels.required}</Badge>
-        </label>
-        <select
-          id="cf-inquiry"
-          required
-          value={inquiryType}
-          onChange={(e) => setInquiryType(e.target.value as InquiryType)}
-          className={fieldClass}
-        >
-          {(Object.entries(labels.inquiryOptions) as [InquiryType, string][]).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Message */}
-      <div>
-        <label htmlFor="cf-message" className={labelClass}>
-          {labels.message} <Badge variant="accent">{labels.required}</Badge>
-        </label>
-        <textarea
-          id="cf-message"
-          required
-          rows={5}
-          aria-invalid={Boolean(fieldErrors['message'])}
-          aria-describedby={fieldErrors['message'] ? 'cf-message-error' : undefined}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onBlur={handleBlur('message')}
-          className={`${fieldClass} resize-y min-h-[120px]`}
-        />
-        {fieldErrors['message'] && (
-          <p id="cf-message-error" role="alert" className={errorClass}>{fieldErrors['message']?.[0]}</p>
-        )}
-      </div>
-
-      {/* Server error */}
       {status === 'error' && serverMessage && (
         <div aria-live="assertive">
           <Alert variant="danger">{serverMessage}</Alert>
@@ -279,7 +220,7 @@ export function ContactForm({ locale, labels, apiPath }: ContactFormProps) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full min-h-[48px] rounded-lg bg-[var(--color-primary)] px-6 py-3 text-base font-medium text-white hover:opacity-90 disabled:opacity-60 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+        className="w-full min-h-[48px] rounded-lg bg-[var(--color-primary)] px-6 py-3 text-base font-medium text-white hover:opacity-90 disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
       >
         {status === 'submitting' ? labels.submitting : labels.submit}
       </button>

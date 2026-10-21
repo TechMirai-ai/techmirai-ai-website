@@ -52,9 +52,9 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
   const enData = {
     title: 'Sadiatec Co., Ltd.: from WordPress to a custom multilingual website with AI chat',
     clientName: 'Sadiatec Co., Ltd.',
-    industry: 'HR and recruitment support (Japan–Bangladesh)',
+    industry: 'HR and recruitment support',
     tagline:
-      'Sadiatec connects Japan and Bangladesh through HR and recruitment support. We rebuilt their website from the ground up in about two months, in three languages, with an admin panel their staff run themselves.',
+      'Sadiatec is an HR and recruitment support company. We rebuilt their website from the ground up in about two months, in three languages, with an admin panel their staff run themselves.',
     publishedAt: '2026-07-31T00:00:00.000Z',
     slug: 'sadiatec',
     active: true,
@@ -66,7 +66,7 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
         variant: 'hero',
         heading: 'Sadiatec Co., Ltd.: from WordPress to a custom multilingual website with AI chat',
         body:
-          'Sadiatec connects Japan and Bangladesh through HR and recruitment support. We rebuilt their website from the ground up in about two months, in three languages, with an admin panel their staff run themselves.',
+          'Sadiatec is an HR and recruitment support company. We rebuilt their website from the ground up in about two months, in three languages, with an admin panel their staff run themselves.',
         textAlignment: 'left',
       },
       {
@@ -74,7 +74,7 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
         heading: 'At a glance',
         rows: [
           { label: 'Client', detail: 'Sadiatec Co., Ltd.' },
-          { label: 'Industry', detail: 'HR and recruitment support (Japan–Bangladesh)' },
+          { label: 'Industry', detail: 'HR and recruitment support' },
           { label: 'Established', detail: '2005' },
           { label: 'Location', detail: 'Chiyoda-ku, Tokyo' },
           { label: 'Project', detail: 'New multilingual corporate website and content management system' },
@@ -148,9 +148,9 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
   const jaData = {
     title: 'Sadiatec Co., Ltd.様：WordPressから、AIチャットを備えた多言語サイトへ',
     clientName: 'Sadiatec Co., Ltd.',
-    industry: '人材・採用支援（日本・バングラデシュ）',
+    industry: '人材・採用支援',
     tagline:
-      'Sadiatec様は、人材・採用支援を通じて日本とバングラデシュをつなぐ企業です。約2か月でホームページを一から再構築し、3言語に対応、スタッフご自身で運用できる管理画面を備えました。',
+      'Sadiatec様は、人材・採用支援の企業です。約2か月でホームページを一から再構築し、3言語に対応、スタッフご自身で運用できる管理画面を備えました。',
     publishedAt: '2026-07-31T00:00:00.000Z',
     slug: 'sadiatec',
     active: true,
@@ -162,7 +162,7 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
         variant: 'hero',
         heading: 'Sadiatec Co., Ltd.様：WordPressから、AIチャットを備えた多言語サイトへ',
         body:
-          'Sadiatec様は、人材・採用支援を通じて日本とバングラデシュをつなぐ企業です。約2か月でホームページを一から再構築し、3言語に対応、スタッフご自身で運用できる管理画面を備えました。',
+          'Sadiatec様は、人材・採用支援の企業です。約2か月でホームページを一から再構築し、3言語に対応、スタッフご自身で運用できる管理画面を備えました。',
         textAlignment: 'left',
       },
       {
@@ -170,7 +170,7 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
         heading: '概要',
         rows: [
           { label: 'クライアント', detail: 'Sadiatec Co., Ltd.' },
-          { label: '業種', detail: '人材・採用支援（日本・バングラデシュ）' },
+          { label: '業種', detail: '人材・採用支援' },
           { label: '設立', detail: '2005年' },
           { label: '所在地', detail: '東京都千代田区' },
           { label: 'プロジェクト', detail: '多言語コーポレートサイトとコンテンツ管理基盤の新規構築' },

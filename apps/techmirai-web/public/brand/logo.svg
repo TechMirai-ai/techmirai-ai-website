@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80" role="img" aria-labelledby="logo-title">
   <title id="logo-title">TechMirai</title>
-  <rect width="240" height="80" fill="#E1F5EE" rx="4"/>
-  <text x="120" y="50" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="#0F6E56" text-anchor="middle">TechMirai</text>
+  <!-- Vector redraw of the TechMirai logo from the owner's reference screenshot (docs/screenshots/screenshot.jpeg,
+       logo only ~25px tall there, so this is an approximation). Replace with the official logo file when available. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
+    <rect x="10" y="30" width="28" height="32" rx="14" stroke="#0F5E48"/>
+    <rect x="30" y="14" width="28" height="32" rx="14" stroke="#1B7F63"/>
+  </g>
+  <text x="76" y="51" font-family="Poppins, 'Segoe UI', system-ui, sans-serif" font-size="29" font-weight="700" fill="#0B4A3B" text-anchor="start">TechMirai</text>
 </svg>

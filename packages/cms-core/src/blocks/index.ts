@@ -50,6 +50,9 @@ import { SetupStepsBlockConfig } from './setup-steps/config'
 import { LayeredAnswersDiagramBlockConfig } from './layered-answers-diagram/config'
 import { IntegrationsStatusTableBlockConfig } from './integrations-status-table/config'
 import { LabelValueListBlockConfig } from './label-value-list/config'
+import { VoiceSectionBlockConfigs } from './voice-sections/config'
+import { CallFlowBlockConfig } from './call-flow/config'
+import { DemoSimulatorBlockConfig } from './demo-simulator/config'
 
 export const allBlockConfigs: Block[] = [
   HeroBlockConfig,
@@ -102,6 +105,9 @@ export const allBlockConfigs: Block[] = [
   LayeredAnswersDiagramBlockConfig,
   IntegrationsStatusTableBlockConfig,
   LabelValueListBlockConfig,
+  CallFlowBlockConfig,
+  DemoSimulatorBlockConfig,
+  ...VoiceSectionBlockConfigs,
 ]
 
 export type { HeroBlockProps } from './hero/types'
@@ -154,6 +160,8 @@ export type { SetupStepsBlockProps, SetupStep } from './setup-steps/types'
 export type { LayeredAnswersDiagramBlockProps, LayeredAnswersStep } from './layered-answers-diagram/types'
 export type { IntegrationsStatusTableBlockProps, IntegrationRow, IntegrationStatus } from './integrations-status-table/types'
 export type { LabelValueListBlockProps, LabelValueRow } from './label-value-list/types'
+export type { CallFlowBlockProps } from './call-flow/types'
+export type { DemoSimulatorBlockProps } from './demo-simulator/types'
 
 export { HeroBlock } from './hero/component'
 export { ProblemSectionBlock } from './problem-section/component'

@@ -2,12 +2,10 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { staticPageMetadata } from '@/lib/seo/build-metadata'
 import siteConfig from '../../../../../site.config'
-import { PageHeroBlock, CTABannerBlock } from '@techmirai/cms-core/blocks'
-import type { PageHeroBlockProps, CTABannerBlockProps } from '@techmirai/cms-core/blocks'
-import { Container, Section, Heading, Text } from '@techmirai/cms-core/components/ui'
-import { ContactForm } from './_components/ContactForm'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import configPromise from '@payload-config'
+import { FileText } from 'lucide-react'
+import { ContactForm, type FormLabels, type InquiryPath } from './_components/ContactForm'
+import { JsonLd } from '@/lib/seo/JsonLd'
+import { launchBreadcrumbJsonLd } from '@/lib/seo/voice-json-ld'
 
 export const revalidate = 3600
 
@@ -18,310 +16,139 @@ function isLocale(s: string): s is Locale {
   return (LOCALES as readonly string[]).includes(s)
 }
 
-type Props = { params: Promise<{ locale: string }> }
+type Props = {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ path?: string }>
+}
 
 export async function generateStaticParams() {
   return siteConfig.locales.enabled.map((locale) => ({ locale }))
 }
 
-// ---------------------------------------------------------------------------
-// Types for form labels
-// ---------------------------------------------------------------------------
-
-type FormLabels = {
-  name: string
-  furigana: string
-  email: string
-  company: string
-  inquiryType: string
-  message: string
-  submit: string
-  submitting: string
-  success: string
-  error: string
-  required: string
-  inquiryOptions: {
-    general: string
-    visa: string
-    recruitment: string
-    other: string
-  }
-}
+// Voice-pivot (docs/ECC MASTER PROMPT TechMirai Voice Website v2 §9). The two
+// inquiry-path labels are the prompt's exact Japanese; all other Japanese is
+// DRAFT written at the owner's request (2026-10-21) and needs native review
+// (register V1-01).
+const RINGI_PDF_HREF = '/downloads/techmirai-ringi-overview.pdf'
 
 const formLabels: Record<Locale, FormLabels> = {
   en: {
-    name: 'Full Name',
-    furigana: 'Furigana (optional)',
-    email: 'Email Address',
-    company: 'How did you hear about us? (optional)',
-    inquiryType: 'Enquiry Type',
-    message: 'Message',
-    submit: 'Send Message',
+    adoptionPath: 'Consult about adopting the AI voice agent',
+    partnershipPath: 'Consult about partnership',
+    pathLegend: 'What would you like to discuss?',
+    name: 'Name',
+    company: 'Company',
+    role: 'Role',
+    email: 'Email',
+    phone: 'Phone (optional)',
+    optionalHeading: 'Optional details',
+    callVolume: 'Call volume range',
+    hoursToCover: 'Hours to cover',
+    languages: 'Languages',
+    goal: 'Goal',
+    consent:
+      'I agree that TechMirai may use the information I enter to reply to this inquiry. Read the',
+    privacyLink: 'privacy policy',
+    submit: 'Send inquiry',
     submitting: 'Sending…',
-    success: 'Thank you! Your message has been sent. We will be in touch within one business day.',
+    success: 'Thank you. We have received your inquiry.',
     error: 'Something went wrong. Please try again.',
     required: 'Required',
-    inquiryOptions: {
-      general: 'General Enquiry',
-      visa: 'About Your First Visit',
-      recruitment: 'Traffic Accident Treatment',
-      other: 'Other',
-    },
+    consentRequired: 'Please agree before sending.',
   },
   ja: {
+    adoptionPath: 'AI音声エージェントの導入を相談する',
+    partnershipPath: '協業について相談する',
+    pathLegend: 'ご相談内容をお選びください',
     name: 'お名前',
-    furigana: 'ふりがな（任意）',
+    company: '会社名',
+    role: '役職・担当',
     email: 'メールアドレス',
-    company: 'ご来院のきっかけ（任意）',
-    inquiryType: 'お問い合わせ種別',
-    message: 'メッセージ',
+    phone: '電話番号（任意）',
+    optionalHeading: '任意項目',
+    callVolume: '想定の通話量',
+    hoursToCover: '対応したい時間帯',
+    languages: '対応言語',
+    goal: 'ご相談の目的',
+    consent: '入力した情報を、このお問い合わせへの返信のためにTechMiraiが利用することに同意します。詳しくは',
+    privacyLink: 'プライバシーポリシー',
     submit: '送信する',
     submitting: '送信中…',
-    success: 'ありがとうございます！メッセージを受け付けました。1営業日以内にご返信いたします。',
+    success: 'ありがとうございます。お問い合わせを受け付けました。',
     error: 'エラーが発生しました。もう一度お試しください。',
     required: '必須',
-    inquiryOptions: {
-      general: '一般的なお問い合わせ',
-      visa: '初診について',
-      recruitment: '交通事故治療について',
-      other: 'その他',
-    },
+    consentRequired: '送信前に同意をお願いします。',
   },
-} as const
-
-// ---------------------------------------------------------------------------
-// Static labels
-// ---------------------------------------------------------------------------
-
-const titles: Record<Locale, string> = {
-  en: 'Contact Us',
-  ja: 'お問い合わせ',
 }
 
-
-const heroSubheadings: Record<Locale, string> = {
-  en: "We'd love to hear from you. Reach out and we'll respond within one business day.",
-  ja: 'お気軽にご連絡ください。1営業日以内にご返信いたします。',
+const copy: Record<Locale, { pill: string; title: string; summary: string; ringiHeading: string; ringiBody: string; ringiLink: string }> = {
+  en: {
+    pill: 'Consultation',
+    title: 'Contact',
+    summary:
+      'Use this form to consult TechMirai about adopting the AI voice agent or about a white-label partnership. We use your details only to reply. Last updated: [TBD: owner to confirm date]. Responsible company: [TBD: legal company name].',
+    ringiHeading: 'Overview for internal approval (ringi)',
+    ringiBody:
+      'A 1–2 page overview you can share internally: what it is, how it works, the PoC flow, a privacy summary and contact. It contains placeholders the owner must review before sharing.',
+    ringiLink: 'Download the overview (PDF)',
+  },
+  ja: {
+    pill: 'ご相談',
+    title: 'お問い合わせ',
+    summary:
+      'AI音声エージェントの導入、またはホワイトラベルでの協業について、TechMiraiにご相談いただくためのフォームです。ご入力いただいた情報は、返信のためにのみ利用します。最終更新日：[TBD：オーナー確認待ち]。責任主体：[TBD：正式な会社名]。',
+    ringiHeading: '社内稟議用の概要資料',
+    ringiBody:
+      '社内で共有できる1〜2ページの概要資料です。サービスの内容、仕組み、PoCの流れ、プライバシーの要点、連絡先をまとめています。共有前に、オーナーが確認すべきプレースホルダーが含まれます。',
+    ringiLink: '概要資料をダウンロード（PDF）',
+  },
 }
-
-const aboutButtonLabels: Record<Locale, string> = {
-  en: 'About',
-  ja: '会社紹介',
-}
-
-const homeLabels: Record<Locale, string> = {
-  en: 'Home',
-  ja: 'ホーム',
-}
-
-const formSectionLabels: Record<Locale, string> = {
-  en: 'Send a Message',
-  ja: 'メッセージを送る',
-}
-
-const ctaHeadings: Record<Locale, string> = {
-  en: 'Looking for answers before reaching out?',
-  ja: 'お問い合わせ前によくある質問をご覧ください。',
-}
-
-const ctaButtons: Record<Locale, string> = {
-  en: 'View FAQ',
-  ja: 'よくある質問を見る',
-}
-
-// ---------------------------------------------------------------------------
-// Metadata
-// ---------------------------------------------------------------------------
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
-
   return staticPageMetadata('/contact', locale)
 }
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
-
-export default async function ContactPage({ params }: Props) {
+export default async function ContactPage({ params, searchParams }: Props) {
   if (!siteConfig.features.contact) notFound()
 
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const base = `https://${siteConfig.site.domain}`
-  const defaultLocale = siteConfig.locales.default
-  const homeUrl = locale === defaultLocale ? base : `${base}/${locale}`
-  const pageUrl = locale === defaultLocale ? `${base}/contact` : `${base}/${locale}/contact`
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: homeLabels[locale], item: homeUrl },
-      { '@type': 'ListItem', position: 2, name: titles[locale], item: pageUrl },
-    ],
-  }
-
-  // Fetch Company Information (depth: 1 に変更して、配列や詳細データを安全に読み込み)
-  const payload = await getPayloadHMR({ config: await configPromise })
-  const companyInfo = await payload.findGlobal({
-    slug: 'company-info',
-    locale,
-    depth: 1,
-  })
-
-  const heroProps: PageHeroBlockProps = {
-    heading: titles[locale],
-    body: heroSubheadings[locale],
-    primaryButton: { label: aboutButtonLabels[locale], href: '/about' },
-    overlayOpacity: 40,
-  }
-
-  const ctaProps: CTABannerBlockProps = {
-    heading: ctaHeadings[locale],
-    primaryButton: { label: ctaButtons[locale], href: '/faq' },
-    variant: 'outlined',
-  }
-
-  const apiPath = '/api/forms/contact'
-  const offices = Array.isArray(companyInfo?.offices) ? companyInfo.offices : []
+  const { path } = await searchParams
+  const initialPath: InquiryPath = path === 'partnership' ? 'partnership' : 'adoption'
+  const text = copy[locale]
+  const breadcrumb = launchBreadcrumbJsonLd(locale, '/contact')
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <PageHeroBlock {...heroProps} />
+    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-16 pt-10 sm:px-6 md:pb-20 md:pt-14 lg:px-8">
+      {breadcrumb && <JsonLd data={breadcrumb} />}
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div className="relative mx-auto max-w-2xl">
+        <span className="inline-block rounded-full border border-emerald-200 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary">
+          {text.pill}
+        </span>
+        <h1 className="mt-4 text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl">{text.title}</h1>
+        <p className="mt-4 text-[14px] leading-[1.9] text-text-secondary">{text.summary}</p>
 
-      <Section>
-        <Container>
-          {/* Row 1: Centered Contact Form */}
-          <div className="max-w-2xl mx-auto mb-24">
-            <Heading level={2} className="text-3xl font-semibold text-center mb-8">
-              {formSectionLabels[locale]}
-            </Heading>
-            <ContactForm
-              locale={locale}
-              labels={formLabels[locale]}
-              apiPath={apiPath}
-            />
+        <div className="mt-8 rounded-2xl border border-border-default bg-white p-6 shadow-sm md:p-8">
+          <ContactForm locale={locale} labels={formLabels[locale]} apiPath="/api/forms/contact" initialPath={initialPath} />
+        </div>
+
+        <div id="ringi" className="mt-6 flex items-start gap-4 rounded-2xl border border-border-default bg-white p-6 shadow-sm">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-brand-primary">
+            <FileText aria-hidden="true" size={22} />
+          </span>
+          <div>
+            <h2 className="text-[16px] font-bold text-text-primary">{text.ringiHeading}</h2>
+            <p className="mt-1 text-[13px] leading-[1.8] text-text-secondary">{text.ringiBody}</p>
+            <a href={RINGI_PDF_HREF} download className="mt-4 inline-flex items-center rounded-full border-2 border-brand-primary px-5 py-2.5 text-[13px] font-semibold text-brand-primary hover:bg-bg-tertiary">
+              {text.ringiLink}
+            </a>
           </div>
-
-          {/* Row 2: Multiple Offices Grid Stacker */}
-{offices.length > 0 && (
-  <div className="space-y-24 border-t border-neutral-100 pt-16">
-    {offices.map((office: any, idx: number) => (
-      <div 
-        key={office.id || idx} 
-        className="space-y-4"
-      >
-        {/* 1. Office Country Heading — Kept full-width so left & right columns align beneath it */}
-        <Heading level={3} className="text-2xl font-bold tracking-tight text-slate-900 text-left">
-          {office.country}
-        </Heading>
-
-        {/* 2. Grid Content Box — Columns now share a clean horizontal baseline directly beneath the heading */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          
-          {/* LEFT COLUMN - Map Component */}
-          <div className="w-full">
-            {office.googleMapsEmbedUrl ? (
-              <div className="aspect-video w-full overflow-hidden rounded-2xl border border-neutral-200 shadow-xs bg-slate-50">
-                <iframe
-                  src={office.googleMapsEmbedUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            ) : (
-              <div className="aspect-video bg-neutral-100 rounded-2xl flex items-center justify-center text-neutral-400 text-sm italic">
-                No Map Available
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT COLUMN - Office Meta Details & Nearest Stations */}
-          <div className="space-y-4 text-left">
-            
-            {/* Office Address Card */}
-            <div className="space-y-1.5">
-              {office.legalName && (
-                <p className="text-base font-bold text-slate-950 leading-snug">{office.legalName}</p>
-              )}
-              <p className="text-[15px] text-slate-600 whitespace-pre-line leading-relaxed">
-                {office.address}
-              </p>
-              
-              {/* Contact Items grouped side-by-side */}
-              <div className="pt-1 text-sm font-medium text-slate-500 flex flex-wrap gap-x-5 gap-y-1.5 items-center">
-                {office.phone && (
-                  <span className="inline-flex items-center">
-                    <span className="font-bold text-slate-700 mr-1.5">TEL:</span>{office.phone}
-                  </span>
-                )}
-                {office.fax && (
-                  <span className="inline-flex items-center">
-                    <span className="font-bold text-slate-700 mr-1.5">FAX:</span>{office.fax}
-                  </span>
-                )}
-                {office.mobile && (
-                  <span className="inline-flex items-center">
-                    <span className="font-bold text-slate-700 mr-1.5">MOB:</span>{office.mobile}
-                  </span>
-                )}
-                {office.email && (
-                  <span className="inline-flex items-center">
-                    <span className="font-bold text-slate-700 mr-1.5">EMAIL:</span>
-                    <a href={`mailto:${office.email}`} className="hover:underline text-slate-600">
-                      {office.email}
-                    </a>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Nearest Stations Blocks */}
-            {office.nearestStations && office.nearestStations.length > 0 && (
-              <div className="border-t border-slate-100 pt-3">
-                <Text className="text-[11px] font-bold uppercase tracking-wider text-(--color-primary) mb-2 block">
-                  NEAREST STATIONS
-                </Text>
-                <ul className="space-y-1.5">
-                  {office.nearestStations.map((station: any, stationIdx: number) => (
-                    <li key={station.id || stationIdx} className="flex gap-2.5 text-[15px] items-start">
-                      <span className="text-base shrink-0 select-none mt-0.5">🚉</span>
-                      <div className="leading-tight">
-                        <span className="font-semibold text-slate-800">{station.stationName}</span>
-                        {station.description && (
-                          <span className="text-sm text-slate-500 ml-2 font-normal">
-                            — {station.description}
-                          </span>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-          </div>
-
         </div>
       </div>
-    ))}
-  </div>
-)}
-        </Container>
-      </Section>
-      
-      
-    </>
+    </section>
   )
 }

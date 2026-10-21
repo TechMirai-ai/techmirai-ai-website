@@ -25,27 +25,18 @@ export async function seedHeader(payload: Payload): Promise<void> {
     locale: 'all',
     data: {
       ...current,
+      // Voice-pivot (ECC Master Prompt v2 §6): no "Home" item; the logo links
+      // to /. Japanese below is DRAFT, written at the owner's request on
+      // 2026-10-21; a native speaker must review it (register V1-01).
       navItems: [
-        { label: { en: 'AI受付', ja: 'AI受付' }, href: '/ai-reception' },
-        {
-          label: { en: 'Solutions', ja: '業種別' },
-          href: '/solutions',
-          children: [
-            { label: { en: 'Clinics & treatment rooms', ja: 'クリニック・治療院' }, href: '/solutions/clinic' },
-            { label: { en: 'Beauty salons', ja: '美容サロン' }, href: '/solutions/beauty' },
-            { label: { en: 'Auto service & dealers', ja: '自動車整備・販売' }, href: '/solutions/automobile' },
-            { label: { en: 'Hotels & guesthouses', ja: 'ホテル・宿泊施設' }, href: '/solutions/hotel' },
-          ],
-        },
-        { label: { en: 'How It Works', ja: '仕組み' }, href: '/how-it-works' },
-        { label: { en: 'Integrations', ja: '連携' }, href: '/integrations' },
-        { label: { en: 'Pricing', ja: '料金' }, href: '/pricing' },
-        { label: { en: 'About', ja: '会社紹介' }, href: '/about' },
-        { label: { en: 'Technology', ja: 'AI開発' }, href: '/technology' },
+        { label: { en: 'Demo', ja: 'デモ' }, href: '/demo' },
+        { label: { en: 'Partners', ja: 'パートナー' }, href: '/partners' },
+        { label: { en: 'Company', ja: '会社情報' }, href: '/company' },
+        { label: { en: 'Contact', ja: 'お問い合わせ' }, href: '/contact' },
       ],
       ctaButton: {
         // label is written separately below — see the comment there.
-        href: '/assessment',
+        href: '/demo',
       },
       phoneButton: {
         phoneDisplay: phone,
@@ -71,12 +62,12 @@ export async function seedHeader(payload: Payload): Promise<void> {
   await (payload as any).updateGlobal({
     slug: 'header',
     locale: 'en',
-    data: { ctaButton: { label: 'Free AI Website Assessment', href: '/assessment' } },
+    data: { ctaButton: { label: 'Try the voice demo', href: '/demo' } },
   })
   await (payload as any).updateGlobal({
     slug: 'header',
     locale: 'ja',
-    data: { ctaButton: { label: '無料AIホームページ診断', href: '/assessment' } },
+    data: { ctaButton: { label: '音声デモを体験する', href: '/demo' } },
   })
   /* eslint-enable @typescript-eslint/no-explicit-any */
 }
@@ -97,20 +88,28 @@ export async function seedFooter(payload: Payload): Promise<void> {
         ja: siteConfig.contact.address?.ja,
       },
       columns: [
+        // Voice-pivot (ECC Master Prompt v2 §9): launch pages first. The older
+        // pages stay live and indexable at their current URLs and are linked
+        // here so they are never orphaned (no redirects in this pass).
         {
-          heading: { en: 'Product', ja: 'サービス' },
+          heading: { en: 'AI voice agent', ja: 'AI音声エージェント' },
+          links: [
+            { label: { en: 'Demo', ja: 'デモ' }, href: '/demo' },
+            { label: { en: 'Partners', ja: 'パートナー' }, href: '/partners' },
+            { label: { en: 'Company', ja: '会社情報' }, href: '/company' },
+            { label: { en: 'Contact', ja: 'お問い合わせ' }, href: '/contact' },
+            { label: { en: 'Privacy Policy', ja: 'プライバシーポリシー' }, href: '/privacy' },
+          ],
+        },
+        {
+          heading: { en: 'Earlier products', ja: '従来のサービス' },
           links: [
             { label: { en: 'AI受付', ja: 'AI受付' }, href: '/ai-reception' },
             { label: { en: 'How It Works', ja: '仕組み' }, href: '/how-it-works' },
             { label: { en: 'Integrations', ja: '連携' }, href: '/integrations' },
             { label: { en: 'Pricing', ja: '料金' }, href: '/pricing' },
-            {
-              // demoUrl is currently a bracketed CONFIRM placeholder (see
-              // docs/PLACEHOLDER-REGISTER.md), stored literally per CLAUDE.md
-              // rule 5 — not a real URL yet.
-              label: { en: 'Live demo', ja: 'デモ' },
-              href: siteConfig.integrations.demoUrl ?? '',
-            },
+            { label: { en: 'Security', ja: 'セキュリティ' }, href: '/security' },
+            { label: { en: 'Technology', ja: 'AI開発' }, href: '/technology' },
           ],
         },
         {
@@ -120,17 +119,8 @@ export async function seedFooter(payload: Payload): Promise<void> {
             { label: { en: 'Beauty salons', ja: '美容サロン' }, href: '/solutions/beauty' },
             { label: { en: 'Auto service', ja: '自動車整備・販売' }, href: '/solutions/automobile' },
             { label: { en: 'Hotels', ja: 'ホテル・宿泊施設' }, href: '/solutions/hotel' },
-          ],
-        },
-        {
-          heading: { en: 'Company', ja: '会社情報' },
-          links: [
             { label: { en: 'About', ja: '会社紹介' }, href: '/about' },
-            { label: { en: 'Technology', ja: 'AI開発' }, href: '/technology' },
-            { label: { en: 'Case study', ja: '導入事例' }, href: '/case-studies/sadiatec' },
-            { label: { en: 'Insights', ja: 'コラム' }, href: '/blog' },
             { label: { en: 'FAQ', ja: 'よくあるご質問' }, href: '/faq' },
-            { label: { en: 'Contact', ja: 'お問い合わせ' }, href: '/contact' },
           ],
         },
       ],

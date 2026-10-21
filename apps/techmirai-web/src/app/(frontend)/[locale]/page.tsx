@@ -6,6 +6,8 @@ import siteConfig from '../../../../site.config'
 import { resolveHeaderData } from './_components/resolveHeaderData'
 import { generateQrCodeDataUrl } from '@/lib/qr-code'
 import { buildPageMetadata, metadataFromPageDoc } from '@/lib/seo/build-metadata'
+import { contactPointJsonLd, voiceServiceJsonLd } from '@/lib/seo/voice-json-ld'
+import { JsonLd } from '@/lib/seo/JsonLd'
 export const revalidate = 3600
 
 const SUPPORTED_LOCALES = ['en', 'ja'] as const
@@ -216,8 +218,12 @@ blocks = await Promise.all(
   
 )
 
+  const contactPoint = contactPointJsonLd()
+
   return (
     <>
+      <JsonLd data={voiceServiceJsonLd(locale)} />
+      {contactPoint && <JsonLd data={contactPoint} />}
       {blocks.map((block, index) => {
         const renderer = blockRegistry[block.blockType]
         if (!renderer) return null

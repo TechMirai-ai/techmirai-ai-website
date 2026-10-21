@@ -503,7 +503,7 @@ const FAQ_ENTRIES: ChatEntry[] = [
   {
     id: 'f24', code: 'F24',
     question: { en: 'Where is development done?', ja: '開発はどこで行っていますか？' },
-    keywords: kw('where developed, offshore, overseas, Bangladesh; 開発場所, 海外, バングラデシュ'),
+    keywords: kw('where developed, offshore, overseas; 開発場所, 海外'),
     answer: {
       en: '[Planning, management and client contact are in Japan; some team members work remotely from overseas — CONFIRM.]',
       ja: '[企画・管理・お客様対応は日本で行い、一部のメンバーは海外からリモートで開発しています — 確認中]',

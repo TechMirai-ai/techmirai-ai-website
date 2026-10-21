@@ -48,7 +48,7 @@ export async function upsertMedia(
 }
 
 const PAGE_LABELS: Record<string, { en: string; ja: string }> = {
-  home: { en: 'Home', ja: '[JA TODO]' },
+  home: { en: 'Home', ja: 'ホーム' },
   'ai-reception': { en: 'AI Reception', ja: 'AI受付' },
   solutions: { en: 'Solutions', ja: '業種別' },
   clinic: { en: 'Clinics & treatment rooms', ja: 'クリニック・治療院' },
@@ -58,14 +58,14 @@ const PAGE_LABELS: Record<string, { en: string; ja: string }> = {
   'how-it-works': { en: 'How It Works', ja: '仕組み' },
   integrations: { en: 'Integrations', ja: '連携' },
   pricing: { en: 'Pricing', ja: '料金' },
-  security: { en: 'Security', ja: '[JA TODO]' },
+  security: { en: 'Security', ja: 'セキュリティ' },
   about: { en: 'About', ja: '会社紹介' },
   technology: { en: 'Technology', ja: 'AI開発' },
   assessment: { en: 'Free AI Website Assessment', ja: '無料AIホームページ診断' },
   faq: { en: 'FAQ', ja: 'よくあるご質問' },
-  privacy: { en: 'Privacy Policy', ja: '[JA TODO]' },
-  terms: { en: 'Terms of Use', ja: '[JA TODO]' },
-  'legal-notice': { en: 'Legal Notice', ja: '[JA TODO]' },
+  privacy: { en: 'Privacy Policy', ja: 'プライバシーポリシー' },
+  terms: { en: 'Terms of Use', ja: '利用規約' },
+  'legal-notice': { en: 'Legal Notice', ja: '特定商取引法に基づく表記' },
 }
 
 /**
@@ -90,7 +90,7 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
     })
     ogImages[slug] = await upsertMedia(payload, `og-${slug}.png`, buffer, {
       en: `Placeholder social-share image for the ${label.en} page`,
-      ja: '[JA TODO]',
+      ja: `${label.ja}ページ用のソーシャル共有プレースホルダー画像`,
     })
   }
   payload.logger.info(`   ${Object.keys(ogImages).length} social-share images ready`)
@@ -98,13 +98,13 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
   const teamGroupBuffer = await createLabelledPlaceholderPng(2400, 1350, 'PLACEHOLDER: Team group photo 2400×1350')
   const teamGroupPhoto = await upsertMedia(payload, 'placeholder-team-group.png', teamGroupBuffer, {
     en: 'Placeholder team group photo — real photo pending (Spec §19)',
-    ja: '[JA TODO]',
+    ja: 'プレースホルダー：チーム集合写真（実際の写真は準備中）',
   })
 
   const portraitBuffer = await createInitialsAvatarPng('?', 1200)
   const individualPortrait = await upsertMedia(payload, 'placeholder-team-portrait.png', portraitBuffer, {
     en: 'Placeholder individual portrait — real photo pending (Spec §19)',
-    ja: '[JA TODO]',
+    ja: 'プレースホルダー：個人ポートレート（実際の写真は準備中）',
   })
 
   // Pack-3/G4: the homepage team-grid's Partner card (Spec §5.11, Sadiatec /
@@ -114,7 +114,7 @@ export async function seedMedia(payload: Payload): Promise<MediaIds> {
   const partnerPhotoBuffer = await createInitialsAvatarPng('SH', 1200)
   const partnerPhoto = await upsertMedia(payload, 'placeholder-partner-sanaul-haque.png', partnerPhotoBuffer, {
     en: 'Placeholder portrait for Sadiatec Co., Ltd. partner (Md. Sanaul Haque) — real photo pending',
-    ja: '[JA TODO]',
+    ja: 'プレースホルダー：Sadiatec株式会社 パートナーのポートレート（実際の写真は準備中）',
   })
 
   payload.logger.info('   Team group + individual portrait placeholders ready')

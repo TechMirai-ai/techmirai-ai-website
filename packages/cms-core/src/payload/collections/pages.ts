@@ -53,6 +53,9 @@ import { SetupStepsBlockConfig } from '../../blocks/setup-steps/config'
 import { LayeredAnswersDiagramBlockConfig } from '../../blocks/layered-answers-diagram/config'
 import { IntegrationsStatusTableBlockConfig } from '../../blocks/integrations-status-table/config'
 import { LabelValueListBlockConfig } from '../../blocks/label-value-list/config'
+import { VoiceSectionBlockConfigs } from '../../blocks/voice-sections/config'
+import { CallFlowBlockConfig } from '../../blocks/call-flow/config'
+import { DemoSimulatorBlockConfig } from '../../blocks/demo-simulator/config'
 
 export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
   return [
@@ -114,6 +117,9 @@ export function buildAvailableBlocks(siteConfig: SiteConfig): Block[] {
     LayeredAnswersDiagramBlockConfig,
     IntegrationsStatusTableBlockConfig,
     LabelValueListBlockConfig,
+    CallFlowBlockConfig,
+    DemoSimulatorBlockConfig,
+    ...VoiceSectionBlockConfigs,
   ]
 }
 

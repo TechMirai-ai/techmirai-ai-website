@@ -9,6 +9,7 @@ import { metadataFromPageDoc } from '@/lib/seo/build-metadata'
 import { pathForPageSlug } from '@/lib/seo/page-meta'
 import { serviceJsonLd } from '@/lib/seo/json-ld'
 import { JsonLd } from '@/lib/seo/JsonLd'
+import { launchBreadcrumbJsonLd } from '@/lib/seo/voice-json-ld'
 
 const SERVICE_PAGE_SLUGS: readonly string[] = ['ai-reception', 'pricing']
 
@@ -229,10 +230,14 @@ export default async function DynamicPage({ params }: Props) {
 
   blocks = resolvedBlocks.filter((b): b is RawBlock => b !== null)
 
+  // Voice-pivot: BreadcrumbList for the launch pages (demo, partners, company).
+  const breadcrumb = launchBreadcrumbJsonLd(locale as 'en' | 'ja', pathForPageSlug(slug))
+
   return (
     <>
       {/* Pack-4/L2: Spec §17.3 Service markup on the product and pricing pages only. */}
       {SERVICE_PAGE_SLUGS.includes(slug) && <JsonLd data={serviceJsonLd()} />}
+      {breadcrumb && <JsonLd data={breadcrumb} />}
       {blocks.map((block, index) => {
         const renderer = blockRegistry[block.blockType]
         if (!renderer) return null

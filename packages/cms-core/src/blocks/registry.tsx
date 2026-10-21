@@ -101,6 +101,11 @@ import { IntegrationsStatusTableBlock } from './integrations-status-table/compon
 import { adaptIntegrationsStatusTableBlock } from './integrations-status-table/adapter'
 import { LabelValueListBlock } from './label-value-list/component'
 import { adaptLabelValueListBlock } from './label-value-list/adapter'
+import { voiceSectionRenderers } from './voice-sections'
+import { CallFlowBlock } from './call-flow/component'
+import { adaptCallFlowBlock } from './call-flow/adapter'
+import { DemoSimulatorBlock } from './demo-simulator/component'
+import { adaptDemoSimulatorBlock } from './demo-simulator/adapter'
 
 export type BlockRenderer = (raw: unknown) => ReactNode
 
@@ -159,4 +164,7 @@ export const blockRegistry: Record<string, BlockRenderer> = {
   'layered-answers-diagram':    (raw) => <LayeredAnswersDiagramBlock    {...adaptLayeredAnswersDiagramBlock(raw)} />,
   'integrations-status-table':  (raw) => <IntegrationsStatusTableBlock  {...adaptIntegrationsStatusTableBlock(raw)} />,
   'label-value-list':            (raw) => <LabelValueListBlock           {...adaptLabelValueListBlock(raw)} />,
+  ...voiceSectionRenderers,
+  'call-flow':                   (raw) => <CallFlowBlock                 {...adaptCallFlowBlock(raw)} />,
+  'demo-simulator':              (raw) => <DemoSimulatorBlock            {...adaptDemoSimulatorBlock(raw)} />,
 }

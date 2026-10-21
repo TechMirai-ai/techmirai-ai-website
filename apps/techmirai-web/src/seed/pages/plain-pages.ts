@@ -27,7 +27,7 @@ interface PlainPageSeed {
 // exists; `[JA TODO]` elsewhere, per docs/WORK-ORDER.md §5 — never a new
 // translation.
 const PLAIN_PAGES: PlainPageSeed[] = [
-  { slug: 'home', title: { en: 'Home', ja: '[JA TODO]' } },
+  { slug: 'home', title: { en: 'Home', ja: 'ホーム' } },
   { slug: 'ai-reception', title: { en: 'AI Reception', ja: 'AI受付' } },
   { slug: 'solutions', title: { en: 'Solutions', ja: '業種別' } },
   { slug: 'clinic', title: { en: 'Clinics & treatment rooms', ja: 'クリニック・治療院' } },
@@ -37,14 +37,14 @@ const PLAIN_PAGES: PlainPageSeed[] = [
   { slug: 'how-it-works', title: { en: 'How It Works', ja: '仕組み' } },
   { slug: 'integrations', title: { en: 'Integrations', ja: '連携' } },
   { slug: 'pricing', title: { en: 'Pricing', ja: '料金' } },
-  { slug: 'security', title: { en: 'Security', ja: '[JA TODO]' } },
+  { slug: 'security', title: { en: 'Security', ja: 'セキュリティ' } },
   { slug: 'about', title: { en: 'About', ja: '会社紹介' } },
   { slug: 'technology', title: { en: 'Technology', ja: 'AI開発' } },
   { slug: 'faq', title: { en: 'FAQ', ja: 'よくあるご質問' } },
   { slug: 'thanks', title: { en: 'Thank you', ja: '送信完了' } },
-  { slug: 'privacy', title: { en: 'Privacy Policy', ja: '[JA TODO]' } },
-  { slug: 'terms', title: { en: 'Terms of Use', ja: '[JA TODO]' } },
-  { slug: 'legal-notice', title: { en: 'Legal Notice', ja: '[JA TODO]' } },
+  { slug: 'privacy', title: { en: 'Privacy Policy', ja: 'プライバシーポリシー' } },
+  { slug: 'terms', title: { en: 'Terms of Use', ja: '利用規約' } },
+  { slug: 'legal-notice', title: { en: 'Legal Notice', ja: '特定商取引法に基づく表記' } },
 ]
 
 /**

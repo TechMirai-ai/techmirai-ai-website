@@ -35,6 +35,7 @@ import { seedChat } from './chat'
 import { seedBlog } from './blog'
 import { seedContact } from './contact'
 import { seedBooking } from './booking'
+import { seedVoicePivot } from './pages/voice-pivot'
 
 async function run(): Promise<void> {
   if (process.env['NODE_ENV'] === 'production' || process.env['NEXT_PHASE'] === 'phase-production-build') {
@@ -110,6 +111,9 @@ async function run(): Promise<void> {
   await seedHeader(payload)
   await seedFooter(payload)
   await seedBooking(payload)
+  // Voice-pivot launch pages overwrite the older home page and add /demo,
+  // /partners and /company, so they must run last.
+  await seedVoicePivot(payload)
 
   payload.logger.info('\n✅ Seed complete.')
   payload.logger.info('   Live site: / (home) — also under /en/...')

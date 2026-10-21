@@ -9,6 +9,11 @@ import { LEGAL_PAGE_META, PAGE_META } from './page-meta'
 
 const CASE_STUDY_PATH = '/case-studies/sadiatec'
 
+// Voice-pivot launch pages that have no Spec §17.1 row. /company is NOT listed
+// yet: seo.test.ts still asserts it is excluded, and CLAUDE.md rule 14 forbids
+// rewriting that test without approval (see docs/FINDINGS.md, voice-pivot).
+const VOICE_LAUNCH_PATHS: readonly string[] = ['/demo', '/partners']
+
 /** Routes that 404 when their feature flag is off (mirrors each route's own notFound()). */
 const FEATURE_GATED: Readonly<Record<string, keyof typeof siteConfig.features>> = {
   '/blog': 'blog',
@@ -39,8 +44,9 @@ function entriesFor(path: string, lastModified: Date): MetadataRoute.Sitemap {
 
 /** One entry per locale per public page, each carrying the full hreflang set. */
 export function buildSitemapEntries({ blogPosts, caseStudyVisible, now }: SitemapInput): MetadataRoute.Sitemap {
-  const staticPaths = [...Object.keys(PAGE_META), ...Object.keys(LEGAL_PAGE_META)]
-    .filter((path) => isPublished(path, caseStudyVisible))
+  const staticPaths = [
+    ...new Set([...Object.keys(PAGE_META), ...Object.keys(LEGAL_PAGE_META), ...VOICE_LAUNCH_PATHS]),
+  ].filter((path) => isPublished(path, caseStudyVisible))
 
   const postEntries = siteConfig.features.blog
     ? blogPosts.flatMap(({ slug, updatedAt }) =>
