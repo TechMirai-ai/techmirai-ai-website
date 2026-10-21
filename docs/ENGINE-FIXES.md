@@ -651,3 +651,13 @@ href (not the literal `'#'`), in both locales.
 **Known limit.** The list is hand-maintained. Another dedicated route that also has a `pages` document would repeat the bug in production builds only. See `docs/O2-CODE-REVIEW.md` (medium 1).
 
 **Status:** code changed, built and observed in a production build.
+
+## 2026-10-20 — next/image allow-list now includes the custom R2 public URL (fix)
+
+**Problem.** `apps/techmirai-web/next.config.ts` only allowed `*.r2.dev`, `*.r2.cloudflarestorage.com` and `imagedelivery.net`. When `NEXT_PUBLIC_R2_PUBLIC_URL` is a custom domain, `next/image` rejects every media URL (HTTP 400), so images load locally but not after deployment.
+
+**Fix.** `remotePatternFromUrl()` parses `NEXT_PUBLIC_R2_PUBLIC_URL` and adds its protocol/host/port to `images.remotePatterns`. An unset or invalid value adds nothing.
+
+**Files.** `apps/techmirai-web/next.config.ts` only.
+
+**Status:** code changed; verification below in FINDINGS.md entry. Live behaviour unverified until redeployed with the R2 variables set.

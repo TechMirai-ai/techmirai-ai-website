@@ -1510,3 +1510,12 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 3. Several route files render their own `<main>` inside the layout's `<main>` (nested `main`, invalid HTML), e.g. `team/page.tsx`, `news/page.tsx`.
 4. Other blocks with a large first-section top padding (`py-16 md:py-24` etc.) now have that padding in addition to the header offset when they come first on a page; looks fine but is extra whitespace.
 5. Dev-server note: two `next dev` servers sharing one `.next` folder made routes return 404 until restarted; the server on port 3000 (pid 4092) is not mine and was left running.
+
+---
+
+## 2026-10-20 — Images missing after deployment: causes and open items
+
+1. Media uploads go to `public/media` (`packages/cms-core/src/payload/collections/media.ts:10`), which `.gitignore` excludes. R2 storage only activates when all four `CLOUDFLARE_R2_*` variables are set (`apps/techmirai-web/payload.config.ts:91-116`). Host setting, not code: set them plus `NEXT_PUBLIC_R2_PUBLIC_URL`, redeploy, and re-upload/re-seed the media.
+2. `NEXT_PUBLIC_SERVER_URL` falls back to `http://localhost:3000` if unset at build time (`payload.config.ts:72`, `config-factory.ts:119,159`). Set it to the live URL in the build environment.
+3. Referenced static files that do not exist in `public/`: `/CEO.png` (`CeoWelcomePopup.tsx:14`), `/hero-placeholder.jpg` (`src/lib/image-slots.ts:303`), `/images/company-placeholder.jpg` (`packages/cms-core/src/blocks/company-profile/component.tsx:111`). Broken locally too. Need the real files from the developer; not invented.
+4. The allow-list fix is logged in ENGINE-FIXES.md.

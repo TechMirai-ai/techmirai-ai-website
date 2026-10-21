@@ -6,6 +6,24 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const r2BucketUrl = process.env['NEXT_PUBLIC_R2_PUBLIC_URL']
 
+// A custom R2 domain (e.g. media.example.com) is not covered by the *.r2.dev
+// patterns, so next/image would reject every media URL with a 400.
+function remotePatternFromUrl(rawUrl: string | undefined) {
+  if (!rawUrl) return []
+  try {
+    const { protocol, hostname, port } = new URL(rawUrl)
+    return [
+      {
+        protocol: protocol.replace(':', '') as 'http' | 'https',
+        hostname,
+        ...(port ? { port } : {}),
+      },
+    ]
+  } catch {
+    return []
+  }
+}
+
 const nextConfig: NextConfig = {
    experimental: {
     workerThreads: false,
@@ -46,6 +64,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.r2.dev' },
       { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
       { protocol: 'https', hostname: 'imagedelivery.net' },
+      ...remotePatternFromUrl(r2BucketUrl),
       // 🔌 👈 Added to authorize local media file serving routes through next/image
       { 
         protocol: 'http', 
