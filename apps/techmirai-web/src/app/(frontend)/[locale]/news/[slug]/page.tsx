@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import React from 'react'
 import { getCachedPayload } from '@/lib/payload'
+import { staticParamsOrEmpty } from '@/lib/static-params'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../../../site.config'
 
@@ -34,20 +35,22 @@ type Props = {
 type RawBlock = { blockType: string; id?: string } & Record<string, unknown>
 
 export async function generateStaticParams() {
-  const payload = await getCachedPayload()
-  const result = await payload.find({
-    collection: 'news',
-    limit: 1000,
-    select: { slug: true },
+  return staticParamsOrEmpty('news/[slug]', async () => {
+    const payload = await getCachedPayload()
+    const result = await payload.find({
+      collection: 'news',
+      limit: 1000,
+      select: { slug: true },
+    })
+
+    const locales = siteConfig.locales.enabled as string[]
+
+    return locales.flatMap((locale) =>
+      result.docs
+        .filter((doc) => typeof doc.slug === 'string')
+        .map((doc) => ({ locale, slug: doc.slug as string }))
+    )
   })
-
-  const locales = siteConfig.locales.enabled as string[]
-
-  return locales.flatMap((locale) =>
-    result.docs
-      .filter((doc) => typeof doc.slug === 'string')
-      .map((doc) => ({ locale, slug: doc.slug as string }))
-  )
 }
 
 export const dynamicParams = true

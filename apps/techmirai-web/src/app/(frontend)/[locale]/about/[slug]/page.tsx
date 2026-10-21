@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getCachedPayload } from '@/lib/payload'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
-import { ABOUT_PAGE_SLUGS } from '@/lib/about-slugs'
 import siteConfig from '../../../../../../site.config'
 
 export const revalidate = 3600
@@ -17,12 +16,11 @@ type Props = {
 
 type RawBlock = { blockType: string; id?: string } & Record<string, unknown>
 
-export async function generateStaticParams() {
-  const locales = siteConfig.locales.enabled as string[]
-
-  return locales.flatMap((locale) =>
-    ABOUT_PAGE_SLUGS.map((slug) => ({ locale, slug }))
-  )
+// Nothing is prerendered at build time: every page here reads the CMS database,
+// and a build host that cannot reach it (ETIMEDOUT) would fail the whole deploy.
+// With dynamicParams = true and revalidate, pages render on first request instead.
+export function generateStaticParams(): Array<{ locale: string; slug: string }> {
+  return []
 }
 
 export const dynamicParams = true

@@ -6,6 +6,7 @@ import { blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/seo/json-ld'
 import { JsonLd } from '@/lib/seo/JsonLd'
 import siteConfig from '../../../../../../site.config'
 import { getCachedPayload } from '@/lib/payload'
+import { staticParamsOrEmpty } from '@/lib/static-params'
 import {
   HeroBlock,
   RichTextBlock,
@@ -58,15 +59,17 @@ const getBlogPost = unstable_cache(
 )
 
 export async function generateStaticParams() {
-  const payload = await getCachedPayload()
-  const result = await payload.find({
-    collection: 'blog',
-    where: { active: { equals: true } },
-    limit: 200,
+  return staticParamsOrEmpty('blog/[slug]', async () => {
+    const payload = await getCachedPayload()
+    const result = await payload.find({
+      collection: 'blog',
+      where: { active: { equals: true } },
+      limit: 200,
+    })
+    return siteConfig.locales.enabled.flatMap((locale) =>
+      result.docs.map((doc) => ({ locale, slug: doc.slug as string })),
+    )
   })
-  return siteConfig.locales.enabled.flatMap((locale) =>
-    result.docs.map((doc) => ({ locale, slug: doc.slug as string })),
-  )
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

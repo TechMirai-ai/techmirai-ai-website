@@ -37,6 +37,13 @@ const localeFontConfig: Record<string, { variableClass: string; cssVar: string }
 // Pack-4/L1: resolves relative share-image URLs (meta.image) to absolute ones.
 export const metadata: Metadata = { metadataBase: new URL(SITE_ORIGIN) }
 
+// Every page under [locale] reads the CMS database (layout, header, footer and the
+// pages themselves). Rendering per request means a build host that cannot reach the
+// database (ETIMEDOUT) no longer fails the deploy. This overrides the per-page
+// `revalidate = 3600` exports, so pages are no longer cached; to get ISR back,
+// remove this line once DATABASE_URI is reachable at build time.
+export const dynamic = 'force-dynamic'
+
 /**
  * Pack-4/L2: the Organization `founder` appears only when company-info
  * `founder.visible` is exactly true (WORK-ORDER decision 5). The name is read

@@ -1519,3 +1519,20 @@ Observed on a rerun of `launch-scan-pages.ts` against the dev server (all 1162 h
 2. `NEXT_PUBLIC_SERVER_URL` falls back to `http://localhost:3000` if unset at build time (`payload.config.ts:72`, `config-factory.ts:119,159`). Set it to the live URL in the build environment.
 3. Referenced static files that do not exist in `public/`: `/CEO.png` (`CeoWelcomePopup.tsx:14`), `/hero-placeholder.jpg` (`src/lib/image-slots.ts:303`), `/images/company-placeholder.jpg` (`packages/cms-core/src/blocks/company-profile/component.tsx:111`). Broken locally too. Need the real files from the developer; not invented.
 4. The allow-list fix is logged in ENGINE-FIXES.md.
+
+---
+
+## 2026-10-21 — Build fails with ETIMEDOUT while prerendering (database unreachable at build time)
+
+**Symptom.** Deploy build: `Error occurred prerendering page "/ja/about/business-contents"` with `Failed query: select count(*) from "pages" where "pages"."slug" = $1`, cause `ETIMEDOUT`. The build host could not connect to Postgres.
+
+**Root fix (host setting, not code).** `DATABASE_URI` (read in `packages/cms-core/src/payload/config-factory.ts:144`, empty string if unset) must be set for the Build environment, point at a database reachable from the build host (firewall/IP allow-list, pooled URL and `sslmode=require` where the provider needs them, serverless DB awake).
+
+**Code change (resilience).**
+- `src/lib/static-params.ts` adds `staticParamsOrEmpty()`: runs a DB-backed `generateStaticParams` loader and returns `[]` (with a `console.warn`) if the database is unreachable.
+- Wrapped the DB-querying `generateStaticParams` in `[slug]`, `blog/[slug]`, `news/[slug]` and `services/[slug]`. Behaviour is unchanged when the database is reachable.
+- `about/[slug]` `generateStaticParams` now returns `[]` (its page render reads the database), so those pages render on first request (`dynamicParams = true`, `revalidate = 3600`).
+
+**All `[locale]` pages made dynamic.** The `[locale]` layout, header, footer and nearly every page read the database, so `export const dynamic = 'force-dynamic'` was added to `src/app/(frontend)/[locale]/layout.tsx`. Every page under it now renders per request; the per-page `revalidate = 3600` exports no longer take effect (no ISR cache), so each request queries the database. To get caching back, remove that line once `DATABASE_URI` is reachable at build time.
+
+**Evidence.** `pnpm build` with `DATABASE_URI=postgres://u:p@127.0.0.1:1/none` (unreachable) exits 0; the four wrapped `generateStaticParams` log `[static-params] ... skipping prerender`. Only `/{ja,en}/line/booking`, `/{ja,en}/line/manage` and `_not-found` are prerendered (none read the database). In the route table `●` on `[locale]` routes only marks that they have `generateStaticParams`; no HTML was generated for them. `tsc --noEmit` passes. Not run: tests, a build against a reachable database, a deployed-site check.

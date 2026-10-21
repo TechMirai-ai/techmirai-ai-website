@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getCachedPayload } from '@/lib/payload'
+import { staticParamsOrEmpty } from '@/lib/static-params'
 import { blockRegistry } from '@techmirai/cms-core/blocks'
 import siteConfig from '../../../../../../site.config'
 
@@ -18,18 +19,20 @@ type Props = {
 type RawBlock = { blockType: string; id?: string } & Record<string, unknown>
 
 export async function generateStaticParams() {
-  const payload = await getCachedPayload()
-  const result = await payload.find({
-    collection: 'services',
-    where: { active: { equals: true } },
-    limit: 100,
+  return staticParamsOrEmpty('services/[slug]', async () => {
+    const payload = await getCachedPayload()
+    const result = await payload.find({
+      collection: 'services',
+      where: { active: { equals: true } },
+      limit: 100,
+    })
+    return siteConfig.locales.enabled.flatMap((locale) =>
+      result.docs.map((service) => ({
+        locale,
+        slug: service.slug as string,
+      })),
+    )
   })
-  return siteConfig.locales.enabled.flatMap((locale) =>
-    result.docs.map((service) => ({
-      locale,
-      slug: service.slug as string,
-    })),
-  )
 }
 
 export const dynamicParams = true
