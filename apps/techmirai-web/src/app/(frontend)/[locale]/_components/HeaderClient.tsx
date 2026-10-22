@@ -143,18 +143,16 @@ export function HeaderClient({
     return hasChildren ? strippedPath.startsWith(item.href) : strippedPath === item.href
   }
 
-  function Logo({ dark, imageUrl }: { dark: boolean; imageUrl?: string | null | undefined }) {
-    const logoSrc = imageUrl || `/${siteConfig.brand.logoFile}`
-
+  function Logo() {
     return (
-      <div className="relative flex items-center h-16 w-40 sm:h-20 sm:w-44 lg:h-20 lg:w-44 xl:h-20 xl:w-52 2xl:h-25 2xl:w-70 shrink-0 transition-all duration-300">
+      <div className="relative flex items-center h-12 w-44 sm:h-14 sm:w-52 lg:h-14 lg:w-48 xl:w-56 shrink-0">
         <Image
-          src={logoSrc}
+          src="/brand/techmirai_logo.png"
           alt={`${siteConfig.site.name} Logo`}
           fill
           priority
           className="object-contain object-left"
-          sizes="400px"
+          sizes="240px"
         />
       </div>
     )
@@ -174,7 +172,7 @@ export function HeaderClient({
     >
       <div className="relative flex items-center justify-between w-full px-2 sm:px-4 lg:px-3 xl:px-6 2xl:px-10 h-18 md:h-20 lg:h-22 gap-1.5 xl:gap-3 2xl:gap-6">
         <Link href="/" className="shrink-0">
-          <Logo dark={true} imageUrl={cmsLogoUrl} />
+          <Logo />
         </Link>
 
         {/* Main Navigation */}
