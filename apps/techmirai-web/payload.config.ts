@@ -29,7 +29,8 @@ const db =
           connectionTimeoutMillis: 45000,
           ssl: uri.includes('rlwy.net') ? { rejectUnauthorized: false } : true,
         },
-         push: true,
+         // Schema push diffs the whole schema on every boot; keep it to local dev.
+         push: process.env.NODE_ENV === 'development',
         // Booking module indexes + constraints that field config can't express.
         // Runs on production init so the DB-level safety net actually deploys.
         //

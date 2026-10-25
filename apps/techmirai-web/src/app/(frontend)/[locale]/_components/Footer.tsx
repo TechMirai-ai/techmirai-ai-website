@@ -57,6 +57,7 @@ export async function Footer({ locale }: FooterProps) {
   try {
     const raw = await payload.findGlobal({
       slug: 'footer',
+      depth: 1,
       locale: locale as 'en' | 'ja',
     })
     footerData = raw as FooterGlobalData

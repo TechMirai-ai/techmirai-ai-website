@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getCachedPayload } from '@/lib/payload'
@@ -26,6 +27,20 @@ type RawBlock = {
   resolvedItems?: unknown[]   // add this
 } & Record<string, unknown>
 
+// generateMetadata and the page body both need the home doc; cache() makes them
+// share one query per request. depth 1 still populates media/relationships.
+const getHomePage = cache(async (locale: SupportedLocale) => {
+  const payload = await getCachedPayload()
+  const result = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'home' } },
+    locale,
+    limit: 1,
+    depth: 1,
+  })
+  return result.docs[0]
+})
+
 // Mirrors [slug]/page.tsx's generateMetadata — the root route reads the same
 // `pages` collection (slug 'home') but isn't covered by that catch-all route,
 // so it needs its own metadata resolution or the document <title> is empty.
@@ -37,14 +52,7 @@ export async function generateMetadata({
   const { locale } = await params
   if (!isSupportedLocale(locale)) return {}
 
-  const payload = await getCachedPayload()
-  const result = await payload.find({
-    collection: 'pages',
-    where: { slug: { equals: 'home' } },
-    locale,
-    limit: 1,
-  })
-  const page = result.docs[0]
+  const page = await getHomePage(locale)
   if (!page) return buildPageMetadata({ locale, path: '', title: siteConfig.site.name })
 
   return metadataFromPageDoc(page as Record<string, unknown>, locale, '')
@@ -60,15 +68,7 @@ export default async function HomePage({
   if (!isSupportedLocale(locale)) notFound()
 
   const payload = await getCachedPayload()
-
-  const result = await payload.find({
-    collection: 'pages',
-    where: { slug: { equals: 'home' } },
-    locale,
-    limit: 1,
-  })
-
-  const page = result.docs[0]
+  const page = await getHomePage(locale)
   if (!page) return null
 
   let blocks = (page.layout ?? []) as RawBlock[]

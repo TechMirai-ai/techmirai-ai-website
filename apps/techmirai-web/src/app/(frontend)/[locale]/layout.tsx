@@ -6,12 +6,12 @@ import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { buildCssVariables } from '@techmirai/cms-core/tokens'
-import { ReceptionWidget } from '@techmirai/cms-core/reception/ui'
 import siteConfig from '../../../../site.config'
 import { Header } from './_components/Header'
 import { resolveHeaderData } from './_components/resolveHeaderData'
 import { Footer } from './_components/Footer'
 import { HtmlLangSetter } from './_components/HtmlLangSetter'
+import { LazyReceptionWidget } from './_components/LazyReceptionWidget'
 // Import the new wrapper
 import { LayoutWrapper } from './_components/LayoutWrapper'
 import { SITE_ORIGIN } from '@/lib/seo/build-metadata'
@@ -38,13 +38,6 @@ const localeFontConfig: Record<string, { variableClass: string; cssVar: string }
 
 // Pack-4/L1: resolves relative share-image URLs (meta.image) to absolute ones.
 export const metadata: Metadata = { metadataBase: new URL(SITE_ORIGIN) }
-
-// Every page under [locale] reads the CMS database (layout, header, footer and the
-// pages themselves). Rendering per request means a build host that cannot reach the
-// database (ETIMEDOUT) no longer fails the deploy. This overrides the per-page
-// `revalidate = 3600` exports, so pages are no longer cached; to get ISR back,
-// remove this line once DATABASE_URI is reachable at build time.
-export const dynamic = 'force-dynamic'
 
 /**
  * Pack-4/L2: the Organization `founder` appears only when company-info
@@ -85,8 +78,11 @@ export default async function LocaleLayout({
   }
 
   setRequestLocale(locale)
-  const messages = await getMessages()
-  const { lineButton } = await resolveHeaderData(locale)
+  const [messages, { lineButton }, founderName] = await Promise.all([
+    getMessages(),
+    resolveHeaderData(locale),
+    resolveFounderName(),
+  ])
 
   // The chat's text is static (techmirai-chat-content.ts). Only per-client
   // URLs come from config, and only an http(s) one is a real link: the demo
@@ -99,7 +95,6 @@ export default async function LocaleLayout({
   }
 
   const dir = (siteConfig.locales.direction[locale] ?? 'ltr') as 'ltr' | 'rtl'
-  const founderName = await resolveFounderName()
   const brandVars = buildCssVariables(siteConfig)
 
   const activeFontConfig = localeFontConfig[locale]
@@ -146,7 +141,7 @@ export default async function LocaleLayout({
         <Footer locale={locale} />
         {/* Voice-pivot: the floating LINE pill is removed — the mobile sticky bar carries Demo / Contact. */}
         {siteConfig.reception.enabled && (
-          <ReceptionWidget
+          <LazyReceptionWidget
             enabled={siteConfig.reception.enabled}
             greeting={siteConfig.reception.greeting}
             openDelayMs={siteConfig.reception.openDelayMs}
