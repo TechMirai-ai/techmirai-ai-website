@@ -123,7 +123,7 @@ export function HoursLocationBlock({
                     </p>
                     <a
                       href={`tel:${phone}`}
-                      className="inline-block text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#2B7A78] hover:opacity-85 transition-opacity tabular-nums"
+                      className="inline-block text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-primary-dark hover:opacity-85 transition-opacity tabular-nums"
                     >
                       {phone}
                     </a>
@@ -156,10 +156,10 @@ export function HoursLocationBlock({
                               return (
                                 <td key={day} className="py-3.5 text-center px-1">
                                   {morning.status === 'open' && (
-                                    <span className="inline-block text-[#2B7A78] text-base font-bold">●</span>
+                                    <span className="inline-block text-brand-primary-dark text-base font-bold">●</span>
                                   )}
                                   {morning.status === 'limited' && (
-                                    <span className="inline-block text-[#2B7A78] text-base font-bold">▲</span>
+                                    <span className="inline-block text-brand-primary-dark text-base font-bold">▲</span>
                                   )}
                                   {morning.status === 'closed' && (
                                     <span className="inline-block text-slate-300 text-xs font-normal">休</span>
@@ -177,10 +177,10 @@ export function HoursLocationBlock({
                               return (
                                 <td key={day} className="py-3.5 text-center px-1">
                                   {afternoon.status === 'open' && (
-                                    <span className="inline-block text-[#2B7A78] text-base font-bold">●</span>
+                                    <span className="inline-block text-brand-primary-dark text-base font-bold">●</span>
                                   )}
                                   {afternoon.status === 'limited' && (
-                                    <span className="inline-block text-[#2B7A78] text-base font-bold">▲</span>
+                                    <span className="inline-block text-brand-primary-dark text-base font-bold">▲</span>
                                   )}
                                   {afternoon.status === 'closed' && (
                                     <span className="inline-block text-slate-300 text-xs font-normal">休</span>
@@ -197,7 +197,7 @@ export function HoursLocationBlock({
 
                 {hasAddress && (
                   <div className="pt-1 flex items-center gap-2 text-slate-700 text-xs sm:text-sm leading-relaxed">
-                    <MapPin className="w-4 h-4 text-[#2B7A78] shrink-0" />
+                    <MapPin className="w-4 h-4 text-brand-primary-dark shrink-0" />
                     <span className="whitespace-pre-line font-medium text-slate-700">{address}</span>
                   </div>
                 )}
@@ -224,7 +224,7 @@ export function HoursLocationBlock({
                   href={`https://maps.google.com/?q=${encodeURIComponent(address || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary px-6 py-3 text-sm font-semibold shadow-xs transition-all duration-200 hover:shadow-md active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-primary hover:bg-white border border-brand-primary text-on-primary hover:text-brand-primary-dark px-6 py-3 text-sm font-semibold shadow-xs transition-all duration-200 hover:shadow-md active:scale-95"
                 >
                   <span>{locale === 'ja' ? '場所と駐車場の詳細' : 'Location & Parking Details'}</span>
                   <ArrowRight className="w-4 h-4" />

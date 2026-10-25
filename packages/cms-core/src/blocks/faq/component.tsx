@@ -128,7 +128,7 @@ export function FAQBlock({
           <div className="mt-8 text-center">
             <Link
               href={textLink.href}
-              className="text-[13.5px] font-semibold text-[var(--color-primary)] hover:underline underline-offset-2"
+              className="text-[13.5px] font-semibold text-brand-primary-dark hover:underline underline-offset-2"
             >
               {textLink.label} →
             </Link>

@@ -170,10 +170,10 @@ export function MobileMenu({
                           type="button"
                           onClick={() => toggleIndex(index)}
                           aria-expanded={isExpanded}
-                          className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-gray-900 hover:bg-neutral-100 hover:text-brand-primary transition-all duration-200 min-h-[48px]"
+                          className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-gray-900 hover:bg-neutral-100 hover:text-brand-primary-dark transition-all duration-200 min-h-[48px]"
                         >
                           <span>{item.label}</span>
-                          <svg className={`h-4 w-4 text-gray-400 group-hover:text-brand-primary transition-all duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className={`h-4 w-4 text-gray-400 group-hover:text-brand-primary-dark transition-all duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
@@ -181,11 +181,11 @@ export function MobileMenu({
                         <Link
                           href={item.href}
                           onClick={close}
-                          className="group flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-gray-900 hover:bg-neutral-100 hover:text-brand-primary transition-all duration-200 min-h-[48px]"
+                          className="group flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-gray-900 hover:bg-neutral-100 hover:text-brand-primary-dark transition-all duration-200 min-h-[48px]"
                         >
                           {(() => {
                             const Icon = navIconMapByHref[item.href] ?? Circle
-                            return <Icon className="w-5 h-5 text-brand-primary shrink-0 transition-transform duration-200 group-hover:scale-110" strokeWidth={2} />
+                            return <Icon className="w-5 h-5 text-brand-primary-dark shrink-0 transition-transform duration-200 group-hover:scale-110" strokeWidth={2} />
                           })()}
                           <span>{item.label}</span>
                         </Link>
@@ -212,7 +212,7 @@ export function MobileMenu({
                                               key={`${child.href}-${colIdx}-${childIdx}`}
                                               href={child.href}
                                               onClick={close}
-                                              className="group flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:text-brand-primary hover:bg-neutral-100 hover:translate-x-1 transition-all duration-200 min-h-[40px]"
+                                              className="group flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:text-brand-primary-dark hover:bg-neutral-100 hover:translate-x-1 transition-all duration-200 min-h-[40px]"
                                             >
                                               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary transition-transform duration-200 group-hover:scale-125" />
                                               <span>{child.label}</span>
@@ -227,7 +227,7 @@ export function MobileMenu({
                                         key={`${child.href}-${childIdx}`}
                                         href={child.href}
                                         onClick={close}
-                                        className="group flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:text-brand-primary hover:bg-neutral-100 hover:translate-x-1 transition-all duration-200 min-h-[40px]"
+                                        className="group flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:text-brand-primary-dark hover:bg-neutral-100 hover:translate-x-1 transition-all duration-200 min-h-[40px]"
                                       >
                                         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary transition-transform duration-200 group-hover:scale-125" />
                                         <span>{child.label}</span>
@@ -250,9 +250,9 @@ export function MobileMenu({
                 <a
                   href={phoneButton?.phoneHref}
                   onClick={close}
-                  className="group relative flex items-center justify-center gap-2 min-h-12 px-3 py-2 text-center leading-tight rounded-full border border-gray-200 hover:border-brand-primary bg-white text-gray-900 hover:text-brand-primary font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                  className="group relative flex items-center justify-center gap-2 min-h-12 px-3 py-2 text-center leading-tight rounded-full border border-gray-200 hover:border-brand-primary bg-white text-gray-900 hover:text-brand-primary-dark font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                 >
-                  <Phone className="w-4 h-4 fill-current text-gray-900 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
+                  <Phone className="w-4 h-4 fill-current text-gray-900 group-hover:text-brand-primary-dark shrink-0 transition-colors duration-200" />
                   <span>{phoneButton?.phoneDisplay}</span>
                 </a>
 

@@ -20,7 +20,7 @@ function labelColor(style: string): string {
 }
 
 function subtitleColor(style: string): string {
-  return style === 'brand' ? 'text-white/80' : 'text-[var(--color-primary)]'
+  return style === 'brand' ? 'text-on-primary/80' : 'text-brand-primary-dark'
 }
 
 // TODO: color token — pie chart slice colors — green monochromatic scale for data viz, not brand tokens

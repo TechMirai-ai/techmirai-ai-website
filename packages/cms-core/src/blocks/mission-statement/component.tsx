@@ -63,7 +63,7 @@ export function MissionStatementBlock({
   }))
   
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-brand-surface via-brand-surface to-[#eaf2ef] pt-1 pb-16 px-4 sm:px-8 md:pt-2 md:pb-24 md:px-16 lg:px-24">
+    <section className="relative w-full overflow-hidden bg-gradient-to-b from-brand-surface via-brand-surface to-[#EAF5EC] pt-1 pb-16 px-4 sm:px-8 md:pt-2 md:pb-24 md:px-16 lg:px-24">
       
       {/* Falling Sakura Flowers */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -102,17 +102,17 @@ export function MissionStatementBlock({
 
         {/* Sub-label */}
         <motion.div variants={fadeInUp} className="flex items-center gap-2 mb-8">
-          <span className="text-brand-primary text-xs font-semibold">|</span>
-          <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-brand-primary">
+          <span className="text-brand-primary-dark text-xs font-semibold">|</span>
+          <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-brand-primary-dark">
             {/* 3. Inline locale check matching the pattern in HeroBlock */}
             {locale === 'ja' ? '当院について' : 'ABOUT US'}
           </span>
-          <span className="text-brand-primary text-xs font-semibold">|</span>
+          <span className="text-brand-primary-dark text-xs font-semibold">|</span>
         </motion.div>
 
         {/* Heading */}
         <motion.div variants={fadeInUp} className="mb-8 max-w-5xl px-2">
-          <h2 className="text-xl md:text-2xl lg:text-2xl text-brand-primary tracking-tight leading-relaxed">
+          <h2 className="text-xl md:text-2xl lg:text-2xl text-brand-primary-dark tracking-tight leading-relaxed">
             {missionHeading}
           </h2>
         </motion.div>

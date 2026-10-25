@@ -18,7 +18,7 @@ const STATUS_LABELS: Record<IntegrationStatus, { en: string; ja: string }> = {
 // Deliberately neutral for "not offered" (not error-red) — it is an honest
 // fact, not a failure state.
 const STATUS_BADGE_CLASSES: Record<IntegrationStatus, string> = {
-  available: 'bg-brand-primary-light text-brand-primary',
+  available: 'bg-brand-primary-light text-brand-primary-dark',
   'case-by-case': 'bg-warning/10 text-warning',
   'in-development': 'bg-brand-accent/15 text-brand-accent-hover',
   'not-offered': 'bg-bg-tertiary text-text-muted border border-border-default',

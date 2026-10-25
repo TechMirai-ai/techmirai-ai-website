@@ -64,7 +64,7 @@ export function ProductEditionBlock({
           <div className="mt-2">
             <Link
               href={withLocale(locale, buttonHref)}
-              className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-white hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-on-primary hover:opacity-90 transition-opacity"
             >
               {buttonLabel}
             </Link>

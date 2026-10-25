@@ -11,18 +11,18 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-primary)] text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
+    'bg-[var(--color-primary)] text-on-primary hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
   // Accent text on tint background — accent text color is darkened from the raw
-  // token (#1D9E75 on tint is only ~3:1) so it still clears 4.5:1 at button text size.
+  // token (#47A35A on tint is only ~3:1) so it still clears 4.5:1 at button text size.
   secondary:
-    'bg-[var(--color-surface-alt)] text-[#167758] hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
+    'bg-[var(--color-surface-alt)] text-[#2A783D] hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
   ghost:
     'bg-transparent text-[var(--color-text)] hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2',
   outline:
-    'border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
+    'border border-[var(--color-primary)] text-brand-primary-dark hover:bg-[var(--color-primary)]/10 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
   // Tap-to-call CTA: same high-contrast fill as primary, tabular figures for the number.
   phone:
-    'bg-[var(--color-primary)] text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 tabular-nums',
+    'bg-[var(--color-primary)] text-on-primary hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 tabular-nums',
 }
 
 const sizeClasses: Record<ButtonSize, string> = {

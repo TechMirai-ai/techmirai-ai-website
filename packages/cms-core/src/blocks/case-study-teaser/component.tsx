@@ -30,14 +30,14 @@ export function CaseStudyTeaserBlock({
         </h2>
         {body && <p className="text-[13.5px] md:text-[15px] leading-relaxed text-text-muted">{body}</p>}
         {statsStrip && (
-          <p className="text-[13px] md:text-[13.5px] font-semibold text-brand-primary">{statsStrip}</p>
+          <p className="text-[13px] md:text-[13.5px] font-semibold text-brand-primary-dark">{statsStrip}</p>
         )}
         {note && <p className="text-[12.5px] text-text-secondary">{note}</p>}
         {buttonLabel && buttonHref && (
           <div>
             <Link
               href={buttonHref}
-              className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-white hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-on-primary hover:opacity-90 transition-opacity"
             >
               {buttonLabel}
             </Link>

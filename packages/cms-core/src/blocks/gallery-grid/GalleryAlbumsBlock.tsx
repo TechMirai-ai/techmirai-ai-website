@@ -56,7 +56,7 @@ export function GalleryAlbumsBlock({
     return (
         <section className="relative w-full overflow-hidden bg-[var(--color-surface-faint)] pt-10 pb-16 md:pt-20 md:pb-24 px-4 sm:px-6 lg:px-8">
             <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-                <div className="absolute top-[5%] left-[5%] h-80 w-80 rounded-full bg-teal-300/25 opacity-70 mix-blend-multiply filter blur-[80px]" />
+                <div className="absolute top-[5%] left-[5%] h-80 w-80 rounded-full bg-brand-primary/25 opacity-70 mix-blend-multiply filter blur-[80px]" />
                 <div className="absolute bottom-[10%] left-[20%] h-[500px] w-[500px] rounded-full bg-amber-200/35 opacity-60 mix-blend-multiply filter blur-[120px]" />
             </div>
 

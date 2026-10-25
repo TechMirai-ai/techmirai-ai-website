@@ -64,7 +64,7 @@ export function CapabilityCardsBlock({
                 <span
                   className={[
                     'shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-semibold whitespace-nowrap',
-                    isAvailable ? 'bg-brand-primary-light text-brand-primary' : 'bg-brand-accent/15 text-brand-accent-hover',
+                    isAvailable ? 'bg-brand-primary-light text-brand-primary-dark' : 'bg-brand-accent/15 text-brand-accent-hover',
                   ].join(' ')}
                 >
                   {isJa ? statusLabel.ja : statusLabel.en}
@@ -92,7 +92,7 @@ export function CapabilityCardsBlock({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="rounded-2xl border border-border-default bg-bg-tertiary p-5 md:p-6">
               {splitLeftTitle && (
-                <h4 className="text-[15px] font-bold text-brand-primary mb-3">{splitLeftTitle}</h4>
+                <h4 className="text-[15px] font-bold text-brand-primary-dark mb-3">{splitLeftTitle}</h4>
               )}
               <ul className="flex flex-col gap-2">
                 {splitLeftItems?.map((item, i) => (

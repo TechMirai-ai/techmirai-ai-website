@@ -21,14 +21,14 @@
 
   /* Availability tiers — paired with a symbol (◎/○/△/×/−) everywhere they
      appear, never color alone. */
-  --booking-tier-plenty: #2f7d52;
+  --booking-tier-plenty: #2A783D;
   --booking-tier-available: #3b6ea5;
   --booking-tier-few: #b7791f;
   --booking-tier-full: #b3261e;
   --booking-tier-closed: #9ca3af;
 
   --booking-error: #b3261e;
-  --booking-success: #2f7d52;
+  --booking-success: #2A783D;
 
   --booking-transition-duration: 175ms;
   --booking-transition-easing: ease-out;

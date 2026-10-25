@@ -46,30 +46,30 @@ const siteConfig: SiteConfig = {
     faviconFile: 'favicon.ico',
     ogImageFile: 'brand/logo.svg',
     colors: {
-      // TechMirai palette (Pack-2/D2): green primary kept from the original
-      // logo per the Spec ("keep the current logo and green"); navy/orange
-      // introduced as the brochure's accent colors. TEMPORARY exact hex
-      // values — the brochure (TECHMIRAI_BROCHURE.html) is not yet supplied,
-      // see docs/PLACEHOLDER-REGISTER.md. primary (#0F6E56, 6.2:1 on white)
-      // is the ONLY color permitted behind white text at normal size. See
+      // TechMirai palette: primary green (#47A35A) and navy are sampled from the
+      // logo (brand/techmirai_logo.png); orange is the brochure accent. Tints and
+      // neutrals are derived from the logo hue and are TEMPORARY, see
+      // docs/PLACEHOLDER-REGISTER.md. #47A35A is only 3.2:1 on white, so text ON a
+      // primary fill is navy (--color-on-primary, 4.5:1) and green TEXT on light
+      // backgrounds uses --color-brand-primary-dark (#2A783D, 5.4:1). See
       // globals.css for the mirrored legacy --color-brand-*/--color-bg-*/
       // --color-text-*/--color-border-* block, a second statically-compiled
       // copy of this same palette — keep both in sync.
-      primary: '#0F6E56',
+      primary: '#47A35A',
       secondary: '#1B2A45',
       accent: '#D97706',
-      background: '#F7FAF9',
+      background: '#F7FAF8',
       surface: '#FFFFFF',
-      text: '#04342C',
-      muted: '#4B6B63',
+      text: '#1B2A45',
+      muted: '#4A5568',
       error: '#DC2626',
-      success: '#12823B',
+      success: '#2A783D',
       warning: '#A35905',
-      surfaceAlt: '#E1F5EE',
-      surfaceSubtle: '#E8F7F2',
-      surfaceFaint: '#F0F8F5',
-      textSecondary: '#4B6B63',
-      headingDark: '#04342C',
+      surfaceAlt: '#E6F4EA',
+      surfaceSubtle: '#EDF7F0',
+      surfaceFaint: '#F4FAF6',
+      textSecondary: '#4A5568',
+      headingDark: '#1B2A45',
       deepAccent: '#1B2A45',
       iconAccent: '#1B2A45',
       buttonAccent: '#D97706',

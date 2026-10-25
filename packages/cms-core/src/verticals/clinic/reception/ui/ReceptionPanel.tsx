@@ -9,7 +9,7 @@ import type { HandoffHours } from '../handoff-hours'
 import { useReceptionEngine, type HostLinks } from './useReceptionEngine'
 
 const CHOICE_BUTTON_CLASS =
-  'rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-[var(--reception-accent,#0F6E56)] transition hover:border-[var(--reception-accent,#0F6E56)] hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#0F6E56)]'
+  'rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-brand-primary-dark transition hover:border-[var(--reception-accent,#47A35A)] hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#47A35A)]'
 
 const EXTERNAL_URL = /^(https?:|tel:|mailto:)/
 
@@ -94,11 +94,11 @@ export function ReceptionPanel({
 
   return (
     <div className="flex h-[min(80vh,600px)] w-[calc(100vw-2.5rem)] max-w-[400px] flex-col overflow-hidden rounded-2xl shadow-2xl sm:w-[400px]">
-      <header className="flex items-center gap-2 bg-[var(--reception-accent,#0F6E56)] px-4 py-3">
-        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{CHAT_WIDGET_TITLE}</p>
+      <header className="flex items-center gap-2 bg-[var(--reception-accent,#47A35A)] px-4 py-3">
+        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-on-primary">{CHAT_WIDGET_TITLE}</p>
 
         {localeOptions.length > 1 && (
-          <div className="flex overflow-hidden rounded-full border border-white/30 text-[11px]">
+          <div className="flex overflow-hidden rounded-full border border-on-primary/30 text-[11px]">
             {localeOptions.map((l) => (
               <button
                 key={l.code}
@@ -106,7 +106,7 @@ export function ReceptionPanel({
                 onClick={() => setLocale(l.code)}
                 className={[
                   'px-2 py-1 transition',
-                  l.code === locale ? 'bg-white font-semibold text-[var(--reception-accent,#0F6E56)]' : 'text-white/80 hover:bg-white/20',
+                  l.code === locale ? 'bg-white font-semibold text-on-primary' : 'text-on-primary/80 hover:bg-black/10',
                 ].join(' ')}
               >
                 {l.label}
@@ -119,7 +119,7 @@ export function ReceptionPanel({
           type="button"
           onClick={restart}
           aria-label={locale === 'ja' ? 'やり直す' : 'Restart'}
-          className="rounded-full p-1.5 text-white/70 transition hover:bg-white/20 hover:text-white"
+          className="rounded-full p-1.5 text-on-primary/70 transition hover:bg-black/10 hover:text-on-primary"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
@@ -147,7 +147,7 @@ export function ReceptionPanel({
         <button
           type="button"
           onClick={talkToPerson}
-          className="rounded px-1 font-semibold text-[var(--reception-accent,#0F6E56)] underline underline-offset-2 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#0F6E56)]"
+          className="rounded px-1 font-semibold text-brand-primary-dark underline underline-offset-2 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--reception-accent,#47A35A)]"
         >
           {CHAT_TALK_TO_PERSON[textLocale]}
         </button>
@@ -161,7 +161,7 @@ export function ReceptionPanel({
                 className={[
                   'whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed',
                   m.role === 'user'
-                    ? 'rounded-br-sm bg-[var(--reception-accent,#0F6E56)] text-white'
+                    ? 'rounded-br-sm bg-[var(--reception-accent,#47A35A)] text-on-primary'
                     : 'rounded-bl-sm border border-zinc-100 bg-white text-zinc-800 shadow-sm',
                 ].join(' ')}
               >
@@ -189,14 +189,14 @@ export function ReceptionPanel({
               href={interaction.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block rounded-xl bg-[var(--reception-accent,#0F6E56)] px-4 py-2.5 text-sm font-medium text-white transition hover:brightness-110"
+              className="inline-block rounded-xl bg-[var(--reception-accent,#47A35A)] px-4 py-2.5 text-sm font-medium text-on-primary transition hover:brightness-110"
             >
               {interaction.label}
             </a>
           ) : (
             <Link
               href={`/${locale}${interaction.href}`}
-              className="inline-block rounded-xl bg-[var(--reception-accent,#0F6E56)] px-4 py-2.5 text-sm font-medium text-white transition hover:brightness-110"
+              className="inline-block rounded-xl bg-[var(--reception-accent,#47A35A)] px-4 py-2.5 text-sm font-medium text-on-primary transition hover:brightness-110"
             >
               {interaction.label}
             </Link>
@@ -249,13 +249,13 @@ export function ReceptionPanel({
               placeholder={CHAT_INPUT_HINT[textLocale]}
               aria-label={CHAT_INPUT_HINT[textLocale]}
               disabled={pending}
-              className="min-w-0 flex-1 rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-[var(--reception-accent,#0F6E56)] focus:outline-none disabled:opacity-60"
+              className="min-w-0 flex-1 rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-[var(--reception-accent,#47A35A)] focus:outline-none disabled:opacity-60"
             />
             <button
               type="submit"
               disabled={pending || draft.trim() === ''}
               aria-label={locale === 'ja' ? '送信' : 'Send'}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--reception-accent,#0F6E56)] text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--reception-accent,#47A35A)] text-on-primary transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {pending ? (
                 <svg

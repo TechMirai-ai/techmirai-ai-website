@@ -20,7 +20,7 @@ function withLocale(locale: string, href: string): string {
 }
 
 function Pill({ children }: { children: ReactNode }) {
-  return <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-[12px] font-semibold text-brand-primary">{children}</span>
+  return <span className="inline-block rounded-full bg-brand-primary-light px-3 py-1 text-[12px] font-semibold text-brand-primary-dark">{children}</span>
 }
 
 function SectionHeading({ pill, heading }: { pill: string; heading: string }) {
@@ -42,21 +42,21 @@ export function PageIntroBlock({ pill, heading, body, primaryButton, secondaryBu
   const locale = useLocale()
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-10 pt-10 sm:px-6 md:pb-14 md:pt-14 lg:px-8">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className={`${INNER} relative max-w-4xl`}>
-        {pill && <span className="inline-block rounded-full border border-emerald-200 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary">{pill}</span>}
+        {pill && <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">{pill}</span>}
         <h1 className="mt-4 text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[40px]">{heading}</h1>
         {body && <p className="mt-5 max-w-2xl text-[14px] leading-[1.9] text-text-secondary">{body}</p>}
         {(primaryButton || secondaryButton) && (
           <div className="mt-7 flex flex-wrap gap-3">
             {primaryButton && (
-              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {primaryButton.label}
                 <ArrowRight aria-hidden="true" size={16} />
               </Link>
             )}
             {secondaryButton && (
-              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {secondaryButton.label}
               </Link>
             )}
@@ -85,21 +85,21 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
 
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-12 pt-10 sm:px-6 md:pb-16 md:pt-14 lg:px-8">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 h-96 w-96 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className={`${INNER} relative grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]`}>
         <div>
-          {pill && <span className="inline-block rounded-full border border-emerald-200 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary">{pill}</span>}
+          {pill && <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">{pill}</span>}
           <h1 className="mt-5 whitespace-pre-line text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[42px]">{heading}</h1>
           <p className="mt-5 max-w-xl text-[14px] leading-[1.9] text-text-secondary">{body}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             {primaryButton && (
-              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {primaryButton.label}
                 <ArrowRight aria-hidden="true" size={16} />
               </Link>
             )}
             {secondaryButton && (
-              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {secondaryButton.label}
               </Link>
             )}
@@ -121,13 +121,13 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
                     isActive ? '-translate-y-1 border-brand-primary shadow-md ring-2 ring-brand-primary/25' : 'border-border-default'
                   }`}
                 >
-                  <span className={`flex items-center justify-center rounded-full ${featured ? 'h-16 w-16 bg-brand-primary text-white' : 'h-12 w-12 bg-bg-tertiary text-brand-primary'}`}>
+                  <span className={`flex items-center justify-center rounded-full ${featured ? 'h-16 w-16 bg-brand-primary text-on-primary' : 'h-12 w-12 bg-bg-tertiary text-brand-primary-dark'}`}>
                     <VoiceIcon name={node.icon} size={featured ? 28 : 22} />
                   </span>
                   <span className="mt-2 text-[13px] font-bold leading-snug text-text-primary">{node.label}</span>
                   {node.sub && <span className="mt-0.5 text-[11.5px] leading-snug text-text-secondary">{node.sub}</span>}
                   {!lastInRow && i < nodes.length - 1 && (
-                    <ArrowRight aria-hidden="true" size={18} className="absolute -right-5 top-1/2 hidden -translate-y-1/2 text-brand-primary sm:block" />
+                    <ArrowRight aria-hidden="true" size={18} className="absolute -right-5 top-1/2 hidden -translate-y-1/2 text-brand-primary-dark sm:block" />
                   )}
                 </li>
               )
@@ -149,7 +149,7 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
 // ── 2. Icon cards (problems, demo scenarios) ──────────────────────────────
 
 const TONE_BG: Record<CardTone, string> = {
-  green: 'bg-emerald-50 text-emerald-700',
+  green: 'bg-brand-primary-light text-brand-primary-dark',
   amber: 'bg-amber-50 text-amber-700',
   blue: 'bg-sky-50 text-sky-700',
   rose: 'bg-rose-50 text-rose-700',
@@ -181,8 +181,8 @@ export function IconCardsBlock({ pill, heading, intro, columns, cards, cta, foot
           ))}
           {cta && (
             <li className="flex flex-col items-center justify-center rounded-2xl border-2 border-brand-primary bg-white p-5 text-center shadow-sm">
-              <Link href={withLocale(locale, cta.href)} className="inline-flex items-center gap-2 text-[15px] font-bold text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary text-white"><Play aria-hidden="true" size={16} /></span>
+              <Link href={withLocale(locale, cta.href)} className="inline-flex items-center gap-2 text-[15px] font-bold text-brand-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary text-on-primary"><Play aria-hidden="true" size={16} /></span>
                 {cta.label}
               </Link>
               {cta.subLabel && (
@@ -201,9 +201,9 @@ export function IconCardsBlock({ pill, heading, intro, columns, cards, cta, foot
 
 const DAY_STYLES: Record<DayTone, { bg: string; icon: string }> = {
   day: { bg: 'bg-gradient-to-br from-sky-100 via-white to-amber-100', icon: 'text-amber-500' },
-  dusk: { bg: 'bg-gradient-to-br from-indigo-100 via-slate-100 to-emerald-50', icon: 'text-indigo-500' },
+  dusk: { bg: 'bg-gradient-to-br from-indigo-100 via-slate-100 to-brand-primary-light', icon: 'text-indigo-500' },
   night: { bg: 'bg-gradient-to-br from-slate-800 via-slate-700 to-indigo-900', icon: 'text-amber-300' },
-  morning: { bg: 'bg-gradient-to-br from-sky-100 via-white to-emerald-100', icon: 'text-emerald-600' },
+  morning: { bg: 'bg-gradient-to-br from-sky-100 via-white to-brand-primary-light', icon: 'text-brand-primary-dark' },
 }
 
 export function DayFlowBlock({ pill, heading, steps }: DayFlowProps) {
@@ -225,7 +225,7 @@ export function DayFlowBlock({ pill, heading, steps }: DayFlowProps) {
                   {step.text && <p className="mt-1 text-[12.5px] leading-[1.7] text-text-secondary">{step.text}</p>}
                 </div>
                 {i < steps.length - 1 && (
-                  <ArrowRight aria-hidden="true" size={18} className="absolute -right-0.5 top-12 hidden text-brand-primary lg:block" />
+                  <ArrowRight aria-hidden="true" size={18} className="absolute -right-0.5 top-12 hidden text-brand-primary-dark lg:block" />
                 )}
               </li>
             )
@@ -243,7 +243,7 @@ function IconList({ items }: { items: { icon: VoiceIconName; text: string }[] })
     <ul className="space-y-3">
       {items.map((item, i) => (
         <li key={i} className="flex items-center gap-3 text-[13.5px] text-text-primary">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-brand-primary">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-brand-primary-dark">
             <VoiceIcon name={item.icon} size={16} />
           </span>
           {item.text}
@@ -269,7 +269,7 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
 
         <figure className="overflow-x-auto rounded-2xl border border-border-default bg-white shadow-lg">
           <div className="min-w-[620px]">
-            <div className="flex items-center justify-between border-b border-border-default px-4 py-2 text-[11px] font-bold text-brand-primary">
+            <div className="flex items-center justify-between border-b border-border-default px-4 py-2 text-[11px] font-bold text-brand-primary-dark">
               <span>TechMirai</span>
               {dashboard.demoLabel && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">{dashboard.demoLabel}</span>}
             </div>
@@ -277,7 +277,7 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
               <nav aria-label={dashboard.menuHeading || undefined} className="border-r border-border-default p-3">
                 <ul className="space-y-1.5">
                   {dashboard.menu.map((item, i) => (
-                    <li key={i} className={`rounded-md px-2 py-1.5 ${i === 0 ? 'bg-bg-tertiary font-semibold text-brand-primary' : 'text-text-secondary'}`}>{item}</li>
+                    <li key={i} className={`rounded-md px-2 py-1.5 ${i === 0 ? 'bg-bg-tertiary font-semibold text-brand-primary-dark' : 'text-text-secondary'}`}>{item}</li>
                   ))}
                 </ul>
               </nav>
@@ -285,7 +285,7 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
                 <p className="mb-2 text-[11px] font-bold text-text-primary">{dashboard.listTitle}</p>
                 <ul className="mb-2 flex flex-wrap gap-1.5">
                   {dashboard.filters.map((f, i) => (
-                    <li key={i} className={`rounded px-2 py-0.5 ${i === 0 ? 'bg-brand-primary text-white' : 'bg-bg-tertiary text-text-secondary'}`}>{f}</li>
+                    <li key={i} className={`rounded px-2 py-0.5 ${i === 0 ? 'bg-brand-primary text-on-primary' : 'bg-bg-tertiary text-text-secondary'}`}>{f}</li>
                   ))}
                 </ul>
                 <table className="w-full text-left">
@@ -301,7 +301,7 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
                         <td className="pr-1">{r.caller}</td>
                         <td className="pr-1">{r.topic}</td>
                         <td>
-                          <span className={`rounded px-1.5 py-0.5 ${r.tone === 'alert' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>{r.status}</span>
+                          <span className={`rounded px-1.5 py-0.5 ${r.tone === 'alert' ? 'bg-rose-100 text-rose-700' : 'bg-brand-primary-light text-brand-primary-dark'}`}>{r.status}</span>
                         </td>
                       </tr>
                     ))}
@@ -322,7 +322,7 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
                   <div className="mt-3 rounded-md border border-border-default p-2">
                     <p className="mb-1 text-text-muted">{dashboard.audioLabel}</p>
                     <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-primary text-white"><Play aria-hidden="true" size={10} /></span>
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-primary text-on-primary"><Play aria-hidden="true" size={10} /></span>
                       <span className="h-1 flex-1 rounded bg-bg-tertiary"><span className="block h-1 w-1/4 rounded bg-brand-primary" /></span>
                       <span className="text-text-muted">00:00 / 02:34</span>
                     </div>
@@ -342,15 +342,15 @@ export function RoutingDashboardBlock({ pill, heading, statusBadge, leftItems, r
 function RoleCard({ tone, icon, heading, items }: { tone: 'ai' | 'human'; icon: 'user' | 'headset'; heading: string; items: string[] }) {
   const ai = tone === 'ai'
   return (
-    <div className={`rounded-2xl border p-6 ${ai ? 'border-emerald-100 bg-emerald-50' : 'border-rose-100 bg-rose-50'}`}>
-      <h3 className={`flex items-center gap-2 text-[16px] font-bold ${ai ? 'text-emerald-700' : 'text-rose-700'}`}>
-        <span className={`flex h-9 w-9 items-center justify-center rounded-full ${ai ? 'bg-emerald-600' : 'bg-rose-500'} text-white`}><VoiceIcon name={icon} size={18} /></span>
+    <div className={`rounded-2xl border p-6 ${ai ? 'border-brand-primary/40 bg-brand-primary-light' : 'border-rose-100 bg-rose-50'}`}>
+      <h3 className={`flex items-center gap-2 text-[16px] font-bold ${ai ? 'text-brand-primary-dark' : 'text-rose-700'}`}>
+        <span className={`flex h-9 w-9 items-center justify-center rounded-full ${ai ? 'bg-brand-primary-dark' : 'bg-rose-500'} text-white`}><VoiceIcon name={icon} size={18} /></span>
         {heading}
       </h3>
       <ul className="mt-4 space-y-2">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-2 text-[13px] leading-[1.7] text-text-primary">
-            <Check aria-hidden="true" size={15} className={`mt-1 shrink-0 ${ai ? 'text-emerald-600' : 'text-rose-500'}`} />
+            <Check aria-hidden="true" size={15} className={`mt-1 shrink-0 ${ai ? 'text-brand-primary-dark' : 'text-rose-500'}`} />
             {item}
           </li>
         ))}
@@ -369,7 +369,7 @@ export function RoleSplitBlock({ pill, heading, aiHeading, aiItems, humanHeading
           <RoleCard tone="human" icon="headset" heading={humanHeading} items={humanItems} />
           {tagline && (
             <div className="flex flex-col items-center gap-4 rounded-2xl bg-bg-tertiary p-6 text-center">
-              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm"><VoiceIcon name="headset" size={40} /></span>
+              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-brand-primary-dark shadow-sm"><VoiceIcon name="headset" size={40} /></span>
               <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.9] text-text-primary">{tagline}</p>
             </div>
           )}

@@ -67,7 +67,7 @@ export function GalleryGridBlock(props: GalleryGridBlockProps) {
       
       {/* Background Aura */}
       {/* <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="absolute top-[5%] left-[5%] h-80 w-80 rounded-full bg-teal-300/25 opacity-70 mix-blend-multiply filter blur-[80px]" />
+        <div className="absolute top-[5%] left-[5%] h-80 w-80 rounded-full bg-brand-primary/25 opacity-70 mix-blend-multiply filter blur-[80px]" />
         <div className="absolute bottom-[10%] left-[20%] h-[500px] w-[500px] rounded-full bg-amber-200/35 opacity-60 mix-blend-multiply filter blur-[120px]" />
         <div className="absolute top-[2%] right-[8%] h-96 w-96 rounded-full bg-purple-200/25 opacity-50 filter blur-[100px]" />
         <div className="absolute bottom-[25%] right-[12%] h-72 w-72 rounded-full bg-yellow-200/35 opacity-40 filter blur-[80px]" />

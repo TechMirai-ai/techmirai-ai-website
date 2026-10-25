@@ -91,7 +91,7 @@ export function ImageTextSplitBlock({
       className={`${cols.text} flex flex-col justify-center gap-5 ${textColor}`}
     >
       {eyebrow && (
-        <p className="text-sm font-semibold uppercase tracking-widest text-[var(--color-primary)]">
+        <p className="text-sm font-semibold uppercase tracking-widest text-brand-primary-dark">
           {eyebrow}
         </p>
       )}
@@ -102,7 +102,7 @@ export function ImageTextSplitBlock({
       {primaryButtonLabel && primaryButtonHref && (
         <Link
           href={withLocale(locale, primaryButtonHref)}
-          className="inline-flex w-fit min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white transition-opacity duration-150 hover:opacity-90"
+          className="inline-flex w-fit min-h-[44px] items-center gap-2 rounded-md bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-on-primary transition-opacity duration-150 hover:opacity-90"
         >
           {primaryButtonLabel}
         </Link>

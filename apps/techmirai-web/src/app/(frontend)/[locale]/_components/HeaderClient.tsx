@@ -58,7 +58,7 @@ function MegaMenuPanel({ item }: { item: ResolvedNavItem }) {
                     className={[
                       "text-[11px] font-bold uppercase tracking-widest",
                       ci === 3
-                        ? "text-brand-primary"
+                        ? "text-brand-primary-dark"
                         : "text-neutral-400"
                     ].join(" ")}
                   >
@@ -193,8 +193,8 @@ export function HeaderClient({
                       'inline-flex items-center justify-center gap-0.5 px-1 xl:px-2 text-[11px] xl:text-xs 2xl:text-sm font-semibold tracking-tight text-center leading-tight whitespace-normal max-w-[85px] xl:max-w-[105px] 2xl:max-w-none',
                       'h-[48px] border-b-2 transition-colors duration-200',
                       active
-                        ? 'text-brand-primary border-brand-primary'
-                        : 'text-text-primary border-transparent hover:text-brand-primary hover:border-brand-primary',
+                        ? 'text-brand-primary-dark border-brand-primary'
+                        : 'text-text-primary border-transparent hover:text-brand-primary-dark hover:border-brand-primary',
                     ].join(' ')}
                   >
                     <span className="text-center leading-tight">
@@ -266,7 +266,7 @@ export function HeaderClient({
                       className={[
                         'flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors',
                         isCurrentLocale
-                          ? 'bg-brand-primary/5 text-brand-primary font-semibold'
+                          ? 'bg-brand-primary/5 text-brand-primary-dark font-semibold'
                           : 'text-text-secondary hover:bg-gray-50 hover:text-text-primary',
                       ].join(' ')}
                     >
@@ -281,7 +281,7 @@ export function HeaderClient({
 
           {ctaLabel && (
             <Link href={ctaHref}>
-              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3 xl:px-4 2xl:px-5 py-2 text-center text-xs xl:text-sm leading-tight font-semibold tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md">
+              <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3 xl:px-4 2xl:px-5 py-2 text-center text-xs xl:text-sm leading-tight font-semibold tracking-wider text-on-primary shadow-sm transition-all duration-200 hover:brightness-110 hover:shadow-md">
                 <span>{ctaLabel}</span>
               </button>
             </Link>
@@ -310,7 +310,7 @@ export function HeaderClient({
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 grid grid-cols-2 border-t border-border-default bg-white shadow-sm">
       <Link
         href="/demo"
-        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-white bg-brand-primary"
+        className="flex items-center justify-center min-h-14 px-1 py-2 text-center text-xs leading-tight font-semibold text-on-primary bg-brand-primary"
       >
         {mobileBarLabels.demo}
       </Link>

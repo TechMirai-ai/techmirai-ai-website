@@ -173,7 +173,7 @@ export function ServicesGridBlock({
   if (!services || services.length === 0) return null
 
   return (
-    <section className="relative w-full z-20 pb-16 md:pb-24 pl-4 sm:pl-6 lg:pl-8 overflow-x-clip bg-gradient-to-b from-[#eaf2ef] to-brand-surface">
+    <section className="relative w-full z-20 pb-16 md:pb-24 pl-4 sm:pl-6 lg:pl-8 overflow-x-clip bg-gradient-to-b from-[#EAF5EC] to-brand-surface">
       <div className="mx-auto max-w-7xl">
         
  {/* 1. OUTER ANGLED CONTAINER (PINK CARD) WITH SCROLL FADE-UP */}
@@ -196,7 +196,7 @@ export function ServicesGridBlock({
       className="mb-8 sm:mb-10 text-center max-w-2xl mx-auto space-y-2 sm:space-y-3 pt-4 sm:pt-2"
     >
       <div className="text-[#d0915a] text-xs mb-1">✦</div>
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-primary leading-tight">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-primary-dark leading-tight">
         {locale === 'ja' ? '症状・お悩み' : 'Symptoms & Concerns'}
       </h2>
       <p className="text-sm md:text-base font-medium text-slate-700">
@@ -235,7 +235,7 @@ export function ServicesGridBlock({
               onClick={() => setOpenIndex(isOpen ? null : idx)}
               className="w-full flex items-start gap-3.5 text-left focus:outline-none cursor-pointer"
             >
-              <div className="w-10 h-10 rounded-xl bg-[#F5E1DD]/60 flex items-center justify-center shrink-0 text-[#2B7A78] mt-0.5">
+              <div className="w-10 h-10 rounded-xl bg-[#F5E1DD]/60 flex items-center justify-center shrink-0 text-brand-primary-dark mt-0.5">
                 <IconComp className="w-5 h-5 stroke-[1.75]" />
               </div>
 
@@ -295,7 +295,7 @@ export function ServicesGridBlock({
       <div className="pt-2">
         <Link
           href={`/${locale}/contact`}
-          className="inline-flex items-center justify-center gap-2.5 bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary text-xs sm:text-sm px-6 py-3 rounded-xl transition-colors shadow-sm group"
+          className="inline-flex items-center justify-center gap-2.5 bg-brand-primary hover:bg-white border border-brand-primary text-on-primary hover:text-brand-primary-dark text-xs sm:text-sm px-6 py-3 rounded-xl transition-colors shadow-sm group"
         >
           <span>{locale === 'ja' ? 'お問い合わせ' : 'Talk to Us'}</span>
           <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -344,7 +344,7 @@ export function ServicesGridBlock({
                 </div>
               </div>
               {eyebrow && (
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-brand-primary leading-tight">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-brand-primary-dark leading-tight">
                   {eyebrow}
                 </h2>
               )}
@@ -357,7 +357,7 @@ export function ServicesGridBlock({
               <div className="hidden lg:block pt-2">
                 <Link
                   href={`/${locale}/treatment-details`}
-                  className="inline-flex items-center justify-center gap-3 bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary text-xs sm:text-sm px-8 py-3.5 rounded-xl transition-colors shadow-sm group"
+                  className="inline-flex items-center justify-center gap-3 bg-brand-primary hover:bg-white border border-brand-primary text-on-primary hover:text-brand-primary-dark text-xs sm:text-sm px-8 py-3.5 rounded-xl transition-colors shadow-sm group"
                 >
                   <span>{locale === 'ja' ? '詳細を見る' : 'View Details'}</span>
                   <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -383,19 +383,19 @@ export function ServicesGridBlock({
                     <motion.div key={service.title || i} variants={fadeInUp}>
                       <Link
                         href={targetHref}
-                        className="group flex flex-row sm:flex-col items-center justify-between bg-[#EBF5F0] hover:bg-[#DFEFE8] transition-all duration-200 rounded-2xl p-3.5 sm:p-5 h-auto sm:h-full sm:min-h-[190px] text-left sm:text-center"
+                        className="group flex flex-row sm:flex-col items-center justify-between bg-[#E6F4EA] hover:bg-[#D3EBD9] transition-all duration-200 rounded-2xl p-3.5 sm:p-5 h-auto sm:h-full sm:min-h-[190px] text-left sm:text-center"
                       >
                         {/* Icon Badge */}
                         <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-white shadow-xs flex items-center justify-center p-2.5 sm:p-3.5 shrink-0 sm:my-auto transition-transform duration-200 group-hover:scale-105">
-                          <IconComponent className="w-6 h-6 sm:w-10 sm:h-10 text-[#2B7A78] stroke-[1.75]" />
+                          <IconComponent className="w-6 h-6 sm:w-10 sm:h-10 text-brand-primary-dark stroke-[1.75]" />
                         </div>
 
                         {/* Title & Arrow Container */}
-                        <div className="w-full pl-3 sm:pl-0 sm:pt-3 sm:border-t border-[#CBE2D7] flex items-center justify-between gap-2 sm:mt-auto">
-                          <span className="text-sm font-semibold text-[#1F5150] truncate">
+                        <div className="w-full pl-3 sm:pl-0 sm:pt-3 sm:border-t border-[#BFE0C8] flex items-center justify-between gap-2 sm:mt-auto">
+                          <span className="text-sm font-semibold text-[#1F5C30] truncate">
                             {service.title}
                           </span>
-                          <ArrowRight className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#2B7A78] shrink-0 transform group-hover:translate-x-1 sm:group-hover:translate-x-0.5 transition-transform" />
+                          <ArrowRight className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-brand-primary-dark shrink-0 transform group-hover:translate-x-1 sm:group-hover:translate-x-0.5 transition-transform" />
                         </div>
                       </Link>
                     </motion.div>
@@ -407,7 +407,7 @@ export function ServicesGridBlock({
               <div className="block lg:hidden pt-6 sm:pt-8 w-full text-center">
                 <Link
                   href={`/${locale}/treatment-details`}
-                  className="inline-flex items-center justify-center gap-3 bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary text-xs sm:text-sm px-8 py-3.5 rounded-xl transition-colors shadow-sm group"
+                  className="inline-flex items-center justify-center gap-3 bg-brand-primary hover:bg-white border border-brand-primary text-on-primary hover:text-brand-primary-dark text-xs sm:text-sm px-8 py-3.5 rounded-xl transition-colors shadow-sm group"
                 >
                   <span>View details</span>
                   <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />

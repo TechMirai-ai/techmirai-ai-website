@@ -17,13 +17,13 @@ const accentLineMap: Record<string, string> = {
 }
 
 const accentTextMap: Record<string, string> = {
-  brand: 'text-[var(--color-primary)]',
+  brand: 'text-brand-primary-dark',
   dark: 'text-[var(--color-neutral-900)]',
   light: 'text-[var(--color-neutral-500,#6b7280)]',
 }
 
 const accentBadgeMap: Record<string, string> = {
-  brand: 'bg-[var(--color-primary)] text-white',
+  brand: 'bg-[var(--color-primary)] text-on-primary',
   dark: 'bg-[var(--color-neutral-900)] text-white',
   light: 'bg-[var(--color-neutral-200,#e5e7eb)] text-[var(--color-text)]',
 }

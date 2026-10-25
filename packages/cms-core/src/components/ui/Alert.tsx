@@ -11,7 +11,7 @@ interface AlertProps {
 }
 
 const variantConfig: Record<AlertVariant, { border: string; icon: typeof Info; iconColor: string }> = {
-  info: { border: 'border-[var(--color-primary)]', icon: Info, iconColor: 'text-[var(--color-primary)]' },
+  info: { border: 'border-[var(--color-primary)]', icon: Info, iconColor: 'text-brand-primary-dark' },
   success: { border: 'border-[var(--color-success)]', icon: CheckCircle2, iconColor: 'text-[var(--color-success)]' },
   warning: { border: 'border-[var(--color-warning)]', icon: AlertTriangle, iconColor: 'text-[var(--color-warning)]' },
   danger: { border: 'border-[var(--color-error)]', icon: AlertCircle, iconColor: 'text-[var(--color-error)]' },

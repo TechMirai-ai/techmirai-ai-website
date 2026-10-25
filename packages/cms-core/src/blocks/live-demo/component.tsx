@@ -43,7 +43,7 @@ export function LiveDemoBlock({
             <ul className="flex flex-col gap-2 mb-6">
               {checklistItems.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-[13.5px] text-text-primary">
-                  <Check className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                  <Check className="w-4 h-4 text-brand-primary-dark shrink-0 mt-0.5" strokeWidth={2.5} />
                   <span>{item.text}</span>
                 </li>
               ))}
@@ -57,7 +57,7 @@ export function LiveDemoBlock({
             // rejects any href containing "[" / "]".
             <a
               href={buttonHref}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary px-8 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-brand-primary-dark"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary px-8 py-3 text-sm font-semibold text-on-primary shadow-md transition-all hover:brightness-110"
             >
               {buttonLabel}
             </a>
@@ -112,7 +112,7 @@ export function LiveDemoBlock({
             {tile.buttonLabel && (
               <Link
                 href={withLocale(locale, tile.href)}
-                className="mt-1 inline-flex items-center gap-1 text-[12.5px] font-semibold text-brand-primary hover:underline"
+                className="mt-1 inline-flex items-center gap-1 text-[12.5px] font-semibold text-brand-primary-dark hover:underline"
               >
                 <span>{tile.buttonLabel}</span>
                 <span aria-hidden="true">→</span>

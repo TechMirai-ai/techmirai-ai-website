@@ -51,7 +51,7 @@ export function ExampleChatBlock({ customerLabel, turns }: ExampleChatBlockProps
                   className={
                     isAi
                       ? 'max-w-[85%] rounded-2xl rounded-tl-sm bg-white border border-border-default px-4 py-2.5 text-[13.5px] leading-relaxed text-text-primary whitespace-pre-wrap'
-                      : 'max-w-[85%] rounded-2xl rounded-tr-sm bg-brand-primary px-4 py-2.5 text-[13.5px] leading-relaxed text-white whitespace-pre-wrap'
+                      : 'max-w-[85%] rounded-2xl rounded-tr-sm bg-brand-primary px-4 py-2.5 text-[13.5px] leading-relaxed text-on-primary whitespace-pre-wrap'
                   }
                 >
                   {turn.message}

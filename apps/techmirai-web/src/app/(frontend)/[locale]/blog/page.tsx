@@ -196,7 +196,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
                 href="?"
                 className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                   !category
-                    ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
+                    ? 'bg-[var(--color-primary)] text-on-primary border-[var(--color-primary)]'
                     : 'border-neutral-300 text-[var(--color-text)] hover:border-[var(--color-primary)]'
                 }`}
               >
@@ -208,7 +208,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
                   href={`?category=${encodeURIComponent(cat)}`}
                   className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     category === cat
-                      ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
+                      ? 'bg-[var(--color-primary)] text-on-primary border-[var(--color-primary)]'
                       : 'border-neutral-300 text-[var(--color-text)] hover:border-[var(--color-primary)]'
                   }`}
                 >
@@ -239,7 +239,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
                   <li key={post.slug}>
                     <Card as="article" hover className="flex flex-col h-full p-6">
                       {post.category && (
-                        <Text className="text-xs font-medium text-[var(--color-primary)] uppercase tracking-wide mb-2">
+                        <Text className="text-xs font-medium text-brand-primary-dark uppercase tracking-wide mb-2">
                           {post.category}
                         </Text>
                       )}
@@ -257,7 +257,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
                         </Text>
                         <Link
                           href={href}
-                          className="text-sm font-medium text-[var(--color-primary)] hover:underline shrink-0 ml-2"
+                          className="text-sm font-medium text-brand-primary-dark hover:underline shrink-0 ml-2"
                         >
                           {readMoreLabels[locale]} →
                         </Link>

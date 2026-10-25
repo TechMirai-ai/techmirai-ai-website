@@ -33,7 +33,7 @@ export function BeforeAfterBlock({
             <tr className="border-b border-border-default bg-bg-secondary">
               <th className="py-3 px-4 text-[13px] font-semibold text-text-muted w-[26%]"> </th>
               <th className="py-3 px-4 text-[13px] font-semibold text-text-secondary">{beforeLabel}</th>
-              <th className="py-3 px-4 text-[13px] font-semibold text-brand-primary">{afterLabel}</th>
+              <th className="py-3 px-4 text-[13px] font-semibold text-brand-primary-dark">{afterLabel}</th>
             </tr>
           </thead>
           <motion.tbody
@@ -76,7 +76,7 @@ export function BeforeAfterBlock({
                 {row.before}
               </p>
               <p className="text-[12.5px] text-text-primary font-medium">
-                <span className="font-semibold text-brand-primary">{afterLabel}: </span>
+                <span className="font-semibold text-brand-primary-dark">{afterLabel}: </span>
                 {row.after}
               </p>
             </div>

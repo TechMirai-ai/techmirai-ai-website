@@ -51,7 +51,7 @@ export default async function PrivacyPage({ params }: Props) {
       {breadcrumb && <JsonLd data={breadcrumb} />}
       <LegalPage locale={locale} page="privacy" />
       <Container className="max-w-3xl pb-24">
-        <aside className="rounded-2xl border border-dashed border-emerald-300 bg-white p-6 shadow-sm">
+        <aside className="rounded-2xl border border-dashed border-brand-primary/40 bg-white p-6 shadow-sm">
           <Heading level={2} className="mb-2 text-base font-semibold">
             {note.heading}
           </Heading>

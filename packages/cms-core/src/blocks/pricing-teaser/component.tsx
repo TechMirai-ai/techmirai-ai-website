@@ -44,7 +44,7 @@ export function PricingTeaserBlock({
         {buttonLabel && buttonHref && (
           <Link
             href={buttonHref}
-            className="mt-2 inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-white hover:opacity-90 transition-opacity"
+            className="mt-2 inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-on-primary hover:opacity-90 transition-opacity"
           >
             {buttonLabel}
           </Link>

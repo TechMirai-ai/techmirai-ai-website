@@ -37,7 +37,7 @@ export function ReceptionWidget({
   clinicName,
   hostLinks,
   handoffHours,
-  accentColor = '#0F6E56',
+  accentColor = '#47A35A',
 }: ReceptionWidgetProps) {
   const [open, setOpen] = useState(false)
   const [render, setRender] = useState(false)
@@ -123,7 +123,7 @@ export function ReceptionWidget({
         onClick={toggle}
         aria-label={CHAT_WIDGET_TITLE}
         aria-expanded={open}
-        className="relative grid h-14 w-14 place-items-center rounded-full bg-[var(--reception-accent)] text-white shadow-lg outline-none transition hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[var(--reception-accent)] focus-visible:ring-offset-2"
+        className="relative grid h-14 w-14 place-items-center rounded-full bg-[var(--reception-accent)] text-on-primary shadow-lg outline-none transition hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[var(--reception-accent)] focus-visible:ring-offset-2"
       >
         {open ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">

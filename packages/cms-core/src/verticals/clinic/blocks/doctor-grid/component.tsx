@@ -58,7 +58,7 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
                 {/* Director Photo with Green Shade Overlay */}
-                <div className="group relative lg:col-span-7 min-h-[340px] sm:min-h-[420px] lg:min-h-[480px] w-full bg-[#EBF5F0] overflow-hidden cursor-pointer">
+                <div className="group relative lg:col-span-7 min-h-[340px] sm:min-h-[420px] lg:min-h-[480px] w-full bg-[#E6F4EA] overflow-hidden cursor-pointer">
                   {director.photoUrl ? (
                     <Image
                       src={director.photoUrl}
@@ -69,13 +69,13 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
                       priority
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-[#2B7A78]">
+                    <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-brand-primary-dark">
                       {director.name.charAt(0)}
                     </div>
                   )}
 
                   {/* Green Tint Overlay with Dynamic "Know more about [Name]" text */}
-                  <div className="absolute inset-0 bg-[#2B7A78]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-8 text-center text-white">
+                  <div className="absolute inset-0 bg-brand-primary-dark/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-8 text-center text-white">
                     <p className="text-base sm:text-xl tracking-tight transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2">
                       <span>Know more about {director.name}</span>
                       <ArrowRight className="w-5 h-5 shrink-0" />
@@ -92,7 +92,7 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
                       {director.name}
                     </h3>
                     {director.title && (
-                      <p className="text-sm sm:text-base font-medium text-[#2B7A78] mt-1">
+                      <p className="text-sm sm:text-base font-medium text-brand-primary-dark mt-1">
                         {director.title}
                       </p>
                     )}
@@ -134,7 +134,7 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
                   className="group overflow-hidden rounded-2xl bg-white border border-[#eedad5] shadow-xs transition-all duration-200"
                 >
                   {/* Staff Photo with Green Shade Overlay */}
-                  <div className="relative h-64 sm:h-72 w-full bg-[#EBF5F0] overflow-hidden cursor-pointer">
+                  <div className="relative h-64 sm:h-72 w-full bg-[#E6F4EA] overflow-hidden cursor-pointer">
                     {staff.photoUrl ? (
                       <Image
                         src={staff.photoUrl}
@@ -144,13 +144,13 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
                         sizes="(max-width: 640px) 100vw, 33vw"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-[#2B7A78]">
+                      <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-brand-primary-dark">
                         {staff.name.charAt(0)}
                       </div>
                     )}
 
                     {/* Green Tint Overlay with Dynamic "Know more about [Name]" text */}
-                    <div className="absolute inset-0 bg-[#2B7A78]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-5 text-center text-white">
+                    <div className="absolute inset-0 bg-brand-primary-dark/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-5 text-center text-white">
                       <p className="text-xs sm:text-sm font-bold tracking-tight transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 flex items-center justify-center gap-1.5 leading-snug">
                         <span>Know more about {staff.name}</span>
                         <ArrowRight className="w-4 h-4 shrink-0" />
@@ -164,7 +164,7 @@ export function DoctorGridBlock({ eyebrow, heading, subheadline, doctors, showBi
                     </h4>
 
                     {staff.title && (
-                      <p className="text-xs font-semibold text-[#2B7A78]">
+                      <p className="text-xs font-semibold text-brand-primary-dark">
                         {staff.title}
                       </p>
                     )}

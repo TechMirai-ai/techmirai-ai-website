@@ -31,9 +31,9 @@ export function ScrollToTop() {
         >
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1.5 rounded-full bg-white border border-brand-primary/20 px-5 py-2.5 text-sm font-semibold text-brand-primary shadow-md hover:bg-slate-50 hover:border-brand-primary/40 hover:shadow-lg transition-all duration-200"
+            className="flex items-center gap-1.5 rounded-full bg-white border border-brand-primary/20 px-5 py-2.5 text-sm font-semibold text-brand-primary-dark shadow-md hover:bg-slate-50 hover:border-brand-primary/40 hover:shadow-lg transition-all duration-200"
           >
-            <ArrowUp className="h-4 w-4 text-brand-primary" />
+            <ArrowUp className="h-4 w-4 text-brand-primary-dark" />
             Top
           </button>
         </motion.div>

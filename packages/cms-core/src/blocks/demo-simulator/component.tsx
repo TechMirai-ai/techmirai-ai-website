@@ -73,7 +73,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
               type="button"
               disabled={!consent}
               onClick={() => setPhase('choose')}
-              className="mt-5 rounded-full bg-brand-primary px-7 py-3 text-[14px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-5 rounded-full bg-brand-primary px-7 py-3 text-[14px] font-semibold text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
               {startLabel}
             </button>

@@ -63,7 +63,7 @@ export function DepartmentListBlock({ eyebrow, heading, subheadline, departments
     <section aria-labelledby="department-list-heading" className="w-full bg-brand-surface pt-12 md:pt-16 pb-12 md:pb-20 overflow-hidden">
       
       {/* Blue/Green Section Wrapper */}
-      <div className="relative w-full bg-[#BBDACD] pt-12 md:pt-16 pb-16 md:pb-20 px-4 md:px-8">
+      <div className="relative w-full bg-[#B8DEC2] pt-12 md:pt-16 pb-16 md:pb-20 px-4 md:px-8">
         
         {/* TOP: Scalloped Wave SVG */}
         <div className="absolute left-0 right-0 -top-[39px] md:-top-[79px] w-full overflow-hidden leading-none pointer-events-none">
@@ -74,7 +74,7 @@ export function DepartmentListBlock({ eyebrow, heading, subheadline, departments
           >
             <path
               d="M0,120 Q 150,20 300,120 Q 450,20 600,120 Q 750,20 900,120 Q 1050,20 1200,120 L 1200,120 L 0,120 Z"
-              fill="#BBDACD"
+              fill="#B8DEC2"
             />
           </svg>
         </div>
@@ -126,7 +126,7 @@ export function DepartmentListBlock({ eyebrow, heading, subheadline, departments
           >
             <path
               d="M0,0 Q400,0 600,120 Q800,0 1200,0 L1200,0 L0,0 Z"
-              fill="#BBDACD"
+              fill="#B8DEC2"
             />
           </svg>
         </div>

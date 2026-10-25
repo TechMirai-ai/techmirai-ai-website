@@ -61,9 +61,9 @@ function HeroButtons({
 }) {
   if (!primaryButton?.label && !secondaryButton?.label) return null
   const primaryClassName =
-    'inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md'
+    'inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition-all duration-200 hover:brightness-110 hover:shadow-md'
   const secondaryClassName =
-    'inline-flex items-center justify-center rounded-full border border-brand-primary px-6 py-2.5 text-sm font-semibold text-brand-primary transition-all duration-200 hover:bg-brand-primary-light'
+    'inline-flex items-center justify-center rounded-full border border-brand-primary px-6 py-2.5 text-sm font-semibold text-brand-primary-dark transition-all duration-200 hover:bg-brand-primary-light'
   return (
     <div className="mt-6 flex flex-wrap items-center gap-3">
       {primaryButton?.label &&
@@ -120,7 +120,7 @@ function PlainTextHeroVariant({
     <section className="w-full px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-10 md:pb-14 bg-brand-surface">
       <div className={`mx-auto max-w-3xl ${alignClass}`}>
         {eyebrow && (
-          <p className="text-[12.5px] font-semibold uppercase tracking-wider text-brand-primary mb-2">{eyebrow}</p>
+          <p className="text-[12.5px] font-semibold uppercase tracking-wider text-brand-primary-dark mb-2">{eyebrow}</p>
         )}
         {heading && (
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-text-primary leading-tight">
@@ -217,7 +217,7 @@ export function PageHeroBlock({
               <p className="text-[12px] font-semibold uppercase tracking-wider text-slate-500 mb-1">{eyebrow}</p>
             )}
             {heading && (
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#2A9D8F] leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-primary-dark leading-tight">
                 {heading}
               </h1>
             )}
@@ -240,7 +240,7 @@ export function PageHeroBlock({
     <ol className="flex flex-wrap items-center gap-3">
       {breadcrumbItems.map((item, i) => {
         const buttonClasses =
-          "group inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-slate-200 text-sm font-semibold text-[#2A9D8F] shadow-sm hover:border-[#2A9D8F]/40 hover:bg-slate-50/80 hover:text-[#1F7A6F] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+          "group inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-slate-200 text-sm font-semibold text-brand-primary-dark shadow-sm hover:border-brand-primary-dark/40 hover:bg-slate-50/80 hover:text-[#1F7A6F] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
 
         return (
           <li key={i}>

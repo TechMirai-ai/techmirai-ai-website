@@ -39,7 +39,7 @@ export async function GET(request: Request): Promise<Response> {
     return new Response('Share image unavailable', { status: 500 })
   }
 
-  const { primary } = siteConfig.brand.colors
+  const { primary, secondary } = siteConfig.brand.colors
   return new ImageResponse(
     (
       <div
@@ -51,7 +51,7 @@ export async function GET(request: Request): Promise<Response> {
           justifyContent: 'space-between',
           padding: '72px 80px',
           backgroundColor: primary,
-          color: '#FFFFFF',
+          color: secondary,
           fontFamily: 'Noto Sans JP',
         }}
       >

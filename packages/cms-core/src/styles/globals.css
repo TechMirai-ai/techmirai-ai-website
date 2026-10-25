@@ -5,57 +5,59 @@
 
 /* ─── Brand token definitions (single source of truth, not overridden at runtime) ─── */
 /* Pack-2/D2: realigned to match site.config.ts's brand.colors (was drifted —
-   #047857 here vs. #0F6E56 there). --color-brand-dark/--color-brand-accent*
+   #047857 here vs. the old green there). --color-brand-dark/--color-brand-accent*
    repurposed to the Spec's navy/orange accents; TEMPORARY exact hex values,
    see docs/PLACEHOLDER-REGISTER.md. */
 :root {
-  --color-brand-primary:        #0F6E56;
-  --color-brand-primary-dark:   #0D5E49;
-  --color-brand-primary-light:  #E1F5EE;
+  --color-brand-primary:        #47A35A;
+  --color-brand-primary-dark:   #2A783D;
+  --color-brand-primary-light:  #E6F4EA;
   --color-brand-dark:           #1B2A45;
-  --color-brand-accent:         #D97706;
+  --color-brand-accent:         #7b7fd0;  /* #D97706 */
   --color-brand-accent-hover:   #B45309;
   --color-bg-primary:           #FFFFFF;
-  --color-bg-secondary:         #F7FAF9;
-  --color-bg-tertiary:          #E1F5EE;
-  --color-text-primary:         #04342C;
-  --color-text-secondary:       #4B6B63;
-  --color-text-muted:           #4B6B63;
+  --color-bg-secondary:         #F7FAF8;
+  --color-bg-tertiary:          #E6F4EA;
+  --color-text-primary:         #1B2A45;
+  --color-text-secondary:       #4A5568;
+  --color-text-muted:           #4A5568;
   --color-text-on-dark:         #FFFFFF;
   --color-text-on-accent:       #FFFFFF;
+  --color-on-primary:           #1B2A45;
   --color-border-default:       #E2E8E7;
   --color-border-strong:        #C0C5C4;
 }
 
 @theme {
   /* ─── Brand tokens (generate Tailwind utilities: bg-brand-primary, text-brand-accent, etc.) ─── */
-  --color-brand-primary:        #0F6E56;
-  --color-brand-primary-dark:   #0D5E49;
-  --color-brand-primary-light:  #E1F5EE;
+  --color-brand-primary:        #47A35A;
+  --color-brand-primary-dark:   #2A783D;
+  --color-brand-primary-light:  #E6F4EA;
   --color-brand-dark:           #1B2A45;
-  --color-brand-accent:         #D97706;
+  --color-brand-accent:         #7b7fd0;  /* #D97706 */
   --color-brand-accent-hover:   #B45309;
   --color-bg-primary:           #FFFFFF;
-  --color-bg-secondary:         #F7FAF9;
-  --color-bg-tertiary:          #E1F5EE;
-  --color-text-primary:         #04342C;
-  --color-text-secondary:       #4B6B63;
-  --color-text-muted:           #4B6B63;
+  --color-bg-secondary:         #F7FAF8;
+  --color-bg-tertiary:          #E6F4EA;
+  --color-text-primary:         #1B2A45;
+  --color-text-secondary:       #4A5568;
+  --color-text-muted:           #4A5568;
   --color-text-on-dark:         #FFFFFF;
   --color-text-on-accent:       #FFFFFF;
+  --color-on-primary:           #1B2A45;
   --color-border-default:       #E2E8E7;
   --color-border-strong:        #C0C5C4;
 
   /* ─── Semantic brand colors (concrete defaults; overridden at runtime via wrapperStyle) ─── */
-  --color-primary: #0F6E56;
+  --color-primary: #47A35A;
   --color-secondary: #1B2A45;
-  --color-accent: #D97706;
-  --color-background: #F7FAF9;
+  --color-accent: #7b7fd0;  /* #D97706 */
+  --color-background: #F7FAF8;
   --color-surface: #FFFFFF;
-  --color-text: #04342C;
-  --color-muted: #4B6B63;
+  --color-text: #1B2A45;
+  --color-muted: #4A5568;
   --color-error: #DC2626;
-  --color-success: #12823B;
+  --color-success: #2A783D;
   --color-warning: #A35905;
 
   /* ─── Neutral palette (slate) ─── */

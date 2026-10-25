@@ -29,7 +29,7 @@ function TreatmentIcon({ iconName }: { iconName?: string }) {
   const IconComponent = ICON_MAP[iconName]
   if (!IconComponent) return null
 
-  return <IconComponent className="w-12 h-12 text-[#2A9D8F] stroke-[1.75]" />
+  return <IconComponent className="w-12 h-12 text-brand-primary-dark stroke-[1.75]" />
 }
 
 const COPY = {
@@ -54,7 +54,7 @@ export function TreatmentListBlock({ treatments }: TreatmentListBlockProps) {
       >
         {treatments.map((treatment, index) => {
           const isEven = index % 2 === 0
-          const bgColor = isEven ? 'bg-[#F0F6F3]' : 'bg-brand-surface'
+          const bgColor = isEven ? 'bg-[#F0F7F2]' : 'bg-brand-surface'
 
           return (
             <motion.div
@@ -71,7 +71,7 @@ export function TreatmentListBlock({ treatments }: TreatmentListBlockProps) {
                 </div>
 
                 {/* Title Header */}
-                <div className="text-2xl sm:text-3xl md:text-4xl text-brand-primary mb-6 tracking-tight font-semibold">
+                <div className="text-2xl sm:text-3xl md:text-4xl text-brand-primary-dark mb-6 tracking-tight font-semibold">
                   {treatment.heading}
                 </div>
 

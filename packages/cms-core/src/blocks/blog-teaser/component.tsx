@@ -18,7 +18,7 @@ function withLocale(locale: string, href: string): string {
 // Category-to-gradient fallback for posts without a thumbnail
 const CATEGORY_GRADIENTS = [
   'from-blue-500 to-indigo-600',
-  'from-emerald-500 to-teal-600',
+  'from-brand-primary to-brand-primary-dark',
   'from-violet-500 to-purple-600',
   'from-amber-500 to-orange-600',
   'from-rose-500 to-pink-600',

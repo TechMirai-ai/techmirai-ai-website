@@ -56,7 +56,7 @@ export function CaseStudiesGridBlock({
           {/* LEFT SIDE */}
           <div className="md:col-span-2 space-y-4 md:space-y-6 min-w-0">
             {eyebrow && (
-              <p className="text-sm font-semibold tracking-widest text-brand-primary uppercase">
+              <p className="text-sm font-semibold tracking-widest text-brand-primary-dark uppercase">
                 {eyebrow}
               </p>
             )}
@@ -74,7 +74,7 @@ export function CaseStudiesGridBlock({
 
             <Link
               href={`/${locale}${buttonHref}`}
-              className="inline-flex max-w-full items-center justify-center gap-2 text-center leading-snug bg-brand-primary hover:bg-brand-primary/90 text-white px-6 md:px-8 py-3 md:py-3.5 rounded-full font-medium transition-all text-sm md:text-base"
+              className="inline-flex max-w-full items-center justify-center gap-2 text-center leading-snug bg-brand-primary hover:bg-brand-primary/90 text-on-primary px-6 md:px-8 py-3 md:py-3.5 rounded-full font-medium transition-all text-sm md:text-base"
             >
               {buttonLabel} →
             </Link>

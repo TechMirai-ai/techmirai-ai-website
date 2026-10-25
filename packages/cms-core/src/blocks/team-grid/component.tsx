@@ -38,7 +38,7 @@ function Card({
       </div>
       <div>
         <h3 className="text-[14.5px] font-bold text-text-primary leading-snug">{name}</h3>
-        {title && <p className="text-[12.5px] font-semibold text-brand-primary">{title}</p>}
+        {title && <p className="text-[12.5px] font-semibold text-brand-primary-dark">{title}</p>}
       </div>
       {bioParagraphs
         ? bioParagraphs.map((para, i) => (
@@ -116,7 +116,7 @@ export function TeamGridBlock({
         <div className="mx-auto max-w-6xl mt-8 text-center">
           <Link
             href={withLocale(locale, buttonHref)}
-            className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-white hover:opacity-90 transition-opacity"
+            className="inline-flex items-center justify-center rounded-full bg-brand-primary px-5 py-2.5 text-[13.5px] font-semibold text-on-primary hover:opacity-90 transition-opacity"
           >
             {buttonLabel}
           </Link>

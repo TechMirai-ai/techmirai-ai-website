@@ -60,7 +60,7 @@ export function CallFlowBlock({
                     : 'border-border-default bg-white text-text-primary'
                 }`}
               >
-                <span className="mb-1 block text-[11px] font-bold text-brand-primary">{i + 1}</span>
+                <span className="mb-1 block text-[11px] font-bold text-brand-primary-dark">{i + 1}</span>
                 {step.label}
               </li>
             )

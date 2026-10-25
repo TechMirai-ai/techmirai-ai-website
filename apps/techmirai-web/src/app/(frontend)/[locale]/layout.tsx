@@ -125,7 +125,7 @@ export default async function LocaleLayout({
       <div className={fontClasses} style={wrapperStyle}>
         <a
           href="#main-content"
-          className="absolute -top-full left-4 z-50 rounded bg-primary px-4 py-2 text-sm font-medium text-white transition-all focus:top-4"
+          className="absolute -top-full left-4 z-50 rounded bg-primary px-4 py-2 text-sm font-medium text-on-primary transition-all focus:top-4"
         >
           {skipLabel[locale] ?? skipLabel['en']}
         </a>

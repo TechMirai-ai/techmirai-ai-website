@@ -532,7 +532,7 @@ export function AssessmentForm({ locale: rawLocale }: AssessmentFormProps) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full min-h-[48px] rounded-lg bg-[var(--color-primary)] px-6 py-3 text-base font-medium text-white hover:opacity-90 disabled:opacity-60 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+        className="w-full min-h-[48px] rounded-lg bg-[var(--color-primary)] px-6 py-3 text-base font-medium text-on-primary hover:opacity-90 disabled:opacity-60 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
       >
         {status === 'submitting' ? t.submitting : t.submit}
       </button>

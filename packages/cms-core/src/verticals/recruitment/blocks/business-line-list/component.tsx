@@ -69,7 +69,7 @@ function RowItem({ item, index }: { item: ExtendedBusinessLineItem; index: numbe
         <div className={`flex flex-col ${hasImage && !isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
           
           {item.eyebrow && (
-            <p className="text-sm font-semibold uppercase tracking-[2px] text-[var(--color-primary)] mb-3">
+            <p className="text-sm font-semibold uppercase tracking-[2px] text-brand-primary-dark mb-3">
               {item.eyebrow}
             </p>
           )}
@@ -102,7 +102,7 @@ function RowItem({ item, index }: { item: ExtendedBusinessLineItem; index: numbe
           {item.ctaLabel && item.ctaHref && (
             <Link
               href={withLocale(locale, item.ctaHref)}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors group"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-primary-dark hover:text-brand-primary-dark transition-colors group"
             >
               {item.ctaLabel}
               <span className="transition-transform group-hover:translate-x-1">→</span>

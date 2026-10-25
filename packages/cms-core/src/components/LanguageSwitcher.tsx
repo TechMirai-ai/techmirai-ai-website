@@ -126,7 +126,7 @@ export function LanguageSwitcher({
               'px-2.5 py-1.5 rounded-md text-sm font-medium min-h-[44px] min-w-[44px] transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]',
               locale === currentLocale
-                ? 'bg-[var(--color-primary)] text-white'
+                ? 'bg-[var(--color-primary)] text-on-primary'
                 : 'text-[var(--color-text)] hover:bg-neutral-100',
             ].join(' ')}
           >

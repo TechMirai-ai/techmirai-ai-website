@@ -10,10 +10,10 @@ interface BadgeProps {
 
 const variantClasses: Record<BadgeVariant, string> = {
   neutral: 'bg-[var(--color-surface-subtle)] text-[var(--color-text)] border border-[var(--color-border-default)]',
-  primary: 'bg-[var(--color-primary)] text-white',
+  primary: 'bg-[var(--color-primary)] text-on-primary',
   // Accent text on tint background — darkened from the raw accent token so it
-  // still clears 4.5:1 at badge text size (raw #1D9E75 on tint is only ~3:1).
-  accent: 'bg-[var(--color-surface-alt)] text-[#167758]',
+  // still clears 4.5:1 at badge text size (raw #47A35A on tint is only ~3:1).
+  accent: 'bg-[var(--color-surface-alt)] text-[#2A783D]',
 }
 
 export function Badge({ children, variant = 'neutral', className = '' }: BadgeProps) {

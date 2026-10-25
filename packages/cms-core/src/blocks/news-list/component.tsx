@@ -48,7 +48,7 @@ export function NewsListBlock({ heading, items, viewAllCta }: NewsListBlockProps
                 className="w-9 h-9 object-contain mx-auto"
               />
             </div>
-            <h2 className="text-3xl md:text-4xl mt-3 font-extrabold tracking-tight text-brand-primary leading-none text-center">
+            <h2 className="text-3xl md:text-4xl mt-3 font-extrabold tracking-tight text-brand-primary-dark leading-none text-center">
               {heading}
             </h2>
             <span className="text-[11px] font-black uppercase tracking-widest text-gray-900 text-center block -mt-5">
@@ -77,7 +77,7 @@ export function NewsListBlock({ heading, items, viewAllCta }: NewsListBlockProps
                     <div className="flex items-center gap-4 shrink-0 sm:contents">
                       {/* Pill Badge */}
                       {item.category && (
-                        <span className="inline-flex items-center justify-center rounded-full border border-brand-primary px-4 py-1 text-xs text-brand-primary hover:bg-brand-primary hover:text-white transition-all duration-200 shrink-0 min-w-[80px] text-center sm:order-2">
+                        <span className="inline-flex items-center justify-center rounded-full border border-brand-primary px-4 py-1 text-xs text-brand-primary-dark hover:bg-brand-primary hover:text-on-primary transition-all duration-200 shrink-0 min-w-[80px] text-center sm:order-2">
                           {item.category.toLowerCase()}
                         </span>
                       )}
@@ -91,7 +91,7 @@ export function NewsListBlock({ heading, items, viewAllCta }: NewsListBlockProps
                     </div>
 
                     {/* Headline: Placed on a new line on mobile, inline on desktop */}
-                    <span className="text-sm sm:text-base text-gray-900 group-hover:text-brand-primary transition-colors duration-150 line-clamp-2 sm:line-clamp-1 sm:order-3">
+                    <span className="text-sm sm:text-base text-gray-900 group-hover:text-brand-primary-dark transition-colors duration-150 line-clamp-2 sm:line-clamp-1 sm:order-3">
                       {item.headline}
                     </span>
                   </Link>
@@ -104,12 +104,12 @@ export function NewsListBlock({ heading, items, viewAllCta }: NewsListBlockProps
               <div className="flex justify-end pt-4">
                 <Link
                   href={withLocale(locale, viewAllCta.href)}
-                  className="group inline-flex items-center gap-3 text-sm text-gray-900 hover:text-brand-primary transition-colors"
+                  className="group inline-flex items-center gap-3 text-sm text-gray-900 hover:text-brand-primary-dark transition-colors"
                 >
                   <span>
                     {viewAllCta.label || (locale === 'ja' ? 'お知らせ一覧' : 'List of announcements')}
                   </span>
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary text-white border border-brand-primary group-hover:bg-white group-hover:text-brand-primary transition-all duration-200 group-hover:scale-110">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary text-on-primary border border-brand-primary group-hover:bg-white group-hover:text-brand-primary-dark transition-all duration-200 group-hover:scale-110">
                     →
                   </span>
                 </Link>

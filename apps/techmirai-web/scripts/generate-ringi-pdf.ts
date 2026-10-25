@@ -69,9 +69,9 @@ function buildHtml(): string {
 
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>TechMirai — overview for internal approval</title>
 <style>
-  body { font-family: "Noto Sans JP", "Segoe UI", sans-serif; color: #04342C; font-size: 11pt; line-height: 1.7; margin: 0; }
-  h1 { font-size: 18pt; color: #0F6E56; margin: 0 0 4pt; }
-  h2 { font-size: 12.5pt; color: #0F6E56; margin: 14pt 0 3pt; border-bottom: 1px solid #E2E8E7; }
+  body { font-family: "Noto Sans JP", "Segoe UI", sans-serif; color: #1B2A45; font-size: 11pt; line-height: 1.7; margin: 0; }
+  h1 { font-size: 18pt; color: #2A783D; margin: 0 0 4pt; }
+  h2 { font-size: 12.5pt; color: #2A783D; margin: 14pt 0 3pt; border-bottom: 1px solid #E2E8E7; }
   p { margin: 3pt 0; }
   .draft { background: #FFF7E6; border: 1px solid #D97706; padding: 6pt 8pt; font-size: 9.5pt; margin-bottom: 10pt; }
 </style></head><body>

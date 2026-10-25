@@ -162,7 +162,7 @@ export function HeroBlock({
               {eyebrow}
             </p>
           )}
-          <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl font-extrabold leading-[1.15] tracking-tight text-brand-primary">
+          <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl font-extrabold leading-[1.15] tracking-tight text-brand-primary-dark">
             {headline}
           </h1>
           {subheadline && (
@@ -185,14 +185,14 @@ export function HeroBlock({
           <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
             <Link
               href={withLocale('ja', '/')}
-              className={`transition-colors hover:text-brand-primary ${locale === 'ja' ? 'text-brand-primary font-bold' : ''}`}
+              className={`transition-colors hover:text-brand-primary-dark ${locale === 'ja' ? 'text-brand-primary-dark font-bold' : ''}`}
             >
               日本語
             </Link>
             <span className="text-gray-300">|</span>
             <Link
               href={withLocale('en', '/')}
-              className={`transition-colors hover:text-brand-primary ${locale === 'en' ? 'text-brand-primary font-bold' : ''}`}
+              className={`transition-colors hover:text-brand-primary-dark ${locale === 'en' ? 'text-brand-primary-dark font-bold' : ''}`}
             >
               English
             </Link>
@@ -207,13 +207,13 @@ export function HeroBlock({
               <span className="absolute -top-3 max-w-[90%] text-center leading-tight bg-[#EE7A93] text-white text-[10px] xl:text-xs font-bold px-2 xl:px-3 py-0.5 rounded-full shadow-sm transition-transform duration-200 group-hover:scale-105">
                 {resolvedPhone.badgeLabel}
               </span>
-              <div className="flex min-w-0 items-center justify-center gap-1 xl:gap-2 text-center leading-tight text-gray-900 group-hover:text-brand-primary font-black text-sm 2xl:text-base tracking-tight transition-colors duration-200">
-                <Phone className="w-3.5 h-3.5 xl:w-5 xl:h-5 fill-current text-gray-900 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
+              <div className="flex min-w-0 items-center justify-center gap-1 xl:gap-2 text-center leading-tight text-gray-900 group-hover:text-brand-primary-dark font-black text-sm 2xl:text-base tracking-tight transition-colors duration-200">
+                <Phone className="w-3.5 h-3.5 xl:w-5 xl:h-5 fill-current text-gray-900 group-hover:text-brand-primary-dark shrink-0 transition-colors duration-200" />
                 <span>{resolvedPhone.phoneDisplay}</span>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 group-hover:text-brand-primary mt-1.5 min-h-4 transition-colors duration-200">
-              <Phone className="w-3 h-3 text-gray-700 group-hover:text-brand-primary shrink-0 transition-colors duration-200" />
+            <div className="flex items-center justify-center gap-1 text-[10px] xl:text-xs text-gray-700 group-hover:text-brand-primary-dark mt-1.5 min-h-4 transition-colors duration-200">
+              <Phone className="w-3 h-3 text-gray-700 group-hover:text-brand-primary-dark shrink-0 transition-colors duration-200" />
               <span className="min-w-0 text-center leading-tight">{resolvedPhone.subLabel}</span>
             </div>
           </a>
@@ -324,7 +324,7 @@ export function HeroBlock({
                       {resolvedHoursRows.map((row) => (
                         <td key={row.day} className="py-1.5 px-0.5 text-center">
                           {row.morning ? (
-                            <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
+                            <span className="text-brand-primary-dark font-bold text-base sm:text-lg leading-none">○</span>
                           ) : (
                             <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
                           )}
@@ -342,7 +342,7 @@ export function HeroBlock({
                       {resolvedHoursRows.map((row) => (
                         <td key={row.day} className="py-1.5 px-0.5 text-center">
                           {row.afternoon ? (
-                            <span className="text-brand-primary font-bold text-base sm:text-lg leading-none">○</span>
+                            <span className="text-brand-primary-dark font-bold text-base sm:text-lg leading-none">○</span>
                           ) : (
                             <span className="text-gray-400 font-medium text-base sm:text-lg leading-none">—</span>
                           )}
@@ -367,12 +367,12 @@ export function HeroBlock({
             {/* Address */}
             <div className="mt-3 pt-3 sm:mt-4 sm:pt-4 border-t border-gray-100 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500">
               <div className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-brand-primary shrink-0" strokeWidth={2} />
+                <MapPin className="w-4 h-4 text-brand-primary-dark shrink-0" strokeWidth={2} />
                 <span className="tracking-wide text-[12px] sm:text-xs md:text-sm">{resolvedAddress.line}</span>
               </div>
               <a
                 href={resolvedAddress.mapHref}
-                className="px-3 py-0.5 text-xs font-medium border border-brand-primary text-brand-primary rounded-full hover:bg-text-secondary hover:text-white transition-colors whitespace-nowrap"
+                className="px-3 py-0.5 text-xs font-medium border border-brand-primary text-brand-primary-dark rounded-full hover:bg-text-secondary hover:text-white transition-colors whitespace-nowrap"
               >
                 {locale === 'ja' ? '地図を見る' : 'view map'}
               </a>
@@ -396,11 +396,11 @@ export function HeroBlock({
       >
         {Icon && (
           <Icon
-            className="w-5 h-5 sm:w-6 sm:h-6 text-brand-primary shrink-0 transition-transform duration-200 group-hover:scale-110"
+            className="w-5 h-5 sm:w-6 sm:h-6 text-brand-primary-dark shrink-0 transition-transform duration-200 group-hover:scale-110"
             strokeWidth={2}
           />
         )}
-        <span className="text-[11px] sm:text-xs xl:text-sm font-extrabold text-brand-primary leading-tight max-w-[120px] whitespace-pre-line">
+        <span className="text-[11px] sm:text-xs xl:text-sm font-extrabold text-brand-primary-dark leading-tight max-w-[120px] whitespace-pre-line">
           {item.label}
         </span>
       </Link>
@@ -431,9 +431,9 @@ export function HeroBlock({
   <div className="flex flex-col sm:flex-row lg:flex-col justify-center items-center gap-2.5 w-full mt-2">
     <Link
       href={resolvedReservation.href}
-      className="group bg-brand-primary hover:bg-white border border-brand-primary text-white hover:text-brand-primary active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-md transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
+      className="group bg-brand-primary hover:bg-white border border-brand-primary text-on-primary hover:text-brand-primary-dark active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-md transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
     >
-      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 xl:w-6 xl:h-6 shrink-0 text-white group-hover:text-brand-primary transition-colors" />
+      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 xl:w-6 xl:h-6 shrink-0 text-white group-hover:text-brand-primary-dark transition-colors" />
       <span>{resolvedReservation.label}</span>
     </Link>
     {secondaryButton?.label && secondaryButton.href && (
@@ -443,7 +443,7 @@ export function HeroBlock({
       // containing "[" / "]", which the current bracketed placeholder does.
       <a
         href={secondaryButton.href}
-        className="group bg-white hover:bg-brand-primary border border-brand-primary text-brand-primary hover:text-white active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-sm transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
+        className="group bg-white hover:bg-brand-primary border border-brand-primary text-brand-primary-dark hover:text-on-primary active:scale-[0.99] text-xs sm:text-sm xl:text-base text-center flex items-center justify-center gap-2 px-6 sm:px-8 xl:px-10 py-2 rounded-full shadow-sm transition-all duration-200 min-h-12 xl:min-h-14 w-full sm:w-auto lg:w-full max-w-xs lg:max-w-none leading-tight break-words"
       >
         <span>{secondaryButton.label}</span>
       </a>

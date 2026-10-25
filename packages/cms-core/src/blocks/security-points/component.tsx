@@ -41,7 +41,7 @@ export function SecurityPointsBlock({ heading, points, buttonLabel, buttonHref }
         <div className="mx-auto max-w-3xl mt-6 text-center">
           <Link
             href={buttonHref}
-            className="text-[13.5px] font-semibold text-brand-primary hover:underline underline-offset-2"
+            className="text-[13.5px] font-semibold text-brand-primary-dark hover:underline underline-offset-2"
           >
             {buttonLabel} →
           </Link>

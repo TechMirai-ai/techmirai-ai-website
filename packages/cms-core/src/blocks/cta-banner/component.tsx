@@ -163,7 +163,7 @@ export function CTABannerBlock({
                       href={withLocale(locale, primaryButton.href)}
                       className="inline-flex items-center gap-2 rounded-full bg-brand-primary
                                 px-6 py-2.5 text-sm font-semibold tracking-wider text-white shadow-sm
-                                transition-all duration-200 hover:bg-brand-primary-dark hover:shadow-md"
+                                transition-all duration-200 hover:brightness-110 hover:shadow-md"
                     >
                       <span>{primaryButton.label}</span>
                       <ArrowRight
@@ -177,7 +177,7 @@ export function CTABannerBlock({
                     <Link
                       href={withLocale(locale, secondaryButton.href)}
                       className="inline-flex items-center gap-2 rounded-full border border-brand-primary
-                                px-6 py-2.5 text-sm font-semibold tracking-wider text-brand-primary
+                                px-6 py-2.5 text-sm font-semibold tracking-wider text-brand-primary-dark
                                 transition-all duration-200 hover:bg-brand-primary-light"
                     >
                       {secondaryButton.label}
@@ -191,7 +191,7 @@ export function CTABannerBlock({
                 <div className="mt-4">
                   <Link
                     href={withLocale(locale, textLink.href)}
-                    className="text-[13px] font-semibold text-brand-primary hover:underline underline-offset-2"
+                    className="text-[13px] font-semibold text-brand-primary-dark hover:underline underline-offset-2"
                   >
                     {textLink.label} →
                   </Link>

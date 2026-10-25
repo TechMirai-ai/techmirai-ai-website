@@ -56,7 +56,7 @@ export function StatsBarBlock({
                 
                 {/* Optional value indicator safe-render */}
                 {item.value && (
-                  <span className="mt-1 text-xs font-semibold text-[var(--color-primary,rgba(15,164,87,1))]">
+                  <span className="mt-1 text-xs font-semibold text-brand-primary-dark">
                     {item.value}
                   </span>
                 )}

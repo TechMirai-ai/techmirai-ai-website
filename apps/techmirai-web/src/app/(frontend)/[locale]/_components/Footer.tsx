@@ -102,13 +102,13 @@ export async function Footer({ locale }: FooterProps) {
             <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-800">
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-slate-900 shrink-0" />
-                <a href={`tel:${dynamicPhone}`} className="font-semibold text-slate-900 hover:text-emerald-950 transition-colors">
+                <a href={`tel:${dynamicPhone}`} className="font-semibold text-slate-900 hover:text-brand-primary-dark transition-colors">
                   {dynamicPhone}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-slate-900 shrink-0" />
-                <a href={`mailto:${dynamicEmail}`} className="font-semibold text-slate-900 hover:text-emerald-950 transition-colors">
+                <a href={`mailto:${dynamicEmail}`} className="font-semibold text-slate-900 hover:text-brand-primary-dark transition-colors">
                   {dynamicEmail}
                 </a>
               </div>
@@ -118,7 +118,7 @@ export async function Footer({ locale }: FooterProps) {
                 href={siteConfig.reception.staffLineUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-semibold text-slate-900 hover:text-emerald-950 transition-colors"
+                className="inline-flex items-center gap-2 font-semibold text-slate-900 hover:text-brand-primary-dark transition-colors"
               >
                 <MessageCircle className="w-4 h-4 text-slate-900 shrink-0" />
                 {t.lineQr}
@@ -143,7 +143,7 @@ export async function Footer({ locale }: FooterProps) {
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-800 hover:text-emerald-950 hover:font-bold font-medium transition-colors group"
+                          className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-800 hover:text-brand-primary-dark hover:font-bold font-medium transition-colors group"
                         >
                           <span className="text-slate-900 text-xs transition-transform group-hover:translate-x-0.5">•</span>
                           <span>{link.label ?? link.href}</span>
@@ -151,7 +151,7 @@ export async function Footer({ locale }: FooterProps) {
                       ) : (
                         <Link
                           href={link.href}
-                          className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-800 hover:text-emerald-950 hover:font-bold font-medium transition-colors group"
+                          className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-800 hover:text-brand-primary-dark hover:font-bold font-medium transition-colors group"
                         >
                           <span className="text-slate-900 text-xs transition-transform group-hover:translate-x-0.5">•</span>
                           <span>{link.label ?? link.href}</span>
@@ -172,15 +172,15 @@ export async function Footer({ locale }: FooterProps) {
           </Text>
 
           <div className="flex items-center gap-4 text-slate-900 font-medium">
-            <Link href="/privacy" className="hover:text-emerald-950 hover:font-bold transition-colors">
+            <Link href="/privacy" className="hover:text-brand-primary-dark hover:font-bold transition-colors">
               {t.privacy}
             </Link>
             <span>|</span>
-            <Link href="/terms" className="hover:text-emerald-950 hover:font-bold transition-colors">
+            <Link href="/terms" className="hover:text-brand-primary-dark hover:font-bold transition-colors">
               {t.terms}
             </Link>
             <span>|</span>
-            <Link href="/legal-notice" className="hover:text-emerald-950 hover:font-bold transition-colors">
+            <Link href="/legal-notice" className="hover:text-brand-primary-dark hover:font-bold transition-colors">
               {t.legalNotice}
             </Link>
           </div>

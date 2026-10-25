@@ -124,9 +124,9 @@ export default async function ContactPage({ params, searchParams }: Props) {
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-16 pt-10 sm:px-6 md:pb-20 md:pt-14 lg:px-8">
       {breadcrumb && <JsonLd data={breadcrumb} />}
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className="relative mx-auto max-w-2xl">
-        <span className="inline-block rounded-full border border-emerald-200 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary">
+        <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">
           {text.pill}
         </span>
         <h1 className="mt-4 text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl">{text.title}</h1>
@@ -137,13 +137,13 @@ export default async function ContactPage({ params, searchParams }: Props) {
         </div>
 
         <div id="ringi" className="mt-6 flex items-start gap-4 rounded-2xl border border-border-default bg-white p-6 shadow-sm">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-brand-primary">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-brand-primary-dark">
             <FileText aria-hidden="true" size={22} />
           </span>
           <div>
             <h2 className="text-[16px] font-bold text-text-primary">{text.ringiHeading}</h2>
             <p className="mt-1 text-[13px] leading-[1.8] text-text-secondary">{text.ringiBody}</p>
-            <a href={RINGI_PDF_HREF} download className="mt-4 inline-flex items-center rounded-full border-2 border-brand-primary px-5 py-2.5 text-[13px] font-semibold text-brand-primary hover:bg-bg-tertiary">
+            <a href={RINGI_PDF_HREF} download className="mt-4 inline-flex items-center rounded-full border-2 border-brand-primary px-5 py-2.5 text-[13px] font-semibold text-brand-primary-dark hover:bg-bg-tertiary">
               {text.ringiLink}
             </a>
           </div>

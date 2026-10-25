@@ -43,7 +43,7 @@ export function ToolsCompatibilityBlock({
           variants={fadeInUp}
           className="rounded-xl border border-border-default bg-bg-tertiary p-5 flex flex-col gap-2"
         >
-          <h3 className="text-[14.5px] font-bold text-brand-primary leading-snug">{col1Title}</h3>
+          <h3 className="text-[14.5px] font-bold text-brand-primary-dark leading-snug">{col1Title}</h3>
           {col1List && <p className="text-[13px] leading-relaxed text-text-muted">{col1List}</p>}
         </motion.div>
 
@@ -68,7 +68,7 @@ export function ToolsCompatibilityBlock({
         <div className="mx-auto max-w-5xl mt-6 text-center">
           <Link
             href={linkHref}
-            className="text-[13.5px] font-semibold text-brand-primary hover:underline underline-offset-2"
+            className="text-[13.5px] font-semibold text-brand-primary-dark hover:underline underline-offset-2"
           >
             {linkLabel} →
           </Link>

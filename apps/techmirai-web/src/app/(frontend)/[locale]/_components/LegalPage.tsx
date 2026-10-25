@@ -15,7 +15,7 @@ export function LegalPage({ locale, page }: LegalPageProps) {
 
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-12 pt-10 sm:px-6 md:pb-16 md:pt-14 lg:px-8">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className="relative mx-auto max-w-3xl">
         <h1 className="text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl">{title}</h1>
         <div className="mt-8 space-y-4">
