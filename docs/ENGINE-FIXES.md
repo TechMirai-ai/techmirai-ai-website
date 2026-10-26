@@ -673,6 +673,8 @@ href (not the literal `'#'`), in both locales.
 
 - `LayoutWrapper.tsx`: removed the timed 2 s splash screen that hid the whole site and faded it in over 1 s (LCP 9–17 s on a throttled phone). Children now render immediately.
 - `[locale]/layout.tsx`: Noto Sans JP `display: 'swap'` → `'optional'` so the large Japanese font cannot delay first text.
+- (2026-10-27) `send-form-emails.ts`: the contact auto-reply promised "within 1–2 business days", a response time nobody confirmed. It now says the message was sent successfully and received, with no time promise. Test added.
+- (2026-10-27) `send-form-emails.ts`: `Reply-To` was set to the recipient itself on every email. The staff notification now replies to the submitter; the auto-reply replies to the staff recipient. `dispatch()` takes an explicit `replyTo` argument. Test added in `send-form-emails.test.ts`. The `From` address stays a verified sender, because mail cannot be sent from the visitor's own address.
 - `send-form-emails.ts`: submitted values are HTML-escaped in staff and auto-reply emails; logs no longer include recipient addresses or subjects (names). New helper `payload/lib/redact.ts` (+ tests), exported as `@techmirai/cms-core/payload/lib/redact`.
 - `api/reception/ai/route.ts`: chatbot error logs mask emails and phone numbers.
 - `call-flow` block: inactive step cards no longer use `opacity-80` (WCAG contrast).

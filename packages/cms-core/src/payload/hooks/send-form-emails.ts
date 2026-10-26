@@ -43,7 +43,13 @@ interface FormPayload {
 // Email dispatch (non-blocking)
 // ---------------------------------------------------------------------------
 
-async function dispatch(to: string, subject: string, html: string, fromEmail: string): Promise<void> {
+async function dispatch(
+  to: string,
+  subject: string,
+  html: string,
+  fromEmail: string,
+  replyTo: string,
+): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     console.warn('RESEND_API_KEY is not set — skipping email')
@@ -60,7 +66,7 @@ async function dispatch(to: string, subject: string, html: string, fromEmail: st
       body: JSON.stringify({
         from: fromEmail,
         to,
-        replyTo: to,           // Important for staff emails
+        replyTo,
         subject,
         html,
       }),
@@ -139,7 +145,9 @@ export function confirmationHtml(formType: FormType, rawName: string, locale?: s
   }
 
   const copy: Record<Exclude<FormType, 'assessment'>, string> = {
-    contact: 'We have received your enquiry and will be in touch within 1–2 business days.',
+    // No response time: the owner has not confirmed one (ECC prompt v2).
+    contact:
+      'Thank you for contacting TechMirai. Your message was sent successfully. We have received your enquiry and will get back to you as soon as we can.',
     'job-apply': 'Thank you for applying. Our recruitment team will review your application shortly.',
     seminar: 'Your seminar registration is confirmed. We will send joining details closer to the date.',
     download: 'Your download request has been received. A link will be emailed to you shortly.',
@@ -219,7 +227,9 @@ export function makeSendFormEmailsHook(emailConfig: EmailConfig): CollectionAfte
     // for 'assessment'; every other formType always resolves to a real
     // address).
     if (staffTo) {
-      void dispatch(staffTo, staffSubject(formType, payload), staffHtml(formType, payload, locale), emailConfig.fromEmail)
+      // Reply-To is the submitter so staff can answer the visitor directly;
+      // the From address must stay a verified sender (cannot be the visitor's).
+      void dispatch(staffTo, staffSubject(formType, payload), staffHtml(formType, payload, locale), emailConfig.fromEmail, userEmail)
     } else {
       console.error(
         `[send-form-emails] No staff recipient configured for formType "${formType}" — skipping staff notification for this submission. ` +
@@ -229,7 +239,14 @@ export function makeSendFormEmailsHook(emailConfig: EmailConfig): CollectionAfte
 
     // Auto-reply to user — always attempted, independent of the staff
     // notification outcome above.
-    void dispatch(userEmail, confirmationSubject(formType, locale), confirmationHtml(formType, userName, locale, payload), emailConfig.fromEmail)
+    // A reply to the auto-reply goes to staff when a recipient is configured.
+    void dispatch(
+      userEmail,
+      confirmationSubject(formType, locale),
+      confirmationHtml(formType, userName, locale, payload),
+      emailConfig.fromEmail,
+      staffTo ?? emailConfig.fromEmail,
+    )
 
     return doc
   }

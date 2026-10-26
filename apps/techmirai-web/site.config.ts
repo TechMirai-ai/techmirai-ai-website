@@ -157,8 +157,9 @@ const siteConfig: SiteConfig = {
   },
 
   forms: {
-    // TODO: replace with the client's real inbox before real client launch
-    contactRecipient: 'reception@sakura-sekkotsu.example',
+    // Temporary inbox for contact/seminar notifications; switch to
+    // info@techmirai-ai.com (the Spec's staff inbox) before launch.
+    contactRecipient: 'farjana.eva.3573@gmail.com',
     // Pack-4/J2, Spec §12.4: booking staff notifications go to info@techmirai-ai.com.
     appointmentRecipient: 'info@techmirai-ai.com',
     // Pack-4/J1, Spec §12.3: the Spec names info@techmirai-ai.com as the

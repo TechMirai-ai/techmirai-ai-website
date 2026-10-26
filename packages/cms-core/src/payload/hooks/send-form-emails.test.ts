@@ -61,6 +61,12 @@ describe('confirmationHtml — assessment', () => {
     expect(html).toContain('Hi Jane,')
     expect(html).toContain('We have received your enquiry')
   })
+
+  it('confirms the contact message was sent and promises no response time', () => {
+    const html = confirmationHtml('contact', 'Jane')
+    expect(html).toContain('sent successfully')
+    expect(html).not.toMatch(/business day/i)
+  })
 })
 
 describe('staffSubject/staffHtml — assessment', () => {
@@ -146,6 +152,17 @@ describe('makeSendFormEmailsHook — assessment dispatch behavior', () => {
     const toAddresses = fetchMock.mock.calls.map(([, init]) => (JSON.parse(init?.body as string) as { to: string }).to)
     expect(toAddresses).toContain('info@techmirai-ai.com')
     expect(toAddresses).toContain('taro@example.com')
+  })
+
+  it('sets Reply-To to the submitter on the staff email and to staff on the auto-reply', async () => {
+    const hook = makeSendFormEmailsHook({ ...baseConfig, assessmentRecipient: 'info@techmirai-ai.com' })
+    await hook(makeDoc())
+
+    const sent = vi
+      .mocked(global.fetch)
+      .mock.calls.map(([, init]) => JSON.parse(init?.body as string) as { to: string; replyTo: string })
+    expect(sent.find((m) => m.to === 'info@techmirai-ai.com')?.replyTo).toBe('taro@example.com')
+    expect(sent.find((m) => m.to === 'taro@example.com')?.replyTo).toBe('info@techmirai-ai.com')
   })
 
   it('skips the staff email but still sends the auto-reply when assessmentRecipient is missing', async () => {
