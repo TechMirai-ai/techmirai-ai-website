@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useLocale } from 'next-intl'
+import { AudioPopup } from './audio-popup'
 import type { DemoScenario, DemoSimulatorBlockProps } from './types'
 
 type Phase = 'notice' | 'choose' | 'result'
@@ -26,19 +28,30 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
     aiLabel,
     demoDataLabel,
     restartLabel,
+    audioLabel,
+    callLabel,
     scenarios,
   } = props
 
+  const locale = useLocale()
   const [phase, setPhase] = useState<Phase>('notice')
   const [consent, setConsent] = useState(false)
   const [scenario, setScenario] = useState<DemoScenario | null>(null)
+  const [audioOpen, setAudioOpen] = useState(false)
+  const closeAudio = useCallback(() => setAudioOpen(false), [])
 
   if (scenarios.length === 0) return null
 
   const restart = () => {
     setScenario(null)
+    setAudioOpen(false)
     setPhase('choose')
   }
+
+  const isJa = locale === 'ja'
+  const audioSrc = scenario ? (isJa ? scenario.audioJa : scenario.audioEn) : ''
+  const callUrl = scenario ? (isJa ? scenario.callUrlJa : scenario.callUrlEn) : ''
+  const closeLabel = isJa ? '閉じる' : 'Close'
 
   return (
     <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
@@ -146,6 +159,43 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
                   ))}
                 </dl>
               </div>
+            )}
+
+            {((audioSrc && audioLabel) || (callUrl && callLabel)) && (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                {audioSrc && audioLabel ? (
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    onClick={() => setAudioOpen(true)}
+                    className="rounded-full bg-brand-primary px-6 py-2.5 text-[13px] font-semibold text-on-primary"
+                  >
+                    {audioLabel}
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {callUrl && callLabel && (
+                  <a
+                    href={callUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-brand-primary px-6 py-2.5 text-[13px] font-semibold text-on-primary"
+                  >
+                    {callLabel}
+                  </a>
+                )}
+              </div>
+            )}
+
+            {audioOpen && audioSrc && (
+              <AudioPopup
+                audioSrc={audioSrc}
+                videoSrc={scenario.videoSrc}
+                title={audioLabel}
+                closeLabel={closeLabel}
+                onClose={closeAudio}
+              />
             )}
 
             <button

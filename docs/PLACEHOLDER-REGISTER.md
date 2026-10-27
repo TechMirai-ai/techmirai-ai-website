@@ -151,6 +151,7 @@ not a static image asset, so it never needed a pixel-size placeholder. Logged as
 | ID | Page / field | Locale | Placeholder | Owner | Status |
 | --- | --- | --- | --- | --- | --- |
 | V1-01 | All launch pages, every Japanese string the prompt did not supply | ja | [JA TODO] | Native Japanese reviewer | open |
+| V1-01a | /, /demo: DRAFT Japanese written by the developer, not from the Spec: 予約受付 (card and scenario title), デモを聞く (audio button), デモ通話 (Demo Call button), 閉じる (popup close; hard-coded in cms-core audio popup) | ja | DRAFT | Native Japanese reviewer | open |
 | V1-02 | /, /contact: last-updated date and responsible company | en/ja | [TBD: owner to confirm date], [TBD: legal company name] | Jamal | open |
 | V1-03 | /demo: recording retention, who can see recordings, public call-length limit (suggested about 3 min) | en | [TBD: owner to confirm] | Jamal | open |
 | V1-04 | /partners: founding-partner benefits and conditions, OEM / white-label terms | en | [TBD: ...] | Jamal | open |

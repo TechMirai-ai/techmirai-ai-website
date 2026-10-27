@@ -65,7 +65,9 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   AI: 'AI',
   'Demo data — dummy values for illustration only.': 'デモデータ：説明用のダミー値です。',
   'Choose another scenario': '別のシナリオを選ぶ',
-  'After-hours inquiry': '営業時間外のお問い合わせ',
+  'Reservation/ Booking': '予約受付',
+  'Listen a Demo': 'デモを聞く',
+  'Demo Call': 'デモ通話',
   'A caller phones at night, outside business hours.': '営業時間外の夜間に、発信者が電話をかけてきます。',
   'Busy-time first reception': '混雑時の一次受付',
   'Many calls arrive at once and operators are busy.': '多くの電話が同時に入り、オペレーターが対応中です。',
@@ -180,7 +182,7 @@ const TEXT_KEYS: ReadonlySet<string> = new Set([
   'heading', 'eyebrow', 'pill', 'note', 'body', 'smallPrint', 'intro', 'sub', 'title', 'line', 'label', 'detail', 'footnote', 'text',
   'description', 'businessName', 'simulationLabel', 'fictionalNotice', 'noticeTitle', 'noticeBody', 'consentLabel',
   'privacyLabel', 'startLabel', 'liveLabel', 'liveNote', 'scenarioHeading', 'transcriptHeading', 'summaryHeading',
-  'callerLabel', 'aiLabel', 'demoDataLabel', 'restartLabel', 'value',
+  'callerLabel', 'aiLabel', 'demoDataLabel', 'restartLabel', 'audioLabel', 'callLabel', 'value',
 ])
 
 type Json = string | number | boolean | null | Json[] | { [key: string]: Json }
@@ -204,10 +206,12 @@ const scenario = (
   description: string,
   turns: [string, string][],
   summary: [string, string][],
+  media?: { audioEn: string; audioJa: string; videoSrc: string; callUrlEn: string; callUrlJa: string },
 ) => ({
   title,
   description,
   businessName: 'Sample Call Center (fictional business)',
+  ...(media ?? {}),
   turns: turns.map(([speaker, text]) => ({ speaker, text })),
   summaryRows: summary.map(([label, value]) => ({ label, value })),
 })
@@ -241,9 +245,11 @@ const demoLayout: Json = [
     aiLabel: 'AI',
     demoDataLabel: 'Demo data — dummy values for illustration only.',
     restartLabel: 'Choose another scenario',
+    audioLabel: 'Listen a Demo',
+    callLabel: 'Demo Call',
     scenarios: [
       scenario(
-        'After-hours inquiry',
+        'Reservation/ Booking',
         'A caller phones at night, outside business hours.',
         [
           ['caller', 'Hello, I would like to ask about my appointment.'],
@@ -252,6 +258,13 @@ const demoLayout: Json = [
           ['ai', 'Thank you. I have noted your request. A person will call you back on the next business day.'],
         ],
         [['Summary', 'Caller asked about an appointment (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Callback requested'], ['Recommended action', 'Call back next business morning']],
+        {
+          audioEn: '/audio/how-to-book-en.wav',
+          audioJa: '/audio/how-to-book-jp.wav',
+          videoSrc: '/video/audio-screen.mp4',
+          callUrlEn: 'https://techmirai-voice-premium.vercel.app/talk/sakura-seikotsuin/en',
+          callUrlJa: 'https://techmirai-voice-premium.vercel.app/talk/sakura-seikotsuin/ja',
+        },
       ),
       scenario(
         'Busy-time first reception',

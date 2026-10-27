@@ -30,6 +30,8 @@ export const DemoSimulatorBlockConfig: Block = {
     text('aiLabel'),
     text('demoDataLabel'),
     text('restartLabel'),
+    text('audioLabel'),
+    text('callLabel'),
     {
       name: 'scenarios',
       type: 'array',
@@ -40,6 +42,14 @@ export const DemoSimulatorBlockConfig: Block = {
         text('title', true),
         { name: 'description', type: 'textarea', localized: true },
         text('businessName'),
+        // Optional per-scenario call recording, one file per language (public path, e.g. /audio/x.wav).
+        { name: 'audioEn', type: 'text' },
+        { name: 'audioJa', type: 'text' },
+        // Background video shown in the audio popup (same file for both languages).
+        { name: 'videoSrc', type: 'text' },
+        // Optional external demo-call page per language; opens in a new tab, https only.
+        { name: 'callUrlEn', type: 'text' },
+        { name: 'callUrlJa', type: 'text' },
         {
           name: 'turns',
           type: 'array',

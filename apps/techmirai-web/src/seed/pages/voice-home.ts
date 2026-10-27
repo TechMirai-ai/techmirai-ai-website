@@ -152,7 +152,7 @@ const en: Copy = {
     intro: 'The demo is a scripted simulation with fictional businesses. It is not a real phone line.',
     columns: '4',
     cards: [
-      { icon: 'moon', tone: 'blue', title: 'After-hours inquiry', text: '(e.g. checking an appointment)' },
+      { icon: 'moon', tone: 'blue', title: 'Reservation/ Booking', text: '(e.g. checking an appointment)' },
       { icon: 'users', tone: 'green', title: 'Busy-time first reception', text: '(e.g. changing a delivery date)' },
       { icon: 'help', tone: 'amber', title: 'FAQ and callback request', text: '(e.g. asking opening hours)' },
     ],
@@ -287,7 +287,7 @@ const ja: Copy = {
     intro: 'デモは、架空の事業者を用いたシナリオ再生（シミュレーション）です。実際の電話回線ではありません。',
     columns: '4',
     cards: [
-      { icon: 'moon', tone: 'blue', title: '営業時間外のお問い合わせ', text: '（例：予約の確認）' },
+      { icon: 'moon', tone: 'blue', title: '予約受付', text: '（例：予約の確認）' },
       { icon: 'users', tone: 'green', title: '混雑時の一次受付', text: '（例：配達日の変更）' },
       { icon: 'help', tone: 'amber', title: 'よくある質問・折り返し依頼', text: '（例：営業時間の確認）' },
     ],

@@ -1,5 +1,11 @@
 # Findings
 
+## 2026-10-28 — /demo: the new "Demo Call" link to an external live AI call site sits beside notice text that says the demo never opens the microphone
+
+The `/demo` consent notice says "It does not open your microphone and it records nothing from you", and the page keeps a disabled "Live AI call (integration required)" placeholder. The "Demo Call" button on the Reservation/ Booking scenario now opens `techmirai-voice-premium.vercel.app/talk/sakura-seikotsuin/{en,ja}` in a new tab. That site is outside this repo and may use the microphone and record the call. The notice wording, the disabled placeholder and the link now disagree. Not changed: the notice text is Spec-governed. Owner to decide whether to reword the notice (and the [TBD] retention fields in V1-03) or to remove the placeholder.
+
+Also noted: `voice-pages.ts` has an unused `row` helper (TypeScript 6133 warning), present before this work.
+
 ## 2026-10-08 — Pack-3/H3: `/how-it-works`/`/integrations` confirmed as the `/ai-reception`-style static-stub case, not the `/solutions` case
 
 H1's finding (below) flagged that `/how-it-works` and `/integrations` share

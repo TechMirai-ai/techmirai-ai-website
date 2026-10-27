@@ -12,6 +12,11 @@ export interface DemoScenario {
   title: string
   description: string
   businessName: string
+  audioEn: string
+  audioJa: string
+  videoSrc: string
+  callUrlEn: string
+  callUrlJa: string
   turns: DemoTurn[]
   summaryRows: DemoSummaryRow[]
 }
@@ -36,5 +41,7 @@ export interface DemoSimulatorBlockProps {
   aiLabel: string
   demoDataLabel: string
   restartLabel: string
+  audioLabel: string
+  callLabel: string
   scenarios: DemoScenario[]
 }
