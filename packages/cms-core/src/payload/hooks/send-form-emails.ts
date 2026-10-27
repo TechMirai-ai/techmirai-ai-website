@@ -221,6 +221,10 @@ export function makeSendFormEmailsHook(emailConfig: EmailConfig): CollectionAfte
     if (!userEmail) return doc
 
     const staffTo = resolveStaffRecipient(formType, emailConfig)
+    // Awaited below, not fire-and-forget: serverless platforms (Vercel) freeze
+    // the function once the response is sent, which would cut off the Resend
+    // calls. dispatch() never throws, so a mail failure cannot fail the submission.
+    const sends: Promise<void>[] = []
 
     // Staff notification — skipped (loudly) rather than misdirected when no
     // recipient is configured for this formType (currently only reachable
@@ -229,7 +233,9 @@ export function makeSendFormEmailsHook(emailConfig: EmailConfig): CollectionAfte
     if (staffTo) {
       // Reply-To is the submitter so staff can answer the visitor directly;
       // the From address must stay a verified sender (cannot be the visitor's).
-      void dispatch(staffTo, staffSubject(formType, payload), staffHtml(formType, payload, locale), emailConfig.fromEmail, userEmail)
+      sends.push(
+        dispatch(staffTo, staffSubject(formType, payload), staffHtml(formType, payload, locale), emailConfig.fromEmail, userEmail),
+      )
     } else {
       console.error(
         `[send-form-emails] No staff recipient configured for formType "${formType}" — skipping staff notification for this submission. ` +
@@ -240,13 +246,17 @@ export function makeSendFormEmailsHook(emailConfig: EmailConfig): CollectionAfte
     // Auto-reply to user — always attempted, independent of the staff
     // notification outcome above.
     // A reply to the auto-reply goes to staff when a recipient is configured.
-    void dispatch(
-      userEmail,
-      confirmationSubject(formType, locale),
-      confirmationHtml(formType, userName, locale, payload),
-      emailConfig.fromEmail,
-      staffTo ?? emailConfig.fromEmail,
+    sends.push(
+      dispatch(
+        userEmail,
+        confirmationSubject(formType, locale),
+        confirmationHtml(formType, userName, locale, payload),
+        emailConfig.fromEmail,
+        staffTo ?? emailConfig.fromEmail,
+      ),
     )
+
+    await Promise.allSettled(sends)
 
     return doc
   }

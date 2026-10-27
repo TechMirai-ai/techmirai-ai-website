@@ -176,4 +176,33 @@ describe('makeSendFormEmailsHook — assessment dispatch behavior', () => {
     expect((JSON.parse(init?.body as string) as { to: string }).to).toBe('taro@example.com')
     expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('No staff recipient configured for formType "assessment"'))
   })
+
+  // Serverless (Vercel) freezes the function once the request returns, so the
+  // hook must not resolve until every Resend call has finished.
+  it('does not resolve until both Resend calls have completed', async () => {
+    let completed = 0
+    global.fetch = vi.fn().mockImplementation(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20))
+      completed += 1
+      return new Response(JSON.stringify({ id: 'test' }), { status: 200 })
+    })
+    const hook = makeSendFormEmailsHook({ ...baseConfig, assessmentRecipient: 'info@techmirai-ai.com' })
+    await hook(makeDoc())
+
+    expect(completed).toBe(2)
+  })
+
+  it('still sends the auto-reply when the staff email request fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    global.fetch = vi.fn().mockImplementation(async (_url: unknown, init?: RequestInit) => {
+      const { to } = JSON.parse(init?.body as string) as { to: string }
+      if (to === 'info@techmirai-ai.com') throw new Error('network down')
+      return new Response(JSON.stringify({ id: 'test' }), { status: 200 })
+    })
+    const hook = makeSendFormEmailsHook({ ...baseConfig, assessmentRecipient: 'info@techmirai-ai.com' })
+    await expect(hook(makeDoc())).resolves.toBeDefined()
+
+    expect(vi.mocked(global.fetch)).toHaveBeenCalledTimes(2)
+    expect(consoleError).toHaveBeenCalled()
+  })
 })
