@@ -91,13 +91,14 @@ export function metadataFromPageDoc(
   path: string,
 ): Metadata {
   const meta = (page['meta'] ?? {}) as Record<string, unknown>
+  const metaTitle = usableDescription(meta['title'])
   const title =
-    typeof meta['title'] === 'string' && meta['title']
-      ? meta['title']
+    metaTitle
+      ? metaTitle
       : typeof page['title'] === 'string' && page['title']
         ? page['title']
         : siteConfig.site.name
-  const description = typeof meta['description'] === 'string' && meta['description'] ? meta['description'] : undefined
+  const description = usableDescription(meta['description'])
   const image = meta['image'] as Record<string, unknown> | null | undefined
   // The seeded og-*.png placeholders (English-only labels) give way to the
   // generated per-locale image; a real editor upload still wins (Pack-4/L2).
@@ -126,5 +127,16 @@ export function staticPageMetadata(path: string, locale: string, options: { noin
   if (!row) throw new Error(`[seo] no Spec §17.1 row for ${path}`)
   if (locale !== 'en' && locale !== 'ja') return {}
   const { title, description } = row[locale as MetaLocale]
-  return buildPageMetadata({ locale, path, title, description, ...options })
+  return buildPageMetadata({ locale, path, title, description: usableDescription(description), ...options })
+}
+
+/**
+ * A meta title or description still holding a bracketed marker ([TBD: …],
+ * [JA TODO]) is not published: it is treated as absent, so the page title or
+ * the site default description is used instead.
+ */
+function usableDescription(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined
+  const text = value.trim()
+  return text === '' || /\[[^\]\n]+\]/.test(text) ? undefined : text
 }
