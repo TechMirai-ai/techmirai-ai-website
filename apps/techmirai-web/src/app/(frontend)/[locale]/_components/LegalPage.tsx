@@ -23,7 +23,9 @@ export function LegalPage({ locale, page }: LegalPageProps) {
             <section key={section.heading} className="rounded-2xl border border-border-default bg-white p-6 shadow-sm">
               <h2 className="text-[16px] font-bold text-text-primary">{section.heading}</h2>
               {section.fact && <p className="mt-2 text-[14px] leading-[1.8] text-text-primary">{section.fact}</p>}
+              {/* PLACEHOLDER-OFF: legal placeholder body hidden for now; restore when the legal text is written.
               <p className="mt-2 text-[13px] italic leading-[1.8] text-text-secondary">{section.placeholder}</p>
+              */}
             </section>
           ))}
         </div>

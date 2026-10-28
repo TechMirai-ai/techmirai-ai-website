@@ -50,11 +50,13 @@ const ITEMS: FaqSeedItem[] = [
     sortOrder: 3,
     en: {
       q: 'Do I need a new website?',
-      a: 'Not necessarily. We can build a new website with AI受付 built in, or [add AI受付 to your current website]. The free assessment shows which suits you.',
+      // PLACEHOLDER-OFF: 'or [add AI受付 to your current website]' (bracketed, unconfirmed option) hidden
+      a: 'Not necessarily. We can build a new website with AI受付 built in. The free assessment shows which suits you.',
     },
     ja: {
       q: '新しいホームページが必要ですか？',
-      a: '必ずしも必要ではありません。AI受付を組み込んだ新しいホームページをつくるか、[今のホームページにAI受付を追加する]ことができます。どちらが合うかは、無料診断でご案内します。',
+      // PLACEHOLDER-OFF: 'か、[今のホームページにAI受付を追加する]ことができます' (bracketed option) hidden
+      a: '必ずしも必要ではありません。AI受付を組み込んだ新しいホームページをつくることができます。どちらが合うかは、無料診断でご案内します。',
     },
   },
   {
@@ -76,11 +78,13 @@ const ITEMS: FaqSeedItem[] = [
     sortOrder: 5,
     en: {
       q: 'How much does it cost?',
-      a: 'The AI受付 Starter Package starts from [¥300,000] for setup and [¥30,000] per month. Your exact quote comes after the free assessment.',
+      // PLACEHOLDER-OFF: 'The AI受付 Starter Package starts from [¥300,000] for setup and [¥30,000] per month. ' (bracketed prices) hidden
+      a: 'Your exact quote comes after the free assessment.',
     },
     ja: {
       q: '料金はいくらですか？',
-      a: 'AI受付 スタートパッケージは、初期費用[30万円]〜、月額[3万円]〜です。正式なお見積りは、無料診断のあとにご提示します。',
+      // PLACEHOLDER-OFF: 'AI受付 スタートパッケージは、初期費用[30万円]〜、月額[3万円]〜です。' (bracketed prices) hidden
+      a: '正式なお見積りは、無料診断のあとにご提示します。',
     },
   },
   {

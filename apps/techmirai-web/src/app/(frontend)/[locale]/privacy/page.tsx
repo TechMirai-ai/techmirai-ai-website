@@ -14,7 +14,8 @@ type Props = { params: Promise<{ locale: string }> }
 const SCOPE_NOTE = {
   en: {
     heading: 'Draft scope — for professional review',
-    body: 'This page explains how TechMirai handles personal information; it is for anyone using our forms or demo, and you can contact us from the Contact page. It is a draft. Last updated: [TBD: owner to confirm date]. Responsible company: [TBD: legal company name]. The final policy written by a professional must cover:',
+    // PLACEHOLDER-OFF: 'Last updated: [TBD: owner to confirm date]. Responsible company: [TBD: legal company name]. ' (hidden)
+    body: 'This page explains how TechMirai handles personal information; it is for anyone using our forms or demo, and you can contact us from the Contact page. It is a draft. The final policy written by a professional must cover:',
     topics: [
       'Information entered in the contact, partnership and overview-download forms',
       'Voice demo recordings, if and when live calls are offered',
@@ -24,8 +25,9 @@ const SCOPE_NOTE = {
     ],
   },
   ja: {
+    // PLACEHOLDER-OFF: '最終更新日：[TBD：オーナー確認待ち]。責任主体：[TBD：正式な会社名]。' removed from body below
     heading: '想定範囲（ドラフト）：専門家による確認用',
-    body: 'このページは、TechMiraiが個人情報をどのように取り扱うかを説明するもので、フォームやデモをご利用になる方向けです。お問い合わせはお問い合わせページからご連絡ください。現在はドラフトです。最終更新日：[TBD：オーナー確認待ち]。責任主体：[TBD：正式な会社名]。専門家が作成する最終版のポリシーでは、次の内容を扱う必要があります。',
+    body: 'このページは、TechMiraiが個人情報をどのように取り扱うかを説明するもので、フォームやデモをご利用になる方向けです。お問い合わせはお問い合わせページからご連絡ください。現在はドラフトです。専門家が作成する最終版のポリシーでは、次の内容を扱う必要があります。',
     topics: [
       'お問い合わせ・協業相談・概要資料ダウンロードの各フォームに入力された情報',
       'ライブ通話を提供する場合の、音声デモの録音',

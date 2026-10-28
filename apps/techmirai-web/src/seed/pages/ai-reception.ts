@@ -64,7 +64,7 @@ export async function seedAiReceptionPage(payload: Payload, downloads: DownloadI
         'Website engine · Online reservation · LINE booking · LINE reminders · Change and cancel by customers · Reception chat · Handoff to staff · Japanese and English content · Admin panel · Staff notification for every booking',
       waysToStart: [
         { text: 'New website with AI受付 built in' },
-        { text: '[Add AI受付 to your current website] — CONFIRM availability' },
+        // PLACEHOLDER-OFF: { text: '[Add AI受付 to your current website] — CONFIRM availability' },
       ],
     },
     {
@@ -139,7 +139,7 @@ export async function seedAiReceptionPage(payload: Payload, downloads: DownloadI
         '独自のサイト基盤・オンライン予約・LINE予約・LINEリマインド・お客様による変更とキャンセル・受付チャット・スタッフへの引き継ぎ・日本語と英語のコンテンツ・管理画面・予約ごとのスタッフ通知',
       waysToStart: [
         { text: 'AI受付を組み込んだ、新しいホームページ' },
-        { text: '[今のホームページにAI受付を追加] — 提供可否を確認中' },
+        // PLACEHOLDER-OFF: { text: '[今のホームページにAI受付を追加] — 提供可否を確認中' },
       ],
     },
     {

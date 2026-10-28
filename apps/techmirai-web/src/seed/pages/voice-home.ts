@@ -49,7 +49,7 @@ const en: Copy = {
     body: 'AI gives first-line response to routine, busy-time and after-hours calls, records and summarizes them, and passes what needs a person to staff. Call-center operators can offer it as their own service.',
     primaryButton: { label: 'Try the voice demo', href: '/demo' },
     secondaryButton: { label: 'Consult about partnership', href: '/contact?path=partnership' },
-    note: 'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]',
+    // PLACEHOLDER-OFF: note: 'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]',
     pauseLabel: 'Pause animation',
     playLabel: 'Play animation',
     nodes: [
@@ -162,7 +162,8 @@ const en: Copy = {
     heading: 'White-label partnership, proven in four steps',
     sub: 'Call-center operators bring customers, call flows and operators; TechMirai brings the voice AI, approved knowledge, dashboard and technical support.',
     steps: [
-      { title: 'Validate', line: 'Start with one call type for one partner client. [TBD: owner to confirm scope]' },
+      // PLACEHOLDER-OFF: ' [TBD: owner to confirm scope]' (trailing sentence hidden)
+      { title: 'Validate', line: 'Start with one call type for one partner client.' },
       { title: 'Measure the effect', line: 'Compare agreed measures such as response, completion and transfer rates.' },
       { title: 'Decide on adoption', line: 'Review the results together and decide whether to go ahead.' },
       { title: 'Production development', line: 'Build and launch the production setup with the partner.' },
@@ -184,7 +185,7 @@ const ja: Copy = {
     body: HERO_BODY_JA,
     primaryButton: { label: DEMO_BUTTON_JA, href: '/demo' },
     secondaryButton: { label: PARTNER_BUTTON_JA, href: '/contact?path=partnership' },
-    note: '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
+    // PLACEHOLDER-OFF: note: '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
     pauseLabel: 'アニメーションを一時停止',
     playLabel: 'アニメーションを再生',
     nodes: [
@@ -297,7 +298,8 @@ const ja: Copy = {
     heading: 'ホワイトラベルでの協業を、4ステップで確かめる',
     sub: 'お客様・通話フロー・オペレーターはコールセンター事業者様が、音声AI・承認済みナレッジ・ダッシュボード・技術サポートはTechMiraiがご用意します。',
     steps: [
-      { title: POC_JA[0], line: 'パートナー様のお客様1社の、1つの通話タイプから始めます。[TBD：範囲はオーナー確認待ち]' },
+      // PLACEHOLDER-OFF: '[TBD：範囲はオーナー確認待ち]' (trailing sentence hidden)
+      { title: POC_JA[0], line: 'パートナー様のお客様1社の、1つの通話タイプから始めます。' },
       { title: POC_JA[1], line: '応答率・完了率・転送率など、合意した指標で比較します。' },
       { title: POC_JA[2], line: '結果を一緒に確認し、進めるかどうかを判断します。' },
       { title: POC_JA[3], line: 'パートナー様とともに、本番環境を開発し公開します。' },

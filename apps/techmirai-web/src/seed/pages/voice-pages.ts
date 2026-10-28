@@ -36,8 +36,9 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   Company: '会社情報',
 
   // ── shared
-  'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]':
-    '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
+  // PLACEHOLDER-OFF:
+  // 'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]':
+  //   '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
 
   // ── /demo
   'Voice demo': '音声デモ',
@@ -49,8 +50,11 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Scripted simulation': 'シナリオ再生（シミュレーション）',
   'All businesses and callers shown are fictional.': '表示される事業者・発信者はすべて架空です。',
   'Recording and transcription notice': '録音・文字起こしに関するお知らせ',
-  'This demo is a scripted simulation. It does not open your microphone and it records nothing from you.\nWhen a live AI call demo is offered, calls will be recorded and transcribed. Retention period: [TBD: owner to confirm]. Who can see them: [TBD: owner to confirm]. Public call length limit: [TBD: owner to confirm, suggested about 3 minutes].':
-    'このデモは、あらかじめ用意したシナリオを再生するシミュレーションです。マイクは使用せず、お客様の音声は一切録音しません。\nライブAI通話デモを提供する場合、通話は録音・文字起こしされます。保存期間：[TBD：オーナー確認待ち]。閲覧できる者：[TBD：オーナー確認待ち]。公開時の通話時間の上限：[TBD：オーナー確認待ち（目安は約3分）]。',
+  // PLACEHOLDER-OFF: full notice with the [TBD] sentence:
+  // 'This demo is a scripted simulation. It does not open your microphone and it records nothing from you.\nWhen a live AI call demo is offered, calls will be recorded and transcribed. Retention period: [TBD: owner to confirm]. Who can see them: [TBD: owner to confirm]. Public call length limit: [TBD: owner to confirm, suggested about 3 minutes].':
+  //   'このデモは、あらかじめ用意したシナリオを再生するシミュレーションです。マイクは使用せず、お客様の音声は一切録音しません。\nライブAI通話デモを提供する場合、通話は録音・文字起こしされます。保存期間：[TBD：オーナー確認待ち]。閲覧できる者：[TBD：オーナー確認待ち]。公開時の通話時間の上限：[TBD：オーナー確認待ち（目安は約3分）]。',
+  'This demo is a scripted simulation. It does not open your microphone and it records nothing from you.':
+    'このデモは、あらかじめ用意したシナリオを再生するシミュレーションです。マイクは使用せず、お客様の音声は一切録音しません。',
   'I have read the notice above and agree to continue. See the':
     '上記のお知らせを読み、同意のうえ続行します。詳しくは',
   'privacy policy': 'プライバシーポリシー',
@@ -87,8 +91,10 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.':
     'ありがとうございます。既存のご注文の変更は担当者が対応しますので、いただいた内容とあわせてオペレーターにおつなぎします。',
   'What are your opening hours?': '営業時間を教えてください。',
-  'Our opening hours are [TBD: owner to confirm]. Would you like a callback from our staff?':
-    '営業時間は[TBD：オーナー確認待ち]です。スタッフからの折り返しをご希望ですか？',
+  // PLACEHOLDER-OFF:
+  // 'Our opening hours are [TBD: owner to confirm]. Would you like a callback from our staff?':
+  //   '営業時間は[TBD：オーナー確認待ち]です。スタッフからの折り返しをご希望ですか？',
+  'Would you like a callback from our staff?': 'スタッフからの折り返しをご希望ですか？',
   'Yes, please call me tomorrow afternoon.': 'はい、明日の午後にお電話をお願いします。',
   'Noted. I have recorded a callback request for tomorrow afternoon.':
     '承知しました。明日の午後の折り返しを依頼として記録しました。',
@@ -118,11 +124,11 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Benefits and conditions are not confirmed yet and are shown as placeholders for the owner.':
     '特典・条件は未確定のため、オーナー確認用のプレースホルダーとして表示しています。',
   Benefits: '特典',
-  '[TBD: owner to confirm founding-partner benefits]': '[TBD：創設パートナーの特典をオーナーが確認]',
+  // PLACEHOLDER-OFF: '[TBD: owner to confirm founding-partner benefits]': '[TBD：創設パートナーの特典をオーナーが確認]',
   Conditions: '条件',
-  '[TBD: owner to confirm conditions]': '[TBD：条件をオーナーが確認]',
+  // PLACEHOLDER-OFF: '[TBD: owner to confirm conditions]': '[TBD：条件をオーナーが確認]',
   'Commercial terms': '取引条件',
-  'Discussed in consultation. [TBD: OEM / white-label terms]': 'ご相談の中でご案内します。[TBD：OEM／ホワイトラベルの条件]',
+  // PLACEHOLDER-OFF: 'Discussed in consultation. [TBD: OEM / white-label terms]': 'ご相談の中でご案内します。[TBD：OEM／ホワイトラベルの条件]',
   'Proof of concept in four steps': '4ステップのPoC（概念実証）',
   'Test the voice agent on one real task.': '1つの実業務で音声エージェントを検証します。',
   'Measure the result against agreed evaluation measures.': '合意した評価指標で効果を測定します。',
@@ -131,16 +137,19 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Typical PoC scope': 'PoCの一般的な範囲',
   'Placeholders. The owner confirms the real details.': 'プレースホルダーです。実際の内容はオーナーが確認します。',
   'Target task': '対象業務',
-  '[One call type, e.g. after-hours inquiries for one partner client]':
-    '[1つの通話タイプ（例：パートナー1社の営業時間外の問い合わせ）]',
+  // PLACEHOLDER-OFF:
+  // '[One call type, e.g. after-hours inquiries for one partner client]':
+  //   '[1つの通話タイプ（例：パートナー1社の営業時間外の問い合わせ）]',
   Duration: '期間',
-  '[X weeks]': '[X週間]',
+  // PLACEHOLDER-OFF: '[X weeks]': '[X週間]',
   'TechMirai delivers': 'TechMiraiの提供内容',
-  '[Voice agent configured for the task, approved-knowledge setup, call logs and summaries, dashboard access, test support, evaluation report]':
-    '[対象業務向けに設定した音声エージェント、承認済みナレッジの設定、通話ログと要約、ダッシュボードの利用、テスト支援、評価レポート]',
+  // PLACEHOLDER-OFF:
+  // '[Voice agent configured for the task, approved-knowledge setup, call logs and summaries, dashboard access, test support, evaluation report]':
+  //   '[対象業務向けに設定した音声エージェント、承認済みナレッジの設定、通話ログと要約、ダッシュボードの利用、テスト支援、評価レポート]',
   'Partner provides': 'パートナー様のご用意',
-  '[One target client or process, call flows and FAQ/manual, test callers or operators, success criteria, a contact person]':
-    '[対象のお客様または業務1件、通話フローとFAQ・マニュアル、テスト用の発信者またはオペレーター、成功基準、ご担当者]',
+  // PLACEHOLDER-OFF:
+  // '[One target client or process, call flows and FAQ/manual, test callers or operators, success criteria, a contact person]':
+  //   '[対象のお客様または業務1件、通話フローとFAQ・マニュアル、テスト用の発信者またはオペレーター、成功基準、ご担当者]',
   'Suggested evaluation measures': '評価指標（案）',
   'These are measures we suggest tracking. No results are claimed.': '追跡をおすすめする指標です。成果を示すものではありません。',
   'Response and completion': '応答と完了',
@@ -162,17 +171,18 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   Team: 'チーム',
   'International engineering team': '国際的なエンジニアチーム',
   Members: 'メンバー',
-  '[TBD: photos, names and roles appear after written consent is recorded]':
-    '[TBD：書面による同意の記録後に、写真・氏名・役割を掲載]',
+  // PLACEHOLDER-OFF:
+  // '[TBD: photos, names and roles appear after written consent is recorded]':
+  //   '[TBD：書面による同意の記録後に、写真・氏名・役割を掲載]',
   'Company profile': '会社概要',
   'Legal name': '正式名称',
-  '[TBD: legal company name]': '[TBD：正式な会社名]',
+  // PLACEHOLDER-OFF: '[TBD: legal company name]': '[TBD：正式な会社名]',
   Representative: '代表者',
-  '[TBD: representative]': '[TBD：代表者]',
+  // PLACEHOLDER-OFF: '[TBD: representative]': '[TBD：代表者]',
   Address: '所在地',
-  '[TBD: registered address]': '[TBD：登記上の所在地]',
+  // PLACEHOLDER-OFF: '[TBD: registered address]': '[TBD：登記上の所在地]',
   Registration: '登録情報',
-  '[TBD: registration number]': '[TBD：登録番号]',
+  // PLACEHOLDER-OFF: '[TBD: registration number]': '[TBD：登録番号]',
   'Get in touch': 'お問い合わせ',
   'Questions about the company or the AI voice agent? Contact us.':
     '会社やAI音声エージェントについてのご質問は、お気軽にお問い合わせください。',
@@ -196,8 +206,9 @@ function toJa(node: Json, key = ''): Json {
   return node
 }
 
-const LAST_UPDATED =
-  'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]'
+// PLACEHOLDER-OFF: unconfirmed "last updated / responsible company" note hidden for now.
+// const LAST_UPDATED =
+//   'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]'
 
 const row = (label: string, detail: string) => ({ label, detail })
 
@@ -222,7 +233,7 @@ const demoLayout: Json = [
     pill: 'Live demo',
     heading: 'Voice demo',
     body: 'This page shows how an AI voice agent handles a call: the conversation, the transcript and the summary your team sees the next morning. It is for call-center operators and businesses that want to see the AI voice agent before a conversation. Everything here is a scripted simulation with a fictional business; next, you can consult us about partnership or adoption.',
-    note: LAST_UPDATED,
+    // PLACEHOLDER-OFF: note: LAST_UPDATED,
   },
   {
     blockType: 'demo-simulator',
@@ -231,8 +242,10 @@ const demoLayout: Json = [
     simulationLabel: 'Scripted simulation',
     fictionalNotice: 'All businesses and callers shown are fictional.',
     noticeTitle: 'Recording and transcription notice',
+    // PLACEHOLDER-OFF: the second sentence (retention / access / call-length limit, all [TBD]) is hidden:
+    // '...\nWhen a live AI call demo is offered, calls will be recorded and transcribed. Retention period: [TBD: owner to confirm]. Who can see them: [TBD: owner to confirm]. Public call length limit: [TBD: owner to confirm, suggested about 3 minutes].'
     noticeBody:
-      'This demo is a scripted simulation. It does not open your microphone and it records nothing from you.\nWhen a live AI call demo is offered, calls will be recorded and transcribed. Retention period: [TBD: owner to confirm]. Who can see them: [TBD: owner to confirm]. Public call length limit: [TBD: owner to confirm, suggested about 3 minutes].',
+      'This demo is a scripted simulation. It does not open your microphone and it records nothing from you.',
     consentLabel: 'I have read the notice above and agree to continue. See the',
     privacyLabel: 'privacy policy',
     startLabel: 'Start the demo',
@@ -282,7 +295,8 @@ const demoLayout: Json = [
         'A routine question, then a request for a callback.',
         [
           ['caller', 'What are your opening hours?'],
-          ['ai', 'Our opening hours are [TBD: owner to confirm]. Would you like a callback from our staff?'],
+          // PLACEHOLDER-OFF: 'Our opening hours are [TBD: owner to confirm]. ' (first sentence hidden)
+          ['ai', 'Would you like a callback from our staff?'],
           ['caller', 'Yes, please call me tomorrow afternoon.'],
           ['ai', 'Noted. I have recorded a callback request for tomorrow afternoon.'],
         ],
@@ -302,20 +316,21 @@ const partnersLayout: Json = [
     body: 'TechMirai works with small and medium-sized call centers as a white-label partner. You bring customers, call flows and operators. We bring the voice AI, conversation design, approved knowledge, dashboard and technical support. AI supports your operators; it does not replace them.',
     primaryButton: { label: 'Consult about partnership', href: '/contact?path=partnership' },
     secondaryButton: { label: 'Try the voice demo', href: '/demo' },
-    note: LAST_UPDATED,
+    // PLACEHOLDER-OFF: note: LAST_UPDATED,
   },
-  {
-    blockType: 'icon-cards',
-    pill: 'Partnership',
-    heading: 'Founding partner program',
-    intro: 'Benefits and conditions are not confirmed yet and are shown as placeholders for the owner.',
-    columns: '3',
-    cards: [
-      card('shield', 'green', 'Benefits', '[TBD: owner to confirm founding-partner benefits]'),
-      card('list', 'blue', 'Conditions', '[TBD: owner to confirm conditions]'),
-      card('fileText', 'amber', 'Commercial terms', 'Discussed in consultation. [TBD: OEM / white-label terms]'),
-    ],
-  },
+  // PLACEHOLDER-OFF: founding partner program block (every card is a [TBD]).
+  // {
+  //   blockType: 'icon-cards',
+  //   pill: 'Partnership',
+  //   heading: 'Founding partner program',
+  //   intro: 'Benefits and conditions are not confirmed yet and are shown as placeholders for the owner.',
+  //   columns: '3',
+  //   cards: [
+  //     card('shield', 'green', 'Benefits', '[TBD: owner to confirm founding-partner benefits]'),
+  //     card('list', 'blue', 'Conditions', '[TBD: owner to confirm conditions]'),
+  //     card('fileText', 'amber', 'Commercial terms', 'Discussed in consultation. [TBD: OEM / white-label terms]'),
+  //   ],
+  // },
   {
     blockType: 'process-steps',
     heading: 'Proof of concept in four steps',
@@ -326,19 +341,20 @@ const partnersLayout: Json = [
       { title: 'Production development', line: 'Build the production setup.' },
     ],
   },
-  {
-    blockType: 'icon-cards',
-    pill: 'PoC scope',
-    heading: 'What a typical PoC covers',
-    intro: 'Placeholders. The owner confirms the real details.',
-    columns: '2',
-    cards: [
-      card('list', 'green', 'Target task', '[One call type, e.g. after-hours inquiries for one partner client]'),
-      card('clock', 'blue', 'Duration', '[X weeks]'),
-      card('headset', 'green', 'TechMirai delivers', '[Voice agent configured for the task, approved-knowledge setup, call logs and summaries, dashboard access, test support, evaluation report]'),
-      card('users', 'amber', 'Partner provides', '[One target client or process, call flows and FAQ/manual, test callers or operators, success criteria, a contact person]'),
-    ],
-  },
+  // PLACEHOLDER-OFF: PoC scope block (every card is a bracketed placeholder).
+  // {
+  //   blockType: 'icon-cards',
+  //   pill: 'PoC scope',
+  //   heading: 'What a typical PoC covers',
+  //   intro: 'Placeholders. The owner confirms the real details.',
+  //   columns: '2',
+  //   cards: [
+  //     card('list', 'green', 'Target task', '[One call type, e.g. after-hours inquiries for one partner client]'),
+  //     card('clock', 'blue', 'Duration', '[X weeks]'),
+  //     card('headset', 'green', 'TechMirai delivers', '[Voice agent configured for the task, approved-knowledge setup, call logs and summaries, dashboard access, test support, evaluation report]'),
+  //     card('users', 'amber', 'Partner provides', '[One target client or process, call flows and FAQ/manual, test callers or operators, success criteria, a contact person]'),
+  //   ],
+  // },
   {
     blockType: 'icon-cards',
     pill: 'Evaluation',
@@ -367,7 +383,7 @@ const companyLayout: Json = [
     heading: 'Company',
     body: "TechMirai is an international engineering team building an AI voice agent for call centers and phone desks. This page is for partners and customers who want to know who is behind it. Team photos and videos appear here only with each person's written consent; next, you can contact us.",
     primaryButton: { label: 'Consult about adopting the AI voice agent', href: '/contact?path=adoption' },
-    note: LAST_UPDATED,
+    // PLACEHOLDER-OFF: note: LAST_UPDATED,
   },
   {
     blockType: 'icon-cards',
@@ -376,21 +392,22 @@ const companyLayout: Json = [
     columns: '2',
     cards: [
       card('users', 'green', 'Team', 'International engineering team'),
-      card('user', 'blue', 'Members', '[TBD: photos, names and roles appear after written consent is recorded]'),
+      // PLACEHOLDER-OFF: card('user', 'blue', 'Members', '[TBD: photos, names and roles appear after written consent is recorded]'),
     ],
   },
-  {
-    blockType: 'icon-cards',
-    pill: 'Company profile',
-    heading: 'Company profile',
-    columns: '4',
-    cards: [
-      card('building', 'green', 'Legal name', '[TBD: legal company name]'),
-      card('user', 'blue', 'Representative', '[TBD: representative]'),
-      card('building', 'amber', 'Address', '[TBD: registered address]'),
-      card('fileText', 'green', 'Registration', '[TBD: registration number]'),
-    ],
-  },
+  // PLACEHOLDER-OFF: company profile block (every card is a [TBD]).
+  // {
+  //   blockType: 'icon-cards',
+  //   pill: 'Company profile',
+  //   heading: 'Company profile',
+  //   columns: '4',
+  //   cards: [
+  //     card('building', 'green', 'Legal name', '[TBD: legal company name]'),
+  //     card('user', 'blue', 'Representative', '[TBD: representative]'),
+  //     card('building', 'amber', 'Address', '[TBD: registered address]'),
+  //     card('fileText', 'green', 'Registration', '[TBD: registration number]'),
+  //   ],
+  // },
   {
     blockType: 'cta-banner',
     heading: 'Get in touch',

@@ -85,8 +85,9 @@ const copy: Record<Locale, { pill: string; title: string; summary: string; ringi
   en: {
     pill: 'Consultation',
     title: 'Contact',
+    // PLACEHOLDER-OFF: ' Last updated: [TBD: owner to confirm date]. Responsible company: [TBD: legal company name].' (hidden)
     summary:
-      'Use this form to consult TechMirai about adopting the AI voice agent or about a white-label partnership. We use your details only to reply. Last updated: [TBD: owner to confirm date]. Responsible company: [TBD: legal company name].',
+      'Use this form to consult TechMirai about adopting the AI voice agent or about a white-label partnership. We use your details only to reply.',
     ringiHeading: 'Overview for internal approval (ringi)',
     ringiBody:
       'A 1–2 page overview you can share internally: what it is, how it works, the PoC flow, a privacy summary and contact. It contains placeholders the owner must review before sharing.',
@@ -95,8 +96,9 @@ const copy: Record<Locale, { pill: string; title: string; summary: string; ringi
   ja: {
     pill: 'ご相談',
     title: 'お問い合わせ',
+    // PLACEHOLDER-OFF: '最終更新日：[TBD：オーナー確認待ち]。責任主体：[TBD：正式な会社名]。' (hidden)
     summary:
-      'AI音声エージェントの導入、またはホワイトラベルでの協業について、TechMiraiにご相談いただくためのフォームです。ご入力いただいた情報は、返信のためにのみ利用します。最終更新日：[TBD：オーナー確認待ち]。責任主体：[TBD：正式な会社名]。',
+      'AI音声エージェントの導入、またはホワイトラベルでの協業について、TechMiraiにご相談いただくためのフォームです。ご入力いただいた情報は、返信のためにのみ利用します。',
     ringiHeading: '社内稟議用の概要資料',
     ringiBody:
       '社内で共有できる1〜2ページの概要資料です。サービスの内容、仕組み、PoCの流れ、プライバシーの要点、連絡先をまとめています。共有前に、オーナーが確認すべきプレースホルダーが含まれます。',

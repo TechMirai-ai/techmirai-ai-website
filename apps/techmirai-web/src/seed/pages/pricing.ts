@@ -46,21 +46,22 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       body: 'One starter package covers what most small businesses need. Your exact quote comes after the free assessment, with every cost listed.',
       textAlignment: 'left',
     },
-    {
-      blockType: 'pricing-teaser',
-      heading: 'Your plan',
-      packageName: 'AI受付 Starter Package',
-      priceLine1: 'Initial setup: From [¥300,000]',
-      priceLine2: 'Monthly: From [¥30,000]',
-      note: 'Your exact quote comes after the free assessment. [Wording from your accountant]',
-      buttonLabel: 'Get a free AI website assessment',
-      buttonHref: '/assessment',
-    },
+    // PLACEHOLDER-OFF: pricing-teaser block (priceLine1/2 are required and bracketed).
+    // {
+    //   blockType: 'pricing-teaser',
+    //   heading: 'Your plan',
+    //   packageName: 'AI受付 Starter Package',
+    //   priceLine1: 'Initial setup: From [¥300,000]',
+    //   priceLine2: 'Monthly: From [¥30,000]',
+    //   note: 'Your exact quote comes after the free assessment. [Wording from your accountant]',
+    //   buttonLabel: 'Get a free AI website assessment',
+    //   buttonHref: '/assessment',
+    // },
     {
       blockType: 'label-value-list',
       heading: 'Included',
       rows: [
-        { label: 'Website', detail: 'Custom-built website, up to [N] pages, Japanese and English' },
+        // PLACEHOLDER-OFF: { label: 'Website', detail: 'Custom-built website, up to [N] pages, Japanese and English' },
         { label: 'Reception chat', detail: 'Chat with your approved answers, AI fallback and staff handoff' },
         {
           label: 'Booking',
@@ -68,10 +69,11 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
         },
         { label: 'LINE', detail: 'LINE booking and reminders on your LINE Official Account' },
         { label: 'Admin panel', detail: 'Staff update content and see bookings; separate staff permissions' },
-        {
-          label: 'Monthly support',
-          detail: '[Hosting], fixes, [N] content updates per month, Japanese-language support',
-        },
+        // PLACEHOLDER-OFF: row 'Monthly support' (bracketed, unconfirmed)
+        // {
+        //   label: 'Monthly support',
+        //   detail: '[Hosting], fixes, [N] content updates per month, Japanese-language support',
+        // },
       ],
     },
     {
@@ -80,21 +82,23 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       rows: [
         { label: 'LINE fees', detail: "LINE's own message fees, depending on your plan" },
         { label: 'Domain', detail: 'Domain registration and renewal' },
-        { label: 'Photography and writing', detail: 'Photo shoots; writing beyond [scope]' },
-        {
-          label: 'Other services',
-          detail: '[Any third-party service fees — CONFIRM what the monthly fee covers]',
-        },
+        // PLACEHOLDER-OFF: rows 'Photography and writing' / 'Other services' (bracketed, unconfirmed)
+        // { label: 'Photography and writing', detail: 'Photo shoots; writing beyond [scope]' },
+        // {
+        //   label: 'Other services',
+        //   detail: '[Any third-party service fees — CONFIRM what the monthly fee covers]',
+        // },
       ],
     },
     {
       blockType: 'label-value-list',
       heading: 'Options',
       rows: [
-        {
-          label: 'Add AI受付 to your current website',
-          detail: '[Price — CONFIRM availability]',
-        },
+        // PLACEHOLDER-OFF: row 'Add AI受付 to your current website' (bracketed, unconfirmed)
+        // {
+        //   label: 'Add AI受付 to your current website',
+        //   detail: '[Price — CONFIRM availability]',
+        // },
         { label: 'AI受付 Voice', detail: 'In development; ask about a demo' },
         { label: 'More languages', detail: 'Quote on request' },
         { label: 'Custom integration', detail: 'Quote after checking your system' },
@@ -107,12 +111,13 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       blockType: 'label-value-list',
       heading: 'Common questions',
       rows: [
-        { label: 'Is there a minimum contract period?', detail: '[CONFIRM]' },
-        { label: 'How do I pay?', detail: '[Bank transfer, monthly — CONFIRM]' },
+        // PLACEHOLDER-OFF: rows 'minimum contract period' / 'How do I pay?' (bracketed, unconfirmed)
+        // { label: 'Is there a minimum contract period?', detail: '[CONFIRM]' },
+        // { label: 'How do I pay?', detail: '[Bank transfer, monthly — CONFIRM]' },
         {
           label: 'What if I stop the service?',
-          detail:
-            'You keep your content and customer data; we help you export it. [CONFIRM contract terms]',
+          // PLACEHOLDER-OFF: ' [CONFIRM contract terms]' (suffix hidden)
+          detail: 'You keep your content and customer data; we help you export it.',
         },
       ],
     },
@@ -126,21 +131,22 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       body: '多くのお店に必要な機能を、ひとつのパッケージにまとめました。正式なお見積りは無料診断のあとに、すべての費用を明記してご提示します。',
       textAlignment: 'left',
     },
-    {
-      blockType: 'pricing-teaser',
-      heading: 'ご契約内容',
-      packageName: 'AI受付 スタートパッケージ',
-      priceLine1: '初期費用 [30万円]〜',
-      priceLine2: '月額 [3万円]〜',
-      note: '正式なお見積りは、無料診断のあとにご提示します。[税理士に確認した表記]',
-      buttonLabel: '無料AIホームページ診断を申し込む',
-      buttonHref: '/assessment',
-    },
+    // PLACEHOLDER-OFF: pricing-teaser block (priceLine1/2 are required and bracketed).
+    // {
+    //   blockType: 'pricing-teaser',
+    //   heading: 'ご契約内容',
+    //   packageName: 'AI受付 スタートパッケージ',
+    //   priceLine1: '初期費用 [30万円]〜',
+    //   priceLine2: '月額 [3万円]〜',
+    //   note: '正式なお見積りは、無料診断のあとにご提示します。[税理士に確認した表記]',
+    //   buttonLabel: '無料AIホームページ診断を申し込む',
+    //   buttonHref: '/assessment',
+    // },
     {
       blockType: 'label-value-list',
       heading: '含まれるもの',
       rows: [
-        { label: 'ホームページ', detail: '独自開発のホームページ（[N]ページまで、日本語・英語）' },
+        // PLACEHOLDER-OFF: { label: 'ホームページ', detail: '独自開発のホームページ（[N]ページまで、日本語・英語）' },
         {
           label: '受付チャット',
           detail: '承認済みの回答、AIによる補助、スタッフへの引き継ぎを備えた受付チャット',
@@ -151,10 +157,11 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
         },
         { label: 'LINE', detail: 'LINE公式アカウントでのLINE予約とリマインド' },
         { label: '管理画面', detail: 'スタッフによる内容の更新と予約の確認、権限の設定' },
-        {
-          label: '月額サポート',
-          detail: '[サーバー管理]、不具合の修正、月[N]回までの更新作業、日本語でのサポート',
-        },
+        // PLACEHOLDER-OFF: row 月額サポート (bracketed, unconfirmed)
+        // {
+        //   label: '月額サポート',
+        //   detail: '[サーバー管理]、不具合の修正、月[N]回までの更新作業、日本語でのサポート',
+        // },
       ],
     },
     {
@@ -163,21 +170,23 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       rows: [
         { label: 'LINEのメッセージ料金', detail: 'プランに応じたLINEのメッセージ料金' },
         { label: 'ドメイン', detail: 'ドメインの取得・更新費用' },
-        { label: '写真撮影・原稿作成', detail: '写真撮影、[範囲]を超える原稿作成' },
-        {
-          label: '外部サービス',
-          detail: '[外部サービスの利用料 — 月額に含まれる範囲を確認中]',
-        },
+        // PLACEHOLDER-OFF: rows 写真撮影・原稿作成 / 外部サービス (bracketed, unconfirmed)
+        // { label: '写真撮影・原稿作成', detail: '写真撮影、[範囲]を超える原稿作成' },
+        // {
+        //   label: '外部サービス',
+        //   detail: '[外部サービスの利用料 — 月額に含まれる範囲を確認中]',
+        // },
       ],
     },
     {
       blockType: 'label-value-list',
       heading: 'オプション',
       rows: [
-        {
-          label: '今のホームページへのAI受付追加',
-          detail: '[今のホームページへのAI受付追加 — 価格確認中]',
-        },
+        // PLACEHOLDER-OFF: row 今のホームページへのAI受付追加 (bracketed, unconfirmed)
+        // {
+        //   label: '今のホームページへのAI受付追加',
+        //   detail: '[今のホームページへのAI受付追加 — 価格確認中]',
+        // },
         { label: 'AI受付 Voice', detail: '開発中。デモはご相談ください' },
         { label: '追加の言語', detail: 'お見積り' },
         { label: '個別の連携', detail: 'システム確認後にお見積り' },
@@ -189,11 +198,13 @@ export async function seedPricingPage(payload: Payload): Promise<void> {
       blockType: 'label-value-list',
       heading: 'よくあるご質問',
       rows: [
-        { label: '最低契約期間はありますか？', detail: '[確認中]' },
-        { label: '支払い方法は？', detail: '[銀行振込・毎月 — 確認中]' },
+        // PLACEHOLDER-OFF: rows 最低契約期間 / 支払い方法 (bracketed, unconfirmed)
+        // { label: '最低契約期間はありますか？', detail: '[確認中]' },
+        // { label: '支払い方法は？', detail: '[銀行振込・毎月 — 確認中]' },
         {
           label: '解約したらどうなりますか？',
-          detail: 'コンテンツと顧客データはお客様のものです。データの書き出しをお手伝いします。[契約条件を確認中]',
+          // PLACEHOLDER-OFF: '[契約条件を確認中]' (suffix hidden)
+          detail: 'コンテンツと顧客データはお客様のものです。データの書き出しをお手伝いします。',
         },
       ],
     },

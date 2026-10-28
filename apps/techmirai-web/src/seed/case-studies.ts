@@ -125,16 +125,17 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
       {
         blockType: 'label-value-list',
         rows: [
-          { label: 'Client comment', detail: '[Quote from Sadiatec, in their own words]' },
+          // PLACEHOLDER-OFF: { label: 'Client comment', detail: '[Quote from Sadiatec, in their own words]' },
           {
             label: 'What came next',
             detail: 'The engine we built for Sadiatec became the foundation of AI受付 and our clinic demo.',
           },
-          {
-            label: 'Screenshots',
-            detail:
-              '[PLACEHOLDER: homepage, admin panel (private data hidden) and chatbot-open screenshots — pending Sadiatec’s written approval]',
-          },
+          // PLACEHOLDER-OFF: row 'Screenshots' (bracketed placeholder)
+          // {
+          //   label: 'Screenshots',
+          //   detail:
+          //     '[PLACEHOLDER: homepage, admin panel (private data hidden) and chatbot-open screenshots — pending Sadiatec’s written approval]',
+          // },
         ],
       },
       {
@@ -218,16 +219,17 @@ export async function seedCaseStudies(payload: Payload): Promise<void> {
       {
         blockType: 'label-value-list',
         rows: [
-          { label: 'お客様からのコメント', detail: '[Sadiatec様からのコメント（ご本人の言葉）]' },
+          // PLACEHOLDER-OFF: { label: 'お客様からのコメント', detail: '[Sadiatec様からのコメント（ご本人の言葉）]' },
           {
             label: 'その後',
             detail: 'Sadiatec様のために開発した基盤が、AI受付とクリニックのデモの土台になりました。',
           },
-          {
-            label: 'スクリーンショット',
-            detail:
-              '[プレースホルダー：ホームページ、管理画面（非公開データを非表示）、チャットボット表示画面 — Sadiatec様の書面での承認を待つ]',
-          },
+          // PLACEHOLDER-OFF: row スクリーンショット (bracketed placeholder)
+          // {
+          //   label: 'スクリーンショット',
+          //   detail:
+          //     '[プレースホルダー：ホームページ、管理画面（非公開データを非表示）、チャットボット表示画面 — Sadiatec様の書面での承認を待つ]',
+          // },
         ],
       },
       {

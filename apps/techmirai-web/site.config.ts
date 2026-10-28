@@ -29,6 +29,8 @@ const sadiatecCaseStudyTeaserVisible = false
 // Shared by contact.phone and reception.clinicPhone so the two never drift.
 // Pack-2/D2: Spec gives this only as a bracketed CONFIRM item — stored
 // literally bracketed per CLAUDE.md rule 5, see docs/PLACEHOLDER-REGISTER.md.
+// NOT commented out: legal-headings.test.ts:82 asserts this placeholder phone exists (rule 14: tests are not
+// weakened). Blank it once that test is updated with your approval.
 const clinicPhone = '[080-7701-3004]'
 
 const siteConfig: SiteConfig = {
@@ -142,18 +144,20 @@ const siteConfig: SiteConfig = {
     // per CLAUDE.md rule 5, not invented. See docs/PLACEHOLDER-REGISTER.md.
     email: 'info@techmirai-ai.com',
     phone: clinicPhone,
-    address: {
-      en: '[Address you may publish]',
-      ja: '[掲載可能な住所]',
-    },
+    // PLACEHOLDER-OFF: address is bracketed, unconfirmed (optional in the schema).
+    // address: {
+    //   en: '[Address you may publish]',
+    //   ja: '[掲載可能な住所]',
+    // },
     mapEmbedUrl: 'https://www.google.com/maps?q=Umegaoka+Station+Tokyo&output=embed',
     // Spec gives hours as one bracketed phrase, not a per-weekday schedule —
     // the hours-location block (packages/cms-core/src/blocks/hours-location)
     // expects monday..sunday keys and has no live instance on any page yet;
     // this single-key shape is a Pack-3 concern once that block is placed.
-    businessHours: {
-      weekdays: '[Weekdays 9:00–18:00]',
-    },
+    // PLACEHOLDER-OFF: bracketed, unconfirmed (optional in the schema).
+    // businessHours: {
+    //   weekdays: '[Weekdays 9:00–18:00]',
+    // },
   },
 
   forms: {

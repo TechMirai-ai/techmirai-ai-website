@@ -109,7 +109,7 @@ export async function seedTechnologyPage(payload: Payload): Promise<void> {
       steps: [
         { line: 'Define the question and what “success” means, in numbers you choose.' },
         { line: 'Check your data: is there enough, and is it usable?' },
-        { line: 'Build a small working prototype in [X weeks].' },
+        // PLACEHOLDER-OFF: { line: 'Build a small working prototype in [X weeks].' },
         { line: 'Report honestly: what worked, what did not, and what going further would cost.' },
         { line: 'You decide: continue, change direction, or stop — with no obligation.' },
       ],
@@ -153,8 +153,9 @@ export async function seedTechnologyPage(payload: Payload): Promise<void> {
         { label: 'Media', detail: 'Cloudflare R2' },
         { label: 'Languages (i18n)', detail: 'next-intl · ja / en' },
         { label: 'Search', detail: 'Fuse.js' },
-        { label: 'AI', detail: '[Groq — CONFIRM]' },
-        { label: 'Voice', detail: '[Azure AI Speech — CONFIRM]' },
+        // PLACEHOLDER-OFF: rows 'AI' / 'Voice' (bracketed, unconfirmed)
+        // { label: 'AI', detail: '[Groq — CONFIRM]' },
+        // { label: 'Voice', detail: '[Azure AI Speech — CONFIRM]' },
         { label: 'Email', detail: 'Resend' },
         { label: 'Rate limiting', detail: 'Upstash Redis' },
         { label: 'Monorepo', detail: 'pnpm · Turborepo' },
@@ -202,7 +203,7 @@ export async function seedTechnologyPage(payload: Payload): Promise<void> {
       steps: [
         { line: '検証したい問いと、「成功」の基準を、御社が決めた数字で定めます。' },
         { line: 'データを確認します。量は足りるか、使える状態か。' },
-        { line: '[X週間]で、小さく動く試作品をつくります。' },
+        // PLACEHOLDER-OFF: { line: '[X週間]で、小さく動く試作品をつくります。' },
         { line: 'うまくいったこと、いかなかったこと、本格導入にかかる費用を、正直にご報告します。' },
         { line: '続ける、方向を変える、やめる。判断は御社が自由に行えます。' },
       ],
@@ -239,8 +240,9 @@ export async function seedTechnologyPage(payload: Payload): Promise<void> {
         { label: 'メディア', detail: 'Cloudflare R2' },
         { label: '多言語対応 (i18n)', detail: 'next-intl · ja / en' },
         { label: '検索', detail: 'Fuse.js' },
-        { label: 'AI', detail: '[Groq — 確認中]' },
-        { label: '音声', detail: '[Azure AI Speech — 確認中]' },
+        // PLACEHOLDER-OFF: rows AI / 音声 (bracketed, unconfirmed)
+        // { label: 'AI', detail: '[Groq — 確認中]' },
+        // { label: '音声', detail: '[Azure AI Speech — 確認中]' },
         { label: 'メール', detail: 'Resend' },
         { label: '送信回数制限', detail: 'Upstash Redis' },
         { label: 'モノレポ', detail: 'pnpm · Turborepo' },

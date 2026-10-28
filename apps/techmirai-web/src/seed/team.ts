@@ -10,7 +10,7 @@ export interface TeamIds {
   abdullah: string | number
   haruka: string | number
   nahida: string | number
-  newEngineer: string | number
+  // PLACEHOLDER-OFF: newEngineer: string | number
 }
 
 interface TeamSeedInput {
@@ -89,7 +89,8 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
       shortBio: "Master's in software engineering. Builds the AI and the systems behind AI受付.",
       // Spec §10.4 full bio, verbatim — bracket kept per CLAUDE.md rule 5.
       bio: [
-        "Has lived in Japan for [about seven years]. Master's in software engineering from a Japanese university. Has worked on deep learning, computer vision and voice AI in Japanese corporate research and manufacturing. Speaks five languages. Designs the AI and systems behind AI受付.",
+        // PLACEHOLDER-OFF: "Has lived in Japan for [about seven years]. " (first sentence hidden)
+        "Master's in software engineering from a Japanese university. Has worked on deep learning, computer vision and voice AI in Japanese corporate research and manufacturing. Speaks five languages. Designs the AI and systems behind AI受付.",
       ],
     },
     ja: {
@@ -97,7 +98,8 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
       title: '代表 (representative)',
       shortBio: 'ソフトウェア工学修士。AI受付を支えるAIとシステムを設計しています。',
       bio: [
-        '日本在住は[約7年]。日本の大学院でソフトウェア工学の修士号を取得。日本企業の研究開発や製造の現場で、ディープラーニング、画像認識、音声AIに携わってきました。5か国語を話します。AI受付を支えるAIとシステムを設計しています。',
+        // PLACEHOLDER-OFF: '日本在住は[約7年]。' (first sentence hidden)
+        '日本の大学院でソフトウェア工学の修士号を取得。日本企業の研究開発や製造の現場で、ディープラーニング、画像認識、音声AIに携わってきました。5か国語を話します。AI受付を支えるAIとシステムを設計しています。',
       ],
     },
     sortOrder: 1,
@@ -177,28 +179,29 @@ export async function seedTeam(payload: Payload): Promise<TeamIds> {
   // Spec §10.4's own 5th row: a deliberate placeholder for a not-yet-hired
   // person, not a real team member awaiting consent (distinct from F1-15's
   // consent gate on the 4 real people above) — registered as I2-06.
-  const newEngineer = await upsertTeamMember(payload, {
-    slug: 'new-engineer',
-    photoFilename: 'placeholder-team-new-engineer.png',
-    initials: 'NE',
-    en: {
-      name: '[New engineer]',
-      title: 'Engineer',
-      shortBio: '[Name and one line, when ready]',
-      bio: ['[Name and one line, when ready]'],
-    },
-    ja: {
-      // Spec gives one bracket token for the name (not a separate EN/JA
-      // translation pair) — kept identical in both locales, per CLAUDE.md
-      // rule 5. Title reuses Nahida's exact JA term above.
-      name: '[New engineer]',
-      title: 'エンジニア',
-      shortBio: '[お名前と一言、準備でき次第]',
-      bio: ['[お名前と一言、準備でき次第]'],
-    },
-    sortOrder: 5,
-  })
+  // PLACEHOLDER-OFF: the 5th "new engineer" slot is entirely bracketed placeholder text.
+  // const newEngineer = await upsertTeamMember(payload, {
+  //   slug: 'new-engineer',
+  //   photoFilename: 'placeholder-team-new-engineer.png',
+  //   initials: 'NE',
+  //   en: {
+  //     name: '[New engineer]',
+  //     title: 'Engineer',
+  //     shortBio: '[Name and one line, when ready]',
+  //     bio: ['[Name and one line, when ready]'],
+  //   },
+  //   ja: {
+  //     // Spec gives one bracket token for the name (not a separate EN/JA
+  //     // translation pair) — kept identical in both locales, per CLAUDE.md
+  //     // rule 5. Title reuses Nahida's exact JA term above.
+  //     name: '[New engineer]',
+  //     title: 'エンジニア',
+  //     shortBio: '[お名前と一言、準備でき次第]',
+  //     bio: ['[お名前と一言、準備でき次第]'],
+  //   },
+  //   sortOrder: 5,
+  // })
 
-  payload.logger.info('🧑‍🤝‍🧑 Team seeded (Spec §5.11/§10.4, 5 people)')
-  return { jamal, abdullah, haruka, nahida, newEngineer }
+  payload.logger.info('🧑‍🤝‍🧑 Team seeded (Spec §5.11/§10.4, 4 people; new-engineer slot hidden)')
+  return { jamal, abdullah, haruka, nahida }
 }

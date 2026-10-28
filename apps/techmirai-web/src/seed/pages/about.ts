@@ -58,7 +58,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
         'Small businesses carry much of Japan’s everyday life: the clinic down the street, the salon, the garage, the family-run hotel. Yet in many of them, skilled people spend a large part of the day answering the same questions and picking up the phone in the middle of other work.',
         'We built AI受付 so the first reply can happen on its own — at 10pm, on a holiday, or in English — and so your staff step in only when it truly matters. We do not believe AI should replace people. We believe it should take the repetitive work off their hands.',
         'We are also honest about what AI cannot do. That is why AI受付 answers with buttons and your own approved words first, uses AI only as a last step, and always shows a way to reach a person.',
-        '[Optional: one or two sentences in your own words about why you started TechMirai.]',
+        // PLACEHOLDER-OFF: '[Optional: one or two sentences in your own words about why you started TechMirai.]',
         'We started with our first client, Sadiatec, and built every piece ourselves. We would be glad to show you what we have built.',
       ),
     },
@@ -81,7 +81,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
     {
       blockType: 'team-grid',
       sectionHeading: 'Our team',
-      members: [team.jamal, team.abdullah, team.haruka, team.nahida, team.newEngineer],
+      members: [team.jamal, team.abdullah, team.haruka, team.nahida], // PLACEHOLDER-OFF: , team.newEngineer
       columns: '3',
       showBio: true,
     },
@@ -95,7 +95,8 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
         role: 'Md. Sanaul Haque, President & CEO',
         line: 'Established in Japan in 2005. An established Japan-based company supporting our local business relationships.',
         clarityLine:
-          'TechMirai is an independent business; Sadiatec is our partner, not our parent company. [CONFIRM wording with Mr. Haque]',
+          // PLACEHOLDER-OFF: ' [CONFIRM wording with Mr. Haque]' (suffix hidden)
+          'TechMirai is an independent business; Sadiatec is our partner, not our parent company.',
       },
       columns: '3',
     },
@@ -105,20 +106,22 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
       rows: [
         { label: 'Trade name', detail: 'TechMirai' },
         { label: 'Representative', detail: 'Jamal Shah', founderGated: true },
-        {
-          label: 'Business form',
-          detail: '[Sole proprietorship — CONFIRM, or company name if incorporated]',
-        },
-        { label: 'Established', detail: '[Month Year]' },
-        { label: 'Address', detail: '[Address you may publish]' },
+        // PLACEHOLDER-OFF: rows 'Business form', 'Established', 'Address' (bracketed, unconfirmed)
+        // {
+        //   label: 'Business form',
+        //   detail: '[Sole proprietorship — CONFIRM, or company name if incorporated]',
+        // },
+        // { label: 'Established', detail: '[Month Year]' },
+        // { label: 'Address', detail: '[Address you may publish]' },
         {
           label: 'Business',
           detail:
             'AI reception systems for small businesses (AI受付) · Website development · AI proof-of-concept development',
         },
         { label: 'Partner', detail: 'Sadiatec Co., Ltd. (Chiyoda-ku, Tokyo; est. 2005)' },
-        { label: 'Main client', detail: '[Sadiatec Co., Ltd. — with permission]' },
-        { label: 'Phone', detail: '[080-7701-3004]' },
+        // PLACEHOLDER-OFF: rows 'Main client', 'Phone' (bracketed, unconfirmed)
+        // { label: 'Main client', detail: '[Sadiatec Co., Ltd. — with permission]' },
+        // { label: 'Phone', detail: '[080-7701-3004]' },
         { label: 'Email', detail: 'info@techmirai-ai.com' },
       ],
     },
@@ -165,7 +168,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
         '日本の毎日の暮らしは、多くの小さなお店や会社に支えられています。街のクリニック、美容室、整備工場、家族で営む宿。けれども、その多くで、専門の技術を持つ方々が一日の多くの時間を、同じ質問への回答や、作業の合間の電話対応に使っています。',
         '私たちがAI受付をつくったのは、夜10時でも、休日でも、英語でも、最初のお返事が自動で届くようにするためです。そして、スタッフの皆さまが本当に必要なときだけ対応すればよいようにするためです。私たちは、AIが人の代わりになるべきだとは考えていません。くり返しの仕事を引き受けて、人の手を空けるためのものだと考えています。',
         '同時に、AIにできないことについても、正直でありたいと考えています。だからAI受付は、まずボタンと、お店が承認した言葉で答え、AIは最後の手段としてだけ使い、どの段階でもスタッフにつながる方法を示します。',
-        '[任意：TechMiraiを始めた理由を、ご自身の言葉で一、二文。 (Optional: one or two sentences, in your own words, on why you started TechMirai.)]',
+        // PLACEHOLDER-OFF: '[任意：TechMiraiを始めた理由を、ご自身の言葉で一、二文。 (Optional: one or two sentences, in your own words, on why you started TechMirai.)]',
         '最初のお客様であるSadiatec様のプロジェクトから始まり、すべてを自分たちの手で開発してきました。実際に動くものを、ぜひご覧ください。',
       ),
     },
@@ -188,7 +191,7 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
     {
       blockType: 'team-grid',
       sectionHeading: 'チーム',
-      members: [team.jamal, team.abdullah, team.haruka, team.nahida, team.newEngineer],
+      members: [team.jamal, team.abdullah, team.haruka, team.nahida], // PLACEHOLDER-OFF: , team.newEngineer
       columns: '3',
       showBio: true,
     },
@@ -202,7 +205,8 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
         role: '代表取締役社長 (president and representative director)　Md. Sanaul Haque',
         line: '2005年に日本で設立。私たちの国内での事業展開を支えていただいているパートナー企業です。',
         clarityLine:
-          'TechMiraiは独立した事業であり、Sadiatecは親会社ではなくパートナー企業です。[表現をHaque様に確認]',
+          // PLACEHOLDER-OFF: '[表現をHaque様に確認]' (suffix hidden)
+          'TechMiraiは独立した事業であり、Sadiatecは親会社ではなくパートナー企業です。',
       },
       columns: '3',
     },
@@ -210,18 +214,21 @@ export async function seedAboutPage(payload: Payload, media: MediaIds, team: Tea
       blockType: 'label-value-list',
       heading: '会社概要',
       rows: [
-        { label: '屋号', detail: 'TechMirai（[テックミライ]）' },
+        // PLACEHOLDER-OFF: 'TechMirai（[テックミライ]）' (bracketed reading hidden)
+        { label: '屋号', detail: 'TechMirai' },
         { label: '代表者', detail: 'ジャマル・シャー', founderGated: true },
-        { label: '事業形態', detail: '[個人事業 — 確認中、法人化済みの場合は法人名]' },
-        { label: '創業', detail: '[年月]' },
-        { label: '所在地', detail: '[掲載可能な住所]' },
+        // PLACEHOLDER-OFF: rows 事業形態 / 創業 / 所在地 (bracketed, unconfirmed)
+        // { label: '事業形態', detail: '[個人事業 — 確認中、法人化済みの場合は法人名]' },
+        // { label: '創業', detail: '[年月]' },
+        // { label: '所在地', detail: '[掲載可能な住所]' },
         {
           label: '事業内容',
           detail: '中小企業・店舗向けAI受付システムの開発・提供／ホームページ制作／AIのPoC（概念実証）開発',
         },
         { label: 'パートナー', detail: 'Sadiatec Co., Ltd.（東京都千代田区、2005年設立）' },
-        { label: '主な取引先', detail: '[Sadiatec Co., Ltd. — 掲載許可を確認]' },
-        { label: '電話', detail: '[080-7701-3004]' },
+        // PLACEHOLDER-OFF: rows 主な取引先 / 電話 (bracketed, unconfirmed)
+        // { label: '主な取引先', detail: '[Sadiatec Co., Ltd. — 掲載許可を確認]' },
+        // { label: '電話', detail: '[080-7701-3004]' },
         { label: 'メール', detail: 'info@techmirai-ai.com' },
       ],
     },

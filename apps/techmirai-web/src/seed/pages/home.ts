@@ -218,7 +218,7 @@ export async function seedHomePage(
       buttonLabel: 'Open the live demo',
       buttonHref: demoUrl,
       qrCaption: 'Scan to try it on your phone, exactly as a customer would.',
-      smallPrint: '[Demo clinic name] is a fictional clinic created for this demo.',
+      // PLACEHOLDER-OFF: smallPrint: '[Demo clinic name] is a fictional clinic created for this demo.',
       // No JA given anywhere in the Spec for these three (brochure not in
       // this repo) — [JA TODO], registered as G2-01.
       threeStepStrip: [{ text: 'Choose a service' }, { text: 'pick a time' }, { text: 'confirmed' }],
@@ -279,7 +279,8 @@ export async function seedHomePage(
     {
       blockType: 'process-steps',
       heading: 'From first conversation to launch, we do the work.',
-      sub: 'No AI expertise required. Typical timeline: [X weeks] after we receive your content.',
+      // PLACEHOLDER-OFF: ' Typical timeline: [X weeks] after we receive your content.' (second sentence hidden)
+      sub: 'No AI expertise required.',
       steps: [
         { title: 'Assessment', line: 'We review your website and how inquiries reach you today.' },
         {
@@ -304,18 +305,19 @@ export async function seedHomePage(
       buttonLabel: 'Read the case study',
       buttonHref: '/case-studies/sadiatec',
     },
-    {
-      blockType: 'pricing-teaser',
-      heading: 'Simple, transparent pricing.',
-      packageName: 'AI受付 Starter Package',
-      priceLine1: 'Initial setup from [¥300,000]',
-      priceLine2: 'Monthly from [¥30,000]',
-      includesList:
-        'Website with AI受付 built in · Reception chat with your approved answers · Online booking · LINE booking and reminders · Japanese and English · Admin panel · Monthly support',
-      note: 'Your exact quote comes after the free assessment. [Tax wording]',
-      buttonLabel: 'See pricing details',
-      buttonHref: '/pricing',
-    },
+    // PLACEHOLDER-OFF: pricing-teaser block (priceLine1/2 are required and bracketed).
+    // {
+    //   blockType: 'pricing-teaser',
+    //   heading: 'Simple, transparent pricing.',
+    //   packageName: 'AI受付 Starter Package',
+    //   priceLine1: 'Initial setup from [¥300,000]',
+    //   priceLine2: 'Monthly from [¥30,000]',
+    //   includesList:
+    //     'Website with AI受付 built in · Reception chat with your approved answers · Online booking · LINE booking and reminders · Japanese and English · Admin panel · Monthly support',
+    //   note: 'Your exact quote comes after the free assessment. [Tax wording]',
+    //   buttonLabel: 'See pricing details',
+    //   buttonHref: '/pricing',
+    // },
     {
       blockType: 'security-points',
       heading: 'Safe to rely on, every day.',
@@ -328,7 +330,7 @@ export async function seedHomePage(
         {
           text: "Personal information handled under our privacy policy and Japan's Act on the Protection of Personal Information.",
         },
-        { text: 'Japanese-language support by email, phone and LINE, [weekdays 9:00–18:00].' },
+        // PLACEHOLDER-OFF: { text: 'Japanese-language support by email, phone and LINE, [weekdays 9:00–18:00].' },
       ],
       buttonLabel: 'Security and support details',
       buttonHref: '/security',
@@ -554,7 +556,7 @@ export async function seedHomePage(
       buttonLabel: 'デモを開く',
       buttonHref: demoUrl,
       qrCaption: 'スマートフォンで読み取って、お客様と同じように試せます。',
-      smallPrint: 'デモに登場する[医院名]は、デモ用の架空の医院です。',
+      // PLACEHOLDER-OFF: smallPrint: 'デモに登場する[医院名]は、デモ用の架空の医院です。',
       // No JA given anywhere in the Spec for these three (brochure not in
       // this repo) — registered as G2-01.
       threeStepStrip: [{ text: 'サービスを選ぶ' }, { text: '日時を選ぶ' }, { text: '予約完了' }],
@@ -613,7 +615,8 @@ export async function seedHomePage(
     {
       blockType: 'process-steps',
       heading: 'はじめてのご相談から公開まで、私たちが進めます。',
-      sub: 'AIの知識は必要ありません。目安の期間：資料をお預かりしてから[X週間]。',
+      // PLACEHOLDER-OFF: '目安の期間：資料をお預かりしてから[X週間]。' (second sentence hidden)
+      sub: 'AIの知識は必要ありません。',
       steps: [
         { title: '無料診断', line: '現在のホームページと、お問い合わせの流れを確認します。' },
         { title: '設計', line: 'AI受付が答えること、スタッフが対応すること、予約の流れを一緒に決めます。' },
@@ -632,18 +635,19 @@ export async function seedHomePage(
       buttonLabel: '事例を詳しく見る',
       buttonHref: '/case-studies/sadiatec',
     },
-    {
-      blockType: 'pricing-teaser',
-      heading: 'わかりやすく、明朗な料金。',
-      packageName: 'AI受付 スタートパッケージ',
-      priceLine1: '初期費用 [30万円]〜',
-      priceLine2: '月額 [3万円]〜',
-      includesList:
-        'AI受付を組み込んだホームページ・承認済みの回答による受付チャット・オンライン予約・LINE予約とリマインド・日本語と英語・管理画面・月額サポート',
-      note: '正式なお見積りは、無料診断のあとにご提示します。[税の表記]',
-      buttonLabel: '料金の詳細を見る',
-      buttonHref: '/pricing',
-    },
+    // PLACEHOLDER-OFF: pricing-teaser block (priceLine1/2 are required and bracketed).
+    // {
+    //   blockType: 'pricing-teaser',
+    //   heading: 'わかりやすく、明朗な料金。',
+    //   packageName: 'AI受付 スタートパッケージ',
+    //   priceLine1: '初期費用 [30万円]〜',
+    //   priceLine2: '月額 [3万円]〜',
+    //   includesList:
+    //     'AI受付を組み込んだホームページ・承認済みの回答による受付チャット・オンライン予約・LINE予約とリマインド・日本語と英語・管理画面・月額サポート',
+    //   note: '正式なお見積りは、無料診断のあとにご提示します。[税の表記]',
+    //   buttonLabel: '料金の詳細を見る',
+    //   buttonHref: '/pricing',
+    // },
     {
       blockType: 'security-points',
       heading: '毎日、安心してお使いいただくために。',
@@ -652,7 +656,7 @@ export async function seedHomePage(
         { text: '空き状況・料金・予約時間は、必ず実際の予約データから表示します。AIが作ることはありません。' },
         { text: 'いつでも、ワンタップでスタッフへ。' },
         { text: '個人情報は、個人情報保護法とプライバシーポリシーに基づいて取り扱います。' },
-        { text: 'メール・電話・LINEで、日本語でサポートします（[平日 9:00〜18:00]）。' },
+        // PLACEHOLDER-OFF: { text: 'メール・電話・LINEで、日本語でサポートします（[平日 9:00〜18:00]）。' },
       ],
       buttonLabel: 'セキュリティとサポートの詳細',
       buttonHref: '/security',
@@ -668,13 +672,14 @@ export async function seedHomePage(
         { text: 'ご相談の前に、実際に動く製品をお試しいただけます。' },
       ],
       members: [team.jamal, team.abdullah, team.haruka, team.nahida],
-      partner: {
-        photo: media.partnerPhoto,
-        // Spec gives this literally bracketed — never machine-translate/edit.
-        name: '[katakana from Mr. Haque]',
-        role: 'パートナー企業 (partner company)',
-        line: '最初のプロジェクトから私たちを支える、日本のパートナー企業です。東京都千代田区、2005年設立。',
-      },
+      // PLACEHOLDER-OFF: partner card (name is the literal bracketed '[katakana from Mr. Haque]').
+      // partner: {
+      //   photo: media.partnerPhoto,
+      //   // Spec gives this literally bracketed — never machine-translate/edit.
+      //   name: '[katakana from Mr. Haque]',
+      //   role: 'パートナー企業 (partner company)',
+      //   line: '最初のプロジェクトから私たちを支える、日本のパートナー企業です。東京都千代田区、2005年設立。',
+      // },
       columns: '3',
       showBio: false,
       buttonLabel: 'チームを詳しく見る',

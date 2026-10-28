@@ -74,8 +74,8 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
         { text: 'Two customers can never book the same slot.' },
         { text: 'Customers manage their booking through a private link sent only to them.' },
         {
-          text:
-            'Forms have spam protection and request limits. [CONFIRM — the booking API\'s rate limiter runs per server process; confirm this holds at production scale before launch, or add a shared store.]',
+          // PLACEHOLDER-OFF: ' [CONFIRM — the booking API\'s rate limiter runs per server process; confirm this holds at production scale before launch, or add a shared store.]' (suffix hidden)
+          text: 'Forms have spam protection and request limits.',
         },
         { text: 'Every page is served over an encrypted connection (HTTPS).' },
       ],
@@ -93,13 +93,14 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
           label: 'Who can see it',
           detail: 'Your staff accounts, and TechMirai engineers when needed for support',
         },
-        { label: 'Where it is stored', detail: '[Hosting provider and region — CONFIRM]' },
-        {
-          label: 'AI providers',
-          detail:
-            '[Provider names — CONFIRM, and check their data terms before stating anything about training]',
-        },
-        { label: 'How long', detail: '[Retention period — CONFIRM]' },
+        // PLACEHOLDER-OFF: rows 'Where it is stored' / 'AI providers' / 'How long' (bracketed, unconfirmed)
+        // { label: 'Where it is stored', detail: '[Hosting provider and region — CONFIRM]' },
+        // {
+        //   label: 'AI providers',
+        //   detail:
+        //     '[Provider names — CONFIRM, and check their data terms before stating anything about training]',
+        // },
+        // { label: 'How long', detail: '[Retention period — CONFIRM]' },
         {
           label: 'Rules',
           detail: "Our privacy policy and Japan's Act on the Protection of Personal Information",
@@ -112,9 +113,10 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
       rows: [
         { label: 'Channels', detail: 'Email, phone and LINE' },
         { label: 'Language', detail: 'Japanese and English' },
-        { label: 'Hours', detail: '[Weekdays 9:00–18:00 JST]' },
-        { label: 'Reply time', detail: '[Within 1 business day]' },
-        { label: 'Included monthly', detail: '[Monitoring], fixes, [N] content updates' },
+        // PLACEHOLDER-OFF: rows 'Hours' / 'Reply time' / 'Included monthly' (bracketed, unconfirmed)
+        // { label: 'Hours', detail: '[Weekdays 9:00–18:00 JST]' },
+        // { label: 'Reply time', detail: '[Within 1 business day]' },
+        // { label: 'Included monthly', detail: '[Monitoring], fixes, [N] content updates' },
         { label: 'If you leave', detail: 'We help you export your content and booking data' },
       ],
     },
@@ -147,8 +149,8 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
         { text: '同じ枠に2件の予約が入ることはありません。' },
         { text: 'お客様は、ご本人だけに届く専用のリンクから予約を管理できます。' },
         {
-          text:
-            'フォームには迷惑送信対策と送信回数の制限を設けています。[確認中 — 予約APIの送信制限はサーバープロセスごとに動作します。本番環境のスケールでも十分か、公開前に確認が必要です。]',
+          // PLACEHOLDER-OFF: '[確認中 — 予約APIの送信制限はサーバープロセスごとに動作します。本番環境のスケールでも十分か、公開前に確認が必要です。]' (suffix hidden)
+          text: 'フォームには迷惑送信対策と送信回数の制限を設けています。',
         },
         { text: 'すべてのページを暗号化通信（HTTPS）で配信しています。' },
       ],
@@ -163,9 +165,10 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
           label: '閲覧できる人',
           detail: 'お客様のスタッフアカウント、およびサポートに必要な場合の当社エンジニア',
         },
-        { label: '保存先', detail: '[保存先のサービスと地域 — 確認中]' },
-        { label: '利用しているAIサービス', detail: '[利用しているAIサービス名 — 確認中]' },
-        { label: '保存期間', detail: '[保存期間 — 確認中]' },
+        // PLACEHOLDER-OFF: rows 保存先 / 利用しているAIサービス / 保存期間 (bracketed, unconfirmed)
+        // { label: '保存先', detail: '[保存先のサービスと地域 — 確認中]' },
+        // { label: '利用しているAIサービス', detail: '[利用しているAIサービス名 — 確認中]' },
+        // { label: '保存期間', detail: '[保存期間 — 確認中]' },
         { label: '適用されるルール', detail: 'プライバシーポリシーおよび個人情報保護法' },
       ],
     },
@@ -175,9 +178,10 @@ export async function seedSecurityPage(payload: Payload): Promise<void> {
       rows: [
         { label: '相談方法', detail: 'メール・電話・LINE' },
         { label: '対応言語', detail: '日本語・英語' },
-        { label: '対応時間', detail: '[平日 9:00〜18:00]' },
-        { label: '返信までの目安', detail: '[1営業日以内にご返信]' },
-        { label: '月額に含まれるもの', detail: '[稼働の確認]、不具合の修正、月[N]回までの更新作業' },
+        // PLACEHOLDER-OFF: rows 対応時間 / 返信までの目安 / 月額に含まれるもの (bracketed, unconfirmed)
+        // { label: '対応時間', detail: '[平日 9:00〜18:00]' },
+        // { label: '返信までの目安', detail: '[1営業日以内にご返信]' },
+        // { label: '月額に含まれるもの', detail: '[稼働の確認]、不具合の修正、月[N]回までの更新作業' },
         { label: '解約時', detail: 'コンテンツと予約データの書き出しをお手伝いします' },
       ],
     },

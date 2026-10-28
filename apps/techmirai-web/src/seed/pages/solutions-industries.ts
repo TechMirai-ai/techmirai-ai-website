@@ -102,7 +102,7 @@ const INDUSTRIES: IndustryContent[] = [
         ja: 'メニュー、所要時間、アクセスのご質問に承認済みの内容で回答。料金はメニューのデータをそのまま表示',
       },
       { en: 'LINE booking and reminders', ja: 'LINE予約とリマインド' },
-      { en: '[Choose a staff member — CONFIRM]', ja: '[スタッフ指名 — 確認中]' },
+      // PLACEHOLDER-OFF: { en: '[Choose a staff member — CONFIRM]', ja: '[スタッフ指名 — 確認中]' },
       { en: 'Customers change or cancel themselves', ja: 'お客様ご自身で変更・キャンセル' },
       { en: 'Your Instagram profile link opens chat or booking', ja: 'Instagramのプロフィールからチャットや予約へ' },
       { en: 'English for visitors', ja: '観光客の方には英語で対応' },

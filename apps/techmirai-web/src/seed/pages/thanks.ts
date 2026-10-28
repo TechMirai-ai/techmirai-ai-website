@@ -39,8 +39,8 @@ export async function seedThanksPage(payload: Payload): Promise<void> {
       blockType: 'page-hero',
       variant: 'hero',
       heading: 'Thank you. We have received your request.',
-      body:
-        'You will hear from us within [1 business day] to confirm, and receive your report within [3 business days]. Want to talk sooner? Message us on LINE.',
+      // PLACEHOLDER-OFF: 'You will hear from us within [1 business day] to confirm, and receive your report within [3 business days]. ' (bracketed timings) hidden
+      body: 'Want to talk sooner? Message us on LINE.',
       textAlignment: 'left',
       secondaryButton: { label: 'Message us on LINE', href: '#' },
     },
@@ -51,8 +51,8 @@ export async function seedThanksPage(payload: Payload): Promise<void> {
       blockType: 'page-hero',
       variant: 'hero',
       heading: 'お申し込みありがとうございます。',
-      body:
-        '[1営業日]以内に受付のご連絡を、[3営業日]以内にレポートをお送りします。お急ぎの場合は、LINEでご連絡ください。',
+      // PLACEHOLDER-OFF: '[1営業日]以内に受付のご連絡を、[3営業日]以内にレポートをお送りします。' (bracketed timings) hidden
+      body: 'お急ぎの場合は、LINEでご連絡ください。',
       textAlignment: 'left',
       secondaryButton: { label: 'LINEでご連絡ください', href: '#' },
     },
