@@ -59,6 +59,6 @@ export function adaptDemoSimulatorBlock(raw: unknown): DemoSimulatorBlockProps {
     restartLabel: str(data['restartLabel']),
     audioLabel: str(data['audioLabel']),
     callLabel: str(data['callLabel']),
-    scenarios: rows(data['scenarios']).map(adaptScenario).filter((s) => s.title && s.turns.length > 0),
+    scenarios: rows(data['scenarios']).map(adaptScenario).filter((s) => s.title && (s.turns.length > 0 || s.videoSrc || s.audioEn || s.audioJa)),
   }
 }

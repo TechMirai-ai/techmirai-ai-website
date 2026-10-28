@@ -66,6 +66,29 @@ describe('adaptDemoSimulatorBlock', () => {
     expect(props.scenarios).toHaveLength(1)
   })
 
+  it('keeps a titled scenario that has a video but no transcript, and still drops one with neither', () => {
+    const props = adaptDemoSimulatorBlock({
+      scenarios: [
+        { ...scenario, turns: [], videoSrc: '/video/v.mp4' },
+        { ...scenario, turns: [] },
+      ],
+    })
+
+    expect(props.scenarios).toHaveLength(1)
+    expect(props.scenarios[0]?.videoSrc).toBe('/video/v.mp4')
+    expect(props.scenarios[0]?.turns).toEqual([])
+  })
+
+  it('keeps a titled scenario that has recordings but no transcript and no video', () => {
+    const props = adaptDemoSimulatorBlock({
+      scenarios: [{ ...scenario, turns: [], audioEn: '/audio/a-en.wav', audioJa: '/audio/a-ja.wav' }],
+    })
+
+    expect(props.scenarios).toHaveLength(1)
+    expect(props.scenarios[0]?.videoSrc).toBe('')
+    expect(props.scenarios[0]?.audioJa).toBe('/audio/a-ja.wav')
+  })
+
   it('treats any unknown speaker as the caller and defaults the privacy link', () => {
     const props = adaptDemoSimulatorBlock({
       scenarios: [{ ...scenario, turns: [{ speaker: 'robot', text: 'Hi' }] }],

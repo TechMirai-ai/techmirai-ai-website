@@ -45,7 +45,8 @@ export const DemoSimulatorBlockConfig: Block = {
         // Optional per-scenario call recording, one file per language (public path, e.g. /audio/x.wav).
         { name: 'audioEn', type: 'text' },
         { name: 'audioJa', type: 'text' },
-        // Background video shown in the audio popup (same file for both languages).
+        // Video shown in the inline player (same file for both languages). A scenario with a
+        // video and no transcript turns shows the player instead of the transcript.
         { name: 'videoSrc', type: 'text' },
         // Optional external demo-call page per language; opens in a new tab, https only.
         { name: 'callUrlEn', type: 'text' },
@@ -53,8 +54,6 @@ export const DemoSimulatorBlockConfig: Block = {
         {
           name: 'turns',
           type: 'array',
-          required: true,
-          minRows: 1,
           fields: [
             {
               name: 'speaker',

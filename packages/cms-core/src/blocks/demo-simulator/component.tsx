@@ -1,8 +1,8 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useLocale } from 'next-intl'
-import { AudioPopup } from './audio-popup'
+import { ScenarioPlayer } from './scenario-player'
 import type { DemoScenario, DemoSimulatorBlockProps } from './types'
 
 type Phase = 'notice' | 'choose' | 'result'
@@ -28,7 +28,6 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
     aiLabel,
     demoDataLabel,
     restartLabel,
-    audioLabel,
     callLabel,
     scenarios,
   } = props
@@ -37,32 +36,35 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   const [phase, setPhase] = useState<Phase>('notice')
   const [consent, setConsent] = useState(false)
   const [scenario, setScenario] = useState<DemoScenario | null>(null)
-  const [audioOpen, setAudioOpen] = useState(false)
-  const closeAudio = useCallback(() => setAudioOpen(false), [])
 
   if (scenarios.length === 0) return null
 
   const restart = () => {
     setScenario(null)
-    setAudioOpen(false)
     setPhase('choose')
   }
 
   const isJa = locale === 'ja'
   const audioSrc = scenario ? (isJa ? scenario.audioJa : scenario.audioEn) : ''
   const callUrl = scenario ? (isJa ? scenario.callUrlJa : scenario.callUrlEn) : ''
-  const closeLabel = isJa ? '閉じる' : 'Close'
+  // A scenario with no transcript but a video and/or a recording shows the player and the summary only.
+  const isPlayerScenario = Boolean(scenario && scenario.turns.length === 0 && (scenario.videoSrc || audioSrc))
+  const showHeader = !(phase === 'result' && isPlayerScenario)
 
   return (
     <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        {heading && <h2 className="text-center text-2xl font-bold tracking-tight text-text-primary md:text-[32px]">{heading}</h2>}
-        {intro && <p className="mx-auto mt-3 max-w-2xl text-center text-[14px] leading-[1.8] text-text-muted">{intro}</p>}
+        {showHeader && (
+          <>
+            {heading && <h2 className="text-center text-2xl font-bold tracking-tight text-text-primary md:text-[32px]">{heading}</h2>}
+            {intro && <p className="mx-auto mt-3 max-w-2xl text-center text-[14px] leading-[1.8] text-text-muted">{intro}</p>}
 
-        <p className="mt-4 text-center text-[12px] font-semibold text-text-secondary">
-          <span className="rounded-full bg-bg-tertiary px-3 py-1">{simulationLabel}</span>
-          <span className="ml-2">{fictionalNotice}</span>
-        </p>
+            <p className="mt-4 text-center text-[12px] font-semibold text-text-secondary">
+              <span className="rounded-full bg-bg-tertiary px-3 py-1">{simulationLabel}</span>
+              <span className="ml-2">{fictionalNotice}</span>
+            </p>
+          </>
+        )}
 
         {phase === 'notice' && (
           <div className="mt-8 rounded-2xl border border-border-default bg-white p-6 shadow-sm">
@@ -124,27 +126,36 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
 
         {phase === 'result' && scenario && (
           <div className="mt-8 grid gap-6">
-            <div>
-              <h3 className="text-[16px] font-bold text-text-primary">
-                {transcriptHeading}
-                {scenario.businessName && <span className="ml-2 text-[12px] font-medium text-text-muted">{scenario.businessName}</span>}
-              </h3>
-              <ul className="mt-3 grid gap-2" aria-live="polite">
-                {scenario.turns.map((turn, i) => (
-                  <li
-                    key={i}
-                    className={`max-w-[85%] rounded-xl px-4 py-3 text-[13px] leading-[1.8] ${
-                      turn.speaker === 'ai' ? 'bg-bg-tertiary text-text-primary' : 'ml-auto border border-border-default text-text-primary'
-                    }`}
-                  >
-                    <span className="mb-0.5 block text-[11px] font-bold text-text-muted">
-                      {turn.speaker === 'ai' ? aiLabel : callerLabel}
-                    </span>
-                    {turn.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {isPlayerScenario ? (
+              <div>
+                {scenario.businessName && (
+                  <p className="mb-3 text-[12px] font-medium text-text-muted">{scenario.businessName}</p>
+                )}
+                <ScenarioPlayer videoSrc={scenario.videoSrc} audioSrc={audioSrc} label={scenario.title} />
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-[16px] font-bold text-text-primary">
+                  {transcriptHeading}
+                  {scenario.businessName && <span className="ml-2 text-[12px] font-medium text-text-muted">{scenario.businessName}</span>}
+                </h3>
+                <ul className="mt-3 grid gap-2" aria-live="polite">
+                  {scenario.turns.map((turn, i) => (
+                    <li
+                      key={i}
+                      className={`max-w-[85%] rounded-xl px-4 py-3 text-[13px] leading-[1.8] ${
+                        turn.speaker === 'ai' ? 'bg-bg-tertiary text-text-primary' : 'ml-auto border border-border-default text-text-primary'
+                      }`}
+                    >
+                      <span className="mb-0.5 block text-[11px] font-bold text-text-muted">
+                        {turn.speaker === 'ai' ? aiLabel : callerLabel}
+                      </span>
+                      {turn.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {scenario.summaryRows.length > 0 && (
               <div className="rounded-2xl border border-border-default bg-white p-5 shadow-sm">
@@ -161,41 +172,17 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
               </div>
             )}
 
-            {((audioSrc && audioLabel) || (callUrl && callLabel)) && (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                {audioSrc && audioLabel ? (
-                  <button
-                    type="button"
-                    aria-haspopup="dialog"
-                    onClick={() => setAudioOpen(true)}
-                    className="rounded-full bg-brand-primary px-6 py-2.5 text-[13px] font-semibold text-on-primary"
-                  >
-                    {audioLabel}
-                  </button>
-                ) : (
-                  <span />
-                )}
-                {callUrl && callLabel && (
-                  <a
-                    href={callUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-brand-primary px-6 py-2.5 text-[13px] font-semibold text-on-primary"
-                  >
-                    {callLabel}
-                  </a>
-                )}
+            {callUrl && callLabel && (
+              <div className="flex justify-end">
+                <a
+                  href={callUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-brand-primary px-6 py-2.5 text-[13px] font-semibold text-on-primary"
+                >
+                  {callLabel}
+                </a>
               </div>
-            )}
-
-            {audioOpen && audioSrc && (
-              <AudioPopup
-                audioSrc={audioSrc}
-                videoSrc={scenario.videoSrc}
-                title={audioLabel}
-                closeLabel={closeLabel}
-                onClose={closeAudio}
-              />
             )}
 
             <button

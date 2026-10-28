@@ -78,26 +78,28 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'FAQ and callback request': 'よくある質問と折り返し依頼',
   'A routine question, then a request for a callback.': '定型的な質問のあと、折り返しを依頼します。',
   'Sample Call Center (fictional business)': 'サンプルコールセンター（架空の事業者）',
-  'Hello, I would like to ask about my appointment.': 'もしもし、予約について確認したいのですが。',
-  'Thank you for calling. Our staff are away right now, but I can take your details and pass them on. May I have your name and a number to reach you?':
-    'お電話ありがとうございます。ただいまスタッフは不在ですが、ご用件を承り、担当者へお伝えします。お名前と、ご連絡のつく電話番号をお願いできますか？',
-  'Sample Caller, 000-0000-0000 (dummy).': 'サンプル太郎、000-0000-0000です（ダミー）。',
-  'Thank you. I have noted your request. A person will call you back on the next business day.':
-    'ありがとうございます。ご用件を承りました。翌営業日に担当者からお電話を差し上げます。',
-  'I need to change the delivery date for my order.': '注文した商品の配達日を変更したいのですが。',
-  'I can help with the first step. Could you tell me your order number?':
-    '最初のご案内をいたします。ご注文番号を教えていただけますか？',
-  'It is 0000 (dummy).': '0000です（ダミー）。',
-  'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.':
-    'ありがとうございます。既存のご注文の変更は担当者が対応しますので、いただいた内容とあわせてオペレーターにおつなぎします。',
-  'What are your opening hours?': '営業時間を教えてください。',
+  // Booking scenario conversation removed (video player instead); entries kept for restoring:
+  // 'Hello, I would like to ask about my appointment.': 'もしもし、予約について確認したいのですが。',
+  // 'Thank you for calling. Our staff are away right now, but I can take your details and pass them on. May I have your name and a number to reach you?':
+  //   'お電話ありがとうございます。ただいまスタッフは不在ですが、ご用件を承り、担当者へお伝えします。お名前と、ご連絡のつく電話番号をお願いできますか？',
+  // 'Sample Caller, 000-0000-0000 (dummy).': 'サンプル太郎、000-0000-0000です（ダミー）。',
+  // 'Thank you. I have noted your request. A person will call you back on the next business day.':
+  //   'ありがとうございます。ご用件を承りました。翌営業日に担当者からお電話を差し上げます。',
+  // Busy-time and FAQ scenario conversations removed (recordings in the player instead); entries kept for restoring:
+  // 'I need to change the delivery date for my order.': '注文した商品の配達日を変更したいのですが。',
+  // 'I can help with the first step. Could you tell me your order number?':
+  //   '最初のご案内をいたします。ご注文番号を教えていただけますか？',
+  // 'It is 0000 (dummy).': '0000です（ダミー）。',
+  // 'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.':
+  //   'ありがとうございます。既存のご注文の変更は担当者が対応しますので、いただいた内容とあわせてオペレーターにおつなぎします。',
+  // 'What are your opening hours?': '営業時間を教えてください。',
   // PLACEHOLDER-OFF:
   // 'Our opening hours are [TBD: owner to confirm]. Would you like a callback from our staff?':
   //   '営業時間は[TBD：オーナー確認待ち]です。スタッフからの折り返しをご希望ですか？',
-  'Would you like a callback from our staff?': 'スタッフからの折り返しをご希望ですか？',
-  'Yes, please call me tomorrow afternoon.': 'はい、明日の午後にお電話をお願いします。',
-  'Noted. I have recorded a callback request for tomorrow afternoon.':
-    '承知しました。明日の午後の折り返しを依頼として記録しました。',
+  // 'Would you like a callback from our staff?': 'スタッフからの折り返しをご希望ですか？',
+  // 'Yes, please call me tomorrow afternoon.': 'はい、明日の午後にお電話をお願いします。',
+  // 'Noted. I have recorded a callback request for tomorrow afternoon.':
+  //   '承知しました。明日の午後の折り返しを依頼として記録しました。',
   Summary: '要約',
   Urgency: '緊急度',
   'Callback status': '折り返し状況',
@@ -217,7 +219,7 @@ const scenario = (
   description: string,
   turns: [string, string][],
   summary: [string, string][],
-  media?: { audioEn: string; audioJa: string; videoSrc: string; callUrlEn: string; callUrlJa: string },
+  media?: Partial<{ audioEn: string; audioJa: string; videoSrc: string; callUrlEn: string; callUrlJa: string }>,
 ) => ({
   title,
   description,
@@ -258,18 +260,19 @@ const demoLayout: Json = [
     aiLabel: 'AI',
     demoDataLabel: 'Demo data — dummy values for illustration only.',
     restartLabel: 'Choose another scenario',
-    audioLabel: 'Listen a Demo',
     callLabel: 'Demo Call',
     scenarios: [
       scenario(
         'Reservation/ Booking',
         'A caller phones at night, outside business hours.',
-        [
-          ['caller', 'Hello, I would like to ask about my appointment.'],
-          ['ai', 'Thank you for calling. Our staff are away right now, but I can take your details and pass them on. May I have your name and a number to reach you?'],
-          ['caller', 'Sample Caller, 000-0000-0000 (dummy).'],
-          ['ai', 'Thank you. I have noted your request. A person will call you back on the next business day.'],
-        ],
+        // Conversation text removed: this scenario shows the video player instead.
+        // [
+        //   ['caller', 'Hello, I would like to ask about my appointment.'],
+        //   ['ai', 'Thank you for calling. Our staff are away right now, but I can take your details and pass them on. May I have your name and a number to reach you?'],
+        //   ['caller', 'Sample Caller, 000-0000-0000 (dummy).'],
+        //   ['ai', 'Thank you. I have noted your request. A person will call you back on the next business day.'],
+        // ],
+        [],
         [['Summary', 'Caller asked about an appointment (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Callback requested'], ['Recommended action', 'Call back next business morning']],
         {
           audioEn: '/audio/how-to-book-en.wav',
@@ -282,25 +285,31 @@ const demoLayout: Json = [
       scenario(
         'Busy-time first reception',
         'Many calls arrive at once and operators are busy.',
-        [
-          ['caller', 'I need to change the delivery date for my order.'],
-          ['ai', 'I can help with the first step. Could you tell me your order number?'],
-          ['caller', 'It is 0000 (dummy).'],
-          ['ai', 'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.'],
-        ],
+        // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
+        // [
+        //   ['caller', 'I need to change the delivery date for my order.'],
+        //   ['ai', 'I can help with the first step. Could you tell me your order number?'],
+        //   ['caller', 'It is 0000 (dummy).'],
+        //   ['ai', 'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.'],
+        // ],
+        [],
         [['Summary', 'Caller wants to change a delivery date (dummy).'], ['Urgency', 'Medium'], ['Callback status', 'Handed to operator'], ['Recommended action', 'Operator confirms the new date']],
+        { audioEn: '/audio/call-back-en.wav', audioJa: '/audio/call-back-ja.wav' },
       ),
       scenario(
         'FAQ and callback request',
         'A routine question, then a request for a callback.',
-        [
-          ['caller', 'What are your opening hours?'],
-          // PLACEHOLDER-OFF: 'Our opening hours are [TBD: owner to confirm]. ' (first sentence hidden)
-          ['ai', 'Would you like a callback from our staff?'],
-          ['caller', 'Yes, please call me tomorrow afternoon.'],
-          ['ai', 'Noted. I have recorded a callback request for tomorrow afternoon.'],
-        ],
+        // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
+        // [
+        //   ['caller', 'What are your opening hours?'],
+        //   // PLACEHOLDER-OFF: 'Our opening hours are [TBD: owner to confirm]. ' (first sentence hidden)
+        //   ['ai', 'Would you like a callback from our staff?'],
+        //   ['caller', 'Yes, please call me tomorrow afternoon.'],
+        //   ['ai', 'Noted. I have recorded a callback request for tomorrow afternoon.'],
+        // ],
+        [],
         [['Summary', 'Asked opening hours, requested an afternoon callback (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Scheduled'], ['Recommended action', 'Call back tomorrow afternoon']],
+        { audioEn: '/audio/FAQ-en.wav', audioJa: '/audio/FAQ-ja.wav' },
       ),
     ],
   },
