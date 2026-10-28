@@ -143,16 +143,19 @@ export function HeaderClient({
     return hasChildren ? strippedPath.startsWith(item.href) : strippedPath === item.href
   }
 
+  // The icon and the wordmark+motto are separate images cut from the same artwork. Shown at the same
+  // height they line up exactly like brand/techmirai_logo.png, and scaling both up widens the motto.
   function Logo() {
     return (
-      <div className="relative flex items-center h-12 w-44 sm:h-14 sm:w-52 lg:h-14 lg:w-48 xl:w-56 shrink-0">
+      <div className="flex h-[52px] shrink-0 items-end sm:h-14 md:h-16 xl:h-[72px]">
+        <Image src="/brand/techmirai_logo_icon.png" alt="" width={381} height={430} priority className="h-full w-auto" />
         <Image
-          src="/brand/techmirai_logo.png"
+          src="/brand/techmirai_logo_text.png"
           alt={`${siteConfig.site.name} Logo`}
-          fill
+          width={1057}
+          height={426}
           priority
-          className="object-contain object-left"
-          sizes="240px"
+          className="h-full w-auto"
         />
       </div>
     )
