@@ -2,21 +2,26 @@
 
 import { useState } from 'react'
 import { useLocale } from 'next-intl'
+import { AccessKeyForm } from './access-key-form'
+import { RegisterForm } from './register-form'
 import { ScenarioPlayer } from './scenario-player'
 import type { DemoScenario, DemoSimulatorBlockProps } from './types'
 
-type Phase = 'notice' | 'choose' | 'result'
+// entry: the two cards. key / register / registered: the live-demo path. choose / result: the audio demo.
+type Phase = 'entry' | 'key' | 'register' | 'registered' | 'choose' | 'result'
 
 export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   const {
-    noticeTitle,
-    noticeBody,
+    // NOTICE-OFF: the "Recording and transcription notice" box is replaced by the two entry cards.
+    // noticeTitle,
+    // noticeBody,
+    // startLabel,
     // CONSENT-OFF: consent checkbox hidden for now.
     // consentLabel,
     // privacyLabel,
     // privacyHref,
-    startLabel,
     liveLabel,
+    copy,
     // LIVE-CALL: status note hidden now that the live call link works.
     // liveNote,
     scenarioHeading,
@@ -32,7 +37,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   } = props
 
   const locale = useLocale()
-  const [phase, setPhase] = useState<Phase>('notice')
+  const [phase, setPhase] = useState<Phase>('entry')
   // CONSENT-OFF: const [consent, setConsent] = useState(false)
   const [scenario, setScenario] = useState<DemoScenario | null>(null)
 
@@ -54,32 +59,55 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   return (
     <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        {phase === 'notice' && (
-          <div className="rounded-2xl border border-border-default bg-white p-6 shadow-sm">
-            <h3 className="text-[16px] font-bold text-text-primary">{noticeTitle}</h3>
-            <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.8] text-text-muted">{noticeBody}</p>
-            {/* CONSENT-OFF: consent checkbox hidden for now; restore with disabled={!consent} on the button below.
-            <label className="mt-4 flex items-start gap-3 text-[13px] leading-[1.7] text-text-primary">
-              <input
-                type="checkbox"
-                checked={consent}
-                onChange={(e) => setConsent(e.target.checked)}
-                className="mt-1 h-4 w-4"
-              />
-              <span>
-                {consentLabel}{' '}
-                <a href={privacyHref} className="underline">
-                  {privacyLabel}
-                </a>
-              </span>
-            </label>
-            */}
+        {phase === 'entry' && (
+          <div className="grid gap-4 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => setPhase('choose')}
-              className="mt-5 rounded-full bg-brand-primary px-7 py-3 text-[14px] font-semibold text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-2xl bg-brand-primary p-6 text-left text-white shadow-sm transition-colors hover:bg-brand-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              {startLabel}
+              <span className="block text-[16px] font-bold text-white">{copy.audioCardTitle}</span>
+              <span className="mt-2 block text-[13px] leading-[1.8] text-white">{copy.audioCardSub}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPhase('key')}
+              className="rounded-2xl bg-brand-primary p-6 text-left text-white shadow-sm transition-colors hover:bg-brand-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <span className="block text-[16px] font-bold text-white">{copy.liveCardTitle}</span>
+              <span className="mt-2 block text-[13px] leading-[1.8] text-white">{copy.liveCardSub}</span>
+            </button>
+          </div>
+        )}
+
+        {phase === 'key' && (
+          <AccessKeyForm
+            copy={copy}
+            liveCallUrl={liveCallUrl}
+            onRegister={() => setPhase('register')}
+            onBack={() => setPhase('entry')}
+          />
+        )}
+
+        {phase === 'register' && (
+          <RegisterForm
+            copy={copy}
+            locale={locale}
+            onRegistered={() => setPhase('registered')}
+            onBack={() => setPhase('key')}
+          />
+        )}
+
+        {phase === 'registered' && (
+          <div role="status" className="rounded-2xl border border-border-default bg-white p-6 shadow-sm">
+            <h3 className="text-[16px] font-bold text-text-primary">{copy.registeredTitle}</h3>
+            <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.8] text-text-muted">{copy.registeredBody}</p>
+            <button
+              type="button"
+              onClick={() => setPhase('entry')}
+              className="mt-5 rounded-full border-2 border-brand-primary bg-white px-5 py-2 text-[13px] font-semibold text-text-secondary hover:bg-bg-tertiary"
+            >
+              {copy.backLabel}
             </button>
           </div>
         )}

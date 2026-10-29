@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { ACCESS_COPY_KEYS } from './access-copy'
 
 // Voice-pivot (ECC Master Prompt v2 §9, /demo): consent-gated, scripted
 // simulation. No microphone is ever opened by this block; the live AI call is
@@ -32,6 +33,8 @@ export const DemoSimulatorBlockConfig: Block = {
     text('restartLabel'),
     text('audioLabel'),
     text('callLabel'),
+    // Entry cards, access-key form and Register form text.
+    ...ACCESS_COPY_KEYS.map((key) => text(key)),
     {
       name: 'scenarios',
       type: 'array',

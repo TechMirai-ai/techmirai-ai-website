@@ -89,6 +89,21 @@ describe('adaptDemoSimulatorBlock', () => {
     expect(props.scenarios[0]?.audioJa).toBe('/audio/a-ja.wav')
   })
 
+  it('carries the entry card, key form and Register form text, defaulting each to empty', () => {
+    const props = adaptDemoSimulatorBlock({
+      audioCardTitle: 'Try the audio demo',
+      keyTitle: 'Do you have any key?',
+      registerLinkLabel: 'Register',
+      scenarios: [scenario],
+    })
+
+    expect(props.copy.audioCardTitle).toBe('Try the audio demo')
+    expect(props.copy.keyTitle).toBe('Do you have any key?')
+    expect(props.copy.registerLinkLabel).toBe('Register')
+    expect(props.copy.liveCardTitle).toBe('')
+    expect(Object.keys(props.copy)).toHaveLength(22)
+  })
+
   it('treats any unknown speaker as the caller and defaults the privacy link', () => {
     const props = adaptDemoSimulatorBlock({
       scenarios: [{ ...scenario, turns: [{ speaker: 'robot', text: 'Hi' }] }],

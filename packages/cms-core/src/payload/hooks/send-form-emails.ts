@@ -10,7 +10,10 @@ interface EmailConfig {
   fromEmail: string
 }
 
-type FormType = 'contact' | 'job-apply' | 'seminar' | 'download' | 'assessment'
+type FormType = 'contact' | 'job-apply' | 'seminar' | 'download' | 'assessment' | 'demo-register'
+
+// Types with their own bilingual copy, handled before the generic English tables below.
+type CustomCopyFormType = 'assessment' | 'demo-register'
 
 interface FormPayload {
   name?: string
@@ -144,7 +147,24 @@ export function confirmationHtml(formType: FormType, rawName: string, locale?: s
     `
   }
 
-  const copy: Record<Exclude<FormType, 'assessment'>, string> = {
+  if (formType === 'demo-register') {
+    // DRAFT Japanese (native review needed). No response time or key is promised:
+    // neither has been confirmed by the owner.
+    if (locale === 'ja') {
+      return `
+        <p>${name} 様</p>
+        <p>TechMirai ライブデモにご登録いただき、ありがとうございます。ご登録内容を受け付けました。</p>
+        <p>— TechMirai チーム</p>
+      `
+    }
+    return `
+      <p>Hi ${name},</p>
+      <p>Thank you for registering for the TechMirai live demo. We have received your details.</p>
+      <p>— The Team</p>
+    `
+  }
+
+  const copy: Record<Exclude<FormType, CustomCopyFormType>, string> = {
     // No response time: the owner has not confirmed one (ECC prompt v2).
     contact:
       'Thank you for contacting TechMirai. Your message was sent successfully. We have received your enquiry and will get back to you as soon as we can.',
@@ -165,7 +185,11 @@ export function staffSubject(formType: FormType, p: FormPayload): string {
     return `New Free AI Website Assessment request from ${p.name ?? 'Unknown'}`
   }
 
-  const targets: Record<Exclude<FormType, 'assessment'>, string> = {
+  if (formType === 'demo-register') {
+    return `New live demo registration from ${p.name ?? 'Unknown'}`
+  }
+
+  const targets: Record<Exclude<FormType, CustomCopyFormType>, string> = {
     contact: `New contact inquiry from ${p.name ?? 'Unknown'}`,
     'job-apply': `New job application from ${p.name ?? 'Unknown'} — ${p.jobSlug ?? ''}`,
     seminar: `New seminar registration from ${p.name ?? 'Unknown'} — ${p.seminarSlug ?? ''}`,
@@ -181,7 +205,14 @@ export function confirmationSubject(formType: FormType, locale?: string): string
       : 'We received your Free AI Website Assessment request'
   }
 
-  const subjects: Record<Exclude<FormType, 'assessment'>, string> = {
+  if (formType === 'demo-register') {
+    // JA is DRAFT (native review needed).
+    return locale === 'ja'
+      ? '【TechMirai】ライブデモのご登録を受け付けました'
+      : 'We received your live demo registration'
+  }
+
+  const subjects: Record<Exclude<FormType, CustomCopyFormType>, string> = {
     contact: 'We received your enquiry',
     'job-apply': 'Application received',
     seminar: 'Seminar registration confirmed',

@@ -47,6 +47,7 @@ export function FormSubmissionsCollection(emailConfig: FormSubmissionsConfig): C
           { label: 'Seminar Registration', value: 'seminar' },
           { label: 'Download Gate', value: 'download' },
           { label: 'Free AI Website Assessment', value: 'assessment' },
+          { label: 'Live Demo Registration', value: 'demo-register' },
         ],
         admin: { position: 'sidebar' },
       },

@@ -59,6 +59,32 @@ const JA_EXACT: Readonly<Record<string, string>> = {
     '上記のお知らせを読み、同意のうえ続行します。詳しくは',
   'privacy policy': 'プライバシーポリシー',
   'Start the demo': 'デモを開始する',
+  // DRAFT Japanese (native review needed): entry cards, access-key form and Register form.
+  'Listen to a sample call': 'サンプル通話を聞く',
+  'Hear example calls and see the dashboard your team gets. No sign-up needed.':
+    '通話例を聞き、チームが確認するダッシュボード表示をご覧いただけます。登録は不要です。',
+  'Talk to the AI live': 'AIとライブで話す',
+  'Speak with the AI voice agent yourself. An access key is required.':
+    'AI音声エージェントと実際にお話しいただけます。アクセスキーが必要です。',
+  'Do you have any key?': 'キーをお持ちですか？',
+  Submit: '送信',
+  'That key is not valid. Please check it and try again.': 'このキーは無効です。ご確認のうえ、もう一度お試しください。',
+  'Something went wrong. Please try again.': 'エラーが発生しました。もう一度お試しください。',
+  "If you don't have any key, then": 'キーをお持ちでない場合は、',
+  Register: '登録する',
+  'Register for the live demo': 'ライブデモに登録する',
+  Name: 'お名前',
+  'Contact No': '電話番号',
+  Email: 'メールアドレス',
+  'Company Name': '会社名',
+  Purpose: 'ご利用の目的',
+  'Sending...': '送信中…',
+  'We could not complete your registration. Please check all fields and try again.':
+    '登録を完了できませんでした。すべての項目をご確認のうえ、もう一度お試しください。',
+  'Thank you for registering': 'ご登録ありがとうございます',
+  'We have received your registration and sent a confirmation to your email.':
+    'ご登録を受け付け、確認メールをお送りしました。',
+  Back: '戻る',
   'Live AI call (integration required)': 'ライブAI通話（連携が必要）',
   'Status: integration required. A live AI call is not available on this page yet.':
     '状況：連携が必要です。現時点では、このページでライブAI通話はご利用いただけません。',
@@ -209,6 +235,9 @@ const TEXT_KEYS: ReadonlySet<string> = new Set([
   'description', 'businessName', 'simulationLabel', 'fictionalNotice', 'noticeTitle', 'noticeBody', 'consentLabel',
   'privacyLabel', 'startLabel', 'liveLabel', 'liveNote', 'scenarioHeading', 'transcriptHeading', 'summaryHeading',
   'callerLabel', 'aiLabel', 'demoDataLabel', 'restartLabel', 'audioLabel', 'callLabel', 'value',
+  'audioCardTitle', 'audioCardSub', 'liveCardTitle', 'liveCardSub', 'keyTitle', 'keySubmitLabel', 'keyInvalid', 'keyError',
+  'noKeyPrefix', 'registerLinkLabel', 'registerTitle', 'nameLabel', 'contactNoLabel', 'emailLabel', 'companyLabel',
+  'purposeLabel', 'registerSubmitLabel', 'registerSending', 'registerError', 'registeredTitle', 'registeredBody', 'backLabel',
 ])
 
 type Json = string | number | boolean | null | Json[] | { [key: string]: Json }
@@ -275,6 +304,28 @@ const demoLayout: Json = [
     demoDataLabel: 'Demo data — dummy values for illustration only.',
     restartLabel: 'Choose another scenario',
     callLabel: 'Demo Call',
+    audioCardTitle: 'Listen to a sample call',
+    audioCardSub: 'Hear example calls and see the dashboard your team gets. No sign-up needed.',
+    liveCardTitle: 'Talk to the AI live',
+    liveCardSub: 'Speak with the AI voice agent yourself. An access key is required.',
+    keyTitle: 'Do you have any key?',
+    keySubmitLabel: 'Submit',
+    keyInvalid: 'That key is not valid. Please check it and try again.',
+    keyError: 'Something went wrong. Please try again.',
+    noKeyPrefix: "If you don't have any key, then",
+    registerLinkLabel: 'Register',
+    registerTitle: 'Register for the live demo',
+    nameLabel: 'Name',
+    contactNoLabel: 'Contact No',
+    emailLabel: 'Email',
+    companyLabel: 'Company Name',
+    purposeLabel: 'Purpose',
+    registerSubmitLabel: 'Register',
+    registerSending: 'Sending...',
+    registerError: 'We could not complete your registration. Please check all fields and try again.',
+    registeredTitle: 'Thank you for registering',
+    registeredBody: 'We have received your registration and sent a confirmation to your email.',
+    backLabel: 'Back',
     scenarios: [
       scenario(
         'Reservation/ Booking',

@@ -690,3 +690,10 @@ href (not the literal `'#'`), in both locales.
 
 - New block `page-intro` (gradient header with pill label, heading, buttons, last-updated note) used on /demo, /partners, /company.
 - /partners and /company content moved onto the `icon-cards` block (rounded cards with icon tiles); `demo-simulator`, the contact page (`/contact`) and `LegalPage` (privacy, terms, legal notice) restyled to the same cards, pills and rounded buttons. Copy and behaviour unchanged.
+
+## 2026-10-29 — Live-demo registration and access key (/demo)
+
+- New form type `demo-register` (generic, additive): added to `FORM_TYPES` in `api/forms/[type]/route.ts` with schema `lib/validation/demo-register.ts` (name, contactNo, email, company, purpose, all required), to the `formType` select in `collections/form-submissions.ts`, and to `send-form-emails.ts` (staff subject, bilingual confirmation; Japanese is DRAFT). The staff email goes to `contactRecipient`. Tests added in `send-form-emails.test.ts` and `demo-register.test.ts`.
+- Schema note: the new select value adds an enum value to the `form_submissions` form type column. This repo has no migrations folder, so dev relies on Payload schema push. Check how production applies schema changes before deploying.
+- New route `api/demo/verify-key` + `lib/demo-access-key.ts`: checks a visitor's key against the server-only `DEMO_ACCESS_KEYS` env list (constant-time, rate limited). Env var documented in `.env.example`. Tests in `demo-access-key.test.ts`.
+- `demo-simulator` block: the "Recording and transcription notice" box is replaced by two entry cards (audio demo, live demo). New files `access-copy.ts`, `access-key-form.tsx`, `register-form.tsx`; 22 new localized text fields driven by one list.

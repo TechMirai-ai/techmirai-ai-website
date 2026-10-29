@@ -1,3 +1,5 @@
+import type { AccessCopy } from './access-copy'
+
 export interface DemoTurn {
   speaker: 'caller' | 'ai'
   text: string
@@ -43,5 +45,6 @@ export interface DemoSimulatorBlockProps {
   restartLabel: string
   audioLabel: string
   callLabel: string
+  copy: AccessCopy
   scenarios: DemoScenario[]
 }

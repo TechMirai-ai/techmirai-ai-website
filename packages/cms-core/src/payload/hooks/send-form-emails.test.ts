@@ -116,6 +116,39 @@ describe('resolveStaffRecipient — assessment', () => {
   })
 })
 
+describe('demo-register formType', () => {
+  const payload = {
+    name: 'Taro <b>Yamada</b>',
+    email: 'taro@example.com',
+    company: 'Example KK',
+    phone: '000-0000-0000',
+    message: 'Evaluate the voice agent',
+  }
+
+  it('names the registrant in the staff subject', () => {
+    expect(staffSubject('demo-register', payload)).toBe('New live demo registration from Taro <b>Yamada</b>')
+  })
+
+  it('lists every registration field in the staff email body, escaped', () => {
+    const html = staffHtml('demo-register', payload, 'en')
+    expect(html).toContain('Example KK')
+    expect(html).toContain('000-0000-0000')
+    expect(html).toContain('Evaluate the voice agent')
+    expect(html).not.toContain('<b>Yamada</b>')
+  })
+
+  it('confirms the registration in EN and JA without promising a response time', () => {
+    expect(confirmationSubject('demo-register', 'en')).toBe('We received your live demo registration')
+    expect(confirmationSubject('demo-register', 'ja')).toContain('ライブデモ')
+    expect(confirmationHtml('demo-register', 'Taro', 'en')).toContain('registering')
+    expect(confirmationHtml('demo-register', 'Taro', 'ja')).toContain('Taro')
+  })
+
+  it('routes the staff email to contactRecipient', () => {
+    expect(resolveStaffRecipient('demo-register', baseConfig)).toBe('reception@example.com')
+  })
+})
+
 describe('makeSendFormEmailsHook — assessment dispatch behavior', () => {
   const originalFetch = global.fetch
 

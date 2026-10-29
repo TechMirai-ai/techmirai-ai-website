@@ -5,6 +5,7 @@ import { contactSchema, type InquiryPath } from '@/lib/validation/contact'
 import { seminarSchema } from '@/lib/validation/seminar'
 import { downloadSchema } from '@/lib/validation/download'
 import { assessmentSchema } from '@/lib/validation/assessment'
+import { demoRegisterSchema } from '@/lib/validation/demo-register'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { extractIp } from '@/lib/request-ip'
 import { z } from 'zod'
@@ -33,7 +34,7 @@ const INQUIRY_PATH_LABELS: Record<InquiryPath, string> = {
   partnership: 'White-label partnership',
 }
 
-const FORM_TYPES = ['contact', 'job-apply', 'seminar', 'download', 'assessment'] as const
+const FORM_TYPES = ['contact', 'job-apply', 'seminar', 'download', 'assessment', 'demo-register'] as const
 type FormType = (typeof FORM_TYPES)[number]
 
 function isFormType(s: string): s is FormType {
@@ -269,6 +270,33 @@ export async function POST(request: NextRequest, context: RouteContext) {
         problem: parsed.data.problem,
         contactPref: parsed.data.contactPref,
         message: parsed.data.message,
+      })
+    } catch {
+      return NextResponse.json({ success: false, message: msg(locale, 'serverError') }, { status: 500 })
+    }
+    return NextResponse.json({ success: true }, { status: 200 })
+  }
+
+  if (type === 'demo-register') {
+    const parsed = demoRegisterSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, fieldErrors: parsed.error.flatten().fieldErrors, message: msg(locale, 'required') },
+        { status: 422 },
+      )
+    }
+    if (parsed.data.turnstileToken && !(await verifyTurnstile(parsed.data.turnstileToken))) {
+      return NextResponse.json({ success: false, message: msg(locale, 'turnstileFailed') }, { status: 400 })
+    }
+    try {
+      // `phone` and `message` are the keys the notification email hook
+      // (send-form-emails.ts) already prints for contactNo and purpose.
+      await persist('demo-register', parsed.data.email, locale, {
+        name: parsed.data.name,
+        email: parsed.data.email,
+        company: parsed.data.company,
+        phone: parsed.data.contactNo,
+        message: parsed.data.purpose,
       })
     } catch {
       return NextResponse.json({ success: false, message: msg(locale, 'serverError') }, { status: 500 })

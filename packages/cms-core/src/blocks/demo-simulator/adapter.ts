@@ -1,3 +1,4 @@
+import { ACCESS_COPY_KEYS, type AccessCopy } from './access-copy'
 import type { DemoScenario, DemoSimulatorBlockProps } from './types'
 
 function str(value: unknown): string {
@@ -34,6 +35,10 @@ function adaptScenario(raw: Record<string, unknown>): DemoScenario {
   }
 }
 
+function adaptCopy(data: Record<string, unknown>): AccessCopy {
+  return Object.fromEntries(ACCESS_COPY_KEYS.map((key) => [key, str(data[key])])) as AccessCopy
+}
+
 export function adaptDemoSimulatorBlock(raw: unknown): DemoSimulatorBlockProps {
   const data = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>
 
@@ -59,6 +64,7 @@ export function adaptDemoSimulatorBlock(raw: unknown): DemoSimulatorBlockProps {
     restartLabel: str(data['restartLabel']),
     audioLabel: str(data['audioLabel']),
     callLabel: str(data['callLabel']),
+    copy: adaptCopy(data),
     scenarios: rows(data['scenarios']).map(adaptScenario).filter((s) => s.title && (s.turns.length > 0 || s.videoSrc || s.audioEn || s.audioJa)),
   }
 }
