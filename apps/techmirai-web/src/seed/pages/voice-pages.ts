@@ -300,7 +300,7 @@ const demoLayout: Json = [
         // Renamed from 'Busy-time first reception' / 'Many calls arrive at once and operators are busy.'
         'Callback request',
         'A caller cannot talk now and asks for a call back.',
-        // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
+        // Conversation text removed: this scenario plays its recording over the animated video in the player.
         // [
         //   ['caller', 'I need to change the delivery date for my order.'],
         //   ['ai', 'I can help with the first step. Could you tell me your order number?'],
@@ -310,13 +310,13 @@ const demoLayout: Json = [
         [],
         // Old dashboard: delivery-date change / Medium / Handed to operator / Operator confirms the new date.
         [['Summary', 'Caller asked for a callback about their inquiry (dummy).'], ['Urgency', 'Medium'], ['Callback status', 'Callback requested'], ['Recommended action', 'Call back at the time the caller asked for']],
-        { audioEn: '/audio/call-back-en.wav', audioJa: '/audio/call-back-ja.wav' },
+        { audioEn: '/audio/call-back-en.wav', audioJa: '/audio/call-back-ja.wav', videoSrc: '/video/audio-screen.mp4' },
       ),
       scenario(
         // Renamed from 'FAQ and callback request' / 'A routine question, then a request for a callback.'
         'FAQ (Frequently Asked Question)',
         'A caller asks a routine question and the AI answers it.',
-        // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
+        // Conversation text removed: this scenario plays its recording over the animated video in the player.
         // [
         //   ['caller', 'What are your opening hours?'],
         //   // PLACEHOLDER-OFF: 'Our opening hours are [TBD: owner to confirm]. ' (first sentence hidden)
@@ -327,7 +327,7 @@ const demoLayout: Json = [
         [],
         // Old dashboard: opening hours + afternoon callback / Low / Scheduled / Call back tomorrow afternoon.
         [['Summary', 'Caller asked a routine question; AI answered from the approved FAQ (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Not needed'], ['Recommended action', 'No action needed']],
-        { audioEn: '/audio/FAQ-en.wav', audioJa: '/audio/FAQ-ja.wav' },
+        { audioEn: '/audio/FAQ-en.wav', audioJa: '/audio/FAQ-ja.wav', videoSrc: '/video/audio-screen.mp4' },
       ),
     ],
   },
