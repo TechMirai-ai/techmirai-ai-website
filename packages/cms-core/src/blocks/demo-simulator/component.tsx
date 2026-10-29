@@ -9,18 +9,16 @@ type Phase = 'notice' | 'choose' | 'result'
 
 export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   const {
-    heading,
-    intro,
-    simulationLabel,
-    fictionalNotice,
     noticeTitle,
     noticeBody,
-    consentLabel,
-    privacyLabel,
-    privacyHref,
+    // CONSENT-OFF: consent checkbox hidden for now.
+    // consentLabel,
+    // privacyLabel,
+    // privacyHref,
     startLabel,
     liveLabel,
-    liveNote,
+    // LIVE-CALL: status note hidden now that the live call link works.
+    // liveNote,
     scenarioHeading,
     transcriptHeading,
     summaryHeading,
@@ -28,13 +26,14 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
     aiLabel,
     demoDataLabel,
     restartLabel,
-    callLabel,
+    // LIVE-CALL: per-scenario "Demo Call" button hidden; its link moved to the live call button.
+    // callLabel,
     scenarios,
   } = props
 
   const locale = useLocale()
   const [phase, setPhase] = useState<Phase>('notice')
-  const [consent, setConsent] = useState(false)
+  // CONSENT-OFF: const [consent, setConsent] = useState(false)
   const [scenario, setScenario] = useState<DemoScenario | null>(null)
 
   if (scenarios.length === 0) return null
@@ -46,30 +45,20 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
 
   const isJa = locale === 'ja'
   const audioSrc = scenario ? (isJa ? scenario.audioJa : scenario.audioEn) : ''
-  const callUrl = scenario ? (isJa ? scenario.callUrlJa : scenario.callUrlEn) : ''
+  // LIVE-CALL: const callUrl = scenario ? (isJa ? scenario.callUrlJa : scenario.callUrlEn) : ''
+  // The live call button uses the first scenario call link for the current locale.
+  const liveCallUrl = scenarios.map((s) => (isJa ? s.callUrlJa : s.callUrlEn)).find(Boolean) ?? ''
   // A scenario with no transcript but a video and/or a recording shows the player and the summary only.
   const isPlayerScenario = Boolean(scenario && scenario.turns.length === 0 && (scenario.videoSrc || audioSrc))
-  const showHeader = !(phase === 'result' && isPlayerScenario)
 
   return (
     <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        {showHeader && (
-          <>
-            {heading && <h2 className="text-center text-2xl font-bold tracking-tight text-text-primary md:text-[32px]">{heading}</h2>}
-            {intro && <p className="mx-auto mt-3 max-w-2xl text-center text-[14px] leading-[1.8] text-text-muted">{intro}</p>}
-
-            <p className="mt-4 text-center text-[12px] font-semibold text-text-secondary">
-              <span className="rounded-full bg-bg-tertiary px-3 py-1">{simulationLabel}</span>
-              <span className="ml-2">{fictionalNotice}</span>
-            </p>
-          </>
-        )}
-
         {phase === 'notice' && (
-          <div className="mt-8 rounded-2xl border border-border-default bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-border-default bg-white p-6 shadow-sm">
             <h3 className="text-[16px] font-bold text-text-primary">{noticeTitle}</h3>
             <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.8] text-text-muted">{noticeBody}</p>
+            {/* CONSENT-OFF: consent checkbox hidden for now; restore with disabled={!consent} on the button below.
             <label className="mt-4 flex items-start gap-3 text-[13px] leading-[1.7] text-text-primary">
               <input
                 type="checkbox"
@@ -84,9 +73,9 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
                 </a>
               </span>
             </label>
+            */}
             <button
               type="button"
-              disabled={!consent}
               onClick={() => setPhase('choose')}
               className="mt-5 rounded-full bg-brand-primary px-7 py-3 text-[14px] font-semibold text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
@@ -96,7 +85,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
         )}
 
         {phase === 'choose' && (
-          <div className="mt-8">
+          <div>
             <h3 className="text-[16px] font-bold text-text-primary">{scenarioHeading}</h3>
             <ul className="mt-3 grid gap-3">
               {scenarios.map((s, i) => (
@@ -116,16 +105,27 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
               ))}
             </ul>
             <div className="mt-5 rounded-2xl border border-dashed border-border-default bg-white/70 p-4">
-              <button type="button" disabled className="rounded-full border border-border-default px-4 py-2 text-[13px] font-semibold text-text-muted opacity-60">
-                {liveLabel}
-              </button>
-              <p className="mt-2 text-[12px] leading-[1.7] text-text-muted">{liveNote}</p>
+              {liveCallUrl ? (
+                <a
+                  href={liveCallUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block rounded-full bg-brand-primary px-4 py-2 text-[13px] font-semibold text-on-primary transition-colors hover:bg-brand-primary-dark"
+                >
+                  {liveLabel}
+                </a>
+              ) : (
+                <button type="button" disabled className="rounded-full border border-border-default px-4 py-2 text-[13px] font-semibold text-text-muted opacity-60">
+                  {liveLabel}
+                </button>
+              )}
+              {/* LIVE-CALL: <p className="mt-2 text-[12px] leading-[1.7] text-text-muted">{liveNote}</p> */}
             </div>
           </div>
         )}
 
         {phase === 'result' && scenario && (
-          <div className="mt-8 grid gap-6">
+          <div className="grid gap-6">
             {isPlayerScenario ? (
               <div>
                 {scenario.businessName && (
@@ -172,6 +172,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
               </div>
             )}
 
+            {/* LIVE-CALL: "Demo Call" button hidden; its link is on the live call button now.
             {callUrl && callLabel && (
               <div className="flex justify-end">
                 <a
@@ -184,6 +185,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
                 </a>
               </div>
             )}
+            */}
 
             <button
               type="button"

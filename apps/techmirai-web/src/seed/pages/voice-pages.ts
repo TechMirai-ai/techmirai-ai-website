@@ -73,10 +73,16 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Listen a Demo': 'デモを聞く',
   'Demo Call': 'デモ通話',
   'A caller phones at night, outside business hours.': '営業時間外の夜間に、発信者が電話をかけてきます。',
-  'Busy-time first reception': '混雑時の一次受付',
-  'Many calls arrive at once and operators are busy.': '多くの電話が同時に入り、オペレーターが対応中です。',
-  'FAQ and callback request': 'よくある質問と折り返し依頼',
-  'A routine question, then a request for a callback.': '定型的な質問のあと、折り返しを依頼します。',
+  // Old scenario names, kept for restoring:
+  // 'Busy-time first reception': '混雑時の一次受付',
+  // 'Many calls arrive at once and operators are busy.': '多くの電話が同時に入り、オペレーターが対応中です。',
+  // 'FAQ and callback request': 'よくある質問と折り返し依頼',
+  // 'A routine question, then a request for a callback.': '定型的な質問のあと、折り返しを依頼します。',
+  // DRAFT Japanese (native review needed):
+  'Callback request': '折り返し依頼',
+  'A caller cannot talk now and asks for a call back.': '発信者が、折り返しの電話を依頼します。',
+  'FAQ (Frequently Asked Question)': 'よくある質問（FAQ）',
+  'A caller asks a routine question and the AI answers it.': '発信者の定型的な質問に、AIが回答します。',
   'Sample Call Center (fictional business)': 'サンプルコールセンター（架空の事業者）',
   // Booking scenario conversation removed (video player instead); entries kept for restoring:
   // 'Hello, I would like to ask about my appointment.': 'もしもし、予約について確認したいのですが。',
@@ -109,13 +115,21 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Caller asked about an appointment (dummy).': '発信者は予約について問い合わせ（ダミー）。',
   'Callback requested': '折り返し依頼あり',
   'Call back next business morning': '翌営業日の午前に折り返す',
-  'Caller wants to change a delivery date (dummy).': '発信者は配達日の変更を希望（ダミー）。',
-  'Handed to operator': 'オペレーターへ引き継ぎ済み',
-  'Operator confirms the new date': 'オペレーターが新しい日程を確認する',
-  'Asked opening hours, requested an afternoon callback (dummy).':
-    '営業時間を質問し、午後の折り返しを依頼（ダミー）。',
-  Scheduled: '予定済み',
-  'Call back tomorrow afternoon': '明日の午後に折り返す',
+  // Old dashboard values, kept for restoring:
+  // 'Caller wants to change a delivery date (dummy).': '発信者は配達日の変更を希望（ダミー）。',
+  // 'Handed to operator': 'オペレーターへ引き継ぎ済み',
+  // 'Operator confirms the new date': 'オペレーターが新しい日程を確認する',
+  // 'Asked opening hours, requested an afternoon callback (dummy).':
+  //   '営業時間を質問し、午後の折り返しを依頼（ダミー）。',
+  // Scheduled: '予定済み',
+  // 'Call back tomorrow afternoon': '明日の午後に折り返す',
+  // DRAFT Japanese (native review needed):
+  'Caller asked for a callback about their inquiry (dummy).': '発信者は問い合わせ内容について折り返しを依頼（ダミー）。',
+  'Call back at the time the caller asked for': '発信者の希望時間に折り返す',
+  'Caller asked a routine question; AI answered from the approved FAQ (dummy).':
+    '発信者の定型的な質問に、AIが承認済みFAQから回答（ダミー）。',
+  'Not needed': '不要',
+  'No action needed': '対応不要',
 
   // ── /partners
   'For call centers and BPO operators': 'コールセンター・BPO事業者様向け',
@@ -283,8 +297,9 @@ const demoLayout: Json = [
         },
       ),
       scenario(
-        'Busy-time first reception',
-        'Many calls arrive at once and operators are busy.',
+        // Renamed from 'Busy-time first reception' / 'Many calls arrive at once and operators are busy.'
+        'Callback request',
+        'A caller cannot talk now and asks for a call back.',
         // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
         // [
         //   ['caller', 'I need to change the delivery date for my order.'],
@@ -293,12 +308,14 @@ const demoLayout: Json = [
         //   ['ai', 'Thank you. Changes to an existing order are handled by a person, so I will pass this to an operator with the details you gave me.'],
         // ],
         [],
-        [['Summary', 'Caller wants to change a delivery date (dummy).'], ['Urgency', 'Medium'], ['Callback status', 'Handed to operator'], ['Recommended action', 'Operator confirms the new date']],
+        // Old dashboard: delivery-date change / Medium / Handed to operator / Operator confirms the new date.
+        [['Summary', 'Caller asked for a callback about their inquiry (dummy).'], ['Urgency', 'Medium'], ['Callback status', 'Callback requested'], ['Recommended action', 'Call back at the time the caller asked for']],
         { audioEn: '/audio/call-back-en.wav', audioJa: '/audio/call-back-ja.wav' },
       ),
       scenario(
-        'FAQ and callback request',
-        'A routine question, then a request for a callback.',
+        // Renamed from 'FAQ and callback request' / 'A routine question, then a request for a callback.'
+        'FAQ (Frequently Asked Question)',
+        'A caller asks a routine question and the AI answers it.',
         // Conversation text removed: this scenario plays its recording in the player (green panel, no video).
         // [
         //   ['caller', 'What are your opening hours?'],
@@ -308,7 +325,8 @@ const demoLayout: Json = [
         //   ['ai', 'Noted. I have recorded a callback request for tomorrow afternoon.'],
         // ],
         [],
-        [['Summary', 'Asked opening hours, requested an afternoon callback (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Scheduled'], ['Recommended action', 'Call back tomorrow afternoon']],
+        // Old dashboard: opening hours + afternoon callback / Low / Scheduled / Call back tomorrow afternoon.
+        [['Summary', 'Caller asked a routine question; AI answered from the approved FAQ (dummy).'], ['Urgency', 'Low'], ['Callback status', 'Not needed'], ['Recommended action', 'No action needed']],
         { audioEn: '/audio/FAQ-en.wav', audioJa: '/audio/FAQ-ja.wav' },
       ),
     ],
