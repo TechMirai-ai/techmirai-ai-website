@@ -9,6 +9,8 @@ import type { HostLinks } from './useReceptionEngine'
 export interface ReceptionWidgetProps {
   enabled: boolean
   greeting: Record<string, string>
+  /** Short per-locale line for the floating bubble; falls back to `greeting` when absent. */
+  teaser?: Record<string, string>
   openDelayMs: number
   locales: string[]
   /** The current page's route locale — preferred over locales[0] when choosing the initial greeting. */
@@ -30,6 +32,7 @@ export interface ReceptionWidgetProps {
 export function ReceptionWidget({
   enabled,
   greeting,
+  teaser: teaserLines,
   openDelayMs,
   locales,
   locale,
@@ -79,7 +82,7 @@ export function ReceptionWidget({
     })
   }
 
-  const teaserText = greeting[initialLocale] ?? Object.values(greeting)[0] ?? ''
+  const teaserText = teaserLines?.[initialLocale] ?? greeting[initialLocale] ?? Object.values(greeting)[0] ?? ''
 
   return (
     <div

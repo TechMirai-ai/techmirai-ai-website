@@ -17,6 +17,8 @@ export interface VoiceHeroProps {
   pauseLabel: string
   playLabel: string
   nodes: { icon: VoiceIconName; label: string; sub: string }[]
+  /** Same-site path or https URL of the decorative hero video; empty = no video. */
+  backgroundVideo: string
 }
 
 export interface PageIntroProps {
@@ -89,6 +91,11 @@ export interface RoleSplitProps {
 
 const obj = (value: unknown): Raw => (typeof value === 'object' && value !== null ? (value as Raw) : {})
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
+// A same-site path ("/video/x.mp4") or an https URL; anything else (javascript:, //host, http:) is dropped.
+const videoSrc = (value: unknown): string => {
+  const src = str(value).trim()
+  return (src.startsWith('/') && !src.startsWith('//')) || src.startsWith('https://') ? src : ''
+}
 const rows = (value: unknown): Raw[] =>
   Array.isArray(value) ? value.filter((r): r is Raw => typeof r === 'object' && r !== null) : []
 const texts = (value: unknown): string[] => rows(value).map((r) => str(r['text'])).filter(Boolean)
@@ -129,6 +136,7 @@ export function adaptVoiceHero(raw: unknown): VoiceHeroProps {
     nodes: rows(d['nodes'])
       .map((n) => ({ icon: toIconName(n['icon']), label: str(n['label']), sub: str(n['sub']) }))
       .filter((n) => n.label),
+    backgroundVideo: videoSrc(d['backgroundVideo']),
   }
 }
 

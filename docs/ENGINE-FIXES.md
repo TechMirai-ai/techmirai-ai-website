@@ -691,9 +691,19 @@ href (not the literal `'#'`), in both locales.
 - New block `page-intro` (gradient header with pill label, heading, buttons, last-updated note) used on /demo, /partners, /company.
 - /partners and /company content moved onto the `icon-cards` block (rounded cards with icon tiles); `demo-simulator`, the contact page (`/contact`) and `LegalPage` (privacy, terms, legal notice) restyled to the same cards, pills and rounded buttons. Copy and behaviour unchanged.
 
+## 2026-10-30 — `voice-hero`: optional background video (addition)
+
+- New optional, non-localized text field `backgroundVideo` on the `voice-hero` block (`config.ts`), mapped in `adaptVoiceHero` (only a same-site `/path` or `https://` URL is kept). `VoiceHeroBlock` shows the video as the hero background from `lg` up (with a white wash over it) and as a 16:9 banner between the text and the call-flow cards below `lg`. Only one placement loads (`matchMedia`), and nothing is shown for reduced motion or when the field is empty, so existing sites are unchanged. Tests in `adapters.test.ts`.
+- Schema note: the new field adds a column to the page blocks table. This repo has no migrations folder, so dev relies on Payload schema push. Check how production applies schema changes before deploying.
+
+## 2026-10-30 — Reception widget: optional short teaser for the floating bubble (addition)
+
+- `site.config` `reception.teaser` (optional, per-locale record) added to `receptionSchema`, and an optional `teaser` prop on `ReceptionWidget`. The bubble that shows before the chat opens uses `teaser[locale]` and falls back to `greeting`, so existing sites are unchanged. The chat panel and the LINE greeting still use `greeting`. Tests in `ReceptionWidget.test.tsx`.
+
 ## 2026-10-29 — Live-demo registration and access key (/demo)
 
 - New form type `demo-register` (generic, additive): added to `FORM_TYPES` in `api/forms/[type]/route.ts` with schema `lib/validation/demo-register.ts` (name, contactNo, email, company, purpose, all required), to the `formType` select in `collections/form-submissions.ts`, and to `send-form-emails.ts` (staff subject, bilingual confirmation; Japanese is DRAFT). The staff email goes to `contactRecipient`. Tests added in `send-form-emails.test.ts` and `demo-register.test.ts`.
 - Schema note: the new select value adds an enum value to the `form_submissions` form type column. This repo has no migrations folder, so dev relies on Payload schema push. Check how production applies schema changes before deploying.
 - New route `api/demo/verify-key` + `lib/demo-access-key.ts`: checks a visitor's key against the server-only `DEMO_ACCESS_KEYS` env list (constant-time, rate limited). Env var documented in `.env.example`. Tests in `demo-access-key.test.ts`.
+- `api/demo/verify-key` now also reads `DEMO_NORMAL_KEYS` and returns `{ valid, tier, url? }` (`tier` is `access` or `normal`, via `getDemoKeyTier`). `url` is sent only for `access` keys, from server-only `DEMO_PREMIUM_CALL_URL_JA` / `_EN`, so the fixed demo key never lives in the repo or page. `access-key-form.tsx` opens that URL for access keys and the plain call link for normal keys. New env vars documented in `.env.example`.
 - `demo-simulator` block: the "Recording and transcription notice" box is replaced by two entry cards (audio demo, live demo). New files `access-copy.ts`, `access-key-form.tsx`, `register-form.tsx`; 22 new localized text fields driven by one list.

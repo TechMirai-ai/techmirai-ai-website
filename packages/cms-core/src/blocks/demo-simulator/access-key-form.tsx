@@ -8,13 +8,14 @@ type Status = 'idle' | 'checking' | 'invalid' | 'error'
 interface AccessKeyFormProps {
   copy: AccessCopy
   liveCallUrl: string
+  locale: string
   onRegister: () => void
   onBack: () => void
 }
 
 // "Do you have any key?" step of the live demo. The key is checked on the server;
 // a valid key opens the live AI call in a new tab.
-export function AccessKeyForm({ copy, liveCallUrl, onRegister, onBack }: AccessKeyFormProps) {
+export function AccessKeyForm({ copy, liveCallUrl, locale, onRegister, onBack }: AccessKeyFormProps) {
   const [key, setKey] = useState('')
   const [status, setStatus] = useState<Status>('idle')
 
@@ -26,11 +27,13 @@ export function AccessKeyForm({ copy, liveCallUrl, onRegister, onBack }: AccessK
       const res = await fetch('/api/demo/verify-key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key }),
+        body: JSON.stringify({ key, locale }),
       })
-      const data = (await res.json()) as { valid?: boolean }
-      if (res.ok && data.valid === true && liveCallUrl) {
-        window.open(liveCallUrl, '_blank', 'noopener,noreferrer')
+      const data = (await res.json()) as { valid?: boolean; tier?: 'access' | 'normal'; url?: string }
+      // Premium keys open the server-provided URL; normal keys open the plain call link.
+      const target = data.tier === 'access' ? data.url : liveCallUrl
+      if (res.ok && data.valid === true && target && target.startsWith('https://')) {
+        window.open(target, '_blank', 'noopener,noreferrer')
         setStatus('idle')
         return
       }

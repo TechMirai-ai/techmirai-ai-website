@@ -12,6 +12,8 @@ import type {
 
 const FLOW_STEP_MS = 1700
 const FEATURED_NODE_INDEX = 2
+// Matches Tailwind's `lg`, where the hero switches to two columns and the video becomes its background.
+const DESKTOP_QUERY = '(min-width: 1024px)'
 
 function withLocale(locale: string, href: string): string {
   if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('[')) return href
@@ -70,12 +72,23 @@ export function PageIntroBlock({ pill, heading, body, primaryButton, secondaryBu
 
 // ── 1. Hero with the animated call flow ───────────────────────────────────
 
-export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryButton, note, pauseLabel, playLabel, nodes }: VoiceHeroProps) {
+export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryButton, note, pauseLabel, playLabel, nodes, backgroundVideo }: VoiceHeroProps) {
   const locale = useLocale()
   const reduceMotion = useReducedMotion()
   const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(true)
   const animated = playing && !reduceMotion
+  // null until the browser reports the width, so only one of the two video placements ever loads.
+  const [wideScreen, setWideScreen] = useState<boolean | null>(null)
+  const showVideo = Boolean(backgroundVideo) && !reduceMotion && wideScreen !== null
+
+  useEffect(() => {
+    const query = window.matchMedia(DESKTOP_QUERY)
+    const update = () => setWideScreen(query.matches)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     if (!animated || nodes.length === 0) return
@@ -85,12 +98,26 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
 
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-12 pt-10 sm:px-6 md:pb-16 md:pt-14 lg:px-8">
+      {showVideo && wideScreen && (
+        <>
+          <video src={backgroundVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/30" />
+        </>
+      )}
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 h-96 w-96 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className={`${INNER} relative grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]`}>
-        <div>
+        {/* Below lg the video is the background of this text block, bleeding to the screen edges and up to the header. */}
+        <div className="relative -mx-4 -mt-10 overflow-hidden px-4 pb-8 pt-10 sm:-mx-6 sm:px-6 md:-mt-14 md:pt-14 lg:mx-0 lg:mt-0 lg:overflow-visible lg:p-0">
+          {showVideo && !wideScreen && (
+            <>
+              <video src={backgroundVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/30" />
+            </>
+          )}
+          <div className="relative">
           {pill && <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">{pill}</span>}
           <h1 className="mt-5 whitespace-pre-line text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[42px]">{heading}</h1>
-          <p className="mt-5 max-w-xl text-[14px] leading-[1.9] text-text-secondary">{body}</p>
+          <p className="mt-5 max-w-xl text-[14px] leading-[1.9] text-text-primary">{body}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             {primaryButton && (
               <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
@@ -105,6 +132,7 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
             )}
           </div>
           {note && <p className="mt-4 text-[11.5px] text-text-muted">{note}</p>}
+          </div>
         </div>
 
         <div>

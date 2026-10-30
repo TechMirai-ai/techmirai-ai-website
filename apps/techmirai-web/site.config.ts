@@ -232,6 +232,12 @@ const siteConfig: SiteConfig = {
       en: "Hello! I'm TechMirai's AI受付, an automated assistant. I can answer questions about our service, show you the demo, or book a free consultation. What would you like to do?",
       ja: 'こんにちは。TechMiraiのAI受付（自動応答）です。サービスについてのご質問、デモのご案内、無料相談のご予約を承ります。ご用件をお選びください。',
     },
+    // One-line bubble shown before the chat opens (the panel keeps the full greeting
+    // above). DRAFT wording, not from the Spec; the AI disclosure is in the panel's greeting.
+    teaser: {
+      en: 'Hi! Chat with me anytime.',
+      ja: 'こんにちは！いつでもチャットでご相談ください。',
+    },
     openDelayMs: 8000,
     locales: ['ja', 'en'],
     clinicPhone,

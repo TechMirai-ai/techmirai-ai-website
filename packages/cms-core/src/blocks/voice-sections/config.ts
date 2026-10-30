@@ -28,6 +28,8 @@ export const VoiceHeroBlockConfig: Block = {
     text('note'),
     text('pauseLabel'),
     text('playLabel'),
+    // Decorative looping video: hero background on desktop, a banner above the call flow on mobile.
+    { name: 'backgroundVideo', type: 'text' },
     {
       name: 'nodes',
       type: 'array',

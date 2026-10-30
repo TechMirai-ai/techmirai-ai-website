@@ -144,6 +144,7 @@ export default async function LocaleLayout({
           <LazyReceptionWidget
             enabled={siteConfig.reception.enabled}
             greeting={siteConfig.reception.greeting}
+            {...(siteConfig.reception.teaser ? { teaser: siteConfig.reception.teaser } : {})}
             openDelayMs={siteConfig.reception.openDelayMs}
             locales={siteConfig.reception.locales}
             locale={locale}

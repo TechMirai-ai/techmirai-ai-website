@@ -20,7 +20,8 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
     // consentLabel,
     // privacyLabel,
     // privacyHref,
-    liveLabel,
+    // LIVE-CALL: "Live AI call" button removed from the scenario list.
+    // liveLabel,
     copy,
     // LIVE-CALL: status note hidden now that the live call link works.
     // liveNote,
@@ -84,6 +85,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
           <AccessKeyForm
             copy={copy}
             liveCallUrl={liveCallUrl}
+            locale={locale}
             onRegister={() => setPhase('register')}
             onBack={() => setPhase('entry')}
           />
@@ -132,23 +134,6 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
                 </li>
               ))}
             </ul>
-            <div className="mt-5 rounded-2xl border border-dashed border-border-default bg-white/70 p-4">
-              {liveCallUrl ? (
-                <a
-                  href={liveCallUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block rounded-full bg-brand-primary px-4 py-2 text-[13px] font-semibold text-on-primary transition-colors hover:bg-brand-primary-dark"
-                >
-                  {liveLabel}
-                </a>
-              ) : (
-                <button type="button" disabled className="rounded-full border border-border-default px-4 py-2 text-[13px] font-semibold text-text-muted opacity-60">
-                  {liveLabel}
-                </button>
-              )}
-              {/* LIVE-CALL: <p className="mt-2 text-[12px] leading-[1.7] text-text-muted">{liveNote}</p> */}
-            </div>
           </div>
         )}
 

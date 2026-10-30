@@ -27,6 +27,8 @@ const DEMO_BUTTON_JA = '音声デモを体験する'
 const PARTNER_BUTTON_JA = '協業について相談する'
 const ADOPT_BUTTON_JA = 'AI音声エージェントの導入を相談する'
 const POC_JA = ['検証', '効果測定', '導入判断', '本番開発'] as const
+// Served from apps/techmirai-web/public/video; the same file is used for both locales.
+const HERO_VIDEO = '/video/hero-section-background.mp4'
 
 const t = (text: string) => ({ text })
 const items = (list: string[]) => list.map(t)
@@ -50,6 +52,7 @@ const en: Copy = {
     primaryButton: { label: 'Try the voice demo', href: '/demo' },
     secondaryButton: { label: 'Consult about partnership', href: '/contact?path=partnership' },
     // PLACEHOLDER-OFF: note: 'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]',
+    backgroundVideo: HERO_VIDEO,
     pauseLabel: 'Pause animation',
     playLabel: 'Play animation',
     nodes: [
@@ -186,6 +189,7 @@ const ja: Copy = {
     primaryButton: { label: DEMO_BUTTON_JA, href: '/demo' },
     secondaryButton: { label: PARTNER_BUTTON_JA, href: '/contact?path=partnership' },
     // PLACEHOLDER-OFF: note: '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
+    backgroundVideo: HERO_VIDEO,
     pauseLabel: 'アニメーションを一時停止',
     playLabel: 'アニメーションを再生',
     nodes: [

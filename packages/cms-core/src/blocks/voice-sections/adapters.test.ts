@@ -23,6 +23,18 @@ describe('adaptVoiceHero', () => {
 
     expect(props.nodes[0]?.icon).toBe('phone')
   })
+
+  it('keeps a same-site or https background video and drops anything else', () => {
+    expect(adaptVoiceHero({ backgroundVideo: '/video/hero.mp4' }).backgroundVideo).toBe('/video/hero.mp4')
+    expect(adaptVoiceHero({ backgroundVideo: 'https://example.test/hero.mp4' }).backgroundVideo).toBe('https://example.test/hero.mp4')
+    expect(adaptVoiceHero({ backgroundVideo: 'javascript:alert(1)' }).backgroundVideo).toBe('')
+    expect(adaptVoiceHero({ backgroundVideo: '//evil.test/hero.mp4' }).backgroundVideo).toBe('')
+    expect(adaptVoiceHero({ backgroundVideo: 'http://example.test/hero.mp4' }).backgroundVideo).toBe('')
+  })
+
+  it('has no background video when the field is missing', () => {
+    expect(adaptVoiceHero({}).backgroundVideo).toBe('')
+  })
 })
 
 describe('adaptIconCards', () => {

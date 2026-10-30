@@ -169,6 +169,9 @@ const receptionSchema = z.object({
   // site.tagline — host-configurable copy, not an i18n key, since it varies
   // per deployment.
   greeting: z.record(z.string(), z.string()),
+  // Optional short per-locale line for the floating bubble that shows before the
+  // chat is opened. When absent the bubble shows `greeting`.
+  teaser: z.record(z.string(), z.string()).optional(),
   openDelayMs: z.number().int().min(0),
   // Which of the app's locales the reception flow is available in — may be a
   // subset of locales.enabled.
