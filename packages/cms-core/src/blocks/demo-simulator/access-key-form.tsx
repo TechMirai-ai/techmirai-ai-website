@@ -23,6 +23,10 @@ export function AccessKeyForm({ copy, liveCallUrl, locale, onRegister, onBack }:
     event.preventDefault()
     if (!key.trim() || status === 'checking') return
     setStatus('checking')
+    // Open the tab now, while the click still counts as a user gesture; browsers block
+    // window.open() after an await. It is pointed at the call URL once the key is verified.
+    const popup = window.open('', '_blank')
+    if (popup) popup.opener = null
     try {
       const res = await fetch('/api/demo/verify-key', {
         method: 'POST',
@@ -30,15 +34,19 @@ export function AccessKeyForm({ copy, liveCallUrl, locale, onRegister, onBack }:
         body: JSON.stringify({ key, locale }),
       })
       const data = (await res.json()) as { valid?: boolean; tier?: 'access' | 'normal'; url?: string }
-      // Premium keys open the server-provided URL; normal keys open the plain call link.
-      const target = data.tier === 'access' ? data.url : liveCallUrl
+      // Premium keys open the server-provided URL; normal keys use the server URL when
+      // configured, otherwise the CMS call link.
+      const target = data.tier === 'access' ? data.url : (data.url ?? liveCallUrl)
       if (res.ok && data.valid === true && target && target.startsWith('https://')) {
-        window.open(target, '_blank', 'noopener,noreferrer')
+        if (popup) popup.location.href = target
+        else window.location.assign(target)
         setStatus('idle')
         return
       }
+      popup?.close()
       setStatus(res.ok && data.valid === false ? 'invalid' : 'error')
     } catch {
+      popup?.close()
       setStatus('error')
     }
   }

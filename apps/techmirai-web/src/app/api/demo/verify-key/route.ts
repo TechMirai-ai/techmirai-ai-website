@@ -25,10 +25,14 @@ export async function POST(request: NextRequest) {
 
   const tier = getDemoKeyTier(key, process.env['DEMO_ACCESS_KEYS'], process.env['DEMO_NORMAL_KEYS'])
   if (tier === null) return NextResponse.json({ valid: false }, { status: 200 })
-  if (tier === 'normal') return NextResponse.json({ valid: true, tier }, { status: 200 })
+  const locale = (body as Record<string, unknown>)['locale'] === 'ja' ? 'ja' : 'en'
+  if (tier === 'normal') {
+    // Optional server-side call URL; when unset the client falls back to the CMS link.
+    const normalUrl = process.env[locale === 'ja' ? 'DEMO_NORMAL_CALL_URL_JA' : 'DEMO_NORMAL_CALL_URL_EN']
+    return NextResponse.json({ valid: true, tier, ...(normalUrl ? { url: normalUrl } : {}) }, { status: 200 })
+  }
 
   // Premium visitors get the server-only call URL (it carries the fixed demo key).
-  const locale = (body as Record<string, unknown>)['locale'] === 'ja' ? 'ja' : 'en'
   const url = process.env[locale === 'ja' ? 'DEMO_PREMIUM_CALL_URL_JA' : 'DEMO_PREMIUM_CALL_URL_EN']
   return NextResponse.json({ valid: true, tier, ...(url ? { url } : {}) }, { status: 200 })
 }
