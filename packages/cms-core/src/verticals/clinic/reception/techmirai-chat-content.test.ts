@@ -21,8 +21,9 @@ describe('TechMirai chat content (Spec §16.1–16.3)', () => {
     expect(MATCHED_ENTRIES.map((e) => e.code)).toEqual(expected)
   })
 
-  it('has the six menu buttons and the Spec sub-buttons', () => {
-    expect(MENU_BUTTON_IDS).toEqual(['b1', 'b2', 'b3', 'b4', 'b5', 'b6'])
+  it('has the five menu buttons (no Pricing button) and the Spec sub-buttons', () => {
+    expect(MENU_BUTTON_IDS).toEqual(['b1', 'b2', 'b4', 'b5', 'b6'])
+    expect(getEntry('b3')).toBeDefined()
     for (const id of ['b1a', 'b1b', 'b4-clinic', 'b4-beauty', 'b4-auto', 'b4-hotel', 'b4-other']) {
       expect(getEntry(id), id).toBeDefined()
     }

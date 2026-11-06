@@ -38,7 +38,7 @@ interface Copy {
   problems: Record<string, unknown>
   dayFlow: Record<string, unknown>
   routing: Record<string, unknown>
-  roles: Record<string, unknown>
+  whyAi: Record<string, unknown>
   demo: Record<string, unknown>
   poc: Record<string, unknown>
   cta: Record<string, unknown>
@@ -152,27 +152,25 @@ const en: Copy = {
       demoLabel: 'Demo data',
     },
   },
-  roles: {
-    pill: 'Roles of AI and people',
-    heading: 'Safe operation for better service',
-    aiHeading: 'What AI handles',
-    aiItems: items([
-      'Routine inquiries',
-      'Initial reception and guidance',
-      'Answers based on approved information',
-      'After-hours reception and recording',
-      'Callback scheduling',
-    ]),
-    humanHeading: 'What people handle',
-    humanItems: items([
-      'Complaints and troubles',
-      'Personal and sensitive information',
-      'Exceptions and irregular cases',
-      'Negotiation and coordination',
-      'When identity cannot be confirmed',
-      'Cases that need advanced judgment',
-    ]),
-    tagline: 'AI supports,\npeople stay close.\nThat is the TechMirai way.',
+  // "Why AI" table from HOMEPAGE-UX-DESIGN.pdf (part 2). "design goal" / "to be confirmed" / [TBD]
+  // markers are the PDF's own and need owner confirmation (PLACEHOLDER-REGISTER V1-08a).
+  whyAi: {
+    pill: 'Why AI',
+    heading: 'Human operator vs. AI operator',
+    humanLabel: 'Human operator',
+    aiLabel: 'TechMirai AI operator',
+    aiSub: 'Recommended for routine and after-hours calls',
+    rows: [
+      { label: 'Availability', human: 'Set shifts and staffed hours', ai: 'After-hours reception by design, day or night' },
+      { label: 'Response speed at busy times', human: 'Callers can queue when all operators are busy', ai: 'First response without a queue (design goal; figure to be measured)' },
+      { label: 'Language support', human: 'Depends on who is hired', ai: 'Japanese and English' },
+      { label: 'Scalability', human: 'More calls need more staff and training', ai: 'Takes more calls at once (capacity limits to be confirmed)' },
+      { label: 'Operational cost', human: 'Grows with hours and volume', ai: 'Pricing not published yet [TBD]' },
+      { label: 'Handling multiple calls', human: 'One call per operator', ai: 'Many calls in parallel' },
+      { label: 'Consistency', human: 'Varies by person and fatigue', ai: 'Same approved answers each time' },
+      { label: 'Complaints and sensitive cases', human: 'Strong: judgment and empathy', ai: 'Handed to staff: AI supports, people stay close', noCheck: true },
+    ],
+    footnote: 'Statements marked "design goal", "to be confirmed" or "[TBD]" need owner confirmation before launch.',
   },
   demo: {
     pill: 'Live demo',
@@ -316,27 +314,24 @@ const ja: Copy = {
       demoLabel: 'デモデータ',
     },
   },
-  roles: {
-    pill: 'AIと人の役割分担',
-    heading: '安全な運用設計で、より良い対応を',
-    aiHeading: 'AIが対応すること',
-    aiItems: items([
-      '定型的な問い合わせ',
-      '初期受付・ご案内',
-      '承認済みの情報に基づく回答',
-      '営業時間外の受付・記録',
-      '折り返しの予約',
-    ]),
-    humanHeading: '人が対応すること',
-    humanItems: items([
-      'クレーム・トラブル',
-      '個人情報・機微情報',
-      '例外対応・イレギュラー',
-      '交渉・調整',
-      '本人確認が取れない場合',
-      '高度な判断が必要な案件',
-    ]),
-    tagline: 'AIが支え、\n人が寄り添う。\nそれが、TechMiraiのスタイルです。',
+  // DRAFT Japanese (not from the Spec): follows the English "Why AI" table; native review needed (PLACEHOLDER-REGISTER V1-08a).
+  whyAi: {
+    pill: 'なぜAIなのか',
+    heading: '人のオペレーターとAIオペレーターの違い',
+    humanLabel: '人のオペレーター',
+    aiLabel: 'TechMirai AIオペレーター',
+    aiSub: '定型的な電話・営業時間外の電話におすすめ',
+    rows: [
+      { label: '対応できる時間', human: 'シフトと配置した時間帯のみ', ai: '設計上、昼夜を問わず営業時間外も受付' },
+      { label: '混雑時の応答スピード', human: '全員が対応中の場合、待ち行列ができることがあります', ai: '待たせずに一次応答（設計目標・数値は今後測定）' },
+      { label: '対応言語', human: '採用した人材によって異なります', ai: '日本語と英語' },
+      { label: '拡張のしやすさ', human: '通話が増えると、人員の増員と教育が必要です', ai: '同時により多くの通話に対応（処理能力の上限は要確認）' },
+      { label: '運用コスト', human: '稼働時間と通話量に応じて増えます', ai: '料金は未公開です [TBD：オーナー確認待ち]' },
+      { label: '複数の通話への対応', human: '1人のオペレーターにつき1通話', ai: '多数の通話を並行して対応' },
+      { label: '対応の一貫性', human: '担当者や疲れによってばらつきがあります', ai: '承認済みの回答を毎回同じようにご案内' },
+      { label: 'クレーム・デリケートな案件', human: '得意：判断力と共感', ai: 'スタッフに引き継ぎ：AIが支え、人が寄り添う', noCheck: true },
+    ],
+    footnote: '「設計目標」「要確認」「[TBD]」と記載した内容は、公開前にオーナーの確認が必要です。',
   },
   demo: {
     pill: 'ライブデモ',
@@ -377,7 +372,7 @@ function buildLayout(c: Copy) {
     { blockType: 'icon-cards', ...c.problems },
     { blockType: 'day-flow', ...c.dayFlow },
     { blockType: 'routing-dashboard', ...c.routing },
-    { blockType: 'role-split', ...c.roles },
+    { blockType: 'why-ai', ...c.whyAi },
     { blockType: 'icon-cards', ...c.demo },
     { blockType: 'process-steps', ...c.poc },
     { blockType: 'cta-banner', ...c.cta },

@@ -22,7 +22,7 @@ const answerKey = (id: string) => `reception.tm.${id}.answer`
 const labelKey = (id: string) => `reception.tm.${id}.label`
 const buttonKey = (name: string) => `reception.tm.btn.${name}`
 
-/** The six main-menu buttons, in Spec order. */
+/** The five main-menu buttons, in Spec order (B3 Pricing is not shown). */
 function menuOptions(): ChoiceOption[] {
   return MENU_BUTTON_IDS.map((id) => ({ labelKey: labelKey(id), value: id, next: id }))
 }
@@ -54,7 +54,7 @@ function toOption(button: NextButton, index: number, fromNodeId: string): Choice
 }
 
 function answerNode(entry: ChatEntry): FlowNode {
-  // C01 is the main menu, and the rule-13 redirect "shows the menu": both offer the six menu entries.
+  // C01 is the main menu, and the rule-13 redirect "shows the menu": both offer the five menu entries.
   const showsMenu = entry.id === MENU_NODE_ID || entry.id === OFF_TOPIC_NODE_ID
   const options = showsMenu ? menuOptions() : entry.next.map((b, i) => toOption(b, i, entry.id))
   return { id: entry.id, type: 'choice', promptKey: answerKey(entry.id), options }

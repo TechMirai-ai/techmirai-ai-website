@@ -42,11 +42,11 @@ describe('ReceptionPanel', () => {
   it('renders an internal link button, locale-prefixed, that does not leave the conversation', () => {
     render(<ReceptionPanel {...defaultProps} />)
 
-    pressButton('料金について')
+    pressButton('AI受付とは？')
+    pressButton('回答は正確？')
 
-    expect(screen.getByRole('link', { name: '料金ページ' })).toHaveAttribute('href', '/ja/pricing')
+    expect(screen.getByRole('link', { name: '仕組み' })).toHaveAttribute('href', '/ja/how-it-works')
     // The same node is still showing its buttons.
-    expect(screen.getByRole('link', { name: '無料診断' })).toHaveAttribute('href', '/ja/assessment')
     expect(button('メニュー')).toBeInTheDocument()
   })
 
@@ -284,11 +284,10 @@ describe('ReceptionPanel — free-text question box', () => {
 // sub-buttons and the way back. A button and a typed question give one answer.
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe('ReceptionPanel — the six menu buttons show the Spec answer', () => {
+describe('ReceptionPanel — the five menu buttons show the Spec answer', () => {
   it.each([
     ['AI受付とは？', /ホームページ・チャット・LINEで働く受付の仕組みです/],
     ['デモを見る', /実際に動くクリニックのホームページです/],
-    ['料金について', /初期費用\[30万円\]〜、月額\[3万円\]〜/],
     ['業種別の活用例', /どちらの業種でしょうか/],
     ['無料診断・相談', /30分のオンライン面談/],
     ['スタッフと話す', /平日 9:00〜18:00/],
@@ -301,7 +300,6 @@ describe('ReceptionPanel — the six menu buttons show the Spec answer', () => {
   it.each([
     ['What is AI受付?', /AI受付 is a front desk for your website, chat and LINE/],
     ['See the live demo', /Our live demo is a working clinic website/],
-    ['Pricing', /Starter Package starts from \[¥300,000\] for setup and \[¥30,000\] per month/],
     ['Examples by industry', /Which business are you in\?/],
     ['Free assessment or consultation', /book a 30-minute online call/],
     ['Talk to a person', /Of course\. Our team replies/],
@@ -324,7 +322,9 @@ describe('ReceptionPanel — the six menu buttons show the Spec answer', () => {
 
     pressButton('Menu')
     expect(screen.getByText('Hello! How can I help?')).toBeInTheDocument()
-    expect(button('Pricing')).toBeInTheDocument()
+    expect(button('Examples by industry')).toBeInTheDocument()
+    // Owner request 2026-11-06: no Pricing button on the main menu.
+    expect(screen.queryByRole('button', { name: 'Pricing' })).not.toBeInTheDocument()
   })
 
   it('B4 offers the five industries, each with its answer', () => {
@@ -339,16 +339,15 @@ describe('ReceptionPanel — the six menu buttons show the Spec answer', () => {
     expect(screen.getByText(/Room bookings stay with your current booking system/)).toBeInTheDocument()
   })
 
-  it('tapping "Pricing" and typing "how much does it cost?" give the same answer — one source', async () => {
+  it('typing "how much does it cost?" still gets the published-price answer from the static source (no Pricing button)', async () => {
     const requestAiAnswer = vi.fn(async () => ({ status: 'answered' as const, answer: 'AI FALLBACK — SHOULD NOT BE USED' }))
     render(<ReceptionPanel {...defaultProps} initialLocale="en" requestAiAnswer={requestAiAnswer} />)
 
-    pressButton('Pricing')
     fireEvent.change(screen.getByPlaceholderText('Or type your question below.'), { target: { value: 'How much does it cost?' } })
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
 
     await waitFor(() => {
-      expect(screen.getAllByText(/Starter Package starts from \[¥300,000\]/)).toHaveLength(2)
+      expect(screen.getAllByText(/Starter Package starts from \[¥300,000\]/)).toHaveLength(1)
     })
     expect(requestAiAnswer).not.toHaveBeenCalled()
   })

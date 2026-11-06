@@ -3,10 +3,11 @@ import { CallFlowDiagramBlock } from './call-flow-diagram'
 import { HomeHeroBlock } from './home-hero'
 import {
   adaptAboutHero, adaptCallFlow, adaptContactBanner, adaptDayFlow, adaptHomeHero, adaptIconCards, adaptMissionSplit, adaptPageIntro,
-  adaptPartnerCard, adaptRoleSplit, adaptRoutingDashboard, adaptTeamSplit, adaptVoiceHero,
+  adaptPartnerCard, adaptRoleSplit, adaptRoutingDashboard, adaptTeamSplit, adaptVoiceHero, adaptWhyAi,
 } from './adapters'
 import { ContactBannerBlock, MissionSplitBlock, PartnerCardBlock, TeamSplitBlock } from './company-components'
 import { AboutHeroBlock } from './company-hero'
+import { WhyAiBlock } from './why-ai'
 import {
   DayFlowBlock, IconCardsBlock, PageIntroBlock, RoleSplitBlock, RoutingDashboardBlock, VoiceHeroBlock,
 } from './components'
@@ -23,6 +24,7 @@ export const voiceSectionRenderers: Record<string, Renderer> = {
   'day-flow': (raw) => <DayFlowBlock {...adaptDayFlow(raw)} />,
   'routing-dashboard': (raw) => <RoutingDashboardBlock {...adaptRoutingDashboard(raw)} />,
   'role-split': (raw) => <RoleSplitBlock {...adaptRoleSplit(raw)} />,
+  'why-ai': (raw) => <WhyAiBlock {...adaptWhyAi(raw)} />,
   'home-hero': (raw) => <HomeHeroBlock {...adaptHomeHero(raw)} />,
   'call-flow-diagram': (raw) => <CallFlowDiagramBlock {...adaptCallFlow(raw)} />,
   'about-hero': (raw) => <AboutHeroBlock {...adaptAboutHero(raw)} />,

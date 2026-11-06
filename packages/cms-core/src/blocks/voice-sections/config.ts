@@ -153,6 +153,30 @@ export const RoleSplitBlockConfig: Block = {
   ],
 }
 
+export const WhyAiBlockConfig: Block = {
+  slug: 'why-ai',
+  interfaceName: 'WhyAiBlock',
+  labels: { singular: 'Why AI (human vs AI table)', plural: 'Why AI tables' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    text('humanLabel'),
+    text('aiLabel'),
+    text('aiSub'),
+    {
+      name: 'rows',
+      type: 'array',
+      fields: [
+        text('label', true),
+        text('human'),
+        text('ai', true),
+        { name: 'noCheck', type: 'checkbox', defaultValue: false },
+      ],
+    },
+    area('footnote'),
+  ],
+}
+
 export const PageIntroBlockConfig: Block = {
   slug: 'page-intro',
   interfaceName: 'PageIntroBlock',
@@ -334,4 +358,5 @@ export const VoiceSectionBlockConfigs: Block[] = [
   DayFlowBlockConfig,
   RoutingDashboardBlockConfig,
   RoleSplitBlockConfig,
+  WhyAiBlockConfig,
 ]

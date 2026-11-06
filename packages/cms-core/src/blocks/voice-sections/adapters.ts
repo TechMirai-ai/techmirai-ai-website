@@ -89,6 +89,17 @@ export interface RoleSplitProps {
   tagline: string
 }
 
+export interface WhyAiProps {
+  pill: string
+  heading: string
+  humanLabel: string
+  aiLabel: string
+  aiSub: string
+  /** `noCheck`: the AI cell is a hand-off to staff, so it gets no check mark. */
+  rows: { label: string; human: string; ai: string; noCheck: boolean }[]
+  footnote: string
+}
+
 export interface MissionSplitProps {
   pill: string
   heading: string
@@ -453,6 +464,21 @@ export function adaptPartnerCard(raw: unknown): PartnerCardProps {
     paragraphs: texts(d['paragraphs']),
     linkLabel: str(d['linkLabel']),
     linkHref: href.startsWith('https://') ? href : '',
+  }
+}
+
+export function adaptWhyAi(raw: unknown): WhyAiProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    humanLabel: str(d['humanLabel']),
+    aiLabel: str(d['aiLabel']),
+    aiSub: str(d['aiSub']),
+    rows: rows(d['rows'])
+      .map((r) => ({ label: str(r['label']), human: str(r['human']), ai: str(r['ai']), noCheck: r['noCheck'] === true }))
+      .filter((r) => r.label && r.ai),
+    footnote: str(d['footnote']),
   }
 }
 

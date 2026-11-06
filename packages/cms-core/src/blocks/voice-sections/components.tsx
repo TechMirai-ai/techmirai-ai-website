@@ -25,7 +25,7 @@ function Pill({ children }: { children: ReactNode }) {
   return <span className="inline-block rounded-full bg-brand-primary-light px-3 py-1 text-[12px] font-semibold text-brand-primary-dark">{children}</span>
 }
 
-function SectionHeading({ pill, heading }: { pill: string; heading: string }) {
+export function SectionHeading({ pill, heading }: { pill: string; heading: string }) {
   if (!pill && !heading) return null
   return (
     <div className="mb-5 md:mb-6">

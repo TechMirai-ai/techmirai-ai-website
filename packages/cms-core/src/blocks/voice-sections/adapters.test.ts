@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  adaptCallFlow, adaptDayFlow, adaptIconCards, adaptRoleSplit, adaptRoutingDashboard, adaptVoiceHero,
+  adaptCallFlow, adaptDayFlow, adaptIconCards, adaptRoleSplit, adaptRoutingDashboard, adaptVoiceHero, adaptWhyAi,
 } from './adapters'
 
 describe('adaptCallFlow', () => {
@@ -111,6 +111,33 @@ describe('adaptRoutingDashboard', () => {
 
     expect(props.leftItems).toEqual([])
     expect(props.dashboard.rows).toEqual([])
+  })
+})
+
+describe('adaptWhyAi', () => {
+  it('maps rows, keeps noCheck only when true, and drops rows missing a label or AI text', () => {
+    const props = adaptWhyAi({
+      pill: 'Why AI',
+      rows: [
+        { label: 'Availability', human: 'Set shifts', ai: 'Day or night' },
+        { label: 'Complaints', human: 'Strong', ai: 'Handed to staff', noCheck: true },
+        { label: '', human: 'x', ai: 'y' },
+        { label: 'No AI text', human: 'x', ai: '' },
+      ],
+    })
+
+    expect(props.pill).toBe('Why AI')
+    expect(props.rows).toEqual([
+      { label: 'Availability', human: 'Set shifts', ai: 'Day or night', noCheck: false },
+      { label: 'Complaints', human: 'Strong', ai: 'Handed to staff', noCheck: true },
+    ])
+  })
+
+  it('returns empty strings and no rows for missing data', () => {
+    const props = adaptWhyAi(undefined)
+
+    expect(props.heading).toBe('')
+    expect(props.rows).toEqual([])
   })
 })
 

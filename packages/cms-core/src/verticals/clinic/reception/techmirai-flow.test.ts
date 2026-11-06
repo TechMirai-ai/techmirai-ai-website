@@ -33,13 +33,12 @@ function harness(locale: 'en' | 'ja') {
 }
 
 describe('techmiraiReceptionFlow structure', () => {
-  it('starts on the greeting with the six menu buttons in Spec order', () => {
+  it('starts on the greeting with the five menu buttons in Spec order (no Pricing)', () => {
     const h = harness('en')
     expect(h.texts()).toHaveLength(1)
     expect(h.labels()).toEqual([
       'What is AI受付?',
       'See the live demo',
-      'Pricing',
       'Examples by industry',
       'Free assessment or consultation',
       'Talk to a person',
@@ -86,7 +85,7 @@ describe('techmiraiReceptionFlow behaviour (engine + resolver, both languages)',
     h.choose('b1a')
     h.choose('c01')
     expect(h.state().currentNodeId).toBe('c01')
-    expect(h.labels()).toHaveLength(6)
+    expect(h.labels()).toHaveLength(5)
   })
 
   it('"Book a call" mounts the inline booking component', () => {

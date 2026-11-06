@@ -102,8 +102,8 @@ const BUTTON = {
 } as const
 
 const MENU_LABELS = {
-  en: ['What is AI受付?', 'See the live demo', 'Pricing', 'Examples by industry', 'Free assessment or consultation', 'Talk to a person'],
-  ja: ['AI受付とは？', 'デモを見る', '料金について', '業種別の活用例', '無料診断・相談', 'スタッフと話す'],
+  en: ['What is AI受付?', 'See the live demo', 'Examples by industry', 'Free assessment or consultation', 'Talk to a person'],
+  ja: ['AI受付とは？', 'デモを見る', '業種別の活用例', '無料診断・相談', 'スタッフと話す'],
 }
 
 // ── model stub and grounding ────────────────────────────────────────────────

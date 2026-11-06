@@ -162,6 +162,7 @@ not a static image asset, so it never needed a pixel-size placeholder. Logged as
 | V1-06b | /company redesign: all new Japanese (hero, mission, team cards, partner card, CTA) written by Claude as DRAFT; native review needed | ja | DRAFT | Native Japanese reviewer | open |
 | V1-07 | /privacy: full policy text incl. demo recording, transcription, retention | en/ja | professional wording | Legal reviewer | open |
 | V1-08 | Ringi PDF: all [TBD] fields (company, contact person, email, retention) | en | [TBD] | Jamal | open |
+| V1-08a | / "Why AI" table (from HOMEPAGE-UX-DESIGN.pdf): all Japanese is DRAFT written by Claude (native review needed); owner must confirm the "design goal" response-speed claim, the "capacity limits to be confirmed" claim, and the "Pricing not published yet [TBD]" operational-cost cell | en/ja | DRAFT, [TBD] | Native Japanese reviewer, Jamal | open |
 
 **V1-01 update (2026-10-21):** at the owner's explicit request, Japanese for the launch pages, navigation, footer, SEO titles/descriptions, demo, contact form, privacy scope note, image alt text and booking messages was written by Claude as DRAFT. It replaces every `[JA TODO]` on the public pages. A native Japanese speaker must review it before launch. Strings given verbatim in the ECC prompt are unchanged. `[TBD：…]` markers inside Japanese text are the same unconfirmed facts as the English `[TBD: …]`. Remaining `[JA TODO]` markers exist only in code paths and tests that depend on them (chat content tests, corpus filter, image-slots tests, seeded placeholder meta).
 

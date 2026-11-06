@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TechMirai chat content — Content Spec §16.1–16.3 (pp. 87–96), K1.
 //
-// The single source of truth for the chat's text: the greeting, the six-button
+// The single source of truth for the chat's text: the greeting, the five-button
 // menu (B1–B6 plus sub-buttons), the 36 matched answers (F01–F26 from the FAQ,
 // C01–C10 chat-only) with their match keywords, and the label of every "next
 // button". techmirai-flow.ts builds the FlowGraph from this; the resolver reads
@@ -152,7 +152,7 @@ const B3_ANSWER: Bilingual = {
   ja: 'AI受付 スタートパッケージは、初期費用[30万円]〜、月額[3万円]〜です。正式なお見積りは、無料診断のあとにご提示します。',
 }
 
-/** Spec 16.2 — the six-button menu, sub-buttons, and their answers. */
+/** Spec 16.2 — the menu (five buttons shown; B3 Pricing is not a button), sub-buttons, and their answers. */
 const MENU_ENTRIES: ChatEntry[] = [
   {
     id: 'b1',
@@ -540,7 +540,7 @@ const CHAT_ONLY_ENTRIES: ChatEntry[] = [
     id: 'c01', code: 'C01',
     keywords: kw('hello, hi; こんにちは, はじめまして'),
     answer: { en: 'Hello! How can I help?', ja: 'こんにちは。ご用件をお選びください。' },
-    next: [], // the six menu buttons — filled by the flow
+    next: [], // the menu buttons — filled by the flow
   },
   {
     id: 'c02', code: 'C02',
@@ -656,7 +656,7 @@ export const B6_ANSWER_KEY = 'reception.tm.b6.answer'
 /**
  * Spec §16.4 rule 13 — "say politely that you can help with TechMirai's
  * services, then show the menu". The Spec gives no exact wording, so this is a
- * labelled placeholder, not copy (register K2-02). The node shows the six menu
+ * labelled placeholder, not copy (register K2-02). The node shows the five menu
  * buttons.
  */
 export const OFF_TOPIC_NODE_ID = 'off-topic'
@@ -667,10 +667,12 @@ const OFF_TOPIC_ENTRY: ChatEntry = {
     en: '[TBD: polite redirect to TechMirai’s services — Spec rule 13 gives no exact wording]',
     ja: '[JA TODO]',
   },
-  next: [], // the six menu buttons — filled by the flow
+  next: [], // the menu buttons — filled by the flow
 }
 
-export const MENU_BUTTON_IDS = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'] as const
+// B3 (Pricing) is kept as an entry (the AI guard reads its published prices) but is
+// deliberately NOT a menu button: owner request 2026-11-06.
+export const MENU_BUTTON_IDS = ['b1', 'b2', 'b4', 'b5', 'b6'] as const
 
 /** F01–F26 and C01–C10: the 36 answers a typed question can land on. */
 export const MATCHED_ENTRIES: readonly ChatEntry[] = [...FAQ_ENTRIES, ...CHAT_ONLY_ENTRIES]
