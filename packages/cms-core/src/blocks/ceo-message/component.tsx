@@ -101,7 +101,7 @@ const t = (labels[locale] || labels['en']) as { title: string };
   )
 
   return (
-    <section className={`py-16 md:py-24 ${bg}`}>
+    <section className={`py-12 md:py-16 ${bg}`}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div 
           variants={containerVariants}

@@ -27,7 +27,7 @@ export function LogoCloudBlock({
   ]
 
   return (
-    <section className="overflow-hidden bg-brand-surface py-14 md:py-20" aria-label={eyebrow}>
+    <section className="overflow-hidden bg-brand-surface py-14 md:py-14" aria-label={eyebrow}>
       
       {/* Scrolling track */}
       <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_8%,white_92%,transparent)]">

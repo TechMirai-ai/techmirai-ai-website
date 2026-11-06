@@ -22,7 +22,7 @@ function PageTitleVariant({
 }) {
   const locale = useLocale()
   return (
-    <section aria-label={pageTitle} className="bg-white pt-8 pb-3 md:pt-16 md:pb-6">
+    <section aria-label={pageTitle} className="bg-white pt-4 pb-3 md:pt-8 md:pb-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-left">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-4xl">
           {pageTitle}
@@ -117,7 +117,7 @@ function PlainTextHeroVariant({
   const locale = useLocale()
   const alignClass = textAlignment === 'center' ? 'text-center mx-auto' : 'text-left'
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-10 md:pb-14 bg-brand-surface">
+    <section className="w-full px-4 sm:px-6 lg:px-8 pt-3 md:pt-5 pb-10 md:pb-14 bg-brand-surface">
       <div className={`mx-auto max-w-3xl ${alignClass}`}>
         {eyebrow && (
           <p className="text-[12.5px] font-semibold uppercase tracking-wider text-brand-primary-dark mb-2">{eyebrow}</p>
@@ -177,7 +177,7 @@ export function PageHeroBlock({
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-surface pt-6 md:pt-10 pb-10">
+    <section className="relative w-full overflow-hidden bg-brand-surface pt-3 md:pt-5 pb-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-4 lg:px-6">
 
         {/* ===== HERO IMAGE CONTAINER ===== */}

@@ -59,16 +59,16 @@ const t = (labels[locale] || labels['en']) as Record<string, string>;
           viewport={{ once: true }}
         >
           {/* Header */}
-          <div className="mb-12">
+          <div className="mb-8">
             {eyebrow && <SectionEyebrow>{eyebrow}</SectionEyebrow>}
             {heading && (
-              <h2 className="mt-3 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
+              <h2 className="mt-3 text-4xl font-bold tracking-tight text-gray-900 md:text-4xl">
                 {heading}
               </h2>
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             
             {/* Left Column - Information */}
             <motion.div variants={fadeInUp} className="lg:col-span-7">

@@ -77,7 +77,7 @@ export function HoursLocationBlock({
   const afternoonTime = sampleAfternoon.time || '15:00–19:30'
 
   return (
-    <section className="py-12 md:py-20 bg-brand-surface text-slate-800 w-full">
+    <section className="py-12 md:py-14 bg-brand-surface text-slate-800 w-full">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={fadeInUp}
@@ -102,7 +102,7 @@ export function HoursLocationBlock({
 
           {/* ========== MAIN CARD ========== */}
           <div className="relative z-10 w-full bg-[#FAF0EE] border-x border-[#eedad5] p-6 sm:p-10 lg:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-10 items-center w-full">
               
               {/* Left Column */}
               <div className="lg:col-span-6 space-y-7">

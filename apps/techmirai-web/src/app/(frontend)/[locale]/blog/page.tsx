@@ -190,7 +190,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
           {categories.length > 0 && (
             <nav
               aria-label={titles[locale]}
-              className="flex flex-wrap gap-2 mb-10"
+              className="flex flex-wrap gap-2 mb-8"
             >
               <Link
                 href="?"
@@ -218,7 +218,7 @@ export default async function BlogIndexPage({ params, searchParams }: IndexProps
             </nav>
           )}
           {posts.length === 0 ? (
-            <Text className="text-center text-[var(--color-muted)] py-16">
+            <Text className="text-center text-[var(--color-muted)] py-12">
               {descriptions[locale]}
             </Text>
           ) : (

@@ -24,7 +24,7 @@ export function CTABannerBlock({
 }: CTABannerBlockProps) {
   const locale = useLocale()
   return (
-    <section className="bg-white py-16 md:py-24 overflow-hidden">
+    <section className="bg-white py-12 md:py-16 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-16">
 
         {/* Outer wrapper — relative for the overlapping card layout structure */}
@@ -57,7 +57,7 @@ export function CTABannerBlock({
             {/* Decorative icon blocks row */}
             {/* MODIFIED: Adjusted padding distributions to balance out the extra available horizontal workspace layout */}
             <div className="relative z-10 flex items-center 
-                            justify-center gap-8 md:gap-14 lg:gap-16 
+                            justify-center gap-8 md:gap-14 lg:gap-12 
                             w-full px-6 md:px-16 lg:pr-36">
               
               {/* Mail icon box */}

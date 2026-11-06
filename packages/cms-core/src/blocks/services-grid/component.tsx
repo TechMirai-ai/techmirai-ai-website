@@ -173,7 +173,7 @@ export function ServicesGridBlock({
   if (!services || services.length === 0) return null
 
   return (
-    <section className="relative w-full z-20 pb-16 md:pb-24 pl-4 sm:pl-6 lg:pl-8 overflow-x-clip bg-gradient-to-b from-[#EAF5EC] to-brand-surface">
+    <section className="relative w-full z-20 pb-16 md:pb-16 pl-4 sm:pl-6 lg:pl-8 overflow-x-clip bg-gradient-to-b from-[#EAF5EC] to-brand-surface">
       <div className="mx-auto max-w-7xl">
         
  {/* 1. OUTER ANGLED CONTAINER (PINK CARD) WITH SCROLL FADE-UP */}
@@ -185,7 +185,7 @@ export function ServicesGridBlock({
   className="relative w-full bg-[#F5E1DD] p-[6px] sm:p-[10px] md:p-[14px] -mt-12 md:-mt-20 shadow-sm [clip-path:polygon(0%_4%,50%_0%,100%_4%,100%_100%,0%_100%)] sm:[clip-path:polygon(0%_12%,50%_0%,100%_12%,100%_100%,0%_100%)]"
 >
   <div
-    className="w-full bg-[#FAF0EE] pt-8 sm:pt-18 md:pt-24 pb-48 sm:pb-56 md:pb-64 px-4 sm:px-8 md:px-12 [clip-path:polygon(0%_4%,50%_0%,100%_4%,100%_100%,0%_100%)] sm:[clip-path:polygon(0%_12%,50%_0%,100%_12%,100%_100%,0%_100%)]"
+    className="w-full bg-[#FAF0EE] pt-8 sm:pt-16 md:pt-16 pb-48 sm:pb-56 md:pb-64 px-4 sm:px-8 md:px-12 [clip-path:polygon(0%_4%,50%_0%,100%_4%,100%_100%,0%_100%)] sm:[clip-path:polygon(0%_12%,50%_0%,100%_12%,100%_100%,0%_100%)]"
   >
     {/* Header Animated Reveal */}
     <motion.div 
@@ -193,7 +193,7 @@ export function ServicesGridBlock({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="mb-8 sm:mb-10 text-center max-w-2xl mx-auto space-y-2 sm:space-y-3 pt-4 sm:pt-2"
+      className="mb-8 sm:mb-8 text-center max-w-2xl mx-auto space-y-2 sm:space-y-3 pt-4 sm:pt-2"
     >
       <div className="text-[#d0915a] text-xs mb-1">✦</div>
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-primary-dark leading-tight">
@@ -327,7 +327,7 @@ export function ServicesGridBlock({
             pr-8 sm:pr-12 lg:pr-16
           "
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             
             {/* LEFT SIDE: Heading & Description */}
             <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5">

@@ -81,11 +81,11 @@ export function DownloadsGridBlock({
     /* MODIFIED: Added external top margins (mt-12 md:mt-16) to push down away from the previous blue curved section */
     <section 
       aria-labelledby="downloads-heading" 
-      className="bg-white pt-5 pb-20 lg:pt-10 lg:pb-24"
+      className="bg-white pt-5 pb-14 lg:pt-10 lg:pb-16"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header — centered */}
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           {eyebrow && <SectionEyebrow>{eyebrow}</SectionEyebrow>}
           {heading && (
             <h2

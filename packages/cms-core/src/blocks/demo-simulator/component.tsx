@@ -58,7 +58,7 @@ export function DemoSimulatorBlock(props: DemoSimulatorBlockProps) {
   const isPlayerScenario = Boolean(scenario && scenario.turns.length === 0 && (scenario.videoSrc || audioSrc))
 
   return (
-    <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+    <section className="w-full bg-bg-tertiary/40 px-4 py-12 sm:px-6 md:py-12 lg:px-8">
       <div className="mx-auto max-w-3xl">
         {phase === 'entry' && (
           <div className="grid gap-4 sm:grid-cols-2">

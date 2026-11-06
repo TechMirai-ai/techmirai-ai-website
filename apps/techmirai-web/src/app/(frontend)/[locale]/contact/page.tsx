@@ -124,7 +124,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
   const breadcrumb = launchBreadcrumbJsonLd(locale, '/contact')
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-16 pt-10 sm:px-6 md:pb-20 md:pt-14 lg:px-8">
+    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-16 pt-5 sm:px-6 md:pb-14 md:pt-7 lg:px-8">
       {breadcrumb && <JsonLd data={breadcrumb} />}
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className="relative mx-auto max-w-2xl">

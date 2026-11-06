@@ -11,14 +11,14 @@ export function BookingCtaBlock({ eyebrow, heading, subheadline, buttonLabel, no
   if (!enabled || !bookingProviderUrl) return null
 
   return (
-    <section className="w-full bg-white py-16 md:py-24">
+    <section className="w-full bg-white py-12 md:py-16">
       <div className="mx-auto max-w-4xl px-6 md:px-12 lg:px-16">
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
-          className="rounded-3xl bg-[var(--color-deep-accent)] px-8 py-12 md:px-16 md:py-16 text-center text-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)]"
+          className="rounded-3xl bg-[var(--color-deep-accent)] px-8 py-12 md:px-16 md:py-12 text-center text-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)]"
         >
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 border border-white/20">
             <CalendarCheck className="h-6 w-6" aria-hidden="true" />

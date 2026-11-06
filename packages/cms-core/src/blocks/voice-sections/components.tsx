@@ -15,7 +15,7 @@ const FEATURED_NODE_INDEX = 2
 // Matches Tailwind's `lg`, where the hero switches to two columns and the video becomes its background.
 const DESKTOP_QUERY = '(min-width: 1024px)'
 
-function withLocale(locale: string, href: string): string {
+export function withLocale(locale: string, href: string): string {
   if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('[')) return href
   const path = href.startsWith('/') ? href : `/${href}`
   return path.startsWith(`/${locale}/`) || path === `/${locale}` ? path : `/${locale}${path}`
@@ -28,37 +28,37 @@ function Pill({ children }: { children: ReactNode }) {
 function SectionHeading({ pill, heading }: { pill: string; heading: string }) {
   if (!pill && !heading) return null
   return (
-    <div className="mb-7 md:mb-9">
+    <div className="mb-5 md:mb-6">
       {pill && <Pill>{pill}</Pill>}
-      {heading && <h2 className="mt-2 text-2xl font-bold leading-[1.4] tracking-tight text-text-primary md:text-[30px]">{heading}</h2>}
+      {heading && <h2 className="mt-2 text-2xl font-bold leading-[1.4] tracking-tight text-text-primary md:text-[26px]">{heading}</h2>}
     </div>
   )
 }
 
-const SECTION = 'w-full px-4 py-12 sm:px-6 md:py-16 lg:px-8'
-const INNER = 'mx-auto max-w-6xl'
+export const SECTION = 'w-full px-4 py-8 sm:px-5 md:py-11 lg:px-6'
+export const INNER = 'mx-auto max-w-6xl'
 
 // ── 0. Page intro (inner pages) ───────────────────────────────────────────
 
 export function PageIntroBlock({ pill, heading, body, primaryButton, secondaryButton, note }: PageIntroProps) {
   const locale = useLocale()
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-10 pt-10 sm:px-6 md:pb-14 md:pt-14 lg:px-8">
+    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-10 pt-5 sm:px-6 md:pb-14 md:pt-7 lg:px-8">
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-6 h-80 w-80 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className={`${INNER} relative max-w-4xl`}>
         {pill && <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">{pill}</span>}
-        <h1 className="mt-4 text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[40px]">{heading}</h1>
-        {body && <p className="mt-5 max-w-2xl text-[14px] leading-[1.9] text-text-secondary">{body}</p>}
+        <h1 className="mt-4 text-[24px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[35px]">{heading}</h1>
+        {body && <p className="mt-5 max-w-2xl text-[13px] leading-[1.9] text-text-secondary">{body}</p>}
         {(primaryButton || secondaryButton) && (
           <div className="mt-7 flex flex-wrap gap-3">
             {primaryButton && (
-              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[13px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {primaryButton.label}
                 <ArrowRight aria-hidden="true" size={16} />
               </Link>
             )}
             {secondaryButton && (
-              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[13px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {secondaryButton.label}
               </Link>
             )}
@@ -97,7 +97,7 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
   }, [animated, nodes.length])
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-12 pt-10 sm:px-6 md:pb-16 md:pt-14 lg:px-8">
+    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-bg-tertiary/60 to-white px-4 pb-12 pt-5 sm:px-6 md:pb-16 md:pt-7 lg:px-8">
       {showVideo && wideScreen && (
         <>
           <video src={backgroundVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
@@ -107,7 +107,7 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
       <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 h-96 w-96 rounded-full bg-brand-primary-light/60 blur-3xl" />
       <div className={`${INNER} relative grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]`}>
         {/* Below lg the video is the background of this text block, bleeding to the screen edges and up to the header. */}
-        <div className="relative -mx-4 -mt-10 overflow-hidden px-4 pb-8 pt-10 sm:-mx-6 sm:px-6 md:-mt-14 md:pt-14 lg:mx-0 lg:mt-0 lg:overflow-visible lg:p-0">
+        <div className="relative -mx-4 -mt-5 overflow-hidden px-4 pb-8 pt-5 sm:-mx-6 sm:px-6 md:-mt-7 md:pt-7 lg:mx-0 lg:mt-0 lg:overflow-visible lg:p-0">
           {showVideo && !wideScreen && (
             <>
               <video src={backgroundVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
@@ -116,17 +116,17 @@ export function VoiceHeroBlock({ pill, heading, body, primaryButton, secondaryBu
           )}
           <div className="relative">
           {pill && <span className="inline-block rounded-full border border-brand-primary/40 bg-white/80 px-4 py-1.5 text-[12px] font-semibold text-brand-primary-dark">{pill}</span>}
-          <h1 className="mt-5 whitespace-pre-line text-[28px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[42px]">{heading}</h1>
-          <p className="mt-5 max-w-xl text-[14px] leading-[1.9] text-text-primary">{body}</p>
+          <h1 className="mt-5 whitespace-pre-line text-[24px] font-bold leading-[1.35] tracking-tight text-text-primary sm:text-4xl lg:text-[37px]">{heading}</h1>
+          <p className="mt-5 max-w-xl text-[13px] leading-[1.9] text-text-primary">{body}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             {primaryButton && (
-              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[14px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, primaryButton.href)} className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-[13px] font-semibold text-on-primary shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {primaryButton.label}
                 <ArrowRight aria-hidden="true" size={16} />
               </Link>
             )}
             {secondaryButton && (
-              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[14px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, secondaryButton.href)} className="inline-flex items-center rounded-full border-2 border-brand-primary bg-white/70 px-6 py-3 text-[13px] font-semibold text-brand-primary-dark hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 {secondaryButton.label}
               </Link>
             )}
@@ -196,20 +196,20 @@ export function IconCardsBlock({ pill, heading, intro, columns, cards, cta, foot
     <section className={`${SECTION} bg-bg-tertiary/40`}>
       <div className={INNER}>
         <SectionHeading pill={pill} heading={heading} />
-        {intro && <p className="-mt-5 mb-7 max-w-2xl text-[14px] leading-[1.8] text-text-secondary">{intro}</p>}
+        {intro && <p className="-mt-5 mb-7 max-w-2xl text-[13px] leading-[1.8] text-text-secondary">{intro}</p>}
         <ul className={`grid gap-4 ${GRID_COLS[columns]}`}>
           {cards.map((card, i) => (
             <li key={i} className="rounded-2xl border border-border-default bg-white p-5 shadow-sm">
               <div className={`flex h-24 items-center justify-center rounded-xl ${TONE_BG[card.tone]}`}>
                 <VoiceIcon name={card.icon} size={40} />
               </div>
-              <h3 className="mt-4 text-[15px] font-bold leading-snug text-text-primary">{card.title}</h3>
+              <h3 className="mt-4 text-[14px] font-bold leading-snug text-text-primary">{card.title}</h3>
               {card.text && <p className="mt-1.5 text-[12.5px] leading-[1.8] text-text-secondary">{card.text}</p>}
             </li>
           ))}
           {cta && (
             <li className="flex flex-col items-center justify-center rounded-2xl border-2 border-brand-primary bg-white p-5 text-center shadow-sm">
-              <Link href={withLocale(locale, cta.href)} className="inline-flex items-center gap-2 text-[15px] font-bold text-brand-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+              <Link href={withLocale(locale, cta.href)} className="inline-flex items-center gap-2 text-[14px] font-bold text-brand-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary text-on-primary"><Play aria-hidden="true" size={16} /></span>
                 {cta.label}
               </Link>
@@ -249,7 +249,7 @@ export function DayFlowBlock({ pill, heading, steps }: DayFlowProps) {
                   <VoiceIcon name={step.icon} size={48} className={style.icon} />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-[14px] font-bold text-text-primary">{step.title}</h3>
+                  <h3 className="text-[13px] font-bold text-text-primary">{step.title}</h3>
                   {step.text && <p className="mt-1 text-[12.5px] leading-[1.7] text-text-secondary">{step.text}</p>}
                 </div>
                 {i < steps.length - 1 && (
@@ -371,7 +371,7 @@ function RoleCard({ tone, icon, heading, items }: { tone: 'ai' | 'human'; icon: 
   const ai = tone === 'ai'
   return (
     <div className={`rounded-2xl border p-6 ${ai ? 'border-brand-primary/40 bg-brand-primary-light' : 'border-rose-100 bg-rose-50'}`}>
-      <h3 className={`flex items-center gap-2 text-[16px] font-bold ${ai ? 'text-brand-primary-dark' : 'text-rose-700'}`}>
+      <h3 className={`flex items-center gap-2 text-[14px] font-bold ${ai ? 'text-brand-primary-dark' : 'text-rose-700'}`}>
         <span className={`flex h-9 w-9 items-center justify-center rounded-full ${ai ? 'bg-brand-primary-dark' : 'bg-rose-500'} text-white`}><VoiceIcon name={icon} size={18} /></span>
         {heading}
       </h3>
@@ -398,7 +398,7 @@ export function RoleSplitBlock({ pill, heading, aiHeading, aiItems, humanHeading
           {tagline && (
             <div className="flex flex-col items-center gap-4 rounded-2xl bg-bg-tertiary p-6 text-center">
               <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-brand-primary-dark shadow-sm"><VoiceIcon name="headset" size={40} /></span>
-              <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.9] text-text-primary">{tagline}</p>
+              <p className="whitespace-pre-line text-[13px] font-semibold leading-[1.9] text-text-primary">{tagline}</p>
             </div>
           )}
         </div>

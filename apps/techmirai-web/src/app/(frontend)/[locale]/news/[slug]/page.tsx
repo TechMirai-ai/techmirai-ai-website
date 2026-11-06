@@ -142,7 +142,7 @@ export default async function NewsDetailPage({ params }: Props) {
   const eventType = typeof article['eventType'] === 'string' ? article['eventType'] : 'Online Event'
 
   return (
-    <main className="w-full pt-5 md:pt-6 bg-white min-h-screen relative overflow-hidden">
+    <main className="w-full pt-3 md:pt-4 bg-white min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden">
         <div className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-cyan-100/40 blur-[120px]" />
         <div className="absolute bottom-[15%] left-[45%] w-[35vw] h-[35vw] rounded-full bg-amber-100/30 blur-[100px]" />
@@ -180,7 +180,7 @@ export default async function NewsDetailPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-8">
             {hasLayoutBlocks ? (
               layoutBlocks.map((block, index) => {
                 const renderer = blockRegistry[block.blockType]

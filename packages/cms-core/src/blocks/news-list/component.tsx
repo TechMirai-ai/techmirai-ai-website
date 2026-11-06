@@ -33,9 +33,9 @@ export function NewsListBlock({ heading, items, viewAllCta }: NewsListBlockProps
     .slice(0, 3)
 
   return (
-    <section className="bg-brand-surface py-16 md:py-24 w-full">
+    <section className="bg-brand-surface py-12 md:py-16 w-full">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-12 items-start">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10 items-start">
 
           {/* Left Column: Logo & Heading (All Centered & Tight Gap) */}
           <div className="md:col-span-3 flex flex-col items-center justify-center text-center pt-1 w-full">

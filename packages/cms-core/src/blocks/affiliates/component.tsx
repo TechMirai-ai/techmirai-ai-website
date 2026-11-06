@@ -80,7 +80,7 @@ function MarqueeLogos({ items }: { items: AffiliateItem[] }) {
   return (
     <div className="relative overflow-hidden">
       <ul
-        className="flex gap-12 items-center animate-marquee whitespace-nowrap"
+        className="flex gap-10 items-center animate-marquee whitespace-nowrap"
         aria-label="Partner logos"
         role="list"
         style={{ ['--marquee-duration' as string]: `${Math.max(20, items.length * 3)}s` }}
@@ -120,10 +120,10 @@ export function AffiliatesBlock({
   const isMarquee = layout === 'logos' && animation === 'marquee'
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {(heading || body) && (
-          <div className="mb-10 text-center">
+          <div className="mb-8 text-center">
             {heading && (
               <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text)] sm:text-3xl">
                 {heading}

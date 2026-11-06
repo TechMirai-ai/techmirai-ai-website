@@ -38,12 +38,12 @@ export function FAQBlock({
   }
 
   return (
-    <section className="bg-white py-16 md:py-24 overflow-hidden">
+    <section className="bg-white py-12 md:py-16 overflow-hidden">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
         {sectionHeading && (
-          <div className="mb-12 text-center">
+          <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-[var(--color-text)] sm:text-4xl">
               {sectionHeading}
             </h2>
@@ -107,7 +107,7 @@ export function FAQBlock({
 
         {/* 🛠️ VARIANT 2: GRID LAYOUT */}
         {variant === 'grid' && (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12 pt-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10 pt-4">
             {items.map((item, idx) => (
               <div
                 key={item.id ?? idx}

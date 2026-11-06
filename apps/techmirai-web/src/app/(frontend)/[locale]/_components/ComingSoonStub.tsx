@@ -13,7 +13,7 @@ export function ComingSoonStub({ locale, titleEn, titleJa }: ComingSoonStubProps
   const body = locale === 'ja' ? 'このページは近日公開予定です。' : 'This page is coming soon.'
 
   return (
-    <Section className="py-24 md:py-32">
+    <Section className="pt-8 pb-16 md:pt-10 md:pb-20">
       <Container className="text-center space-y-4">
         <Heading level={1} className="text-2xl md:text-3xl">
           {title}

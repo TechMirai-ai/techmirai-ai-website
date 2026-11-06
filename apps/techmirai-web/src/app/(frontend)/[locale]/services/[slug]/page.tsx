@@ -126,7 +126,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     <main className="w-full bg-white">
       
       {/* Header Container Area */}
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 border-b border-neutral-100">
+      <div className="mx-auto max-w-7xl px-4 pt-5 pb-10 sm:px-6 lg:px-8 border-b border-neutral-100">
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           
           {/* 🛠️ FIXED: Image is now placed first (Left Side on desktop screen layouts) */}

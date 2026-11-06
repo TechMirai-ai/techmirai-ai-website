@@ -1,7 +1,38 @@
 import { describe, expect, it } from 'vitest'
 import {
-  adaptDayFlow, adaptIconCards, adaptRoleSplit, adaptRoutingDashboard, adaptVoiceHero,
+  adaptCallFlow, adaptDayFlow, adaptIconCards, adaptRoleSplit, adaptRoutingDashboard, adaptVoiceHero,
 } from './adapters'
+
+describe('adaptCallFlow', () => {
+  const card = (n: number) => ({ icon: 'fileText', tone: 'light', title: `Card ${n}`, text: `Text ${n}` })
+
+  it('keeps up to three path cards and drops any beyond the third', () => {
+    const props = adaptCallFlow({ cards: [1, 2, 3, 4].map(card) })
+
+    expect(props.cards.map((c) => c.title)).toEqual(['Card 1', 'Card 2', 'Card 3'])
+  })
+
+  it('maps the separate summary section when it has a title', () => {
+    const props = adaptCallFlow({ summaryIcon: 'fileText', summaryTitle: 'Summary and record', summaryText: 'Overview.' })
+
+    expect(props.summary).toEqual({ icon: 'fileText', title: 'Summary and record', text: 'Overview.' })
+  })
+
+  it('has no summary section when the title is missing or blank', () => {
+    expect(adaptCallFlow({ summaryText: 'Orphan text' }).summary).toBeNull()
+    expect(adaptCallFlow({ summaryTitle: '  ' }).summary).toBeNull()
+  })
+
+  it('falls back to the phone icon for an unknown summary icon', () => {
+    expect(adaptCallFlow({ summaryTitle: 'S', summaryIcon: 'nope' }).summary?.icon).toBe('phone')
+  })
+
+  it('drops cards without a title', () => {
+    const props = adaptCallFlow({ cards: [card(1), { ...card(2), title: '' }] })
+
+    expect(props.cards).toHaveLength(1)
+  })
+})
 
 describe('adaptVoiceHero', () => {
   it('maps buttons and call-flow nodes, dropping nodes without a label', () => {

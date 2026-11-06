@@ -5,7 +5,7 @@ export function RichTextBlock({ content, maxWidth = 'prose' }: RichTextBlockProp
   if (!content) return null
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-12 bg-gray-50">
       <div className={`mx-auto px-6 ${maxWidth === 'wide' ? 'max-w-5xl' : 'max-w-4xl'}`}>
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 md:p-12">
           <div className="prose prose-lg max-w-none 

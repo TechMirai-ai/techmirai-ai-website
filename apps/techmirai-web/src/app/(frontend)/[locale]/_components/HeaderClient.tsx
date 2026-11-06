@@ -173,7 +173,7 @@ export function HeaderClient({
     <header
       className="fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ease-out translate-y-0 opacity-100 border-b border-border-default shadow-sm"
     >
-      <div className="relative flex items-center justify-between w-full px-2 sm:px-4 lg:px-3 xl:px-6 2xl:px-10 h-18 md:h-20 lg:h-22 gap-1.5 xl:gap-3 2xl:gap-6">
+      <div className="relative flex items-center justify-between w-full px-2 sm:px-4 lg:px-3 xl:px-6 2xl:px-10 h-[62px] md:h-[68px] lg:h-[76px] gap-1.5 xl:gap-3 2xl:gap-6">
         <Link href="/" className="shrink-0">
           <Logo />
         </Link>

@@ -21,20 +21,20 @@ export const JA_TODO = '[JA TODO]'
 
 const HERO_LABEL_JA = 'コールセンター・電話窓口向け AI音声エージェント'
 const HERO_HEADLINE_JA = '電話が集中する時間も、営業時間外も。AIが一次対応を支えます。'
+// DRAFT Japanese (not from the ECC prompt): the hero body follows HOMEPAGE-UX-DESIGN.pdf; native review needed (PLACEHOLDER-REGISTER V1-01a).
 const HERO_BODY_JA =
-  '定型的な問い合わせ・混雑時・営業時間外の電話にAIが一次対応し、通話を記録・要約して、必要な対応はスタッフへ。コールセンター事業者様は、自社サービスとして提供できます。'
+  '定型的な問い合わせや営業時間外の電話にAIが対応し、通話を記録・要約して、人の対応が必要なものはスタッフにつなぎます。'
 const DEMO_BUTTON_JA = '音声デモを体験する'
 const PARTNER_BUTTON_JA = '協業について相談する'
 const ADOPT_BUTTON_JA = 'AI音声エージェントの導入を相談する'
 const POC_JA = ['検証', '効果測定', '導入判断', '本番開発'] as const
-// Served from apps/techmirai-web/public/video; the same file is used for both locales.
-const HERO_VIDEO = '/video/hero-section-background.mp4'
 
 const t = (text: string) => ({ text })
 const items = (list: string[]) => list.map(t)
 
 interface Copy {
   hero: Record<string, unknown>
+  flow: Record<string, unknown>
   problems: Record<string, unknown>
   dayFlow: Record<string, unknown>
   routing: Record<string, unknown>
@@ -47,22 +47,47 @@ interface Copy {
 const en: Copy = {
   hero: {
     pill: 'AI voice agent for call centers and phone desks',
-    heading: 'Even when calls surge, even outside business hours, AI supports first-line response.',
-    body: 'AI gives first-line response to routine, busy-time and after-hours calls, records and summarizes them, and passes what needs a person to staff. Call-center operators can offer it as their own service.',
+    heading: 'Even when calls surge, even outside business hours,',
+    headingAccent: 'AI supports first-line response.',
+    body: 'AI answers routine and after-hours calls, records and summarizes them, and passes what needs a person to your staff.',
     primaryButton: { label: 'Try the voice demo', href: '/demo' },
     secondaryButton: { label: 'Consult about partnership', href: '/contact?path=partnership' },
     // PLACEHOLDER-OFF: note: 'Last updated: [TBD: owner to confirm date] · Responsible company: [TBD: legal company name]',
-    backgroundVideo: HERO_VIDEO,
-    pauseLabel: 'Pause animation',
-    playLabel: 'Play animation',
-    nodes: [
-      { icon: 'phone', label: 'Phone call', sub: 'A customer calls' },
-      { icon: 'users', label: 'Operators', sub: 'Busy or queued' },
-      { icon: 'audio', label: 'AI first response', sub: 'Triage and guidance' },
-      { icon: 'bookOpen', label: 'Approved knowledge', sub: 'FAQ · RAG' },
-      { icon: 'fileText', label: 'Call summary and record', sub: '' },
-      { icon: 'user', label: 'Complex inquiries go to a person', sub: '' },
+    note: 'Japanese and English',
+    callCard: {
+      liveLabel: 'Live call',
+      timer: '00:42',
+      sampleLabel: 'Sample · fictional business',
+      callerText: 'Hello, I would like to ask about my appointment.',
+      agentLabel: 'AI voice agent',
+      agentText: 'Thank you for calling. Our staff are away right now, but I can take your details and pass them on.',
+      chips: [
+        { icon: 'moon', text: 'After hours' },
+        { icon: 'fileText', text: 'Summary saved' },
+        { icon: 'calendar', text: 'Callback requested' },
+      ],
+      handledLabel: 'Handled',
+      followUpLabel: 'Staff follow up tomorrow',
+    },
+  },
+  flow: {
+    pill: 'How it works',
+    heading: 'The journey of one call',
+    customerLabel: 'Customer',
+    agentLabel: 'AI voice agent',
+    bubble: 'Request routing',
+    agentName: 'TechMirai',
+    agentSub: 'Voice Agent',
+    captionTitle: 'Understands each request and sends it to the right place',
+    captionText: 'Promotes automated handling',
+    cards: [
+      { icon: 'bookOpen', tone: 'primary', badge: '', label: 'FAQ Support', title: 'Automated FAQ Answers', text: 'Instantly answers routine customer questions.' },
+      { icon: 'calendar', tone: 'light', badge: 'Auto', label: 'Reservations, Callbacks & Info Gathering', title: 'Reservations & Callbacks', text: 'Collects details, books appointments, and schedules callbacks.' },
+      { icon: 'forward', tone: 'dark', badge: '', label: 'Call Forwarding to Staff', title: 'Seamless Call Forwarding', text: 'Transfers complex calls directly to your team.' },
     ],
+    summaryIcon: 'fileText',
+    summaryTitle: 'Summary and record',
+    summaryText: 'Get a clear overview of every AI conversation and its outcome.',
   },
   problems: {
     pill: 'Common challenges',
@@ -184,22 +209,49 @@ const en: Copy = {
 const ja: Copy = {
   hero: {
     pill: HERO_LABEL_JA,
-    heading: HERO_HEADLINE_JA,
+    // The ECC prompt's headline, split at the sentence break so the second sentence can be highlighted.
+    heading: HERO_HEADLINE_JA.split('。')[0] + '。',
+    headingAccent: HERO_HEADLINE_JA.split('。')[1] + '。',
     body: HERO_BODY_JA,
     primaryButton: { label: DEMO_BUTTON_JA, href: '/demo' },
     secondaryButton: { label: PARTNER_BUTTON_JA, href: '/contact?path=partnership' },
     // PLACEHOLDER-OFF: note: '最終更新日：[TBD：オーナー確認待ち]・責任主体：[TBD：正式な会社名]',
-    backgroundVideo: HERO_VIDEO,
-    pauseLabel: 'アニメーションを一時停止',
-    playLabel: 'アニメーションを再生',
-    nodes: [
-      { icon: 'phone', label: 'お電話', sub: 'お客様からの着信' },
-      { icon: 'users', label: 'オペレーター', sub: '対応中・混雑' },
-      { icon: 'audio', label: 'AIが一次対応', sub: '選別・案内' },
-      { icon: 'bookOpen', label: '承認済みナレッジ', sub: 'FAQ・RAG' },
-      { icon: 'fileText', label: '通話要約・記録', sub: '' },
-      { icon: 'user', label: '複雑な問い合わせは人へ引き継ぎ', sub: '' },
+    // DRAFT Japanese below (native review needed, PLACEHOLDER-REGISTER V1-01a).
+    note: '日本語と英語に対応',
+    callCard: {
+      liveLabel: '通話中',
+      timer: '00:42',
+      sampleLabel: 'サンプル・架空の事業者',
+      callerText: 'すみません、予約の件でお聞きしたいのですが。',
+      agentLabel: 'AI音声エージェント',
+      agentText: 'お電話ありがとうございます。ただいまスタッフは不在ですが、ご用件を伺い、担当者にお伝えします。',
+      chips: [
+        { icon: 'moon', text: '営業時間外' },
+        { icon: 'fileText', text: '要約を保存' },
+        { icon: 'calendar', text: '折り返し依頼' },
+      ],
+      handledLabel: '対応済み',
+      followUpLabel: '明日スタッフが対応',
+    },
+  },
+  flow: {
+    pill: '仕組み',
+    heading: '1本の電話の流れ',
+    customerLabel: 'お客様',
+    agentLabel: 'AI音声エージェント',
+    bubble: '用件の振り分け',
+    agentName: 'TechMirai',
+    agentSub: 'Voice Agent',
+    captionTitle: 'ご用件を理解し、最適な対応先へおつなぎします',
+    captionText: '自動対応を促進',
+    cards: [
+      { icon: 'bookOpen', tone: 'primary', badge: '', label: 'FAQサポート', title: 'FAQへの自動回答', text: 'よくあるご質問に、その場で自動回答します。' },
+      { icon: 'calendar', tone: 'light', badge: '自動', label: '予約・折り返し・情報収集', title: '予約と折り返し', text: '必要事項を伺い、予約の受付と折り返しの手配を行います。' },
+      { icon: 'forward', tone: 'dark', badge: '', label: 'スタッフへの通話転送', title: 'スムーズな通話転送', text: '複雑な通話は、そのままスタッフへおつなぎします。' },
     ],
+    summaryIcon: 'fileText',
+    summaryTitle: '概要と記録',
+    summaryText: 'AIとの全会話の概要と結果を、ひと目で確認できます。',
   },
   problems: {
     pill: 'よくある課題',
@@ -320,7 +372,8 @@ const ja: Copy = {
 
 function buildLayout(c: Copy) {
   return [
-    { blockType: 'voice-hero', ...c.hero },
+    { blockType: 'home-hero', ...c.hero },
+    { blockType: 'call-flow-diagram', ...c.flow },
     { blockType: 'icon-cards', ...c.problems },
     { blockType: 'day-flow', ...c.dayFlow },
     { blockType: 'routing-dashboard', ...c.routing },

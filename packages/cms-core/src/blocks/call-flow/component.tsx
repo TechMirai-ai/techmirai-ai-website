@@ -34,7 +34,7 @@ export function CallFlowBlock({
   if (steps.length === 0) return null
 
   return (
-    <section className="w-full bg-white px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+    <section className="w-full bg-white px-4 py-12 sm:px-6 md:py-12 lg:px-8">
       <div className="mx-auto max-w-5xl">
         {heading && (
           <h2 className="text-center text-2xl font-bold leading-[1.3] tracking-tight text-text-primary md:text-[32px]">

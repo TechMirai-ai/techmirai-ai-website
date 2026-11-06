@@ -228,11 +228,69 @@ const JA_EXACT: Readonly<Record<string, string>> = {
   'Get in touch': 'お問い合わせ',
   'Questions about the company or the AI voice agent? Contact us.':
     '会社やAI音声エージェントについてのご質問は、お気軽にお問い合わせください。',
+
+  // ── /company redesign (from TechMirai_About_Us_Webpage.html).
+  // DRAFT Japanese written by the developer's assistant, pending native review (see PLACEHOLDER-REGISTER V1-06).
+  'Making AI': 'AIを',
+  'Accessible.': '身近に。',
+  'Making Business Smarter.': 'ビジネスをもっとスマートに。',
+  'Japanese Business Focus': '日本のビジネスに特化',
+  'Practical Innovation': '実用的なイノベーション',
+  'The people behind TechMirai': 'TechMiraiを支える人々',
+  'Behind TechMirai AI is an international engineering team combining AI engineering, software development and customer communication.':
+    'TechMirai AIの背景には、AIエンジニアリング、ソフトウェア開発、お客様とのコミュニケーションを組み合わせた、国際的なエンジニアチームがあります。',
+  "We understand both the technical challenges of implementing AI and the practical needs of businesses adopting new technology. Team photos and names appear here only with each person's written consent.":
+    'AIを導入する際の技術的な課題と、新しい技術を取り入れる企業の実務上のニーズの両方を理解しています。チームの写真や氏名は、本人の書面による同意がある場合にのみ掲載します。',
+  "Let's work together": 'ご一緒に取り組みましょう',
+  Contact: 'お問い合わせ先',
+  'Akiba Mitakikan 5F, 4-5-5 Sotokanda': 'Akiba Mitakikan 5F, 4-5-5 Sotokanda',
+  'Chiyoda-ku, Tokyo 101-0021, Japan': 'Chiyoda-ku, Tokyo 101-0021, Japan',
+  'At the office of our Japan-based business partner, Sadiatec.': '日本のビジネスパートナーSadiatecのオフィス内です。',
+  'techmirai-ai.com': 'techmirai-ai.com',
+  'TechMirai AI is a Japan-focused AI solutions brand helping businesses improve efficiency and customer communication with practical, accessible AI technology. We connect engineering expertise with a deep understanding of everyday business needs.':
+    'TechMirai AIは、実用的で身近なAI技術によって、企業の業務効率とお客様とのコミュニケーションの向上を支援する、日本市場に向けたAIソリューションブランドです。エンジニアリングの専門性と、日々のビジネスのニーズへの深い理解をつなぎます。',
+  'Our mission': '私たちのミッション',
+  'Empowering Japanese Businesses Through AI.': 'AIで日本の企業を後押しします。',
+  'We believe AI should be accessible to businesses of every size, not only large corporations. Our mission is to simplify AI adoption, reduce routine workloads, and help teams focus on work that matters most.':
+    'AIは大企業だけでなく、あらゆる規模の企業が使えるものであるべきだと考えています。AI導入をシンプルにし、日々の定型業務を減らし、チームが本当に大切な仕事に集中できるよう支援することが私たちのミッションです。',
+  'AI should empower people, not replace them.': 'AIは人の代わりではなく、人を支えるものであるべきです。',
+  'Technology for people.': '人のためのテクノロジー。',
+  'Built by engineers. Driven by business needs.': 'エンジニアが作る。ビジネスのニーズが導く。',
+  "Behind TechMirai AI is an international engineering team combining AI engineering, software development and customer communication. We understand both the technical challenges of implementing AI and the practical needs of businesses adopting new technology. Team photos and names appear here only with each person's written consent.":
+    'TechMirai AIの背景には、AIエンジニアリング、ソフトウェア開発、お客様とのコミュニケーションを組み合わせた、国際的なエンジニアチームがあります。AIを導入する際の技術的な課題と、新しい技術を取り入れる企業の実務上のニーズの両方を理解しています。チームの写真や氏名は、本人の書面による同意がある場合にのみ掲載します。',
+  'AI Engineering': 'AIエンジニアリング',
+  'Voice agents, intelligent automation, and applied AI.': '音声エージェント、インテリジェントな自動化、実用的なAI。',
+  'Software Development': 'ソフトウェア開発',
+  'Applications, integration, and dependable systems.': 'アプリケーション、システム連携、信頼できる仕組み。',
+  'Japan Business': '日本でのビジネス',
+  'Local communication and customer coordination.': '現地でのコミュニケーションとお客様との調整。',
+  'Customer Focus': 'お客様第一',
+  'Solutions built around real business operations.': '実際の業務に合わせて作るソリューション。',
+  'Working together in Japan': '日本での協業',
+  'Our Japan-based business partner': '日本のビジネスパートナー',
+  'Local collaboration that connects TechMirai with businesses across Japan.':
+    'TechMiraiと日本全国の企業をつなぐ、現地での協力体制です。',
+  SADIATEC: 'SADIATEC',
+  'Partner logo placeholder': 'パートナーロゴ（仮）',
+  'Sadiatec Co., Ltd.': 'Sadiatec Co., Ltd.',
+  'TechMirai AI collaborates with Sadiatec, a Japan-based business partner, to support business development and customer engagement in Japan.':
+    'TechMirai AIは、日本のビジネスパートナーであるSadiatecと協力し、日本での事業開発とお客様対応を進めています。',
+  "Through this partnership, TechMirai maintains its Japan business contact address at Sadiatec's office.":
+    'この協業により、TechMiraiはSadiatecのオフィス内に日本での連絡先を置いています。',
+  'Japan business contact': '日本での連絡先',
+  'Akiba Mitakikan 5F, 4-5-5 Sotokanda, Chiyoda-ku, Tokyo 101-0021, Japan':
+    'Akiba Mitakikan 5F, 4-5-5 Sotokanda, Chiyoda-ku, Tokyo 101-0021, Japan',
+  'info@techmirai-ai.com': 'info@techmirai-ai.com',
+  "Visit Sadiatec's website": 'Sadiatecのウェブサイトを見る',
+  "Let's make AI work for your business.": 'AIをあなたのビジネスの力に。',
+  "Whether you're exploring AI for the first time or looking for a technology partner, we'd love to hear about your goals.":
+    'AIを初めて検討している方も、技術パートナーをお探しの方も、ぜひ目標をお聞かせください。',
 }
 
 const TEXT_KEYS: ReadonlySet<string> = new Set([
   'heading', 'eyebrow', 'pill', 'note', 'body', 'smallPrint', 'intro', 'sub', 'title', 'line', 'label', 'detail', 'footnote', 'text',
   'description', 'businessName', 'simulationLabel', 'fictionalNotice', 'noticeTitle', 'noticeBody', 'consentLabel',
+  'quote', 'caption', 'brandName', 'brandNote', 'name', 'linkLabel', 'headingAccent', 'headingTail', 'lede',
   'privacyLabel', 'startLabel', 'liveLabel', 'liveNote', 'scenarioHeading', 'transcriptHeading', 'summaryHeading',
   'callerLabel', 'aiLabel', 'demoDataLabel', 'restartLabel', 'audioLabel', 'callLabel', 'value',
   'audioCardTitle', 'audioCardSub', 'liveCardTitle', 'liveCardSub', 'keyTitle', 'keySubmitLabel', 'keyInvalid', 'keyError',
@@ -456,22 +514,54 @@ const partnersLayout: Json = [
 
 const companyLayout: Json = [
   {
-    blockType: 'page-intro',
+    blockType: 'about-hero',
     pill: 'About us',
-    heading: 'Company',
-    body: "TechMirai is an international engineering team building an AI voice agent for call centers and phone desks. This page is for partners and customers who want to know who is behind it. Team photos and videos appear here only with each person's written consent; next, you can contact us.",
+    heading: 'Making AI',
+    headingAccent: 'Accessible.',
+    headingTail: 'Making Business Smarter.',
+    lede: 'TechMirai AI is a Japan-focused AI solutions brand helping businesses improve efficiency and customer communication with practical, accessible AI technology. We connect engineering expertise with a deep understanding of everyday business needs.',
+    tags: [{ text: 'AI Engineering' }, { text: 'Japanese Business Focus' }, { text: 'Practical Innovation' }],
+    artSrc: '/brand/about-orbit-logo.png',
     primaryButton: { label: 'Consult about adopting the AI voice agent', href: '/contact?path=adoption' },
     // PLACEHOLDER-OFF: note: LAST_UPDATED,
   },
   {
-    blockType: 'icon-cards',
-    pill: 'Team',
-    heading: 'Team',
-    columns: '2',
-    cards: [
-      card('users', 'green', 'Team', 'International engineering team'),
-      // PLACEHOLDER-OFF: card('user', 'blue', 'Members', '[TBD: photos, names and roles appear after written consent is recorded]'),
+    blockType: 'mission-split',
+    pill: 'Our mission',
+    heading: 'Empowering Japanese Businesses Through AI.',
+    body: 'We believe AI should be accessible to businesses of every size, not only large corporations. Our mission is to simplify AI adoption, reduce routine workloads, and help teams focus on work that matters most.',
+    quote: 'AI should empower people, not replace them.',
+    caption: 'Technology for people.',
+  },
+  {
+    blockType: 'team-split',
+    pill: 'The people behind TechMirai',
+    heading: 'Built by engineers. Driven by business needs.',
+    paragraphs: [
+      { text: 'Behind TechMirai AI is an international engineering team combining AI engineering, software development and customer communication.' },
+      { text: "We understand both the technical challenges of implementing AI and the practical needs of businesses adopting new technology. Team photos and names appear here only with each person's written consent." },
     ],
+    cards: [
+      card('headset', 'green', 'AI Engineering', 'Voice agents, intelligent automation, and applied AI.'),
+      card('list', 'blue', 'Software Development', 'Applications, integration, and dependable systems.'),
+      card('building', 'amber', 'Japan Business', 'Local communication and customer coordination.'),
+      card('users', 'green', 'Customer Focus', 'Solutions built around real business operations.'),
+    ],
+  },
+  {
+    blockType: 'partner-card',
+    pill: 'Working together in Japan',
+    heading: 'Our Japan-based business partner',
+    intro: 'Local collaboration that connects TechMirai with businesses across Japan.',
+    brandName: 'SADIATEC',
+    brandNote: 'Partner logo placeholder',
+    name: 'Sadiatec Co., Ltd.',
+    paragraphs: [
+      { text: 'TechMirai AI collaborates with Sadiatec, a Japan-based business partner, to support business development and customer engagement in Japan.' },
+      { text: "Through this partnership, TechMirai maintains its Japan business contact address at Sadiatec's office." },
+    ],
+    linkLabel: "Visit Sadiatec's website",
+    linkHref: 'https://www.sadiatec.com/',
   },
   // PLACEHOLDER-OFF: company profile block (every card is a [TBD]).
   // {
@@ -487,10 +577,25 @@ const companyLayout: Json = [
   //   ],
   // },
   {
-    blockType: 'cta-banner',
-    heading: 'Get in touch',
-    body: 'Questions about the company or the AI voice agent? Contact us.',
+    blockType: 'contact-banner',
+    pill: "Let's work together",
+    heading: "Let's make AI work for your business.",
+    body: "Whether you're exploring AI for the first time or looking for a technology partner, we'd love to hear about your goals.",
     primaryButton: { label: 'Consult about adopting the AI voice agent', href: '/contact?path=adoption' },
+    columns: [
+      {
+        title: 'Japan business contact',
+        lines: [{ text: 'Akiba Mitakikan 5F, 4-5-5 Sotokanda' }, { text: 'Chiyoda-ku, Tokyo 101-0021, Japan' }],
+        note: 'At the office of our Japan-based business partner, Sadiatec.',
+      },
+      {
+        title: 'Contact',
+        lines: [
+          { text: 'info@techmirai-ai.com', href: 'mailto:info@techmirai-ai.com' },
+          { text: 'techmirai-ai.com', href: 'https://techmirai-ai.com/' },
+        ],
+      },
+    ],
   },
 ]
 

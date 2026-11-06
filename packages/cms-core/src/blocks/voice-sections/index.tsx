@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react'
+import { CallFlowDiagramBlock } from './call-flow-diagram'
+import { HomeHeroBlock } from './home-hero'
 import {
-  adaptDayFlow, adaptIconCards, adaptPageIntro, adaptRoleSplit, adaptRoutingDashboard, adaptVoiceHero,
+  adaptAboutHero, adaptCallFlow, adaptContactBanner, adaptDayFlow, adaptHomeHero, adaptIconCards, adaptMissionSplit, adaptPageIntro,
+  adaptPartnerCard, adaptRoleSplit, adaptRoutingDashboard, adaptTeamSplit, adaptVoiceHero,
 } from './adapters'
+import { ContactBannerBlock, MissionSplitBlock, PartnerCardBlock, TeamSplitBlock } from './company-components'
+import { AboutHeroBlock } from './company-hero'
 import {
   DayFlowBlock, IconCardsBlock, PageIntroBlock, RoleSplitBlock, RoutingDashboardBlock, VoiceHeroBlock,
 } from './components'
@@ -18,4 +23,11 @@ export const voiceSectionRenderers: Record<string, Renderer> = {
   'day-flow': (raw) => <DayFlowBlock {...adaptDayFlow(raw)} />,
   'routing-dashboard': (raw) => <RoutingDashboardBlock {...adaptRoutingDashboard(raw)} />,
   'role-split': (raw) => <RoleSplitBlock {...adaptRoleSplit(raw)} />,
+  'home-hero': (raw) => <HomeHeroBlock {...adaptHomeHero(raw)} />,
+  'call-flow-diagram': (raw) => <CallFlowDiagramBlock {...adaptCallFlow(raw)} />,
+  'about-hero': (raw) => <AboutHeroBlock {...adaptAboutHero(raw)} />,
+  'team-split': (raw) => <TeamSplitBlock {...adaptTeamSplit(raw)} />,
+  'contact-banner': (raw) => <ContactBannerBlock {...adaptContactBanner(raw)} />,
+  'mission-split': (raw) => <MissionSplitBlock {...adaptMissionSplit(raw)} />,
+  'partner-card': (raw) => <PartnerCardBlock {...adaptPartnerCard(raw)} />,
 }

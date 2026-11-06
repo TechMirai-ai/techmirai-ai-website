@@ -89,6 +89,97 @@ export interface RoleSplitProps {
   tagline: string
 }
 
+export interface MissionSplitProps {
+  pill: string
+  heading: string
+  body: string
+  quote: string
+  caption: string
+}
+
+export interface PartnerCardProps {
+  pill: string
+  heading: string
+  intro: string
+  brandName: string
+  brandNote: string
+  name: string
+  paragraphs: string[]
+  linkLabel: string
+  /** https URL only; anything else is dropped. */
+  linkHref: string
+}
+
+export interface HomeHeroProps {
+  pill: string
+  heading: string
+  /** Highlighted (green) tail of the headline. */
+  headingAccent: string
+  body: string
+  primaryButton: LinkProps | null
+  secondaryButton: LinkProps | null
+  note: string
+  callCard: {
+    liveLabel: string
+    timer: string
+    sampleLabel: string
+    callerText: string
+    agentLabel: string
+    agentText: string
+    chips: { icon: VoiceIconName; text: string }[]
+    handledLabel: string
+    followUpLabel: string
+  }
+}
+
+export type FlowTone = 'primary' | 'light' | 'dark'
+
+/** The desktop diagram draws a connector per path card, so the number of cards is bounded. */
+export const MAX_FLOW_CARDS = 3
+
+export interface CallFlowProps {
+  pill: string
+  heading: string
+  customerLabel: string
+  agentLabel: string
+  bubble: string
+  agentName: string
+  agentSub: string
+  captionTitle: string
+  captionText: string
+  cards: { icon: VoiceIconName; tone: FlowTone; badge: string; label: string; title: string; text: string }[]
+  /** Separate band under the diagram; null when no title is set. */
+  summary: { icon: VoiceIconName; title: string; text: string } | null
+}
+
+export interface AboutHeroProps {
+  pill: string
+  /** Heading parts: lead, highlighted word(s), and a second line. */
+  heading: string
+  headingAccent: string
+  headingTail: string
+  lede: string
+  tags: string[]
+  /** Same-site image path; empty = no artwork. */
+  artSrc: string
+  primaryButton: LinkProps | null
+}
+
+export interface TeamSplitProps {
+  pill: string
+  heading: string
+  paragraphs: string[]
+  cards: { icon: VoiceIconName; tone: CardTone; title: string; text: string }[]
+}
+
+export interface ContactBannerProps {
+  pill: string
+  heading: string
+  body: string
+  primaryButton: LinkProps | null
+  columns: { title: string; lines: { text: string; href: string }[]; note: string }[]
+}
+
 const obj = (value: unknown): Raw => (typeof value === 'object' && value !== null ? (value as Raw) : {})
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
 // A same-site path ("/video/x.mp4") or an https URL; anything else (javascript:, //host, http:) is dropped.
@@ -219,6 +310,149 @@ export function adaptRoutingDashboard(raw: unknown): RoutingDashboardProps {
       audioLabel: str(dash['audioLabel']),
       demoLabel: str(dash['demoLabel']),
     },
+  }
+}
+
+// A same-site path ("/brand/x.png"); anything else (javascript:, //host, remote URLs) is dropped.
+const imageSrc = (value: unknown): string => {
+  const src = str(value).trim()
+  return src.startsWith('/') && !src.startsWith('//') ? src : ''
+}
+
+// Only mailto: and https: links are allowed in contact lines.
+const contactHref = (value: unknown): string => {
+  const href = str(value).trim()
+  return href.startsWith('mailto:') || href.startsWith('https://') ? href : ''
+}
+
+export function adaptHomeHero(raw: unknown): HomeHeroProps {
+  const d = obj(raw)
+  const call = obj(d['callCard'])
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    headingAccent: str(d['headingAccent']),
+    body: str(d['body']),
+    primaryButton: link(d['primaryButton']),
+    secondaryButton: link(d['secondaryButton']),
+    note: str(d['note']),
+    callCard: {
+      liveLabel: str(call['liveLabel']),
+      timer: str(call['timer']),
+      sampleLabel: str(call['sampleLabel']),
+      callerText: str(call['callerText']),
+      agentLabel: str(call['agentLabel']),
+      agentText: str(call['agentText']),
+      chips: iconRows(call['chips']),
+      handledLabel: str(call['handledLabel']),
+      followUpLabel: str(call['followUpLabel']),
+    },
+  }
+}
+
+export function adaptCallFlow(raw: unknown): CallFlowProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    customerLabel: str(d['customerLabel']),
+    agentLabel: str(d['agentLabel']),
+    bubble: str(d['bubble']),
+    agentName: str(d['agentName']),
+    agentSub: str(d['agentSub']),
+    captionTitle: str(d['captionTitle']),
+    captionText: str(d['captionText']),
+    cards: rows(d['cards'])
+      .map((c) => ({
+        icon: toIconName(c['icon']),
+        tone: pick(c['tone'], ['primary', 'light', 'dark'] as const, 'light'),
+        badge: str(c['badge']),
+        label: str(c['label']),
+        title: str(c['title']),
+        text: str(c['text']),
+      }))
+      .filter((c) => c.title)
+      .slice(0, MAX_FLOW_CARDS),
+    summary: str(d['summaryTitle']).trim()
+      ? { icon: toIconName(d['summaryIcon']), title: str(d['summaryTitle']).trim(), text: str(d['summaryText']) }
+      : null,
+  }
+}
+
+export function adaptAboutHero(raw: unknown): AboutHeroProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    headingAccent: str(d['headingAccent']),
+    headingTail: str(d['headingTail']),
+    lede: str(d['lede']),
+    tags: texts(d['tags']),
+    artSrc: imageSrc(d['artSrc']),
+    primaryButton: link(d['primaryButton']),
+  }
+}
+
+export function adaptTeamSplit(raw: unknown): TeamSplitProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    paragraphs: texts(d['paragraphs']),
+    cards: rows(d['cards'])
+      .map((c) => ({
+        icon: toIconName(c['icon']),
+        tone: pick(c['tone'], ['green', 'amber', 'blue', 'rose'] as const, 'green'),
+        title: str(c['title']),
+        text: str(c['text']),
+      }))
+      .filter((c) => c.title),
+  }
+}
+
+export function adaptContactBanner(raw: unknown): ContactBannerProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    body: str(d['body']),
+    primaryButton: link(d['primaryButton']),
+    columns: rows(d['columns'])
+      .map((c) => ({
+        title: str(c['title']),
+        lines: rows(c['lines'])
+          .map((l) => ({ text: str(l['text']), href: contactHref(l['href']) }))
+          .filter((l) => l.text),
+        note: str(c['note']),
+      }))
+      .filter((c) => c.title),
+  }
+}
+
+export function adaptMissionSplit(raw: unknown): MissionSplitProps {
+  const d = obj(raw)
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    body: str(d['body']),
+    quote: str(d['quote']),
+    caption: str(d['caption']),
+  }
+}
+
+export function adaptPartnerCard(raw: unknown): PartnerCardProps {
+  const d = obj(raw)
+  const href = str(d['linkHref']).trim()
+  return {
+    pill: str(d['pill']),
+    heading: str(d['heading']),
+    intro: str(d['intro']),
+    brandName: str(d['brandName']),
+    brandNote: str(d['brandNote']),
+    name: str(d['name']),
+    paragraphs: texts(d['paragraphs']),
+    linkLabel: str(d['linkLabel']),
+    linkHref: href.startsWith('https://') ? href : '',
   }
 }
 

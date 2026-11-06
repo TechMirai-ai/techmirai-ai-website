@@ -1,5 +1,6 @@
 import type { Block, Field } from 'payload'
 import { VOICE_ICON_NAMES } from './icons'
+import { MAX_FLOW_CARDS } from './adapters'
 
 // Voice-pivot home sections (ECC Master Prompt v2 §6-§7), modelled on the
 // owner's reference screenshot. Five additive blocks sharing one icon list.
@@ -166,7 +167,167 @@ export const PageIntroBlockConfig: Block = {
   ],
 }
 
+export const MissionSplitBlockConfig: Block = {
+  slug: 'mission-split',
+  interfaceName: 'MissionSplitBlock',
+  labels: { singular: 'Mission Split', plural: 'Mission Splits' },
+  fields: [text('pill'), text('heading'), area('body'), area('quote'), text('caption')],
+}
+
+export const PartnerCardBlockConfig: Block = {
+  slug: 'partner-card',
+  interfaceName: 'PartnerCardBlock',
+  labels: { singular: 'Partner Card', plural: 'Partner Cards' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    text('intro'),
+    text('brandName'),
+    text('brandNote'),
+    text('name'),
+    textRows('paragraphs'),
+    // Unused since the layout pass: contact details now live in the contact-banner block.
+    // Kept so existing database rows keep their shape.
+    { name: 'details', type: 'array', admin: { hidden: true }, fields: [text('label', true), text('value')] },
+    text('linkLabel'),
+    { name: 'linkHref', type: 'text' },
+  ],
+}
+
+export const AboutHeroBlockConfig: Block = {
+  slug: 'about-hero',
+  interfaceName: 'AboutHeroBlock',
+  labels: { singular: 'About Hero (text + orbit art)', plural: 'About Heroes' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    text('headingAccent'),
+    text('headingTail'),
+    area('lede'),
+    textRows('tags'),
+    { name: 'artSrc', type: 'text', admin: { description: 'Same-site image path, e.g. /brand/about-orbit-logo.png. Empty = no artwork.' } },
+    button('primaryButton'),
+  ],
+}
+
+export const TeamSplitBlockConfig: Block = {
+  slug: 'team-split',
+  interfaceName: 'TeamSplitBlock',
+  labels: { singular: 'Team Split (text + 2x2 cards)', plural: 'Team Splits' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    textRows('paragraphs'),
+    {
+      name: 'cards',
+      type: 'array',
+      required: true,
+      minRows: 1,
+      fields: [
+        icon(),
+        { name: 'tone', type: 'select', defaultValue: 'green', options: ['green', 'amber', 'blue', 'rose'] },
+        text('title', true),
+        area('text'),
+      ],
+    },
+  ],
+}
+
+export const ContactBannerBlockConfig: Block = {
+  slug: 'contact-banner',
+  interfaceName: 'ContactBannerBlock',
+  labels: { singular: 'Contact Banner', plural: 'Contact Banners' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    area('body'),
+    button('primaryButton'),
+    {
+      name: 'columns',
+      type: 'array',
+      fields: [
+        text('title', true),
+        { name: 'lines', type: 'array', fields: [text('text', true), { name: 'href', type: 'text' }] },
+        text('note'),
+      ],
+    },
+  ],
+}
+
+export const HomeHeroBlockConfig: Block = {
+  slug: 'home-hero',
+  interfaceName: 'HomeHeroBlock',
+  labels: { singular: 'Home Hero (text + live-call card)', plural: 'Home Heroes' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    text('headingAccent'),
+    area('body'),
+    button('primaryButton'),
+    button('secondaryButton'),
+    text('note'),
+    {
+      name: 'callCard',
+      type: 'group',
+      fields: [
+        text('liveLabel'),
+        text('timer'),
+        text('sampleLabel'),
+        area('callerText'),
+        text('agentLabel'),
+        area('agentText'),
+        { name: 'chips', type: 'array', fields: [icon(), text('text', true)] },
+        text('handledLabel'),
+        text('followUpLabel'),
+      ],
+    },
+  ],
+}
+
+export const CallFlowDiagramBlockConfig: Block = {
+  slug: 'call-flow-diagram',
+  interfaceName: 'CallFlowDiagramBlock',
+  labels: { singular: 'Call Flow Diagram (customer, agent, 3 paths, summary band)', plural: 'Call Flow Diagrams' },
+  fields: [
+    text('pill'),
+    text('heading'),
+    text('customerLabel'),
+    text('agentLabel'),
+    text('bubble'),
+    text('agentName'),
+    text('agentSub'),
+    text('captionTitle'),
+    text('captionText'),
+    {
+      name: 'cards',
+      type: 'array',
+      required: true,
+      minRows: 1,
+      maxRows: MAX_FLOW_CARDS,
+      fields: [
+        icon(),
+        { name: 'tone', type: 'select', defaultValue: 'light', options: ['primary', 'light', 'dark'] },
+        text('badge'),
+        text('label'),
+        text('title', true),
+        area('text'),
+      ],
+    },
+    // Optional band shown under the diagram, outside the connector layout.
+    icon('summaryIcon'),
+    text('summaryTitle'),
+    area('summaryText'),
+  ],
+}
+
 export const VoiceSectionBlockConfigs: Block[] = [
+  HomeHeroBlockConfig,
+  CallFlowDiagramBlockConfig,
+  AboutHeroBlockConfig,
+  TeamSplitBlockConfig,
+  ContactBannerBlockConfig,
+  MissionSplitBlockConfig,
+  PartnerCardBlockConfig,
   PageIntroBlockConfig,
   VoiceHeroBlockConfig,
   IconCardsBlockConfig,
